@@ -38,7 +38,7 @@ const Estates = ({ index }) => {
       } else {
         fetchFeaturedEstates(false);
       }
-    }, [index, user])
+    }, [index])
   );
 
   useEffect(() => {
@@ -54,31 +54,85 @@ const Estates = ({ index }) => {
     fetchFeaturedEstates(true);
   };
 
-  const renderFooter = () => {
-    if (!loading) return null;
-    return (
-      <ActivityIndicator style={{ margin: 0 }} size="small" color="#333" />
-    );
-  };
+  const handlePress = useCallback(() => {
+    navigation.navigate("AllRealtorAdverts", {
+      name: "Emlak İlanları",
+      slug: "emlak-ilanlari",
+      data: filteredHomes,
+      count: filteredHomes.length,
+      type: "mustakil-tatil",
+      optional: null,
+      title: null,
+      check: null,
+      city: null,
+      county: null,
+      hood: null,
+    });
+  }, [filteredHomes, navigation]);
+
+  const renderItem = useCallback(
+    ({ item }) => {
+      const housingData = JSON.parse(item.housing_type_data);
+      return (
+        <RealtorPost
+          sold={item.sold}
+          HouseId={item.id}
+          price={`${housingData.price} `}
+          housing={item}
+          title={item.housing_title}
+          loading={loading}
+          location={`${item.city_title} / ${item.county_title}`}
+          image={`${frontEndUriBase}housing_images/${housingData.image}`}
+          openSharing={housingData.open_sharing1}
+          column1_additional={item.column1_additional}
+          column1_name={housingData[item.column1_name] || ""}
+          column2_name={housingData[item.column2_name] || ""}
+          column2_additional={item.column2_additional}
+          column3_name={housingData[item.column3_name] || ""}
+          column3_additional={item.column3_additional}
+          column4_name={housingData[item.column4_name] || ""}
+          column4_additional={item.column4_additional}
+          bookmarkStatus={true}
+          dailyRent={false}
+          isFavorite={item.is_favorite}
+        />
+      );
+    },
+    [loading]
+  );
+
+  const keyExtractor = useCallback(
+    (item, index) => (item.id ? item.id.toString() : index.toString()),
+    []
+  );
+
+  const ListHeaderComponent = useMemo(
+    () => (
+      <>
+        <View style={styles.headerImageContainer}>
+          <Image source={Housing} style={styles.headerImage} />
+        </View>
+        <View style={styles.header}>
+          <Text style={styles.headerText}>ÖNE ÇIKAN EMLAK İLANLARI</Text>
+          <TouchableOpacity style={styles.allBtn} onPress={handlePress}>
+            <Text style={styles.allBtnText}>Tüm İlanları Gör</Text>
+          </TouchableOpacity>
+        </View>
+      </>
+    ),
+    [handlePress]
+  );
 
   return (
     <>
       {loading ? (
-        <View
-          style={{ alignItems: "center", justifyContent: "center", flex: 1 }}
-        >
+        <View style={styles.loader}>
           <ActivityIndicator size={"small"} color="#333" />
         </View>
       ) : (
         <View style={styles.container}>
           {refreshing && (
-            <View
-              style={{
-                padding: 10,
-                backgroundColor: "white",
-                alignItems: "center",
-              }}
-            >
+            <View style={styles.refresh}>
               <ActivityIndicator
                 animating={true}
                 size="small"
@@ -86,124 +140,28 @@ const Estates = ({ index }) => {
               />
             </View>
           )}
-
           <AlertNotificationRoot>
             {filteredHomes.length == 0 ? (
-              <View style={{ width: "100%", paddingTop: 10 }}>
-                <Text
-                  style={{
-                    textAlign: "center",
-                    color: "grey",
-                    fontWeight: "700",
-                  }}
-                >
-                  Konut İlanı Bulunamadı
-                </Text>
+              <View style={styles.alertArea}>
+                <Text style={styles.notFoundText}>Konut İlanı Bulunamadı</Text>
               </View>
             ) : (
               <FlatList
                 data={filteredHomes}
                 showsVerticalScrollIndicator={false}
-                renderItem={({ item }) => (
-                  <RealtorPost
-                    sold={item.sold}
-                    HouseId={item.id}
-                    price={`${JSON.parse(item.housing_type_data)["price"]} `}
-                    housing={item}
-                    title={item.housing_title}
-                    loading={loading}
-                    location={item.city_title + " / " + item.county_title}
-                    image={`${frontEndUriBase}housing_images/${
-                      JSON.parse(item.housing_type_data).image
-                    }`}
-                    openSharing={
-                      JSON.parse(item.housing_type_data)["open_sharing1"]
-                    }
-                    column1_additional={item.column1_additional}
-                    column1_name={
-                      JSON.parse(item.housing_type_data)[item.column1_name]
-                        ? JSON.parse(item.housing_type_data)[item.column1_name]
-                        : ""
-                    }
-                    column2_name={
-                      JSON.parse(item.housing_type_data)[item.column2_name]
-                        ? JSON.parse(item.housing_type_data)[item.column2_name]
-                        : ""
-                    }
-                    column2_additional={item.column2_additional}
-                    column3_name={
-                      JSON.parse(item.housing_type_data)[item.column3_name]
-                        ? JSON.parse(item.housing_type_data)[item.column3_name]
-                        : ""
-                    }
-                    column3_additional={item.column3_additional}
-                    column4_name={
-                      JSON.parse(item.housing_type_data)[item.column4_name]
-                        ? JSON.parse(item.housing_type_data)[item.column4_name]
-                        : ""
-                    }
-                    column4_additional={item.column4_additional}
-                    bookmarkStatus={true}
-                    dailyRent={false}
-                    isFavorite={item.is_favorite}
-                  />
-                )}
-                keyExtractor={(item, index) =>
-                  item.id ? item.id.toString() : index.toString()
-                }
+                renderItem={renderItem}
+                keyExtractor={keyExtractor}
                 onEndReachedThreshold={0.1}
+                initialNumToRender={5}
+                maxToRenderPerBatch={5}
+                windowSize={10}
                 refreshControl={
                   <RefreshControl
                     refreshing={refreshing}
                     onRefresh={onRefresh}
                   />
                 }
-                ListHeaderComponent={
-                  <>
-                    <View style={{ paddingHorizontal: 0 }}>
-                      <Image
-                        source={Housing}
-                        style={{ width: "100%", height: 120 }}
-                      />
-                    </View>
-
-                    <View style={styles.header}>
-                      <Text style={{ fontSize: 14, fontWeight: 700 }}>
-                        ÖNE ÇIKAN EMLAK İLANLARI
-                      </Text>
-
-                      <TouchableOpacity
-                        style={styles.allBtn}
-                        onPress={() =>
-                          navigation.navigate("AllRealtorAdverts", {
-                            name: "Emlak İlanları",
-                            slug: "emlak-ilanlari",
-                            data: filteredHomes,
-                            count: filteredHomes.length,
-                            type: "konut",
-                            optional: null,
-                            title: null,
-                            check: null,
-                            city: null,
-                            county: null,
-                            hood: null,
-                          })
-                        }
-                      >
-                        <Text
-                          style={{
-                            color: "white",
-                            fontSize: 12,
-                            fontWeight: "bold",
-                          }}
-                        >
-                          Tüm İlanları Gör
-                        </Text>
-                      </TouchableOpacity>
-                    </View>
-                  </>
-                }
-                ListFooterComponent={renderFooter}
+                ListHeaderComponent={ListHeaderComponent}
               />
             )}
           </AlertNotificationRoot>
@@ -229,6 +187,11 @@ const styles = StyleSheet.create({
     padding: 5,
     borderRadius: 4,
   },
+  allBtnText: {
+    color: "white",
+    fontSize: 12,
+    fontWeight: "bold",
+  },
   modal4: {
     justifyContent: "center",
     margin: 0,
@@ -240,15 +203,43 @@ const styles = StyleSheet.create({
     padding: 20,
     borderRadius: 5,
   },
+  headerImageContainer: {
+    paddingHorizontal: 0,
+  },
+  headerImage: {
+    width: "100%",
+    height: 120,
+  },
   header: {
-    paddingBottom: 3,
+    paddingHorizontal: 16,
+    paddingVertical: 8,
     flexDirection: "row",
     justifyContent: "space-between",
-    paddingLeft: 10,
-    paddingRight: 10,
     alignItems: "center",
+  },
+  headerText: {
+    fontSize: 14,
+    fontWeight: "700",
+    color: "#333",
+  },
+  loader: {
+    alignItems: "center",
+    justifyContent: "center",
+    flex: 1,
+  },
+  refresh: {
+    padding: 10,
     backgroundColor: "white",
-    marginTop: 20,
+    alignItems: "center",
+  },
+  notFoundText: {
+    textAlign: "center",
+    color: "grey",
+    fontWeight: "700",
+  },
+  alertArea: {
+    width: "100%",
+    paddingTop: 10,
   },
 });
 

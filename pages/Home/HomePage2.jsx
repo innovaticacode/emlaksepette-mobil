@@ -6,68 +6,37 @@ import {
   SafeAreaView,
   StyleSheet,
   TouchableOpacity,
-  ScrollView,
-  ImageBackground,
   TextInput,
-  Dimensions,
-  Platform,
+  FlatList,
 } from "react-native";
-import { TabView, SceneMap } from "react-native-tab-view";
+import { TabView } from "react-native-tab-view";
 import HomePage from "./HomePage";
-import Navbar from "../../components/Navbar";
-import SliderMenu from "../../components/SliderMenu";
 import axios from "axios";
-import { useState } from "react";
-import { DrawerMenu } from "../../components";
-import Search from "./Search";
-import Header from "../../components/Header";
 import Estates from "./Home Pages/Estates";
 import Shop from "./Home Pages/Shop";
 import Area from "./Home Pages/Area";
 import Prefabrik from "./Home Pages/Prefabrik";
 import BookHouse from "./Home Pages/BookHouse";
-import SellAcil from "./Home Pages/SellAcil";
-import Shared from "./Home Pages/Shared";
-import Modal from "react-native-modal";
-import Categories from "../../components/Categories";
-import { StatusBar } from "expo-status-bar";
 import { useNavigation } from "@react-navigation/native";
 import FirstHome from "./FirstHome";
+import Shared from "./Home Pages/Shared";
+import SellAcil from "./Home Pages/SellAcil";
 import { apiUrl } from "../../components/methods/apiRequest";
 
-const { width, height } = Dimensions.get("window");
-
-const FirstRoute = () => (
-  <View style={{ flex: 1, backgroundColor: "#ff4081" }} />
-);
-
-const SecondRoute = () => (
-  <View style={{ flex: 1, backgroundColor: "#673ab7" }} />
-);
-
 const renderScene = ({ route, index }) => {
-  switch (route.key) {
-    case "home":
-      return <FirstHome index={index} />;
-    case "first":
-      return <HomePage index={index} />;
-    case "second":
-      return <Estates index={index} />;
-    case "shop":
-      return <Shop index={index} />;
-    case "area":
-      return <Area index={index} />;
-    case "prefabrik":
-      return <Prefabrik index={index} />;
-    case "bookhouse":
-      return <BookHouse index={index} />;
-    // case "sellacil":
-    //   return <SellAcil index={index} />;
-    // case "shared":
-    //   return <Shared index={index} />;
-    default:
-      return null;
-  }
+  const scenes = {
+    home: <FirstHome index={index} />,
+    first: <HomePage index={index} />,
+    second: <Estates index={index} />,
+    shop: <Shop index={index} />,
+    area: <Area index={index} />,
+    prefabrik: <Prefabrik index={index} />,
+    bookhouse: <BookHouse index={index} />,
+    // sellacil: <SellAcil index={index} />,
+    // shared: <Shared index={index} />,
+  };
+
+  return scenes[route.key] || null;
 };
 
 const CustomTabBar = ({
@@ -85,46 +54,52 @@ const CustomTabBar = ({
     const fetchMenuItems = async () => {
       try {
         const response = await axios.get(apiUrl + "menu-list");
-        setMenuItems(response.data);
         setMenuItems([{ text: "Anasayfa" }, ...response.data.slice(0, -1)]);
       } catch (error) {
         console.error("Error fetching menu items:", error);
       }
     };
-
     fetchMenuItems();
   }, []);
 
-  React.useEffect(() => {
-    if (scrollViewRef.current && tabWidth > 0) {
-      const tabCount = menuItems.length;
-      const viewWidth = width;
-      const tabOffset = tab * tabWidth;
-      const contentWidth = tabWidth * tabCount;
-      const centeredOffset = Math.max(
-        0,
-        Math.min(
-          tabOffset - (viewWidth / 2 - tabWidth / 2),
-          contentWidth - viewWidth
-        )
-      );
-
-      scrollViewRef.current.scrollTo({
-        x: centeredOffset,
-        animated: true,
-      });
-    }
-  }, [tab, menuItems, tabWidth]);
-
-  // Calculate the width of each tab after layout
   const onTabLayout = (event) => {
     const { width: measuredWidth } = event.nativeEvent.layout;
     setTabWidth(measuredWidth);
   };
 
+  const renderItem = React.useCallback(
+    ({ item, index }) => (
+      <TouchableOpacity
+        key={index}
+        style={[
+          styles.tabBtn,
+          {
+            backgroundColor: tab == index ? "#EA2C2E" : "white",
+            borderWidth: tab == index ? 0 : 1,
+          },
+        ]}
+        onPress={() => {
+          indexChange(index);
+        }}
+        onLayout={onTabLayout}
+      >
+        <Text
+          style={{
+            textAlign: "center",
+            color: tab == index ? "white" : "#333",
+            fontSize: 12,
+          }}
+        >
+          {item.text}
+        </Text>
+      </TouchableOpacity>
+    ),
+    [tab, indexChange, onTabLayout]
+  );
+
   return (
     <View style={{ padding: 5, flexDirection: "row", gap: 5 }}>
-      <ScrollView
+      {/* <ScrollView
         horizontal={true}
         showsHorizontalScrollIndicator={false}
         ref={scrollViewRef} // Ref ekleniyor
@@ -135,48 +110,31 @@ const CustomTabBar = ({
             setTabWidth(tabWidth);
           }
         }}
-      >
-        <View style={{ padding: 10, flexDirection: "row", gap: 10 }}>
-          {menuItems.map((item, index) => (
-            <TouchableOpacity
-              key={index}
-              style={[
-                styles.tabBtn,
-                {
-                  backgroundColor: tab == index ? "#EA2C2E" : "white",
-                  borderWidth: tab == index ? 0 : 1,
-                },
-              ]}
-              onPress={() => {
-                indexChange(index);
-              }}
-              onLayout={onTabLayout}
-            >
-              <Text
-                style={{
-                  textAlign: "center",
-                  color: tab == index ? "white" : "#333",
-                  fontSize: 12,
-                }}
-              >
-                {item.text}
-              </Text>
-            </TouchableOpacity>
-          ))}
-        </View>
-      </ScrollView>
+      > */}
+      <View style={{ padding: 10 }}>
+        <FlatList
+          data={menuItems}
+          horizontal
+          keyExtractor={(item, index) => index.toString()}
+          renderItem={renderItem}
+          showsHorizontalScrollIndicator={false}
+          initialNumToRender={5}
+          windowSize={3}
+          maxToRenderPerBatch={5}
+          ItemSeparatorComponent={() => <View style={{ width: 10 }} />}
+        />
+      </View>
+      {/* </ScrollView> */}
     </View>
   );
 };
+
 export default function HomePage2() {
   const navigation = useNavigation();
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-  const toggleDrawer = () => {
-    // setIsDrawerOpen(!isDrawerOpen);
-  };
   const layout = useWindowDimensions();
   const [tab, settab] = React.useState(0);
   const [index, setIndex] = React.useState(0);
+
   const [routes] = React.useState([
     { key: "home", title: "Home" },
     { key: "first", title: "First" },
@@ -188,33 +146,17 @@ export default function HomePage2() {
     { key: "sellacil", title: "Sellacil" },
     { key: "shared", title: "Shared" },
   ]);
-  const indexChange = (index) => {
+
+  const indexChange = React.useCallback((index) => {
     setIndex(index);
     settab(index);
-  };
+  }, []);
 
   return (
-    <SafeAreaView
-      style={{ flex: 1, backgroundColor: "#ffffff", paddingTop: 10 }}
-    >
-      {/* <Header onPress={toggleDrawer} index={setIndex} tab={settab} /> */}
-
-      <Modal
-        isVisible={isDrawerOpen}
-        // onBackdropPress={() => setIsDrawerOpen(false)}
-        animationIn="bounceInLeft"
-        animationOut="bounceOutLeft"
-        style={styles.modal}
-        swipeDirection={["left"]}
-        // onSwipeComplete={() => setIsDrawerOpen(false)}
-      >
-        {/* <View style={styles.modalContent}>
-          <DrawerMenu setIsDrawerOpen={setIsDrawerOpen} />
-        </View> */}
-      </Modal>
-      <View style={{ paddingLeft: 10, paddingRight: 10, paddingTop: 10 }}>
+    <SafeAreaView style={styles.searchMainArea}>
+      <View style={styles.searchArea}>
         <TextInput
-          style={{ padding: 8, backgroundColor: "#ebebeb", borderRadius: 5 }}
+          style={styles.search}
           placeholder="Kelime veya İlan no ile ara..."
           onPress={() => {
             navigation.navigate("SearchPage");
@@ -223,9 +165,7 @@ export default function HomePage2() {
       </View>
       <TabView
         navigationState={{ index, routes }}
-        renderScene={({ route, jumpTo }) =>
-          renderScene({ route, jumpTo, index })
-        }
+        renderScene={renderScene} // Sadece renderScene fonksiyonunu kullanın
         onIndexChange={indexChange}
         initialLayout={{ width: layout.width }}
         renderTabBar={(props) => (
@@ -235,6 +175,7 @@ export default function HomePage2() {
     </SafeAreaView>
   );
 }
+
 const styles = StyleSheet.create({
   scene: {
     flex: 1,
@@ -281,5 +222,20 @@ const styles = StyleSheet.create({
     // borderTopLeftRadius: 10,
     borderTopRightRadius: 10,
     width: 320,
+  },
+  searchMainArea: {
+    flex: 1,
+    backgroundColor: "#ffffff",
+    paddingTop: 10,
+  },
+  searchArea: {
+    paddingLeft: 10,
+    paddingRight: 10,
+    paddingTop: 10,
+  },
+  search: {
+    padding: 8,
+    backgroundColor: "#ebebeb",
+    borderRadius: 5,
   },
 });
