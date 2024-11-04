@@ -128,7 +128,7 @@ const SellAndRentAdvantage = (props) => {
               </Text>
             )}
           </View>
-          <TouchableOpacity
+          {/* <TouchableOpacity
             activeOpacity={0.8}
             onPress={() => {}}
             style={styles.redButton}
@@ -136,7 +136,7 @@ const SellAndRentAdvantage = (props) => {
             <Text style={styles.redButtonText}>
               {index === 0 ? "Hızlı Sat Kirala" : "Bireysel Sat Kirala"}
             </Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </View>
       </ScrollView>
     </View>
