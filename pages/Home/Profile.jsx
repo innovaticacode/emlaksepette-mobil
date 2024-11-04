@@ -559,7 +559,6 @@ export default function Profile() {
                 bottom: 0,
                 paddingBottom: Platform.OS === "ios" ? 40 : 12,
                 width: "100%",
-                backgroundColor: "#F2F2F2",
                 height: "auto",
               }}
             >
@@ -795,7 +794,7 @@ const styles = StyleSheet.create({
   },
   headerBg: {
     width: "100%",
-    height: width > 400 ? 220 : 170,
+    height: width > 350 ? 170 : 120,
     borderBottomLeftRadius: 50,
     borderBottomRightRadius: 50,
   },
