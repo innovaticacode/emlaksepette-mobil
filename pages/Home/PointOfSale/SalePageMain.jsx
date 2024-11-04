@@ -49,8 +49,10 @@ export default function SalePageMain() {
     }
   };
   const navigateToLogin = () => {
-    navigation.navigate("Login");
     closeModal();
+    setTimeout(() => {
+      navigation.navigate("Login");
+    }, 100);
   };
   const closeModal = () => {
     setIsCorporateTypeRight(false);
