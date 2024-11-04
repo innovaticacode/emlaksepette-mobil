@@ -57,7 +57,7 @@ export default function ShoppingProfile() {
   const [permissionsUser, setPermissionsUser] = useState([]);
   const [dialogVisible, setDialogVisible] = useState(false);
   const [openAccor, setOpenAccor] = useState({});
-  
+
   const [profileImage, setProfileImage] = useState(null);
   useEffect(() => {
     getValueFor("user", setUser);
@@ -72,14 +72,11 @@ export default function ShoppingProfile() {
           return;
         }
 
-        const response = await axios.get(
-          apiUrl+"user/notification",
-          {
-            headers: {
-              Authorization: `Bearer ${user.access_token}`,
-            },
-          }
-        );
+        const response = await axios.get(apiUrl + "user/notification", {
+          headers: {
+            Authorization: `Bearer ${user.access_token}`,
+          },
+        });
 
         if (response.data) {
           setNotifications(response.data);
@@ -107,14 +104,11 @@ export default function ShoppingProfile() {
     setLoading(true);
     try {
       if (user.access_token && user) {
-        const response = await axios.get(
-          `${apiUrl}users/${user?.id}`,
-          {
-            headers: {
-              Authorization: `Bearer ${user?.access_token}`,
-            },
-          }
-        );
+        const response = await axios.get(`${apiUrl}users/${user?.id}`, {
+          headers: {
+            Authorization: `Bearer ${user?.access_token}`,
+          },
+        });
         setPermissionsUser(response.data.user.permissions);
       }
     } catch (error) {
@@ -214,18 +208,17 @@ export default function ShoppingProfile() {
     setLoading(true);
     try {
       if (user?.access_token && user) {
-        const userInfo = await axios.get(
-          apiUrl+"users/" + user?.id,
-          {
-            headers: {
-              Authorization: `Bearer ${user.access_token}`,
-            },
-          }
-        );
+        const userInfo = await axios.get(apiUrl + "users/" + user?.id, {
+          headers: {
+            Authorization: `Bearer ${user.access_token}`,
+          },
+        });
         const userData = userInfo?.data?.user;
         setnamFromGetUser(userData);
-       
-        setProfileImage(`${frontEndUriBase}storage/profile_images/${userData.profile_image}`);
+
+        setProfileImage(
+          `${frontEndUriBase}storage/profile_images/${userData.profile_image}`
+        );
       }
     } catch (error) {
       console.error("Kullanıcı verileri güncellenirken hata oluştu:", error);
@@ -237,12 +230,23 @@ export default function ShoppingProfile() {
 
   useEffect(() => {
     if (profileImage) {
-      if (profileImage.endsWith("indir.jpeg")) {
+      if (
+        profileImage.endsWith("indir.jpeg") ||
+        profileImage.endsWith("indir.jpg")
+      ) {
         if (namFromGetUser?.name) {
           const fullName = namFromGetUser.name.split(" ");
-          const name = fullName[0]?.charAt(0).toUpperCase();
-          const surname = fullName[1]?.charAt(0).toUpperCase();
-          setCheckImage(name + surname);
+          let checkImage = "";
+          if (fullName.length > 1) {
+            // İsim ve soyisim varsa, her iki kelimenin ilk harfini al
+            const name = fullName[0].charAt(0).toUpperCase();
+            const surname = fullName[1].charAt(0).toUpperCase();
+            checkImage = name + surname;
+          } else {
+            // Sadece tek isim varsa ilk iki harfi al
+            checkImage = fullName[0].slice(0, 2).toUpperCase();
+          }
+          setCheckImage(checkImage);
         }
       } else {
         setCheckImage(null);
@@ -257,7 +261,7 @@ export default function ShoppingProfile() {
   const onShare = async () => {
     try {
       const result = await Share.share({
-        message:frontEndUriBase,
+        message: frontEndUriBase,
       });
 
       if (result.action === Share.sharedAction) {
@@ -777,10 +781,11 @@ export default function ShoppingProfile() {
                         fontWeight: "bold",
                       }}
                     >
-                     ({user.corporate_type || namFromGetUser?.role})  {
-                        (namFromGetUser?.is_brand==1 && namFromGetUser?.brand_id)&&
-                        <Text>- Franchise Markası</Text>
-                      }
+                      ({user.corporate_type || namFromGetUser?.role}){" "}
+                      {namFromGetUser?.is_brand == 1 &&
+                        namFromGetUser?.brand_id && (
+                          <Text>- Franchise Markası</Text>
+                        )}
                     </Text>
                   </View>
                 </View>
