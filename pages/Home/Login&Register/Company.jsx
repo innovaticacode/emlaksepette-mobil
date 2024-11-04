@@ -21,6 +21,7 @@ import { useNavigation } from "@react-navigation/native";
 import FontAwesome5Icon from "react-native-vector-icons/FontAwesome5";
 import { ActivityIndicator } from "react-native-paper";
 import { apiUrl } from "../../../components/methods/apiRequest";
+import { Dialog } from "react-native-alert-notification";
 
 export default function Company() {
   const Navigation = useNavigation();
@@ -257,7 +258,11 @@ export default function Company() {
       }, 700);
     } catch (error) {
       // Handle error
-      console.error("Hata:", error.response.data.errors);
+      Dialog.show({
+        title: "Hata",
+        description: error.response.data.message,
+        animationType: "fade",
+      });
       scrollToTop();
       if (error.response.data.errors.email) {
         seterrorStatu(2);
