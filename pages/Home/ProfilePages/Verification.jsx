@@ -115,11 +115,7 @@ export default function Verification({ nextStep, prevStep }) {
     } finally {
       setloading(false);
       setTimeout(() => {
-        // navigation.navigate("Drawer", { screen: "Home" });
-        navigation.reset({
-          index: 0,
-          routes: [{ name: "Drawer", params: { screen: "Home" } }],
-        });
+        navigation.navigate("Drawer", { screen: "Home" });
       }, 1000);
     }
   };
