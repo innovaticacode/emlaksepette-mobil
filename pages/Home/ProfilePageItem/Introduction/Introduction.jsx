@@ -74,7 +74,7 @@ const Introduction = (props) => {
       <View style={styles.container}>
         <View>
           <Image
-            source={{ uri: "https://www.dummyimage.co.uk/480x160/000000" }}
+            source={{ uri: "https://www.dummyimage.co.uk/480x240/000000" }}
             width={"100%"}
             height={240}
             resizeMode="cover"
