@@ -74,9 +74,10 @@ const Introduction = (props) => {
       <View style={styles.container}>
         <View>
           <Image
-            source={{ uri: "https://picsum.photos/200/300" }}
+            source={{ uri: "https://www.dummyimage.co.uk/480x160/000000" }}
             width={"100%"}
             height={240}
+            resizeMode="cover"
           />
           <View style={styles.textArea}>
             <Text style={styles.title}>Hakkımızda</Text>
