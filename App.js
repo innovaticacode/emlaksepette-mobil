@@ -1350,7 +1350,7 @@ const StackScreenNavigator = () => {
                   name="SalePage"
                   component={SalePage}
                   options={({ route }) => ({
-                    title: "Satış Noktası Başvur",
+                    title: "Satış Noktası Başvurusu",
                     headerBackTitleVisible: false,
                     headerStyle: {
                       backgroundColor: "#ffffff",

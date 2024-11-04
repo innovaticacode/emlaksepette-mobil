@@ -1,0 +1,28 @@
+[
+  {
+    "title": "Emlak Ofisleriyle İle İş birliği ",
+    "description": "Emlaksepette satış noktaları, Türkiye’nin dört bir yanındaki emlak ofisleriyle iş birliği yaparak satış ve kiralamada güçlü bir destek ağı oluşturur. Satış noktalarıyla ortak çalışan emlak ofisleri, paylaşımlı ilanlar yayınlayarak kendi bölgeleri dışındaki müşterilere de satış noktaları aracılığıyla birebir destek sağlama fırsatı elde eder. Bu iş birliği sayesinde, daha geniş bir müşteri portföyüne erişerek kazancınızı artırır.",
+    "image": "Home"
+  },
+  {
+    "title": "İnşaat Firmaları ile İş Birliği",
+    "description": "Emlaksepette satış noktaları, emlaksepette’nin anlaşmalı olduğu inşaat firmalarının projelerini platform üzerinden satma ve pazarlama yetkisine sahip olur.Bu doğrultuda satış noktaları, gerçekleştirdikleri her satıştan komisyon kazanarak gelirlerini artırma fırsatı elde eder.",
+    "image": "Build"
+  },
+  {
+    "title": "Üreticiler İle İş Birliği",
+    "description": "Emlaksepette satış noktaları, Emlaksepette’nin anlaşmalı olduğu prefabrik ev, bungalov, tiny house, karavan, konteyner ve çelik ev gibi ürünlerin üreticileriyle işbirliği yapma fırsatı elde eder. Emlaksepette Satış Noktaları, platform üzerinden üreticilerin ürünlerini tanıtma, satışını gerçekleştirme ve pazarlama yetkisi alarak, komisyon karşılığında potansiyel müşterilere ulaşabilirler.",
+    "image": "Settings"
+  },
+
+  {
+    "title": "Turizm Acenteleri İle İş Birliği",
+    "description": "Emlaksepette satış noktaları, Emlaksepette’nin anlaşmalı olduğu turizm acenteleri ile işbirliği yapar. Emlaksepette Turizm Acenteleri, bulundukları bölgede Turizm Acentelerinin hizmetlerini tanıtarak ve pazarlayarak komisyon kazanma fırsatı elde eder.",
+    "image": "Acente"
+  },
+  {
+    "title": "Emlak Kulüp Üyeleri İle İş birliği ",
+    "description": "Emlakkulüp üyeleri, platformdaki işlemlerini satış noktalarıyla iş birliği içinde yürütür. Gerçekleşen satış veya kiralama işlemlerinde, emlakkulüp üyeleri belirlenen satış noktalarına yönlendirilir ve satış noktaları işlemi tamamlar. Bu, satış noktalarına yüzlerce danışman kazanma ve komisyon kazancı elde etme fırsatı sunar. Böylece, satış noktaları gelirlerini artırırken, emlakkulüp üyeleri de kazanç sağlar.",
+    "image": "Home"
+  }
+]

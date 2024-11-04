@@ -9,6 +9,8 @@ import ViewAllCard from "./Card/ViewAllCard/ViewAllCard";
 import InfoCard from "./Card/InfoCard/InfoCard";
 import MySwapInfoBottom from "./BottomModals/MySwapInfoBottom/MySwapInfoBottom";
 import WhiteOrRedButtons from "./Buttons/WhiteOrRedButtons/WhiteOrRedButtons";
+import SalePointCard from "./Card/SalePointCard/SalePointCard";
+
 export {
   CommentCard,
   TotalStarCard,
@@ -21,4 +23,5 @@ export {
   InfoCard,
   MySwapInfoBottom,
   WhiteOrRedButtons,
+  SalePointCard,
 };
