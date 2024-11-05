@@ -155,7 +155,7 @@ const BookHouse = ({ index }) => {
                     title={item.housing_title}
                     loading={loading}
                     location={item.city_title + " / " + item.county_title}
-                    image={`${frontEndUriBase}/housing_images/${
+                    image={`${frontEndUriBase}housing_images/${
                       JSON.parse(item.housing_type_data).image
                     }`}
                     column1_additional={item.column1_additional}
@@ -185,6 +185,7 @@ const BookHouse = ({ index }) => {
                     bookmarkStatus={true}
                     dailyRent={false}
                     isFavorite={item.is_favorite}
+                    sold={item.sold}
                   />
                 )}
                 ListHeaderComponent={

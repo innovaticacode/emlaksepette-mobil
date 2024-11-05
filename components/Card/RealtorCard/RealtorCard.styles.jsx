@@ -93,6 +93,27 @@ const { width, height } = Dimensions.get("window");
       },
     }),
   },
+  ıconContainer2: {
+
+    width: 32,
+    height: 32,
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 20,
+    backgroundColor: "#FFFF",
+    borderColor: "#e6e6e6",
+    ...Platform.select({
+      ios: {
+        shadowColor: " #e6e6e6",
+        shadowOffset: { width: 1, height: 1 },
+        shadowOpacity: 0.1,
+        shadowRadius: 5,
+      },
+      android: {
+        elevation: 5,
+      },
+    }),
+  },
   InformationText: {
     fontSize: width > 400 ? 12 : 10,
     right: width > 400 ? 10 : 5,
@@ -100,7 +121,7 @@ const { width, height } = Dimensions.get("window");
   priceText: {
     color: "#EA2C2E",
     fontWeight: "700",
-    fontSize: 13,
+    fontSize: 14,
   },
   discountedPriceText: {
     textDecorationLine: "line-through",

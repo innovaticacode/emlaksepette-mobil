@@ -615,6 +615,7 @@ if (index==1) {
                   dailyRent={false}
                   isFavorite={item.is_favorite}
                   chekView={chekView}
+                  sold={item.sold}
                 />
               )}
               keyExtractor={(item) => item.id.toString()}

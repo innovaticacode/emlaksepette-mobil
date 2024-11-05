@@ -182,6 +182,7 @@ const Area = ({ index }) => {
                     bookmarkStatus={true}
                     dailyRent={false}
                     isFavorite={item.is_favorite}
+                    sold={item.sold}
                   />
                 )}
                 keyExtractor={(item, index) =>

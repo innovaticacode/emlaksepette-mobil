@@ -311,7 +311,7 @@ export default function RealtorPostFavorited({
               }}
             />
             <View style={styles.İlan}>
-              <View style={{ width: "30%", height: 80 }}>
+              <View style={{ width: "30%", height: 95 }}>
                 <Image
                   source={{ uri: image }}
                   style={{ width: "100%", height: "100%" }}
@@ -344,9 +344,9 @@ export default function RealtorPostFavorited({
                   >
                     <Text
                       style={{
-                        color: "#264ABB",
-                        fontWeight: "600",
-                        fontSize: 12,
+                       color: "#EA2C2E",
+                        fontWeight: "700",
+                        fontSize: 14,
                         left: 20,
                       }}
                     >
@@ -374,7 +374,7 @@ export default function RealtorPostFavorited({
                 </View>
               </View>
             </View>
-            <View
+            {/* <View
               style={{
                 backgroundColor: "#E8E8E8",
                 height: 30,
@@ -391,7 +391,7 @@ export default function RealtorPostFavorited({
               <View style={{ justifyContent: "center" }}>
                 <Text style={styles.InformationText}>{location}</Text>
               </View>
-            </View>
+            </View> */}
           </View>
         </TouchableOpacity>
       </Swipeable>
@@ -404,10 +404,10 @@ const styles = StyleSheet.create({
     width: "100%",
 
     marginTop: 10,
-
+    paddingBottom:5,
     display: "flex",
     flexDirection: "column",
-    borderBottomWidth: 1,
+    borderBottomWidth: 2,
     borderBottomColor: "#E5E5E5",
   },
   İlan: {
@@ -415,7 +415,7 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "row",
     flex: 1,
-
+  
     gap: 8,
     justifyContent: "space-between",
   },
@@ -461,8 +461,9 @@ const styles = StyleSheet.create({
     paddingLeft: 20,
     paddingRight: 20,
     padding: 5,
+    borderRadius:5,
     alignItems: "center",
-    backgroundColor: "#264ABB",
+    backgroundColor: "#EA2C2E",
   },
 
   ıconContainer: {
