@@ -41,6 +41,7 @@ import Filter from "../../assets/filter.png";
 import ProjectBottomSheetFilter from "../../components/ProjectBottomSheetFilter";
 import EstateBottomSheetFilter from "../../components/EstateBottomSheetFilter";
 import BecomingFranchise from "./ProfilePageItem/BecomingFranchise/BecomingFranchise";
+import BecomeConsultant from "./ProfilePageItem/BecomeConsultant/BecomeConsultant";
 
 export default function Profile() {
   const route = useRoute();
@@ -105,6 +106,10 @@ export default function Profile() {
       },
       {
         text: "Franchise Ol",
+        isShow: "All",
+      },
+      {
+        text: "Danışman Ol",
         isShow: "All",
       },
     ];
@@ -553,6 +558,7 @@ export default function Profile() {
               {tab === 5 && <CommentsOfBrands id={id} />}
               {tab === 6 && <Team teamm={teamm} />}
               {tab === 7 && <BecomingFranchise />}
+              {tab === 8 && <BecomeConsultant />}
             </View>
           </View>
 
