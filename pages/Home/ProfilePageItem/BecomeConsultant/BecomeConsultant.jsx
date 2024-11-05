@@ -1,9 +1,11 @@
 import { View, Text, Image, ScrollView } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import { styles } from "./BecomeConsultant.styles";
-import { WhiteOrRedButtons } from "../../../../components";
+import { FranchiseForm, WhiteOrRedButtons } from "../../../../components";
 
 const BecomeConsultant = () => {
+  const [isVisible, setIsVisible] = useState(false);
+
   return (
     <View style={styles.container}>
       <ScrollView
@@ -22,7 +24,7 @@ const BecomeConsultant = () => {
             <View style={{ height: 40 }}>
               <WhiteOrRedButtons
                 bgColor={"#EA2B2E"}
-                onPress={() => null}
+                onPress={() => setIsVisible(true)}
                 text={"Başvuru Formu"}
               />
             </View>
@@ -47,6 +49,7 @@ const BecomeConsultant = () => {
           </View>
         </>
       </ScrollView>
+      <FranchiseForm isVisible={isVisible} setIsVisible={setIsVisible} />
     </View>
   );
 };

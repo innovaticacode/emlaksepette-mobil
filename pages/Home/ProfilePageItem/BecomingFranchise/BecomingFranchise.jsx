@@ -1,7 +1,7 @@
 import { View, Text, ScrollView, Image } from "react-native";
 import React, { useRef, useState } from "react";
 import { styles } from "./BecomingFranchise.styles";
-import { WhiteOrRedButtons } from "../../../../components";
+import { FranchiseForm, WhiteOrRedButtons } from "../../../../components";
 import Map from "../../../../assets/greyMap.svg";
 import PagerView from "react-native-pager-view";
 import AntDesign from "@expo/vector-icons/AntDesign";
@@ -9,6 +9,7 @@ import AntDesign from "@expo/vector-icons/AntDesign";
 const BecomingFranchise = () => {
   const pagerRef = useRef(null);
   const imageRef = useRef(null);
+  const [isVisible, setIsVisible] = useState(false);
   const [currentPage, setCurrentPage] = useState(0);
   const [currentImage, setCurrentImage] = useState(0);
 
@@ -118,7 +119,9 @@ const BecomingFranchise = () => {
           <WhiteOrRedButtons
             bgColor={"#EA2B2E"}
             textColor={"#FFF"}
-            onPress={() => console.debug("Başvuru Formu")}
+            onPress={() => {
+              setIsVisible(true);
+            }}
             text={"Başvuru Formu"}
           />
         </View>
@@ -233,6 +236,7 @@ const BecomingFranchise = () => {
           </View>
         </View>
       </ScrollView>
+      <FranchiseForm isVisible={isVisible} setIsVisible={setIsVisible} />
     </View>
   );
 };
