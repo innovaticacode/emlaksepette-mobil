@@ -14,7 +14,7 @@ import {
   Keyboard,
 } from "react-native";
 import React, { useState, useRef } from "react";
-import RealtorPost from "../../../components/RealtorPost";
+
 import ArrowIcon from "react-native-vector-icons/SimpleLineIcons";
 import Filter from "react-native-vector-icons/Feather";
 import Icon from "react-native-vector-icons/MaterialIcons";
@@ -23,6 +23,7 @@ import { useNavigation } from "@react-navigation/native";
 import Modal from "react-native-modal";
 import Check from "./Check";
 import { CheckBox } from "react-native-elements";
+import RealtorPost from "../../../components/Card/RealtorCard/RealtorPost";
 
 UIManager.setLayoutAnimationEnabledExperimental &&
   UIManager.setLayoutAnimationEnabledExperimental(true);
@@ -188,7 +189,7 @@ export default function HomeList() {
       </View>
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={{ paddingBottom: 25, padding: 10, gap: 10 }}>
-          <RealtorPost />
+          <RealtorPost/>
           <RealtorPost />
           <RealtorPost />
         </View>

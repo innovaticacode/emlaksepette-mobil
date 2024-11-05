@@ -8,7 +8,7 @@ import {
   RefreshControl,
   Image,
 } from "react-native";
-import RealtorPost from "../../../components/RealtorPost";
+
 import axios from "axios";
 import { ActivityIndicator } from "react-native-paper";
 import Modal from "react-native-modal";
@@ -19,6 +19,7 @@ import SliderEstateBar from "../../../components/SliderEstateBar";
 import { AlertNotificationRoot } from "react-native-alert-notification";
 import Housing from "../../../src/assets/images/Konut.png";
 import { apiUrl, frontEndUriBase } from "../../../components/methods/apiRequest";
+import RealtorPost from "../../../components/Card/RealtorCard/RealtorPost";
 const PAGE_SIZE = 10;
 
 const Estates = ({ index }) => {
@@ -257,6 +258,7 @@ const Estates = ({ index }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    
   },
   item: {
     padding: 20,

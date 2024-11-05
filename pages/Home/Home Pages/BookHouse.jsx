@@ -9,7 +9,7 @@ import {
   ScrollView,
   Image,
 } from "react-native";
-import RealtorPost from "../../../components/RealtorPost";
+
 import axios from "axios";
 import { ActivityIndicator } from "react-native-paper";
 import Modal from "react-native-modal";
@@ -19,6 +19,7 @@ import Icon from "react-native-vector-icons/AntDesign";
 import { AlertNotificationRoot } from "react-native-alert-notification";
 import bannerSRC from "../../../src/assets/images/tatilim-sepette-banner.png";
 import { apiUrl, frontEndUriBase } from "../../../components/methods/apiRequest";
+import RealtorPost from "../../../components/Card/RealtorCard/RealtorPost";
 const PAGE_SIZE = 10;
 
 const BookHouse = ({ index }) => {
@@ -154,7 +155,7 @@ const BookHouse = ({ index }) => {
                     title={item.housing_title}
                     loading={loading}
                     location={item.city_title + " / " + item.county_title}
-                    image={`${frontEndUriBase}/housing_images/${
+                    image={`${frontEndUriBase}housing_images/${
                       JSON.parse(item.housing_type_data).image
                     }`}
                     column1_additional={item.column1_additional}
@@ -184,6 +185,7 @@ const BookHouse = ({ index }) => {
                     bookmarkStatus={true}
                     dailyRent={false}
                     isFavorite={item.is_favorite}
+                    sold={item.sold}
                   />
                 )}
                 ListHeaderComponent={

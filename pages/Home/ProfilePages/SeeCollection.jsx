@@ -24,7 +24,7 @@ import Icon from "react-native-vector-icons/AntDesign";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import BackIcon from "react-native-vector-icons/MaterialIcons";
 import axios from "axios";
-import RealtorPost from "../../../components/RealtorPost";
+
 import Modal from "react-native-modal";
 import Heart from "react-native-vector-icons/AntDesign";
 import SettingsItem from "../../../components/SettingsItem";
@@ -42,6 +42,7 @@ import { getValueFor } from "../../../components/methods/user";
 import AddCollection from "../../../components/AddCollection";
 import Arrow from "react-native-vector-icons/MaterialIcons";
 import { ActivityIndicator } from "react-native-paper";
+import RealtorPost from "../../../components/Card/RealtorCard/RealtorPost";
 export default function SeeCollection() {
   const route = useRoute();
 
