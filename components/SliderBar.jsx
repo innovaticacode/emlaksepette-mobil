@@ -36,29 +36,7 @@ export default function SliderBar() {
     return text.charAt(0).toUpperCase() + text.slice(1);
   };
 
-  const firstBrands = [
-    {
-      text: "Al Sat Acil",
-      image: `${frontEndUriBase}images/al-sat-acil-image.png`,
-      color: "#FF0000",
-      url: "",
-      isShow: "All",
-    },
-    {
-      text: "Emlak Kulüp",
-      image: `${frontEndUriBase}images/emlak-kulup.png`,
-      color: "#F4A226",
-      url: "RealtorClubExplore",
-      isShow: "Emlak Ofisi",
-    },
-    {
-      text: "Sat Kirala",
-      image:`${frontEndUriBase}images/sat-kirala.png`,
-      color: "#0000FF",
-      url: "SellAndRent",
-      isShow: "All",
-    },
-  ];
+ 
   const [user, setuser] = useState({});
   useEffect(() => {
     getValueFor("user", setuser);
@@ -72,38 +50,7 @@ export default function SliderBar() {
           top: 0,
         }}
       >
-        {firstBrands.map((item, i) => (
-          <View
-            style={{
-              width: 80,
-              marginLeft: 3,
-              alignItems: "center",
-              display:
-                item.isShow == "All"
-                  ? "flex"
-                  : "none" &&
-                    (!user.access_token ||
-                      user.type == 1 ||
-                      item.isShow == user.corporate_type)
-                  ? "flex"
-                  : "none",
-            }}
-            key={i}
-          >
-            <SliderItem
-              navigationStatus={true}
-              borderColor={item.color}
-              image={item.image}
-              url={item.url}
-            />
-            <Text
-              numberOfLines={2}
-              style={{ fontSize: 11, textAlign: "center" }}
-            >
-              {capitalizeFirstLetter(item.text)}
-            </Text>
-          </View>
-        ))}
+       
 
         {featuredStores.map((item, index) => (
           <View

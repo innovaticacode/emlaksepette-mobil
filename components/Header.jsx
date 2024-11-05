@@ -77,6 +77,7 @@ export default function Header({showBack}) {
         {
                 showBack ==1 ?
                 <TouchableOpacity 
+                hitSlop={{ top: 20, bottom: 20, left: 40, right: 20 }}
                 onPress={() => {
                   navigation.goBack();
                 }}
@@ -129,10 +130,10 @@ export default function Header({showBack}) {
 const styles = StyleSheet.create({
   header: {
     flexDirection: "row",
-    justifyContent: "space-between",
+    justifyContent: "space-around",
     alignItems: "center",
     padding: 10,
-    
+    gap:50,
     width: "100%",
     // Android için paddingTop ekle
     paddingTop: Platform.OS === 'android' ? 30 : 0,

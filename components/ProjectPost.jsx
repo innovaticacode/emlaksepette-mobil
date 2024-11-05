@@ -94,7 +94,7 @@ export default function ProjectPost({
             </View>
 
             <View style={{ height: "60%", gap: 10 }}>
-              <Text style={styles.titleText}>
+              <Text style={styles.titleText} numberOfLines={3}>
                 {project?.project_title?.toUpperCase()}
               </Text>
               <Text style={[styles.titleText, { fontSize: 12 }]}>
@@ -112,10 +112,10 @@ const { width, height } = Dimensions.get("window");
 
 const styles = StyleSheet.create({
   container: {
-    height: width > 400 ? 230 : 180,
+    height: width > 400 ? 200 : 180,
     alignItems: "center",
     justifyContent: "center",
-    marginVertical: 10,
+    marginVertical: 5,
     borderRadius: 10,
     overflow: "hidden",
     position: "relative",
