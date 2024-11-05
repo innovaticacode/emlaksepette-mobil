@@ -29,11 +29,13 @@ export default FranchiseBanner;
 const styles = StyleSheet.create({
   container: {
     // backgroundColor: "rgb(228, 228, 228)",
+    paddingLeft:20,
+    paddingRight:20,
     backgroundColor: "#ffffff",
-    borderWidth: 1,
+    
     borderColor: "#E4E4E4",
     borderRadius: 10,
-    width: 110,
+    padding:8,
     paddingHorizontal: 10,
     height: "auto",
     borderRadius: 10,
@@ -45,7 +47,7 @@ const styles = StyleSheet.create({
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
-      height: 2,
+      height: 1,
     },
     shadowOpacity: 0.23,
     shadowRadius: 2.62,
@@ -65,7 +67,7 @@ const styles = StyleSheet.create({
   },
   apply: {
     backgroundColor: "red",
-    padding: 5,
+    padding: 8,
     borderRadius: 5,
     width: "100%",
     alignItems: "center",
@@ -73,6 +75,6 @@ const styles = StyleSheet.create({
   btnText: {
     color: "#FFF",
     fontWeight: "600",
-    fontSize: 9,
+    fontSize: 11,
   },
 });

@@ -79,24 +79,36 @@ export default function Header({ showBack }) {
   return (
     <SafeAreaView style={[styles.header, headerStyle, checkNotch]}>
       <View>
-        {showBack == 1 ? (
-          <TouchableOpacity
-            onPress={() => {
-              navigation.goBack();
-            }}
-          >
-            <BackIcon name="left" size={25} color={"#333"} />
-          </TouchableOpacity>
-        ) : (
-          <IconMenu
-            name="menu"
-            size={36}
-            color={"#333"}
-            onPress={() => {
-              navigation.openDrawer();
-            }}
-          />
-        )}
+
+        {
+                showBack ==1 ?
+                <TouchableOpacity 
+                hitSlop={{ top: 20, bottom: 20, left: 40, right: 20 }}
+                onPress={() => {
+                  navigation.goBack();
+                }}
+                >
+                     <BackIcon
+                name="left"
+                size={25}
+                color={"#333"}
+                
+              />
+                </TouchableOpacity>
+             :
+              <IconMenu
+              name="menu"
+              size={36}
+              color={"#333"}
+              onPress={() => {
+                navigation.openDrawer();
+              }}
+            />
+
+        }
+    
+      
+
       </View>
       <View
         style={styles.logoContainer}
@@ -130,9 +142,12 @@ export default function Header({ showBack }) {
 const styles = StyleSheet.create({
   header: {
     flexDirection: "row",
-    justifyContent: "space-between",
+    justifyContent: "space-around",
     alignItems: "center",
     padding: 10,
+
+    gap:50,
+
     width: "100%",
     // Android için paddingTop ekle
     paddingTop: Platform.OS === "android" ? 30 : 0,
