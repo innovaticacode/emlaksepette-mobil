@@ -101,7 +101,7 @@ export default function Profile() {
         isShow: "All",
       },
       {
-        text: "Ekip",
+        text: "Danışmanlar",
         isShow: "All",
       },
       {
@@ -556,7 +556,7 @@ export default function Profile() {
                 ) : null)}
 
               {tab === 5 && <CommentsOfBrands id={id} />}
-              {tab === 6 && <Team teamm={teamm} />}
+              {tab === 6 && <Team team={teamm} />}
               {tab === 7 && <BecomingFranchise />}
               {tab === 8 && <BecomeConsultant />}
             </View>
