@@ -9,14 +9,15 @@ import {
   ScrollView,
   Image,
 } from "react-native";
-import RealtorPost from "../../../components/RealtorPost";
+
 import axios from "axios";
 import { ActivityIndicator } from "react-native-paper";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { getValueFor } from "../../../components/methods/user";
 import { AlertNotificationRoot } from "react-native-alert-notification";
 import bannerSRC from "../../../src/assets/images/is_yeri.png";
-import { apiUrl } from "../../../components/methods/apiRequest";
+import { apiUrl, frontEndUriBase } from "../../../components/methods/apiRequest";
+import RealtorPost from "../../../components/Card/RealtorCard/RealtorPost";
 
 const PAGE_SIZE = 10;
 
@@ -153,7 +154,7 @@ const Shop = ({ index }) => {
                     title={item.housing_title}
                     loading={loading}
                     location={item.city_title + " / " + item.county_title}
-                    image={`${apiUrl}housing_images/${
+                    image={`${frontEndUriBase}housing_images/${
                       JSON.parse(item.housing_type_data).image
                     }`}
                     column1_additional={item.column1_additional}
@@ -183,6 +184,7 @@ const Shop = ({ index }) => {
                     bookmarkStatus={true}
                     dailyRent={false}
                     isFavorite={item.is_favorite}
+                    sold={item.sold}
                   />
                 )}
                 keyExtractor={(item, index) =>

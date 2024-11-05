@@ -7,10 +7,11 @@ import {
   StyleSheet,
 } from "react-native";
 import React, { useState, useEffect } from "react";
-import RealtorPost from "../../../components/RealtorPost";
+
 import { FlatList } from "react-native-gesture-handler";
 import { ActivityIndicator } from "react-native-paper";
 import { frontEndUriBase } from "../../../components/methods/apiRequest";
+import RealtorPost from "../../../components/Card/RealtorCard/RealtorPost";
 
 export default function RealtorAdverts({ housingdata, filteredResults }) {
   const [featuredEstates, setFeaturedEstates] = useState({});

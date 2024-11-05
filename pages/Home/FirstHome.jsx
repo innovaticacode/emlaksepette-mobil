@@ -22,12 +22,11 @@ import FranchiseBanner from "../../components/FranchiseBanner";
 import WhatIsEmlakSepette from "../../components/WhatIsEmlakSepette";
 import SliderEstateBar from "../../components/SliderEstateBar";
 import SliderTourismRent from "./SliderTourismRent";
-import RealtorPost from "../../components/RealtorPost";
 import { apiUrl, frontEndUri, frontEndUriBase } from "../../components/methods/apiRequest";
 import Arrow from 'react-native-vector-icons/SimpleLineIcons'
 import SliderBarForFeature from "../../components/SliderBarForFeature";
 import RealtorCardHome from "../../components/Card/RealtorCardHomePage/RealtorCardHome";
-
+import RealtorPost from "../../components/Card/RealtorCard/RealtorPost";
 
 const FirstHome = (props) => {
   const { index } = props;
