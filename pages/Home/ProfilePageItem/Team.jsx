@@ -12,19 +12,10 @@ import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import Filter from "../../../assets/filterRealtor.svg";
+import { useNavigation } from "@react-navigation/native";
 
 export default function Team({ team }) {
-  const getInitials = (name) => {
-    const nameParts = name.split(" ");
-    if (nameParts.length >= 2) {
-      return nameParts[0][0] + nameParts[1][0].toUpperCase();
-    } else if (nameParts.length === 1) {
-      return nameParts[0][0].toUpperCase();
-    } else {
-      return "";
-    }
-  };
-
+  const navigation = useNavigation();
   return (
     <View style={styles.container}>
       <FlatList
@@ -63,7 +54,11 @@ export default function Team({ team }) {
           <>
             <View style={styles.filterBody}>
               <TextInput placeholder="Ara..." style={styles.input} />
-              <TouchableOpacity activeOpacity={0.7} style={styles.filter}>
+              <TouchableOpacity
+                activeOpacity={0.7}
+                style={styles.filter}
+                onPress={() => navigation.navigate("TeamFilter")}
+              >
                 <Filter width={16} height={16} style={{ marginRight: 6 }} />
                 <Text style={styles.filterText}>Filtrele</Text>
               </TouchableOpacity>
