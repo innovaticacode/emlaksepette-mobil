@@ -125,6 +125,7 @@ import RealEstateWallet from "./src/pages/RealEstateWallet";
 import EditPending from "./pages/Home/EditProject/EditPending";
 import ShareScreen from "./pages/Home/ShareScreen";
 import TeamFilter from "./pages/Home/ProfilePageItem/TeamFilter/TeamFilter";
+import FranchisePersonDetail from "./pages/Home/FranchisePerson/FranchisePersonDetail/FranchisePersonDetail";
 
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator(); // Drawer navigator
@@ -1446,6 +1447,13 @@ const StackScreenNavigator = () => {
                     headerStyle: {
                       backgroundColor: "#ffffff",
                     },
+                  })}
+                />
+                <Stack.Screen
+                  name="FranchisePersonDetail"
+                  component={FranchisePersonDetail}
+                  options={() => ({
+                    headerShown: false,
                   })}
                 />
               </Stack.Navigator>

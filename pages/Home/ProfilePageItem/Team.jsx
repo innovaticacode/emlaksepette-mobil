@@ -24,7 +24,13 @@ export default function Team({ team }) {
         showsVerticalScrollIndicator={false}
         renderItem={({ item }) => (
           <>
-            <View style={styles.main}>
+            <TouchableOpacity
+              style={styles.main}
+              activeOpacity={0.8}
+              onPress={() =>
+                navigation.navigate("FranchisePersonDetail", { item })
+              }
+            >
               <View style={styles.imgBody}>
                 <Image
                   source={{
@@ -46,7 +52,7 @@ export default function Team({ team }) {
                   <Text style={styles.thinText}>{item.email}</Text>
                 </View>
               </View>
-            </View>
+            </TouchableOpacity>
             <View style={styles.seperator} />
           </>
         )}
