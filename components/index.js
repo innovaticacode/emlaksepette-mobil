@@ -12,6 +12,7 @@ import WhiteOrRedButtons from "./Buttons/WhiteOrRedButtons/WhiteOrRedButtons";
 import SalePointCard from "./Card/SalePointCard/SalePointCard";
 import FranchiseForm from "./BottomModals/FranchiseForm/FranchiseForm";
 import BasicButtons from "./Buttons/BasicButtons/BasicButtons";
+import CommentsBottomModal from "./BottomModals/CommentsBottomModal/CommentsBottomModal";
 
 export {
   CommentCard,
@@ -28,4 +29,5 @@ export {
   SalePointCard,
   FranchiseForm,
   BasicButtons,
+  CommentsBottomModal,
 };

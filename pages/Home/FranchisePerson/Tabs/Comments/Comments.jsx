@@ -1,10 +1,12 @@
-import React from "react";
+import React, { useState } from "react";
 import { View, Text } from "react-native";
 import { styles } from "./Comments.styles";
-import { BasicButtons } from "../../../../../components";
+import { BasicButtons, CommentsBottomModal } from "../../../../../components";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 
 const Comments = () => {
+  const [isVisible, setIsVisible] = useState(false);
+
   return (
     <View style={styles.body}>
       <View style={styles.btnArea}>
@@ -18,7 +20,7 @@ const Comments = () => {
           }
           text={"Yorum Yaz"}
           onPress={() => {
-            null;
+            setIsVisible(true);
           }}
           containerStyle={{ width: "48%" }}
         />
@@ -47,6 +49,7 @@ const Comments = () => {
           <Text style={styles.commentName}>22 Eylül 2024 | K****</Text>
         </View>
       </View>
+      <CommentsBottomModal isVisible={isVisible} setIsVisible={setIsVisible} />
     </View>
   );
 };

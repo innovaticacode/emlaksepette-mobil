@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from "react";
-import { View, Text, TextInput, ScrollView, Dimensions } from "react-native";
+import { View, Text, TextInput, ScrollView } from "react-native";
 import ActionSheet from "react-native-actions-sheet";
 import { styles } from "./FranchiseForm.styles";
 import AntDesign from "@expo/vector-icons/AntDesign";
@@ -7,8 +7,6 @@ import WhiteOrRedButtons from "../../Buttons/WhiteOrRedButtons/WhiteOrRedButtons
 
 const FranchiseForm = ({ isVisible, setIsVisible }) => {
   const actionSheetRef = useRef(null);
-  const screenHeight = Dimensions.get("screen").height;
-  const actionSheetHeight = screenHeight * 0.71;
 
   useEffect(() => {
     if (isVisible) {
@@ -28,7 +26,7 @@ const FranchiseForm = ({ isVisible, setIsVisible }) => {
         defaultOverlayOpacity={0.3}
         drawUnderStatusBar={true}
         gestureEnabled={true}
-        containerStyle={[styles.container, { height: actionSheetHeight }]}
+        containerStyle={styles.container}
       >
         <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
           <View style={styles.header}>

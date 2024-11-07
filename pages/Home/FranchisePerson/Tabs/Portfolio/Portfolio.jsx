@@ -1,11 +1,12 @@
 import { View, Text } from "react-native";
-import React from "react";
-import { BasicButtons } from "../../../../../components";
+import React, { useState } from "react";
+import { BasicButtons, CommentsBottomModal } from "../../../../../components";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { styles } from "./Portfolio.styles";
 import RealtorPost from "../../../../../components/Card/RealtorCard/RealtorPost";
 
 const Portfolio = () => {
+  const [isVisible, setIsVisible] = useState(false);
   return (
     <View style={styles.body}>
       <View style={styles.btnArea}>
@@ -19,7 +20,7 @@ const Portfolio = () => {
           }
           text={"Yorum Yaz"}
           onPress={() => {
-            null;
+            setIsVisible(true);
           }}
           containerStyle={{ width: "48%" }}
         />
@@ -41,6 +42,7 @@ const Portfolio = () => {
       <View>
         <RealtorPost chekView={true} />
       </View>
+      <CommentsBottomModal isVisible={isVisible} setIsVisible={setIsVisible} />
     </View>
   );
 };

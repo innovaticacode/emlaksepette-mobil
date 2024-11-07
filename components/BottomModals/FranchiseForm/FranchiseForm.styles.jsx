@@ -1,8 +1,10 @@
-import { StyleSheet } from "react-native";
-
+import { Dimensions, StyleSheet } from "react-native";
+const screenHeight = Dimensions.get("screen").height;
+const actionSheetHeight = screenHeight * 0.71;
 export const styles = StyleSheet.create({
   container: {
     width: "94%",
+    height: actionSheetHeight,
   },
   header: {
     flexDirection: "row",

@@ -3,8 +3,6 @@ import {
   View,
   Text,
   SafeAreaView,
-  Platform,
-  Dimensions,
   TouchableOpacity,
   Image,
   useWindowDimensions,
@@ -23,6 +21,7 @@ import { frontEndUriBase } from "../../../../components/methods/apiRequest";
 import { TabView, SceneMap, TabBar } from "react-native-tab-view";
 import Portfolio from "../Tabs/Portfolio/Portfolio";
 import Comments from "../Tabs/Comments/Comments";
+import { CommentsBottomModal } from "../../../../components";
 
 const renderScene = SceneMap({
   porfolio: Portfolio,
@@ -59,7 +58,6 @@ const FranchisePersonDetail = ({ route }) => {
     { key: "porfolio", title: "Portföy" },
     { key: "comments", title: "Müşteri Yorumları" },
   ]);
-
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <View style={styles.container}>
@@ -152,7 +150,7 @@ const FranchisePersonDetail = ({ route }) => {
               <View style={styles.dataContainer}>
                 <View style={styles.dataBody}>
                   <View style={styles.dataImage}>
-                    <Docs width={24} height={24} />
+                    <Docs width={20} height={20} />
                   </View>
                   <Text style={styles.normalText}>120</Text>
                 </View>
@@ -161,7 +159,7 @@ const FranchisePersonDetail = ({ route }) => {
               <View style={styles.dataContainer}>
                 <View style={styles.dataBody}>
                   <View style={styles.dataImage}>
-                    <Marker width={24} height={24} />
+                    <Marker width={20} height={20} />
                   </View>
                   <View style={{ flexDirection: "row", gap: 6 }}>
                     <Text style={styles.normalText}>Van</Text>
@@ -188,7 +186,7 @@ const FranchisePersonDetail = ({ route }) => {
               <View style={styles.dataContainer}>
                 <View style={styles.dataBody}>
                   <View style={styles.dataImage}>
-                    <Calendar width={24} height={24} />
+                    <Calendar width={20} height={20} />
                   </View>
                   <Text style={styles.normalText}>6.yıl</Text>
                 </View>
