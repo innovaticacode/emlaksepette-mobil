@@ -18,12 +18,19 @@ import Icon2 from "react-native-vector-icons/EvilIcons";
 import SocialIcons from "react-native-vector-icons/Entypo";
 import axios from "axios";
 import { styles } from "./DrawerMenu.style";
+import { useDispatch } from "react-redux";
+import { setShoppingProfile } from "../../../store/slices/Menu/MenuSlice";
+import { apiUrl, frontEndUriBase } from "../../methods/apiRequest";
 
 const DrawerMenu = () => {
   const navigation = useNavigation();
+  const dispatch = useDispatch();
   const [user, setUser] = useState({});
   const [namFromGetUser, setnamFromGetUser] = useState([]);
-  const PhotoUrl = "https://private.emlaksepette.com/storage/profile_images/";
+  const [checkImage, setCheckImage] = useState(null);
+  const image = namFromGetUser.profile_image;
+
+  const PhotoUrl = `${frontEndUriBase}storage/profile_images/`;
 
   useEffect(() => {
     getValueFor("user", setUser);
@@ -32,14 +39,11 @@ const DrawerMenu = () => {
   const fetchMenuItems = async () => {
     try {
       if (user?.access_token && user?.id) {
-        const response = await axios.get(
-          `https://private.emlaksepette.com/api/users/${user.id}`,
-          {
-            headers: {
-              Authorization: `Bearer ${user.access_token}`,
-            },
-          }
-        );
+        const response = await axios.get(`${apiUrl}users/${user.id}`, {
+          headers: {
+            Authorization: `Bearer ${user.access_token}`,
+          },
+        });
         setnamFromGetUser(response.data.user);
       }
     } catch (error) {
@@ -53,12 +57,29 @@ const DrawerMenu = () => {
 
   const navigateToScreen = (screenName) => {
     navigation.navigate(screenName);
-    navigation.dispatch(DrawerActions.closeDrawer()); // Drawer'ı kapatıyoruz
+    navigation.dispatch(DrawerActions.closeDrawer());
   };
 
   const openLink = (url) => {
     Linking.openURL(url);
   };
+
+  useEffect(() => {
+    if (image == "indir.jpeg" || image == "indir.jpg") {
+      if (namFromGetUser.name) {
+        const fullName = namFromGetUser.name.split(" ");
+        if (fullName.length > 1) {
+          // İsim ve soyisim varsa ilk harflerden oluşan kombinasyon
+          const name = fullName[0].charAt(0).toUpperCase();
+          const surname = fullName[1].charAt(0).toUpperCase();
+          setCheckImage(name + surname);
+        } else {
+          // Sadece tek isim varsa ilk iki harfi al
+          setCheckImage(fullName[0].slice(0, 2).toUpperCase());
+        }
+      }
+    }
+  }, [namFromGetUser, fetchMenuItems]);
 
   return (
     <SafeAreaView>
@@ -80,16 +101,32 @@ const DrawerMenu = () => {
               <View style={styles.profileImageContainer}>
                 <View style={styles.profileImageWrapper}>
                   {user.access_token ? (
-                    <Image
-                      source={{ uri: PhotoUrl + namFromGetUser.profile_image }}
-                      style={styles.profileImage}
-                      resizeMode="contain"
-                    />
+                    checkImage ? (
+                      <Text
+                        style={{
+                          fontSize: 24,
+                          color: "#000",
+                          textAlign: "center",
+                          textAlignVertical: "center",
+                        }}
+                      >
+                        {checkImage}
+                      </Text>
+                    ) : (
+                      <Image
+                        source={{
+                          uri: PhotoUrl + namFromGetUser.profile_image,
+                        }}
+                        style={styles.profileImage}
+                        resizeMode="contain"
+                      />
+                    )
                   ) : (
-                    <Icon2 name="user" size={65} color="#333" padding={10} />
+                    <Icon2 name="user" size={64} color="#000" />
                   )}
                 </View>
               </View>
+
               {/* PROFİL FOTO END */}
 
               {/* GİRİŞ YAP-HESABIM BÖLÜMÜ START */}
@@ -111,7 +148,8 @@ const DrawerMenu = () => {
                 <TouchableOpacity
                   disabled={user.access_token ? false : true}
                   onPress={() => {
-                    navigateToScreen("ShopProfile");
+                    navigateToScreen("Hesabım");
+                    dispatch(setShoppingProfile({ isShoppingProfile: true }));
                   }}
                 >
                   <Text style={styles.userAccountText}>
@@ -146,9 +184,7 @@ const DrawerMenu = () => {
           {/* GRİ ALAN START */}
           <View style={styles.grayArea}>
             <View style={styles.categoryWrapper}>
-              <TouchableOpacity
-                onPress={() => navigateToScreen("SellAndRent")}
-              >
+              <TouchableOpacity onPress={() => navigateToScreen("SellAndRent")}>
                 <Categories
                   category={"Sat Kirala Nedir ?"}
                   materialIcon={"groups-2"}

@@ -20,6 +20,7 @@ import Icon4 from "react-native-vector-icons/FontAwesome5";
 import { ActivityIndicator } from "react-native-paper";
 import { Stack } from "@react-native-material/core";
 import { CheckBox } from "react-native-elements";
+import { apiUrl } from "../../../components/methods/apiRequest";
 export default function ActiveRealtorAdverts({ index }) {
   const navigation = useNavigation();
   const [user, setUser] = useState({});
@@ -43,7 +44,7 @@ export default function ActiveRealtorAdverts({ index }) {
     };
     try {
       const res = await axios.get(
-        "https://private.emlaksepette.com/api/get_my_housings?orderByHousings=" +
+        apiUrl+"get_my_housings?orderByHousings=" +
           sort,
         {
           headers: {
@@ -52,11 +53,10 @@ export default function ActiveRealtorAdverts({ index }) {
           },
         }
       );
-      console.log(res.data);
       sethousings(res?.data?.activeHousingTypes);
+      console.debug("res---->>>>", res?.data?.activeHousingTypes);
       sethousingRecords(res?.data?.activeHousingTypes);
     } catch (e) {
-      console.log(e + " hataasdasd");
     } finally {
       setloading(false);
     }
@@ -311,7 +311,11 @@ export default function ActiveRealtorAdverts({ index }) {
                     alignItems: "center",
                     gap: 10,
                   }}
-                  onPress={{}}
+                  onPress={() => {
+                    // navigation.navigate("EditProject", { id: selectedProject });
+                    navigation.navigate("EditPending");
+                    setEditModalVisible(false);
+                  }}
                 >
                   <Icon3 name="mode-edit-outline" size={23} color={"#333"} />
                   <Text
@@ -326,7 +330,11 @@ export default function ActiveRealtorAdverts({ index }) {
                     alignItems: "center",
                     gap: 10,
                   }}
-                  onPress={{}}
+                  onPress={() => {
+                    // navigation.navigate("EditProject", { id: selectedProject });
+                    navigation.navigate("EditPending");
+                    setEditModalVisible(false);
+                  }}
                 >
                   <Icon3 name="photo-library" size={21} color={"#333"} />
                   <Text

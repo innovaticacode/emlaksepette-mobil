@@ -5,7 +5,6 @@ export default function SliderMenuDetails({tab,setTab,changeTab}) {
     const menuItems=[
         {text:'Projedeki Konutlar'},
         {text:'Açıklama'},
-        {text:'Özellikler'},
         {text:'Harita'},
         {text:'Vaziyet & Kat Planı'},
         {text:'Yorumlar'}

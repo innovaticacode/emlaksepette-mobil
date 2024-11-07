@@ -20,6 +20,7 @@ import { Stack } from "@react-native-material/core";
 import { CheckBox } from "react-native-elements";
 import NoDataScreen from "../../../components/NoDataScreen";
 import { RadioFilter } from "../../../components";
+import { apiUrl } from "../../../components/methods/apiRequest";
 
 export default function Sell() {
   const [search, setSearch] = useState("");
@@ -46,7 +47,7 @@ export default function Sell() {
       try {
         if (user?.access_token) {
           const response = await axios.get(
-            "https://private.emlaksepette.com/api/institutional/get_solds",
+            apiUrl+"institutional/get_solds",
             {
               headers: {
                 Authorization: `Bearer ${user.access_token}`,

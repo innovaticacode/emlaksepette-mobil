@@ -19,6 +19,7 @@ import {
 } from "react-native-alert-notification";
 import Modal from "react-native-modal";
 import { ActivityIndicator } from "react-native-paper";
+import { apiUrl } from "../../../components/methods/apiRequest";
 
 export default function ChangePassword() {
   const navigation = useNavigation();
@@ -61,7 +62,7 @@ export default function ChangePassword() {
       formData.append("new_password_confirmation", newPasswordconfirmation);
 
       const response = await axios.post(
-        "https://private.emlaksepette.com/api/client/password/update",
+        apiUrl+"client/password/update",
         formData,
         {
           headers: {

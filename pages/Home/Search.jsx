@@ -13,6 +13,7 @@ import axios from "axios";
 import slugify from "react-slugify";
 import { Platform } from "react-native";
 import { DrawerActions } from "@react-navigation/native";
+import { apiUrl } from "../../components/methods/apiRequest";
 
 export default function Search({ onpres, setIsDrawerOpen }) {
   const navigation = useNavigation();
@@ -26,7 +27,7 @@ export default function Search({ onpres, setIsDrawerOpen }) {
   const fetchmenuItems = async () => {
     try {
       const response = await axios.get(
-        "https://private.emlaksepette.com/api/menu-list"
+        apiUrl+"menu-list"
       );
 
       const filteredMenuItems = response.data;

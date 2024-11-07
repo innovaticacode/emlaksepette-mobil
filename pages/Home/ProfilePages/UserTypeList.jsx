@@ -22,6 +22,7 @@ import {
 } from "react-native-alert-notification";
 import { ActivityIndicator } from "react-native-paper";
 import { useIsFocused, useNavigation } from "@react-navigation/native";
+import { apiUrl } from "../../../components/methods/apiRequest";
 export default function UserTypeList() {
   const [userList, setuserList] = useState([]);
   const navigation = useNavigation();
@@ -35,7 +36,7 @@ export default function UserTypeList() {
     try {
       if (user.access_token) {
         const response = await axios.get(
-          "https://private.emlaksepette.com/api/institutional/roles",
+          apiUrl+"institutional/roles",
           {
             headers: {
               Authorization: `Bearer ${user?.access_token}`,
@@ -70,7 +71,7 @@ export default function UserTypeList() {
 
     try {
       const response = await axios.delete(
-        `https://private.emlaksepette.com/api/institutional/roles/${UserId}`,
+        `${apiUrl}institutional/roles/${UserId}`,
         {
           headers: {
             Authorization: `Bearer ${user.access_token}`,
@@ -144,7 +145,7 @@ export default function UserTypeList() {
     };
     try {
       const response = await axios.delete(
-        "https://private.emlaksepette.com/api/institutional/rol-users",
+        apiUrl+"institutional/rol-users",
         {
           data: data,
           headers: {
@@ -189,7 +190,7 @@ export default function UserTypeList() {
     };
     try {
       const response = await axios.delete(
-        "https://private.emlaksepette.com/api/institutional/rol-users",
+        apiUrl+"institutional/rol-users",
         {
           data: data,
           headers: {

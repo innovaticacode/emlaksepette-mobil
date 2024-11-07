@@ -5,10 +5,8 @@ import {
   ScrollView,
   TextInput,
   TouchableOpacity,
-  TouchableWithoutFeedback,
-  Keyboard,
-  FlatList,
   KeyboardAvoidingView,
+  Platform,
 } from "react-native";
 import { React, useState, useEffect, useRef } from "react";
 import Modal from "react-native-modal";
@@ -16,15 +14,14 @@ import EyeIcon from "react-native-vector-icons/Ionicons";
 import { CheckBox } from "@rneui/themed";
 import RNPickerSelect from "react-native-picker-select";
 import axios from "axios";
-import IconSocialMedia from "react-native-vector-icons/AntDesign";
 import MailCheck from "react-native-vector-icons/MaterialCommunityIcons";
 import HTML from "react-native-render-html";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { SafeAreaView } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import FontAwesome5Icon from "react-native-vector-icons/FontAwesome5";
 import { ActivityIndicator } from "react-native-paper";
-import { ALERT_TYPE, AlertNotificationRoot, Dialog } from "react-native-alert-notification";
+import { apiUrl } from "../../../components/methods/apiRequest";
+import { Dialog } from "react-native-alert-notification";
 
 export default function Company() {
   const Navigation = useNavigation();
@@ -38,8 +35,6 @@ export default function Company() {
   const [bossName, setbossName] = useState("");
   const [companyName, setcompanyName] = useState("");
   const [companyPhone, setcompanyPhone] = useState("");
-  const [Iban, setIban] = useState("");
-  const [accounttype, setaccounttype] = useState(null);
   const [focusArea, setfocusArea] = useState(null);
   const [city, setcity] = useState(null);
   const [county, setcounty] = useState(null);
@@ -73,6 +68,32 @@ export default function Company() {
     /* Functions */
   }
   const [Show, setShow] = useState(false);
+  const [Neigbour, setNeigbour] = useState([]);
+  const scrollViewRef = useRef();
+  const [message, setmessage] = useState("");
+  const [IsSucces, setIsSucces] = useState(null);
+  const [citites, setCities] = useState([]);
+  const [counties, setcounties] = useState([]);
+  const [errorStatu, seterrorStatu] = useState(0);
+  const [errorMessage, seterrorMessage] = useState("");
+  const [TaxOfficesCity, setTaxOfficesCity] = useState([]);
+  const [TaxOffices, setTaxOffices] = useState([]);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [modalVisible2, setModalVisible2] = useState(false);
+  const [modalVisible3, setModalVisible3] = useState(false);
+  const [Deals, setDeals] = useState("");
+  const [passControl, setpassControl] = useState(false);
+  const [showLengthAlert, setShowLengthAlert] = useState(false);
+  const [showUpperAlert, setShowUpperAlert] = useState(false);
+  const [showSymbolAlert, setShowSymbolAlert] = useState(false);
+  const [showNumberAlert, setShowNumberAlert] = useState(false);
+  const [colorForLength, setcolorForLength] = useState(false);
+  const [colorForNumberAlert, setcolorForNumberAlert] = useState(false);
+  const [colorForUpper, setcolorForUpper] = useState(false);
+  const [colorForSymbol, setcolorForSymbol] = useState(false);
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
+
   const show = () => {
     setShow(!Show);
   };
@@ -95,9 +116,7 @@ export default function Company() {
   };
   const fetchData = async () => {
     try {
-      const response = await axios.get(
-        "https://private.emlaksepette.com/api/cities"
-      );
+      const response = await axios.get(apiUrl + "cities");
       return response.data;
     } catch (error) {
       console.error("Hata:", error);
@@ -105,7 +124,6 @@ export default function Company() {
     }
   };
 
-  const [citites, setCities] = useState([]);
   useEffect(() => {
     fetchData()
       .then((citites) => setCities(citites.data))
@@ -114,12 +132,9 @@ export default function Company() {
       );
   }, []);
 
-  const [counties, setcounties] = useState([]);
   const fetchDataCounty = async (value) => {
     try {
-      const response = await axios.get(
-        `https://private.emlaksepette.com/api/counties/${value}`
-      );
+      const response = await axios.get(`${apiUrl}counties/${value}`);
       return response.data;
     } catch (error) {
       console.error("Hata:", error);
@@ -131,12 +146,11 @@ export default function Company() {
   //     .then(county => setcounties(county.data))
   //     .catch(error => console.error('Veri alınırken bir hata oluştu:', error));
   // },[city]);
-  const scrollViewRef = useRef();
 
   // Bu fonksiyon sayfanın en üstüne scroll etmek için kullanılabilir
 
   const scrollToTop = () => {
-    scrollViewRef.current.scrollTo({ y:0, animated: true });
+    scrollViewRef.current.scrollTo({ y: 0, animated: true });
   };
 
   const onChangeCity = (value) => {
@@ -151,12 +165,9 @@ export default function Company() {
       setcounties([]);
     }
   };
-  const [Neigbour, setNeigbour] = useState([]);
   const fetchDataNeigbour = async (value) => {
     try {
-      const response = await axios.get(
-        `https://private.emlaksepette.com/api/neighborhoods/${value}`
-      );
+      const response = await axios.get(`${apiUrl}neighborhoods/${value}`);
       return response.data;
     } catch (error) {
       console.error("Hata:", error);
@@ -176,51 +187,50 @@ export default function Company() {
       setNeigbour([]);
     }
   };
-  const [message, setmessage] = useState("");
-  const [IsSucces, setIsSucces] = useState(null)
 
   const postData = async () => {
     setsuccesRegister(true);
     let fullNumber = `${cityCode}${companyPhone}`;
     try {
-      var formData = new FormData();
-      formData.append("type", 2);
-      formData.append("username", bossName);
-      formData.append("email", eposta);
-      formData.append("mobile_phone", phoneNumber);
-      formData.append("password", password);
-      formData.append("store_name", companyName);
-      formData.append("name", ShoppingName);
-      formData.append("phone", fullNumber);
-      formData.append("corporate-account-type", focusArea);
-      formData.append("city_id", city);
-      formData.append("county_id", county);
-      formData.append("neighborhood_id", neigbourhod);
-      formData.append("taxOfficeCity", TaxPlaceCity);
-      formData.append("taxOffice", TaxPlace);
-      formData.append("taxNumber", taxNumber);
-      formData.append("idNumber", IdCardNo);
-      formData.append("check-d", checked);
-      formData.append("check-b", checked1);
-      formData.append("check-c", checked2);
-      formData.append("account_type");
-      formData.append("authority_licence", licence);
-      formData.append("activity", null);
-      formData.append("iban", null);
-      formData.append("is_brand", IsGiveFrancheise);
-      formData.append("other_brand_name", MarcaName);
-      formData.append("Franchise-question", IsConnectFranchaise);
-      formData.append("brand_id", FrancheiseMarc);
-      const response = await axios.post(
-        "https://private.emlaksepette.com/api/register",
-        formData
-      );
+      const data = {
+        type: 2,
+        username: bossName,
+        email: eposta,
+        mobile_phone: phoneNumber,
+        password: password,
+        store_name: companyName,
+        name: ShoppingName,
+        phone: fullNumber,
+        "corporate-account-type": focusArea,
+        city_id: city,
+        county_id: county,
+        neighborhood_id: neigbourhod,
+        taxOfficeCity: TaxPlaceCity,
+        taxOffice: TaxPlace,
+        taxNumber: taxNumber,
+        idNumber: IdCardNo,
+        "check-d": checked,
+        "check-b": checked1,
+        "check-c": checked2,
+        account_type: null,
+        authority_licence: licence,
+        is_brand: IsGiveFrancheise,
+        other_brand_name: MarcaName,
+        "Franchise-question": IsConnectFranchaise,
+        brand_id: FrancheiseMarc,
+      };
 
-      // İsteğin başarılı bir şekilde tamamlandığı durum
+      const response = await axios.post(apiUrl + "register", data, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
 
+      // Handle success
       setmessage(response.data.message);
       setIsSucces(response.data.status);
 
+      // Clear form fields
       seteposta("");
       setphoneNumber("");
       setpassword("");
@@ -242,42 +252,36 @@ export default function Company() {
       setChecked2(false);
       setChecked3(false);
       setcityCode("");
+
       setTimeout(() => {
         Navigation.replace("Login", { showAlert: true });
       }, 700);
-    
     } catch (error) {
-      // Hata durumunda
-       scrollToTop();
+      // Handle error
+      Dialog.show({
+        title: "Hata",
+        description: error.response.data.message,
+        animationType: "fade",
+      });
+      scrollToTop();
       if (error.response.data.errors.email) {
-        seterrorStatu(2)
-          seterrorMessage(error.response.data.errors.email)
-          setTimeout(() => {
-            seterrorStatu(0);
-          }, 10000);
+        seterrorStatu(2);
+        seterrorMessage(error.response.data.errors.email);
+        setTimeout(() => {
+          seterrorStatu(0);
+        }, 10000);
       }
-        // Dialog.show({
-        //   type: ALERT_TYPE.WARNING,
-        //   title: "Başarılı",
-        //   textBody: `${error.response.data.errors.email}`,
-        //   button: "Tamam",
-        // });
-      
-      
     } finally {
       setsuccesRegister(false);
     }
   };
 
-  const [errorStatu, seterrorStatu] = useState(0);
-  const [errorMessage, seterrorMessage] = useState("");
-  console.log(focusArea,!focusArea);
   const register = () => {
     switch (true) {
       case !bossName:
         seterrorStatu(1);
         seterrorMessage("İsim Alanı Boş Bırakılmaz");
-        
+
         scrollToTop();
         setTimeout(() => {
           seterrorStatu(0);
@@ -316,40 +320,40 @@ export default function Company() {
           seterrorStatu(0);
         }, 10000);
         break;
-        case focusArea == "Emlak Ofisi" && !licence:
-          seterrorStatu(14);
-          seterrorMessage("Yetki Belgesi zorunludur");
-            scrollToTop()
-          setTimeout(() => {
-            seterrorStatu(0);
-          }, 10000);
-          break;
-          case (focusArea == "Emlak Ofisi" && IsConnectFranchaise==null):
-            seterrorStatu(16);
-            seterrorMessage("Bu Alan Zorunludur");
-            scrollToTop()
-            setTimeout(() => {
-              seterrorStatu(0);
-            }, 10000);
-            break;
-            case( focusArea == "Emlak Ofisi" && IsConnectFranchaise == 0 && !MarcaName):
-            seterrorStatu(17);
-            seterrorMessage("Marka Alanı Zorundludur");
-            scrollToTop()
-            setTimeout(() => {
-              seterrorStatu(0);
-            }, 10000);
-            break;
-          case focusArea == "Emlak Ofisi" &&
-            IsConnectFranchaise == 1 &&
-            !FrancheiseMarc:
-            seterrorStatu(18);
-            seterrorMessage("Bu Alan Zorunludur");
-            scrollToTop()
-            setTimeout(() => {
-              seterrorStatu(0);
-            }, 10000);
-            break;
+      case focusArea == "Emlak Ofisi" && !licence:
+        seterrorStatu(14);
+        seterrorMessage("Yetki Belgesi zorunludur");
+        scrollToTop();
+        setTimeout(() => {
+          seterrorStatu(0);
+        }, 10000);
+        break;
+      case focusArea == "Emlak Ofisi" && IsConnectFranchaise == null:
+        seterrorStatu(16);
+        seterrorMessage("Bu Alan Zorunludur");
+        scrollToTop();
+        setTimeout(() => {
+          seterrorStatu(0);
+        }, 10000);
+        break;
+      case focusArea == "Emlak Ofisi" && IsConnectFranchaise == 0 && !MarcaName:
+        seterrorStatu(17);
+        seterrorMessage("Marka Alanı Zorundludur");
+        scrollToTop();
+        setTimeout(() => {
+          seterrorStatu(0);
+        }, 10000);
+        break;
+      case focusArea == "Emlak Ofisi" &&
+        IsConnectFranchaise == 1 &&
+        !FrancheiseMarc:
+        seterrorStatu(18);
+        seterrorMessage("Bu Alan Zorunludur");
+        scrollToTop();
+        setTimeout(() => {
+          seterrorStatu(0);
+        }, 10000);
+        break;
       case !companyName:
         seterrorStatu(5);
         seterrorMessage("Ticaret Ünvanı Boş Bırakılamaz");
@@ -392,7 +396,7 @@ export default function Company() {
         break;
       case !TaxPlaceCity:
         seterrorStatu(11);
-        seterrorMessage('Vergi dairesi ili zorunludur');
+        seterrorMessage("Vergi dairesi ili zorunludur");
         scrollToTop();
         setTimeout(() => {
           seterrorStatu(0);
@@ -421,7 +425,7 @@ export default function Company() {
           seterrorStatu(0);
         }, 5000);
         break;
-  
+
       default:
         postData();
     }
@@ -429,9 +433,7 @@ export default function Company() {
 
   const fetchTaxOfficeCity = async () => {
     try {
-      const response = await axios.get(
-        "https://private.emlaksepette.com/api/get-tax-offices"
-      );
+      const response = await axios.get(apiUrl + "get-tax-offices");
       return response.data;
     } catch (error) {
       console.error("Hata:", error);
@@ -439,7 +441,6 @@ export default function Company() {
     }
   };
 
-  const [TaxOfficesCity, setTaxOfficesCity] = useState([]);
   useEffect(() => {
     fetchTaxOfficeCity()
       .then((TaxOffice) => setTaxOfficesCity(TaxOffice))
@@ -461,17 +462,13 @@ export default function Company() {
   };
   const fetchTaxOffice = async (value) => {
     try {
-      const response = await axios.get(
-        `https://private.emlaksepette.com/api/get-tax-office/${value}`
-      );
+      const response = await axios.get(`${apiUrl}get-tax-office/${value}`);
       return response.data;
     } catch (error) {
       console.error("Hata:", error);
       throw error;
     }
   };
-
-  const [TaxOffices, setTaxOffices] = useState([]);
 
   const TaxOfficePlace = Array.from(
     new Set(TaxOffices.map((item) => item.daire))
@@ -483,10 +480,6 @@ export default function Company() {
     value: item.id.toString(), // id değerini string olarak çevirme
   }));
 
-  const [modalVisible, setModalVisible] = useState(false);
-  const [modalVisible2, setModalVisible2] = useState(false);
-  const [modalVisible3, setModalVisible3] = useState(false);
-  const [Deals, setDeals] = useState("");
   const formatPhoneNumber = (value) => {
     // Sadece rakamları al
     const cleaned = ("" + value).replace(/\D/g, "");
@@ -510,7 +503,6 @@ export default function Company() {
   const handlePhoneNumberChange = (value) => {
     const formattedPhoneNumber = formatPhoneNumber(value);
     setphoneNumber(formattedPhoneNumber);
-   
   };
 
   const GetDeal = (deal) => {
@@ -528,7 +520,7 @@ export default function Company() {
   // Örnek kullanım
 
   const fetchDataDeal = async (deal) => {
-    const url = `https://private.emlaksepette.com/api/sayfa/${deal}`;
+    const url = `${apiUrl}sayfa/${deal}`;
     try {
       const data = await fetchFromURL(url);
       setDeals(data.content);
@@ -646,15 +638,11 @@ export default function Company() {
 
     setcompanyPhone(formatted);
   };
-  const [data, setData] = useState([]);
-  const [loading, setLoading] = useState(true);
 
   // API'ye GET isteği atan fonksiyon
   const fetchFranchiseMarkalari = async () => {
     try {
-      const response = await axios.get(
-        "https://private.emlaksepette.com/api/franchise-markalari"
-      );
+      const response = await axios.get(apiUrl + "franchise-markalari");
       setData(response.data.data); // 'data' alanına erişiyoruz
     } catch (error) {
       console.error("API isteği başarısız:", error);
@@ -671,59 +659,58 @@ export default function Company() {
     label: item.title,
     value: item?.id,
   }));
-  const [passControl, setpassControl] = useState(false);
-  const [showLengthAlert, setShowLengthAlert] = useState(false);
-  const [showUpperAlert, setShowUpperAlert] = useState(false);
-  const [showSymbolAlert, setShowSymbolAlert] = useState(false);
-  const [showNumberAlert, setShowNumberAlert] = useState(false);
-  const [colorForLength, setcolorForLength] = useState(false)
-  const [colorForNumberAlert, setcolorForNumberAlert] = useState(false)
-  const [colorForUpper, setcolorForUpper] = useState(false)
-  const [colorForSymbol, setcolorForSymbol] = useState(false)
-const handlePasswordChange = (text) => {
-  setpassword(text);
-  // Şifre uzunluğunu kontrol edin ve uyarıyı göstermek/gizlemek için durumu güncelleyin
 
-  if (text.length+1 <= 8) {
-    setShowLengthAlert(true)
-    setcolorForLength(false)
-  } else {
+  const handlePasswordChange = (text) => {
+    setpassword(text);
+    // Şifre uzunluğunu kontrol edin ve uyarıyı göstermek/gizlemek için durumu güncelleyin
 
-    setcolorForLength(true)
-  }
+    if (text.length + 1 <= 8) {
+      setShowLengthAlert(true);
+      setcolorForLength(false);
+    } else {
+      setcolorForLength(true);
+    }
 
-  //rakam kontrölü
-  const numberRegex = /[0-9]/;
-  if (!numberRegex.test(text)) {
-    setShowNumberAlert(true);
-    setcolorForNumberAlert(false)
-  } else {
-    
-    setcolorForNumberAlert(true)
-  }
-  //Büyük harf kontrolü
-  const upperCaseRegex = /[A-Z]/;
-  if (!upperCaseRegex.test(text)) {
-    setShowUpperAlert(true)
-    setcolorForUpper(false)
-  } else {
-    
-    setcolorForUpper(true)
-  }
-  // Sembole kontrolü
-  const symbolRegex = /[!@#$%^&*(),.?":{}|<>]/;
-  if (!symbolRegex.test(text)) {
-    setShowSymbolAlert(true)
-    setcolorForSymbol(false)
-  } else {
-   
-    setcolorForSymbol(true)
-  }
-};
-console.log(errorStatu)
+    //rakam kontrölü
+    const numberRegex = /[0-9]/;
+    if (!numberRegex.test(text)) {
+      setShowNumberAlert(true);
+      setcolorForNumberAlert(false);
+    } else {
+      setcolorForNumberAlert(true);
+    }
+    //Büyük harf kontrolü
+    const upperCaseRegex = /[A-Z]/;
+    if (!upperCaseRegex.test(text)) {
+      setShowUpperAlert(true);
+      setcolorForUpper(false);
+    } else {
+      setcolorForUpper(true);
+    }
+    // Sembole kontrolü
+    const symbolRegex = /[!@#$%^&*(),.?":{}|<>]/;
+    if (!symbolRegex.test(text)) {
+      setShowSymbolAlert(true);
+      setcolorForSymbol(false);
+    } else {
+      setcolorForSymbol(true);
+    }
+  };
+
   return (
-     
-      <ScrollView behavior="padding" style={{flex:1}} ref={scrollViewRef}>
+    <KeyboardAvoidingView
+      style={{ flex: 1, backgroundColor: "transparent" }}
+      behavior={Platform.OS === "ios" ? "padding" : "height"} // iOS ve Android için farklı davranışlar
+      keyboardVerticalOffset={Platform.OS === "ios" ? 100 : 0} // iOS için klavyenin üstünde kalacak şekilde offset ayarı
+    >
+      <ScrollView
+        contentContainerStyle={{ flexGrow: 1 }}
+        behavior="padding"
+        style={{ flex: 1 }}
+        ref={scrollViewRef}
+        showsVerticalScrollIndicator={false}
+        keyboardShouldPersistTaps="handled"
+      >
         <View style={styles.container}>
           <View style={{ padding: 15, gap: 20 }}>
             <View style={{ gap: 5 }}>
@@ -792,7 +779,9 @@ console.log(errorStatu)
                     borderColor: errorStatu == 4 ? "red" : "#ebebeb",
                   },
                 ]}
-                onChangeText={(value)=>{ handlePhoneNumberChange(value)}}
+                onChangeText={(value) => {
+                  handlePhoneNumberChange(value);
+                }}
                 placeholder="Cep Telefonu"
                 keyboardType="number-pad"
                 maxLength={15}
@@ -839,26 +828,26 @@ console.log(errorStatu)
                   />
                 </TouchableOpacity>
               </View>
-              {showLengthAlert  && (
-                            <Text style={{ color: colorForLength? 'green': "red" }}>
-                              Şifreniz en az 8 karakter olmalıdır!
-                            </Text>
-                          )}
-                          {showNumberAlert && (
-                            <Text style={{ color: colorForNumberAlert? 'green': "red" }}>
-                              Şifrenizde en az bir rakam olmalıdır.
-                            </Text>
-                          )}
-                          {showUpperAlert && (
-                            <Text style={{ color: colorForUpper? 'green': "red" }}>
-                              Şifrenizde en az bir büyük harf olmalıdır!
-                            </Text>
-                          )}
-                          {showSymbolAlert  && (
-                            <Text style={{ color: colorForSymbol?'green': "red" }}>
-                              Şifrenizde en az bir özel karakter olmalıdır!
-                            </Text>
-                          )}
+              {showLengthAlert && (
+                <Text style={{ color: colorForLength ? "green" : "red" }}>
+                  Şifreniz en az 8 karakter olmalıdır!
+                </Text>
+              )}
+              {showNumberAlert && (
+                <Text style={{ color: colorForNumberAlert ? "green" : "red" }}>
+                  Şifrenizde en az bir rakam olmalıdır.
+                </Text>
+              )}
+              {showUpperAlert && (
+                <Text style={{ color: colorForUpper ? "green" : "red" }}>
+                  Şifrenizde en az bir büyük harf olmalıdır!
+                </Text>
+              )}
+              {showSymbolAlert && (
+                <Text style={{ color: colorForSymbol ? "green" : "red" }}>
+                  Şifrenizde en az bir özel karakter olmalıdır!
+                </Text>
+              )}
             </View>
 
             <View style={{ gap: 5 }}>
@@ -880,7 +869,10 @@ console.log(errorStatu)
                   { label: "Banka", value: "Banka" },
                   { label: "Turizm", value: "Turizm Amaçlı Kiralama" },
                   { label: "Üretici", value: "Üretici" },
-                  { label: "Gayrimenkul Franchise", value: "Gayrimenkul Franchise" }
+                  {
+                    label: "Gayrimenkul Franchise",
+                    value: "Gayrimenkul Franchise",
+                  },
                 ]}
               />
               {errorStatu == 7 ? (
@@ -948,7 +940,7 @@ console.log(errorStatu)
                   )}
                 </View> */}
 
-                { focusArea=='Emlak Ofisi' && (
+                {focusArea == "Emlak Ofisi" && (
                   <View style={{ gap: 5 }}>
                     <Text
                       style={{ fontSize: 14, color: "black", fontWeight: 600 }}
@@ -979,7 +971,7 @@ console.log(errorStatu)
                   </View>
                 )}
 
-                {IsConnectFranchaise == 1  && (
+                {IsConnectFranchaise == 1 && (
                   <View style={{ gap: 5 }}>
                     <Text
                       style={{ fontSize: 14, color: "black", fontWeight: 600 }}
@@ -1045,7 +1037,10 @@ console.log(errorStatu)
             <View style={{ gap: 5 }}>
               <View style={{ paddingLeft: 5 }}>
                 <Text style={{ fontSize: 14, color: "black", fontWeight: 600 }}>
-                  Ticari Ünvan <Text style={{color:'#888888',fontSize:12}}>(Vergi Levhasında Yazan Firma Adı)</Text>
+                  Ticari Ünvan{" "}
+                  <Text style={{ color: "#888888", fontSize: 12 }}>
+                    (Vergi Levhasında Yazan Firma Adı)
+                  </Text>
                 </Text>
               </View>
               <TextInput
@@ -1070,7 +1065,10 @@ console.log(errorStatu)
             <View style={{ gap: 5 }}>
               <View style={{ paddingLeft: 5 }}>
                 <Text style={{ fontSize: 14, color: "black", fontWeight: 600 }}>
-                  Mağaza Adı <Text style={{fontSize:12,color:'#888888'}}>(Ofisinizin tabela adı ile aynı olmalıdır)</Text>
+                  Mağaza Adı{" "}
+                  <Text style={{ fontSize: 12, color: "#888888" }}>
+                    (Ofisinizin tabela adı ile aynı olmalıdır)
+                  </Text>
                 </Text>
               </View>
               <TextInput
@@ -1234,7 +1232,6 @@ console.log(errorStatu)
                   checkedColor="#E54242"
                   title={<Text style={{ fontSize: 12 }}>Şahıs Şirketi</Text>}
                   containerStyle={{
-                    
                     padding: 0,
                     backgroundColor: "transparent",
                     borderWidth: 0,
@@ -1252,9 +1249,7 @@ console.log(errorStatu)
                   checkedColor="#E54242"
                   title={
                     <View style={{}}>
-                      <Text style={{ fontSize: 12 }}>
-                        LTD.ŞTİ veya A.Ş{" "}
-                      </Text>
+                      <Text style={{ fontSize: 12 }}>LTD.ŞTİ veya A.Ş </Text>
                     </View>
                   }
                   containerStyle={{
@@ -1264,7 +1259,7 @@ console.log(errorStatu)
                     borderTopWidth: 1,
                   }}
                 />
-                   <CheckBox
+                <CheckBox
                   checked={selectedIndexRadio === 3}
                   onPress={() => {
                     setIndexRadio(3);
@@ -1275,9 +1270,7 @@ console.log(errorStatu)
                   checkedColor="#E54242"
                   title={
                     <View style={{}}>
-                      <Text style={{ fontSize: 12 }}>
-                        Diğer{" "}
-                      </Text>
+                      <Text style={{ fontSize: 12 }}>Diğer </Text>
                     </View>
                   }
                   containerStyle={{
@@ -1363,7 +1356,6 @@ console.log(errorStatu)
             <View
               style={{
                 gap: 5,
-                
               }}
             >
               <View style={{ paddingLeft: 5 }}>
@@ -1521,7 +1513,7 @@ console.log(errorStatu)
                 </Text>
               </TouchableOpacity>
             </View>
-                
+
             {/* Contract Finish */}
 
             {/* Register Button */}
@@ -1681,8 +1673,7 @@ console.log(errorStatu)
           </SafeAreaView>
         </Modal>
       </ScrollView>
-    
-   
+    </KeyboardAvoidingView>
   );
 }
 const pickerSelectStyles = StyleSheet.create({

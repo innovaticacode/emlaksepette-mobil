@@ -13,6 +13,7 @@ import Icon from "react-native-vector-icons/Entypo";
 import axios from "axios";
 import { Platform } from "react-native";
 import { getValueFor } from "../../../components/methods/user";
+import { apiUrl } from "../../../components/methods/apiRequest";
 export default function Rent() {
   const [Tabs, setTabs] = useState(0);
   const [TabIndex, setTabIndex] = useState(0);
@@ -67,7 +68,7 @@ export default function Rent() {
         const skipValue = page * 10; // Calculate skip value
         console.log("Fetching items with skip:", skipValue, "and take:", 10);
         const response = await axios.get(
-          "https://private.emlaksepette.com/api/get_my_reservations",
+          apiUrl+"get_my_reservations",
           {
             headers: {
               Authorization: `Bearer ${user?.access_token}`,

@@ -19,6 +19,7 @@ import {
   useNavigation,
 } from "@react-navigation/native";
 import * as SecureStore from "expo-secure-store";
+import { apiUrl } from "../../../components/methods/apiRequest";
 export default function Verification({ nextStep, prevStep }) {
   const [codes, setCodes] = useState("");
   const inputs = useRef([]);
@@ -60,14 +61,11 @@ export default function Verification({ nextStep, prevStep }) {
   const [falseCodeAlert, setfalseCodeAlert] = useState(false);
   const updateUserData = async () => {
     try {
-      const updateResponse = await axios.get(
-        "https://private.emlaksepette.com/api/users/" + user?.id,
-        {
-          headers: {
-            Authorization: `Bearer ${user.access_token}`,
-          },
-        }
-      );
+      const updateResponse = await axios.get(apiUrl + "users/" + user?.id, {
+        headers: {
+          Authorization: `Bearer ${user.access_token}`,
+        },
+      });
 
       // Mevcut kullanıcı verilerini güncellenmiş verilerle birleştirme
       const updatedUser = {
@@ -92,7 +90,7 @@ export default function Verification({ nextStep, prevStep }) {
     try {
       // POST isteği yap
       const response = await axios.post(
-        "https://private.emlaksepette.com/api/phone-verification/verify",
+        apiUrl + "phone-verification/verify",
         { code: codes },
         {
           headers: {
@@ -104,7 +102,7 @@ export default function Verification({ nextStep, prevStep }) {
       updateUserData();
       setCodes("");
       setsucces(true);
-      nextStep();
+
       SecureStore.setItemAsync("PhoneVerify", "1");
       setIsucces(true);
       setTimeout(() => {
@@ -116,6 +114,9 @@ export default function Verification({ nextStep, prevStep }) {
       setsucces(false);
     } finally {
       setloading(false);
+      setTimeout(() => {
+        navigation.navigate("Drawer", { screen: "Home" });
+      }, 1000);
     }
   };
 
@@ -183,7 +184,7 @@ export default function Verification({ nextStep, prevStep }) {
       };
       if (user?.access_token) {
         const response = await axios.post(
-          "https://private.emlaksepette.com/api/phone-verification/generate",
+          apiUrl + "phone-verification/generate",
           {},
           config
         );
@@ -196,7 +197,7 @@ export default function Verification({ nextStep, prevStep }) {
       console.error("Post isteği başarısız oldu:", error);
     }
   };
-  console.log(isActive)
+  console.log(isActive);
   return (
     <SafeAreaView style={styles.container}>
       <View style={{ padding: 10 }}>
@@ -269,25 +270,50 @@ export default function Verification({ nextStep, prevStep }) {
           ))}
         </View>
         <View style={{ padding: 10, paddingTop: 50, gap: 20 }}>
-          {
-            isActive ?
+          {isActive ? (
             <TouchableOpacity
-            disabled={codes.length == 6 ? false : true}
-            onPress={() => {
-              handleSubmit();
-            }}
-            style={{
-              backgroundColor: "#EA2A28",
-              padding: 9,
-              borderRadius: 5,
-              opacity: codes.length == 6 ? 1 : 0.5,
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            {loading ? (
-              <ActivityIndicator color="white" />
-            ) : (
+              disabled={codes.length == 6 ? false : true}
+              onPress={() => {
+                handleSubmit();
+              }}
+              style={{
+                backgroundColor: "#EA2A28",
+                padding: 9,
+                borderRadius: 5,
+                opacity: codes.length == 6 ? 1 : 0.5,
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              {loading ? (
+                <ActivityIndicator color="white" />
+              ) : (
+                <Text
+                  style={{
+                    color: "white",
+                    textAlign: "center",
+                    fontWeight: "600",
+                  }}
+                >
+                  Onayla
+                </Text>
+              )}
+            </TouchableOpacity>
+          ) : (
+            <TouchableOpacity
+              onPress={() => {
+                resetTimer();
+                sendPostRequest();
+              }}
+              style={{
+                backgroundColor: "#EA2A28",
+                padding: 9,
+                borderRadius: 5,
+
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
               <Text
                 style={{
                   color: "white",
@@ -295,41 +321,10 @@ export default function Verification({ nextStep, prevStep }) {
                   fontWeight: "600",
                 }}
               >
-                Onayla
+                Kod Gönder
               </Text>
-            )}
-          </TouchableOpacity>:
-             <TouchableOpacity
-            
-             onPress={() => {
-              resetTimer()
-             sendPostRequest()
-             }}
-             style={{
-               backgroundColor: "#EA2A28",
-               padding: 9,
-               borderRadius: 5,
-          
-               alignItems: "center",
-               justifyContent: "center",
-             }}
-           >
-            
-               <Text
-                 style={{
-                   color: "white",
-                   textAlign: "center",
-                   fontWeight: "600",
-                 }}
-               >
-                 Kod Gönder
-               </Text>
-            
-           </TouchableOpacity>
-
-          }
-        
-          
+            </TouchableOpacity>
+          )}
         </View>
       </View>
       <Modal

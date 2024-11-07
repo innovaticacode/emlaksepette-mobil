@@ -9,8 +9,9 @@ import React, { useState, useEffect } from "react";
 import ProjectPost from "../../../components/ProjectPost";
 import ProjectBottomSheetFilter from "../../../components/ProjectBottomSheetFilter";
 import axios from "axios";
+import { apiUrl, frontEndUriBase } from "../../../components/methods/apiRequest";
 
-const ApiUrl = "https://private.emlaksepette.com";
+
 
 export default function ProjectAdverts(props) {
   const { data, isVisible, setIsVisible, id } = props;
@@ -20,7 +21,7 @@ export default function ProjectAdverts(props) {
   const [hasMore, setHasMore] = useState(true);
 
   const fetchFeaturedProjects = async (page = 0) => {
-    const uri = `${ApiUrl}/api/get_institutional_projects_by_housing_type/${id}`;
+    const uri = `${apiUrl}get_institutional_projects_by_housing_type/${id}`;
     const params = {
       housing_type: null,
       skip: page * 10,
@@ -54,7 +55,7 @@ export default function ProjectAdverts(props) {
     setCurrentPage(0);
     setFeaturedProjects([]);
 
-    const uri = `${ApiUrl}/api/get_institutional_projects_by_housing_type/${id}`;
+    const uri = `${apiUrl}get_institutional_projects_by_housing_type/${id}`;
     const params = {
       housing_type: filter,
       skip: 0,
@@ -104,12 +105,12 @@ export default function ProjectAdverts(props) {
               key={item.id}
               project={item}
               caption={item?.project_title}
-              ımage={`${ApiUrl}/${item?.image.replace("public/", "storage/")}`}
+              ımage={`${frontEndUriBase}${item?.image.replace("public/", "storage/")}`}
               location={item?.city?.title}
               city={item?.county?.ilce_title}
               ProjectNo={item?.id}
               user={data?.data}
-              ProfilImage={`${ApiUrl}/storage/profile_images/${data?.profile_image}`}
+              ProfilImage={`${frontEndUriBase}storage/profile_images/${data?.profile_image}`}
               loading={loadingProjects}
             />
           )}

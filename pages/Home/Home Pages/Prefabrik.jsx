@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   View,
   Text,
@@ -9,20 +9,22 @@ import {
   ScrollView,
   Image,
 } from "react-native";
-import RealtorPost from "../../../components/RealtorPost";
+
 import axios from "axios";
 import { ActivityIndicator } from "react-native-paper";
 import Modal from "react-native-modal";
 import { getValueFor } from "../../../components/methods/user";
-import { useNavigation } from "@react-navigation/native";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import Icon from "react-native-vector-icons/AntDesign";
 import { AlertNotificationRoot } from "react-native-alert-notification";
 import PrefabrikBanner from "../../../src/assets/images/prefabrik.png";
+import { apiUrl, frontEndUriBase } from "../../../components/methods/apiRequest";
+import RealtorPost from "../../../components/Card/RealtorCard/RealtorPost";
 const PAGE_SIZE = 10;
 
 const Prefabrik = ({ index }) => {
   const navigation = useNavigation();
-  const apiUrl = "https://private.emlaksepette.com/";
+ 
   const [featuredEstates, setFeaturedEstates] = useState([]);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
@@ -40,7 +42,7 @@ const Prefabrik = ({ index }) => {
     };
     try {
       const response = await axios.get(
-        `https://private.emlaksepette.com/api/real-estates?page=${
+        `${apiUrl}real-estates?page=${
           reset ? 1 : page
         }&limit=${PAGE_SIZE}`,
         config
@@ -73,13 +75,15 @@ const Prefabrik = ({ index }) => {
     }
   };
 
-  useEffect(() => {
-    if (index == 5) {
-      fetchFeaturedEstates();
-    } else {
-      setFeaturedEstates([]);
-    }
-  }, [index, user]);
+  useFocusEffect(
+    useCallback(() => {
+      if (index == 5) {
+        fetchFeaturedEstates(true);
+      } else {
+        setFeaturedEstates([]);
+      }
+    }, [index, user])
+  );
 
   const filteredHomes = featuredEstates.filter(
     (estate) => estate.step1_slug === "konut"
@@ -107,7 +111,6 @@ const Prefabrik = ({ index }) => {
         </View>
       ) : (
         <>
-          
           {refreshing && (
             <View
               style={{
@@ -147,7 +150,7 @@ const Prefabrik = ({ index }) => {
                     title={item.housing_title}
                     loading={loading}
                     location={item.city_title + " / " + item.county_title}
-                    image={`${apiUrl}/housing_images/${
+                    image={`${frontEndUriBase}housing_images/${
                       JSON.parse(item.housing_type_data).image
                     }`}
                     column1_additional={item.column1_additional}
@@ -185,44 +188,44 @@ const Prefabrik = ({ index }) => {
                 ListHeaderComponent={
                   <View>
                     <View style={{ paddingHorizontal: 0 }}>
-            <Image
-              source={PrefabrikBanner}
-              style={{ width: "100%", height: 120 }}
-              resizeMode="cover"
-            />
-          </View>
-          <View style={styles.header}>
-            <Text style={{ fontSize: 14, fontWeight: 700 }}>
-              ÖNE ÇIKAN PREFABRİK İLANLARI
-            </Text>
+                      <Image
+                        source={PrefabrikBanner}
+                        style={{ width: "100%", height: 120 }}
+                        resizeMode="cover"
+                      />
+                    </View>
+                    <View style={styles.header}>
+                      <Text style={{ fontSize: 14, fontWeight: 700 }}>
+                        ÖNE ÇIKAN PREFABRİK İLANLARI
+                      </Text>
 
-            <TouchableOpacity style={styles.allBtn}>
-              <Text
-                style={{ color: "white", fontSize: 12, fontWeight: "bold" }}
-                onPress={() =>
-                  navigation.navigate("Drawer", {
-                    screen: "AllRealtorAdverts",
-                    params: {
-                      name: "Emlak İlanları",
-                      slug: "emlak-ilanlari",
-                      data: filteredHomes,
-                      count: filteredHomes.length,
-                      type: null,
-                      optional: "satilik",
-                      title: "konut",
-                      check: "prefabrik-ev",
-                      city: null,
-                      county: null,
-                      hood: null,
-                    },
-                  })
-                }
-              >
-                Tüm İlanları Gör
-              </Text>
-            </TouchableOpacity>
-          </View>
-
+                      <TouchableOpacity style={styles.allBtn}>
+                        <Text
+                          style={{
+                            color: "white",
+                            fontSize: 12,
+                            fontWeight: "bold",
+                          }}
+                          onPress={() =>
+                            navigation.navigate("AllRealtorAdverts", {
+                              name: "Emlak İlanları",
+                              slug: "emlak-ilanlari",
+                              data: filteredHomes,
+                              count: filteredHomes.length,
+                              type: null,
+                              optional: "satilik",
+                              title: "konut",
+                              check: "prefabrik-ev",
+                              city: null,
+                              county: null,
+                              hood: null,
+                            })
+                          }
+                        >
+                          Tüm İlanları Gör
+                        </Text>
+                      </TouchableOpacity>
+                    </View>
                   </View>
                 }
                 onEndReachedThreshold={0.1}

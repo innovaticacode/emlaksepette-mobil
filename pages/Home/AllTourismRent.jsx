@@ -11,8 +11,9 @@ import {
 } from "react-native";
 import { ALERT_TYPE, Dialog } from "react-native-alert-notification";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import { apiUrl, frontEndUriBase } from "../../components/methods/apiRequest";
 
-const apiUrl = "https://private.emlaksepette.com";
+
 
 export default function AllTourismRent(prosp) {
   const { navigation } = prosp;
@@ -22,7 +23,7 @@ export default function AllTourismRent(prosp) {
   const fetchFeaturedStores = async () => {
     try {
       const response = await axios.get(
-        `${apiUrl}/api/get_featured_acente_brands`
+        `${apiUrl}get_featured_acente_brands`
       );
       if (response.data.length > 0) {
         setTourismBrand(response.data);
@@ -72,7 +73,7 @@ export default function AllTourismRent(prosp) {
                 <View style={styles.imageArea}>
                   <ImageBackground
                     source={{
-                      uri: `${apiUrl}/storage/profile_images/${item.profile_image}`,
+                      uri: `${frontEndUriBase}storage/profile_images/${item.profile_image}`,
                     }}
                     alt="brands"
                     resizeMode="contain"

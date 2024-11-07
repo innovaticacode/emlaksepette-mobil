@@ -22,9 +22,11 @@ import FranchiseBanner from "../../components/FranchiseBanner";
 import WhatIsEmlakSepette from "../../components/WhatIsEmlakSepette";
 import SliderEstateBar from "../../components/SliderEstateBar";
 import SliderTourismRent from "./SliderTourismRent";
-import RealtorPost from "../../components/RealtorPost";
-
-const apiUrl = "https://private.emlaksepette.com";
+import { apiUrl, frontEndUri, frontEndUriBase } from "../../components/methods/apiRequest";
+import Arrow from 'react-native-vector-icons/SimpleLineIcons'
+import SliderBarForFeature from "../../components/SliderBarForFeature";
+import RealtorCardHome from "../../components/Card/RealtorCardHomePage/RealtorCardHome";
+import RealtorPost from "../../components/Card/RealtorCard/RealtorPost";
 
 const FirstHome = (props) => {
   const { index } = props;
@@ -39,14 +41,15 @@ const FirstHome = (props) => {
   const pagerViewRef = useRef(null);
   const [sellAdvert, setSellAdvert] = useState([]);
   const [dailyRental, setDailyRental] = useState([]);
-  const [popularConstructionBrands, setPopularConstructionBrands] = useState(
-    []
-  );
-
+  const [rentAdvert, setrentAdvert] = useState([])
+  const [sellDevren, setsellDevren] = useState([])
+  const [popularConstructionBrands, setPopularConstructionBrands] = useState([]);
+  const [creatorBrands, setcreatorBrands] = useState([])
+  const [Bungalov, setBungalov] = useState([])
   // Fetch featured sliders
   const fetchFeaturedSliders = async () => {
     try {
-      const response = await axios.get(`${apiUrl}/api/featured-sliders`);
+      const response = await axios.get(`${apiUrl}featured-sliders`);
       setFeaturedSliders(response.data);
       return setLoadingSliders(false);
     } catch (error) {
@@ -58,7 +61,7 @@ const FirstHome = (props) => {
   const fetchFeaturedProjects = async () => {
     try {
       setLoadingProjects(true);
-      const response = await axios.get(`${apiUrl}/api/featured-projects`);
+      const response = await axios.get(`${apiUrl}featured-projects`);
       const projects = response.data.data.slice(0, 6); // Get first 5 projects
       return setFeaturedProjects(projects);
     } catch (error) {
@@ -70,7 +73,7 @@ const FirstHome = (props) => {
 
   const fetchFranchiseBrands = async () => {
     try {
-      const response = await axios.get(`${apiUrl}/api/franchise-markalari`);
+      const response = await axios.get(`${apiUrl}franchise-markalari`);
       setFranchise(response.data.data);
     } catch (error) {
       console.log("Error fetching franchise brands:", error);
@@ -80,7 +83,7 @@ const FirstHome = (props) => {
   const fetchPopularConstructionBrands = async () => {
     try {
       const response = await axios.get(
-        `${apiUrl}/api/popular-construction-brands`
+        `${apiUrl}popular-construction-brands`
       );
       // console.log("Popular Construction Brands: ", response.data);
       if (response.data.length > 0) {
@@ -90,11 +93,27 @@ const FirstHome = (props) => {
       console.log("Error fetching popular construction brands:", error);
     }
   };
-
+  const fetchPopularCreatorBrands = async () => {
+    try {
+      const response = await axios.get(
+        `${apiUrl}uretici-markalari`
+      );
+      // console.log("Popular Construction Brands: ", response.data);
+      if (response?.data?.producer_users?.length > 0) {
+        setcreatorBrands(response?.data?.producer_users);
+      }
+    } catch (error) {
+      console.log("Error fetching uretici:", error);
+    }
+  };
   useEffect(() => {
-    fetchFeaturedProjects();
-    fetchFranchiseBrands();
-    fetchPopularConstructionBrands();
+    if (index==0) {
+      fetchFeaturedProjects();
+      fetchFranchiseBrands();
+      fetchPopularConstructionBrands();
+      fetchPopularCreatorBrands()
+    }
+
   }, [index]);
 
   useEffect(() => {
@@ -142,17 +161,29 @@ const FirstHome = (props) => {
   const advertsForSale = async () => {
     try {
       const response = await axios.get(
-        `https://private.emlaksepette.com/api/real-estates`
+        `${apiUrl}real-estates`
       );
 
-      const advertSellFilter = response.data.filter(
+      const advertSellFilter = response?.data?.filter(
         (item) => item.step2_slug === "satilik"
       );
-      const advertDailyRentalFilter = response.data.filter(
+      const advertRentFilter = response?.data?.filter(
+        (item) => item.step2_slug === "kiralik"
+      );
+      const advertDailyRentalFilter = response?.data?.filter(
         (item) => item.step2_slug === "gunluk-kiralik"
       );
-      setDailyRental(advertDailyRentalFilter.slice(0, 6));
-      setSellAdvert(advertSellFilter.slice(0, 6));
+      const advertSellDevren = response?.data?.filter(
+        (item) => item.step2_slug === "devren-satilik"
+      );
+      const advertBungalov = response?.data?.filter(
+        (item) => item?.housing_type_title === "Bungalov"
+      );
+      setDailyRental(advertDailyRentalFilter?.slice(0, 6));
+      setSellAdvert(advertSellFilter?.slice(0, 6));
+      setrentAdvert(advertRentFilter?.slice(0,6))
+      setsellDevren(advertSellDevren?.slice(0,6))
+      setBungalov(advertBungalov?.slice(0,6))
     } catch (error) {
       console.error("Error fetching real estate data:", error);
     }
@@ -161,6 +192,43 @@ const FirstHome = (props) => {
   useEffect(() => {
     advertsForSale();
   }, []);
+  const [tourismRent, setTourismRent] = useState([]);
+  const [featuredStores, setFeaturedStores] = useState([]);
+  const fetchFeaturedStores = async () => {
+    try {
+     
+      const response = await axios.get(
+        apiUrl+"get_featured_acente_brands"
+      );
+      if (response?.data?.length > 0) {
+        setTourismRent(response.data);
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      
+    }
+  };
+  const fetchFeaturedStoresEstate = async () => {
+    try {
+      const response = await axios.get(
+        `${apiUrl}popular-estate-brands`
+      );
+      if (response.data.length > 0) {
+        setFeaturedStores(response.data);
+        setloading(true);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  useEffect(() => {
+    fetchFeaturedStores();
+    fetchFeaturedStoresEstate();
+  }, []);
+ 
+
+
 
   return (
     <AlertNotificationRoot>
@@ -202,7 +270,7 @@ const FirstHome = (props) => {
                     >
                       <ImageBackground
                         source={{
-                          uri: `${apiUrl}/storage/sliders/${item.mobile_image}`,
+                          uri: `${frontEndUriBase}/storage/sliders/${item.mobile_image}`,
                         }}
                         style={styles.imageBackground}
                         resizeMode="cover"
@@ -229,12 +297,7 @@ const FirstHome = (props) => {
             </View>
 
             {/* Popular Construction Brands */}
-            <View style={styles.sliderBarContainer}>
-              <Text style={styles.sliderBarTitle}>
-                ÖNE ÇIKAN İNŞAAT MARKALARI
-              </Text>
-              <SliderBar loading={loadingProjects} />
-            </View>
+         
 
             {/* Featured Projects */}
             <View style={styles.featuredProjectsContainer}>
@@ -246,13 +309,18 @@ const FirstHome = (props) => {
                     </View>
                   ) : (
                     <>
-                      <View
-                        style={{
-                          flexDirection: "row",
-                          justifyContent: "space-between",
-                        }}
+                             <View style={styles.sliderBarContainer}>
+              <Text style={styles.sliderBarTitle}>
+                Emlak Sepette Ayrıcalıkları
+              </Text>
+              <SliderBarForFeature loading={loadingProjects} />
+            </View>
+            <ScrollView
+                        horizontal={true}
+                        contentContainerStyle={{gap:10}}
+                        showsHorizontalScrollIndicator={false}
                       >
-                        <View>
+                      
                           <ProjectButton
                             color="#0E49B5"
                             text="Yatırım Projeleri"
@@ -263,8 +331,8 @@ const FirstHome = (props) => {
                             text="Villa Projeleri"
                             onPress={navigateToVillaProjects}
                           />
-                        </View>
-                        <View>
+                       
+                      
                           <ProjectButton
                             color="#A70107"
                             text="Lansman Projeleri"
@@ -274,8 +342,9 @@ const FirstHome = (props) => {
                             color="#06065d"
                             text="Ticari Projeler"
                           />
-                        </View>
-                      </View>
+                     
+                      </ScrollView>
+           
 
                       <FlatList
                         data={featuredProjects}
@@ -290,7 +359,7 @@ const FirstHome = (props) => {
                               key={index}
                               project={item}
                               caption={item.project_title}
-                              ımage={`${apiUrl}/${item.image.replace(
+                              ımage={`${frontEndUriBase}/${item.image.replace(
                                 "public/",
                                 "storage/"
                               )}`}
@@ -301,25 +370,39 @@ const FirstHome = (props) => {
                               // acıklama={item.description
                               //   .replace(/<\/?[^>]+(>|$)/g, "")
                               //   .replace(/&nbsp;/g, " ")}
-                              ProfilImage={`${apiUrl}/storage/profile_images/${item.user.profile_image}`}
+                              ProfilImage={`${frontEndUriBase}/storage/profile_images/${item.user.profile_image}`}
                               loading={loadingProjects}
                             />
                           </View>
                         )}
                         ListHeaderComponent={
-                          <View style={styles.featuredProjectsHeader}>
+                          <View style={{gap:9}}>
+                                       <View style={styles.sliderBarContainer}>
+              <Text style={styles.sliderBarTitle}>
+                Öne Çıkan İnşaat Markaları
+              </Text>
+              <SliderBar loading={loadingProjects} />
+            </View>
+                               <View style={styles.featuredProjectsHeader}>
                             <Text style={styles.featuredProjectsTitle}>
-                              ÖNE ÇIKAN PROJELER
+                              Öne Çıkan Projeler
                             </Text>
                             <TouchableOpacity
                               style={styles.allProjectsButton}
                               onPress={navigateToAllProjects}
                             >
+                           
                               <Text style={styles.allProjectsButtonText}>
-                                Tüm Projeleri Gör
+                                Tümünü Gör
                               </Text>
+                              <Arrow name="arrow-right" color={'#EA2C2E'}/>
                             </TouchableOpacity>
                           </View>
+                          
+                     
+                      
+                          </View>
+                     
                         }
                         scrollEnabled={false}
                       />
@@ -336,7 +419,7 @@ const FirstHome = (props) => {
             >
               <View style={styles.featuredProjectsHeader}>
                 <Text style={styles.featuredProjectsTitle}>
-                  FRANCHİSE MARKALARI
+                  Franchise Markaları
                 </Text>
                 <TouchableOpacity
                   style={styles.allProjectsButton}
@@ -344,6 +427,7 @@ const FirstHome = (props) => {
                 >
                   <Text style={styles.allProjectsButtonText}>Tümünü Gör</Text>
                 </TouchableOpacity>
+                <Arrow name="arrow-right" color={'#EA2C2E'}/>
               </View>
               <View>
                 <FlatList
@@ -355,7 +439,7 @@ const FirstHome = (props) => {
                   renderItem={({ item, index }) => (
                     <FranchiseBanner
                       key={index}
-                      image={`${apiUrl}/logos/${item.logo}`}
+                      image={`${frontEndUriBase}/logos/${item.logo}`}
                       text={item.title}
                     />
                   )}
@@ -363,10 +447,10 @@ const FirstHome = (props) => {
               </View>
             </View>
             {/* bottom area */}
-            <View>
+            <View style={{paddingTop:9,paddingBottom:9}}>
               <View style={styles.featuredProjectsHeader}>
                 <Text style={styles.featuredProjectsTitle}>
-                  ÖNE ÇIKAN GAYRİMENKUL OFİSLERİ
+                  Öne Çıkan Gayrimenkul Ofisleri
                 </Text>
                 <TouchableOpacity
                   style={styles.allProjectsButton}
@@ -374,39 +458,69 @@ const FirstHome = (props) => {
                 >
                   <Text style={styles.allProjectsButtonText}>Tümünü Gör</Text>
                 </TouchableOpacity>
+                <Arrow name="arrow-right" color={'#EA2C2E'}/>
               </View>
 
-              <View>
-                <SliderEstateBar />
+              <View style={{paddingTop:5,paddingBottom:5}}>
+          
+                <SliderTourismRent data={featuredStores} />
               </View>
 
               <>
-                <View
-                  style={{
-                    flexDirection: "row",
-                    justifyContent: "space-between",
-                    marginBottom: 10,
-                    marginTop: 20,
-                  }}
+                <ScrollView
+                    horizontal={true}
+                    contentContainerStyle={{gap:10,paddingTop:5,paddingBottom:5}}
+                    showsHorizontalScrollIndicator={false}
                 >
-                  <View>
+               
                     <ProjectButton color="#0E49B5" text="Paylaşımlı İlanlar" />
                     <ProjectButton color="#A2DAE0" text="Sahibinden" />
-                  </View>
-                  <View>
+                 
                     <ProjectButton color="#A70107" text="Kiralık Konutlar" />
                     <ProjectButton color="#06065d" text="Emlak Ofisinden" />
-                  </View>
-                </View>
+                 
+                </ScrollView>
               </>
 
               <React.Fragment>
                 <View style={styles.seperator} />
+                <View>
+                <View style={styles.featuredProjectsHeader}>
+                      <Text style={styles.featuredProjectsTitle}>
+                        Satılık İlanlar
+                      </Text>
+                      <TouchableOpacity
+                        style={styles.allProjectsButton}
+                        onPress={() =>
+                          navigation.navigate("AllRealtorAdverts", {
+                            name: "Emlak İlanları",
+                            slug: "emlak-ilanlari",
+                            data: sellAdvert,
+                            count: sellAdvert.length,
+                            type: "konut",
+                            optional: null,
+                            title: null,
+                            check: null,
+                            city: null,
+                            county: null,
+                            hood: null,
+                          })
+                        }
+                      >
+                        <Text style={styles.allProjectsButtonText}>
+                          Tümünü Gör
+                        </Text>
+                      </TouchableOpacity>
+                      <Arrow name="arrow-right" color={'#EA2C2E'}/>
+                    </View>
                 <FlatList
                   data={sellAdvert}
+                  contentContainerStyle={{gap:5,padding:5}}
+                  horizontal={true}
+                  showsHorizontalScrollIndicator={false}
                   keyExtractor={(item, index) => index.toString()}
                   renderItem={({ item, index }) => (
-                    <RealtorPost
+                    <RealtorCardHome
                       housing={item}
                       title={item.housing_title}
                       HouseId={item.id}
@@ -416,7 +530,7 @@ const FirstHome = (props) => {
                           : JSON.parse(item.housing_type_data)["price"]
                       }
                       location={`${item.city_title} / ${item.county_title}`} // Combine location
-                      image={`${apiUrl}/housing_images/${
+                      image={`${frontEndUriBase}/housing_images/${
                         JSON.parse(item.housing_type_data)?.image ?? ""
                       }`} // Safely access image
                       column1_name={`${
@@ -447,12 +561,21 @@ const FirstHome = (props) => {
                       }`} // Safely access column4_name
                       column4_additional={item.column4_additional}
                       dailyRent={false}
+                      sold={item.sold}
                     />
                   )}
-                  ListHeaderComponent={
-                    <View style={styles.featuredProjectsHeader}>
+               
+                
+                />
+                </View>
+              
+              </React.Fragment>
+              <React.Fragment>
+                <View style={styles.seperator} />
+                <View>
+                <View style={styles.featuredProjectsHeader}>
                       <Text style={styles.featuredProjectsTitle}>
-                        SATILIK İLANLAR
+                        Kiralık İlanlar
                       </Text>
                       <TouchableOpacity
                         style={styles.allProjectsButton}
@@ -476,15 +599,158 @@ const FirstHome = (props) => {
                           Tümünü Gör
                         </Text>
                       </TouchableOpacity>
+                      <Arrow name="arrow-right" color={'#EA2C2E'}/>
                     </View>
-                  }
+                <FlatList
+                  data={rentAdvert}
+                  contentContainerStyle={{gap:5,padding:5}}
+                  horizontal={true}
+                  showsHorizontalScrollIndicator={false}
+                  keyExtractor={(item, index) => index.toString()}
+                  renderItem={({ item, index }) => (
+                    <RealtorCardHome
+                      housing={item}
+                      title={item.housing_title}
+                      HouseId={item.id}
+                      price={
+                        item.step2_slug == "gunluk-kiralik"
+                          ? JSON.parse(item.housing_type_data)["daily_rent"]
+                          : JSON.parse(item.housing_type_data)["price"]
+                      }
+                      location={`${item.city_title} / ${item.county_title}`} // Combine location
+                      image={`${frontEndUriBase}/housing_images/${
+                        JSON.parse(item.housing_type_data)?.image ?? ""
+                      }`} // Safely access image
+                      column1_name={`${
+                        JSON.parse(item.housing_type_data)?.[
+                          item.column1_name
+                        ] ?? ""
+                      }`} // Safely access column1_name
+                      column1_additional={item.column1_additional}
+                      column2_name={`${
+                        JSON.parse(item.housing_type_data)?.[
+                          item.column2_name
+                        ] ?? ""
+                      }`} // Safely access column2_name
+                      column2_additional={item.column2_additional}
+                      openSharing={
+                        JSON.parse(item.housing_type_data)["open_sharing1"]
+                      }
+                      column3_name={`${
+                        JSON.parse(item.housing_type_data)?.[
+                          item.column3_name
+                        ] ?? ""
+                      }`} // Safely access column3_name
+                      column3_additional={item.column3_additional}
+                      column4_name={`${
+                        JSON.parse(item.housing_type_data)?.[
+                          item.column4_name
+                        ] ?? ""
+                      }`} // Safely access column4_name
+                      column4_additional={item.column4_additional}
+                      dailyRent={false}
+                      sold={item.sold}
+                    />
+                  )}
+               
+                
                 />
+                </View>
+              
+              </React.Fragment>
+              <React.Fragment>
+                <View style={styles.seperator} />
+                <View>
+                <View style={styles.featuredProjectsHeader}>
+                      <Text style={styles.featuredProjectsTitle}>
+                        Devren Satılık İlanlar
+                      </Text>
+                      <TouchableOpacity
+                        style={styles.allProjectsButton}
+                        onPress={() =>
+                          navigation.navigate("AllRealtorAdverts", {
+                            name: "Emlak İlanları",
+                            slug: "emlak-ilanlari",
+                            data: sellAdvert,
+                            count: sellAdvert.length,
+                            type: "konut",
+                            optional: null,
+                            title: null,
+                            check: null,
+                            city: null,
+                            county: null,
+                            hood: null,
+                          })
+                        }
+                      >
+                        <Text style={styles.allProjectsButtonText}>
+                          Tümünü Gör
+                        </Text>
+                      </TouchableOpacity>
+                      <Arrow name="arrow-right" color={'#EA2C2E'}/>
+                    </View>
+                <FlatList
+                  data={sellDevren}
+                  contentContainerStyle={{gap:5,padding:5}}
+                  horizontal={true}
+                  showsHorizontalScrollIndicator={false}
+                  keyExtractor={(item, index) => index.toString()}
+                  renderItem={({ item, index }) => (
+                    <RealtorCardHome
+                      housing={item}
+                      title={item.housing_title}
+                      HouseId={item.id}
+                      price={
+                        item.step2_slug == "gunluk-kiralik"
+                          ? JSON.parse(item.housing_type_data)["daily_rent"]
+                          : JSON.parse(item.housing_type_data)["price"]
+                      }
+                      location={`${item.city_title} / ${item.county_title}`} // Combine location
+                      image={`${frontEndUriBase}/housing_images/${
+                        JSON.parse(item.housing_type_data)?.image ?? ""
+                      }`} // Safely access image
+                      column1_name={`${
+                        JSON.parse(item.housing_type_data)?.[
+                          item.column1_name
+                        ] ?? ""
+                      }`} // Safely access column1_name
+                      column1_additional={item.column1_additional}
+                      column2_name={`${
+                        JSON.parse(item.housing_type_data)?.[
+                          item.column2_name
+                        ] ?? ""
+                      }`} // Safely access column2_name
+                      column2_additional={item.column2_additional}
+                      openSharing={
+                        JSON.parse(item.housing_type_data)["open_sharing1"]
+                      }
+                      column3_name={`${
+                        JSON.parse(item.housing_type_data)?.[
+                          item.column3_name
+                        ] ?? ""
+                      }`} // Safely access column3_name
+                      column3_additional={item.column3_additional}
+                      column4_name={`${
+                        JSON.parse(item.housing_type_data)?.[
+                          item.column4_name
+                        ] ?? ""
+                      }`} // Safely access column4_name
+                      column4_additional={item.column4_additional}
+                      dailyRent={false}
+                      sold={item.sold}
+                    />
+                  )}
+               
+                
+                />
+                </View>
+              
               </React.Fragment>
             </View>
-            <View>
+            <View style={{paddingTop:9,paddingBottom:9}}>
               <View style={styles.featuredProjectsHeader}>
                 <Text style={styles.featuredProjectsTitle}>
-                  TURİZM AMAÇLI KİRALAMA MARKALARI
+                  Turizm Amaçlı Kiralama Markaları
                 </Text>
                 <TouchableOpacity
                   style={styles.allProjectsButton}
@@ -492,28 +758,25 @@ const FirstHome = (props) => {
                 >
                   <Text style={styles.allProjectsButtonText}>Tümünü Gör</Text>
                 </TouchableOpacity>
+                <Arrow name="arrow-right" color={'#EA2C2E'}/>
               </View>
               <>
-                <SliderTourismRent />
+                <SliderTourismRent data={tourismRent} />
               </>
             </View>
-            <View
-              style={{
-                flexDirection: "row",
-                justifyContent: "space-between",
-                marginBottom: 10,
-                marginTop: 10,
-              }}
+            <ScrollView
+                horizontal={true}
+                contentContainerStyle={{gap:10}}
+                showsHorizontalScrollIndicator={false}
             >
-              <View>
+             
                 <ProjectButton color="#0E49B5" text="Kiralık Oteller" />
                 <ProjectButton color="#A70107" text="Kiralık Bungalov" />
-              </View>
-              <View>
+             
                 <ProjectButton color="#A2DAE0" text="Kiralık Tiny House" />
                 <ProjectButton color="#06065d" text="Kiralık Müstakil Ev" />
-              </View>
-            </View>
+              
+            </ScrollView>
             <View
               style={{
                 width: "100%",
@@ -526,7 +789,7 @@ const FirstHome = (props) => {
               <React.Fragment>
                 <View style={styles.featuredProjectsHeader}>
                   <Text style={styles.featuredProjectsTitle}>
-                    GÜNLÜK KİRALIK İLANLAR
+                    Günlük Kiralık İlanlar
                   </Text>
                   <TouchableOpacity
                     style={styles.allProjectsButton}
@@ -548,13 +811,17 @@ const FirstHome = (props) => {
                   >
                     <Text style={styles.allProjectsButtonText}>Tümünü Gör</Text>
                   </TouchableOpacity>
+                  <Arrow name="arrow-right" color={'#EA2C2E'}/>
                 </View>
-
+              
                 <FlatList
                   data={dailyRental}
+                  contentContainerStyle={{gap:5,padding:5}}
                   keyExtractor={(item, index) => index.toString()}
+                  horizontal={true}
+                  showsHorizontalScrollIndicator={false}
                   renderItem={({ item, index }) => (
-                    <RealtorPost
+                    <RealtorCardHome
                       openSharing={
                         JSON.parse(item.housing_type_data)["open_sharing1"]
                       }
@@ -567,7 +834,7 @@ const FirstHome = (props) => {
                       housing={item}
                       title={item.housing_title}
                       location={item.city_title + " / " + item.county_title}
-                      image={`${apiUrl}/housing_images/${
+                      image={`${frontEndUriBase}/housing_images/${
                         JSON.parse(item.housing_type_data).image
                       }`}
                       column1_additional={item.column1_additional}
@@ -611,7 +878,7 @@ const FirstHome = (props) => {
 
                 <View style={styles.seperator} />
               </React.Fragment>
-              <View
+              {/* <View
                 style={{
                   width: "100%",
                   height: "auto",
@@ -619,9 +886,116 @@ const FirstHome = (props) => {
                 }}
               >
                 <WhatIsEmlakSepette />
+              </View> */}
+            </View>
+            <View>
+              <View style={{width:'100%',height:90}}>
+                  <ImageBackground source={{uri:'https://private.emlaksepette.com/bungalowhp.png'}} style={{width:'100%',height:'100%'}} resizeMode='cover'/>
               </View>
             </View>
+            <View style={[styles.featuredProjectsHeader,{paddingTop:9}]}>
+                <Text style={styles.featuredProjectsTitle}>
+                  Öne Çıkan Üretici Markaları
+                </Text>
+                <TouchableOpacity
+                  style={styles.allProjectsButton}
+                  onPress={() => navigation.navigate("AllFeaturedRealEstate")}
+                >
+                  <Text style={styles.allProjectsButtonText}>Tümünü Gör</Text>
+                </TouchableOpacity>
+                <Arrow name="arrow-right" color={'#EA2C2E'}/>
+              </View>
+
+              <View style={{paddingTop:5,paddingBottom:5}}>
+          
+                <SliderTourismRent data={creatorBrands} />
+              </View>
+              <View>
+                <View style={styles.featuredProjectsHeader}>
+                      <Text style={styles.featuredProjectsTitle}>
+                        Bungalov İlanları
+                      </Text>
+                      <TouchableOpacity
+                        style={styles.allProjectsButton}
+                        onPress={() =>
+                          navigation.navigate("AllRealtorAdverts", {
+                            name: "Emlak İlanları",
+                            slug: "emlak-ilanlari",
+                            data: sellAdvert,
+                            count: sellAdvert.length,
+                            type: "konut",
+                            optional: null,
+                            title: null,
+                            check: null,
+                            city: null,
+                            county: null,
+                            hood: null,
+                          })
+                        }
+                      >
+                        <Text style={styles.allProjectsButtonText}>
+                          Tümünü Gör
+                        </Text>
+                      </TouchableOpacity>
+                      <Arrow name="arrow-right" color={'#EA2C2E'}/>
+                    </View>
+                <FlatList
+                  data={Bungalov}
+                  contentContainerStyle={{gap:5,padding:5}}
+                  horizontal={true}
+                  showsHorizontalScrollIndicator={false}
+                  keyExtractor={(item, index) => index.toString()}
+                  renderItem={({ item, index }) => (
+                    <RealtorCardHome
+                      housing={item}
+                      title={item.housing_title}
+                      HouseId={item.id}
+                      price={
+                        item.step2_slug == "gunluk-kiralik"
+                          ? JSON.parse(item.housing_type_data)["daily_rent"]
+                          : JSON.parse(item.housing_type_data)["price"]
+                      }
+                      location={`${item.city_title} / ${item.county_title}`} // Combine location
+                      image={`${frontEndUriBase}/housing_images/${
+                        JSON.parse(item.housing_type_data)?.image ?? ""
+                      }`} // Safely access image
+                      column1_name={`${
+                        JSON.parse(item.housing_type_data)?.[
+                          item.column1_name
+                        ] ?? ""
+                      }`} // Safely access column1_name
+                      column1_additional={item.column1_additional}
+                      column2_name={`${
+                        JSON.parse(item.housing_type_data)?.[
+                          item.column2_name
+                        ] ?? ""
+                      }`} // Safely access column2_name
+                      column2_additional={item.column2_additional}
+                      openSharing={
+                        JSON.parse(item.housing_type_data)["open_sharing1"]
+                      }
+                      column3_name={`${
+                        JSON.parse(item.housing_type_data)?.[
+                          item.column3_name
+                        ] ?? ""
+                      }`} // Safely access column3_name
+                      column3_additional={item.column3_additional}
+                      column4_name={`${
+                        JSON.parse(item.housing_type_data)?.[
+                          item.column4_name
+                        ] ?? ""
+                      }`} // Safely access column4_name
+                      column4_additional={item.column4_additional}
+                      dailyRent={false}
+                      sold={item.sold}
+                    />
+                  )}
+               
+                
+                />
+                </View>
           </ScrollView>
+
         </SafeAreaView>
       )}
     </AlertNotificationRoot>
@@ -640,7 +1014,7 @@ const styles = StyleSheet.create({
     flexGrow: 1,
   },
   sliderContainer: {
-    height: 200,
+    height: 150,
     borderRadius: 10,
     marginBottom: 10,
     overflow: "hidden",
@@ -669,7 +1043,7 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
   },
   sliderBarTitle: {
-    fontSize: 14,
+    fontSize: 13,
     fontWeight: "700",
     marginBottom: 7,
   },
@@ -682,7 +1056,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    paddingVertical: 8,
+    paddingVertical: 5,
   },
   featuredProjectsTitle: {
     fontSize: 14,
@@ -691,16 +1065,16 @@ const styles = StyleSheet.create({
     width: "70%",
   },
   allProjectsButton: {
-    backgroundColor: "#EA2C2E",
-    paddingVertical: 5,
-    borderRadius: 4,
+   flexDirection:'row',
+   alignItems:'center',
+    gap:5,
   },
   allProjectsButtonText: {
-    color: "white",
-    fontSize: 12,
-    paddingHorizontal: 12,
+    color: "#EA2C2E",
+    fontSize: 13,
+  
     fontWeight: "bold",
-    padding: 3,
+    
   },
   projectPostContainer: {
     marginTop: 7,

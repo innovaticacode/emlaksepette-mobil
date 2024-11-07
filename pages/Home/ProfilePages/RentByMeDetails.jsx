@@ -20,6 +20,7 @@ import IconInfo from "react-native-vector-icons/Feather";
 import SuccessForRent from "./SuccessForRent";
 import axios from "axios";
 import { color } from "@rneui/base";
+import { apiUrl } from "../../../components/methods/apiRequest";
 const { width, height } = Dimensions.get("window");
 export default function RentByMeDetails({ route }) {
   const [user, setUser] = useState({});
@@ -42,7 +43,7 @@ export default function RentByMeDetails({ route }) {
     try {
       if (user?.access_token) {
         const response = await axios.get(
-          `https://private.emlaksepette.com/api/get_customer_reservations/{id}`,
+          `${apiUrl}get_customer_reservations/${id}`,
           {
             headers: {
               Authorization: `Bearer ${user?.access_token}`,

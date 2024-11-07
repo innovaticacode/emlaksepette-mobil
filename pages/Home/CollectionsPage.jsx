@@ -37,6 +37,7 @@ import {
   AlertNotificationRoot,
 } from "react-native-alert-notification";
 import NoDataScreen from "../../components/NoDataScreen";
+import { apiUrl } from "../../components/methods/apiRequest";
 export default function CollectionsPage() {
   const [showAlert, setshowAlert] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
@@ -151,7 +152,7 @@ export default function CollectionsPage() {
     try {
       if (user?.access_token && user) {
         const userInfo = await axios.get(
-          "https://private.emlaksepette.com/api/users/" + user?.id,
+          `${apiUrl}users/` + user?.id,
           {
             headers: {
               Authorization: `Bearer ${user.access_token}`,
@@ -175,7 +176,7 @@ export default function CollectionsPage() {
 
       if (user?.access_token) {
         const response = await axios.get(
-          "https://private.emlaksepette.com/api/client/collections",
+          `${apiUrl}client/collections`,
           {
             headers: {
               Authorization: `Bearer ${user?.access_token}`,
@@ -206,7 +207,7 @@ export default function CollectionsPage() {
       let formData = new FormData();
       formData.append();
       const response = await axios.delete(
-        `https://private.emlaksepette.com/api/collection/${id}/delete`,
+        `${apiUrl}collection/${id}/delete`,
         {
           headers: {
             Authorization: `Bearer ${user?.access_token}`,
@@ -244,7 +245,7 @@ export default function CollectionsPage() {
       formData.append("collectionName", newName);
 
       const response = await axios.post(
-        `https://private.emlaksepette.com/api/collection/${id}/edit`,
+        `${apiUrl}collection/${id}/edit`,
         formData,
         {
           headers: {
@@ -278,7 +279,7 @@ export default function CollectionsPage() {
     };
     try {
       const response = await axios.delete(
-        `https://private.emlaksepette.com/api/collections`,
+        `${apiUrl}collections`,
 
         {
           data: data,
@@ -314,7 +315,7 @@ export default function CollectionsPage() {
     };
     try {
       const response = await axios.delete(
-        `https://private.emlaksepette.com/api/collections`,
+        `${apiUrl}collections`,
 
         {
           data: data,

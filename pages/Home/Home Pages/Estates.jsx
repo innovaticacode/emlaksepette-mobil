@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   View,
   Text,
@@ -8,21 +8,23 @@ import {
   RefreshControl,
   Image,
 } from "react-native";
-import RealtorPost from "../../../components/RealtorPost";
+
 import axios from "axios";
 import { ActivityIndicator } from "react-native-paper";
 import Modal from "react-native-modal";
 import { getValueFor } from "../../../components/methods/user";
-import { useNavigation } from "@react-navigation/native";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import Icon from "react-native-vector-icons/AntDesign";
 import SliderEstateBar from "../../../components/SliderEstateBar";
 import { AlertNotificationRoot } from "react-native-alert-notification";
 import Housing from "../../../src/assets/images/Konut.png";
+import { apiUrl, frontEndUriBase } from "../../../components/methods/apiRequest";
+import RealtorPost from "../../../components/Card/RealtorCard/RealtorPost";
 const PAGE_SIZE = 10;
 
 const Estates = ({ index }) => {
   const navigation = useNavigation();
-  const apiUrl = "https://private.emlaksepette.com/";
+  
   const [featuredEstates, setFeaturedEstates] = useState([]);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
@@ -41,7 +43,7 @@ const Estates = ({ index }) => {
 
     try {
       const response = await axios.get(
-        `${apiUrl}api/real-estates?page=${reset ? 1 : page}&limit=${PAGE_SIZE}`,
+        `${apiUrl}real-estates?page=${reset ? 1 : page}&limit=${PAGE_SIZE}`,
         config
       );
       const newEstates = Object.values(response.data);
@@ -72,13 +74,15 @@ const Estates = ({ index }) => {
     }
   };
 
-  useEffect(() => {
-    if (index == 2) {
-      fetchFeaturedEstates();
-    } else {
-      setFeaturedEstates([]);
-    }
-  }, [index, user]);
+  useFocusEffect(
+    useCallback(() => {
+      if (index == 2) {
+        fetchFeaturedEstates(true);
+      } else {
+        setFeaturedEstates([]);
+      }
+    }, [index, user])
+  );
 
   useEffect(() => {
     getValueFor("user", setuser);
@@ -151,7 +155,7 @@ const Estates = ({ index }) => {
                     title={item.housing_title}
                     loading={loading}
                     location={item.city_title + " / " + item.county_title}
-                    image={`${apiUrl}/housing_images/${
+                    image={`${frontEndUriBase}housing_images/${
                       JSON.parse(item.housing_type_data).image
                     }`}
                     openSharing={
@@ -213,21 +217,18 @@ const Estates = ({ index }) => {
                       <TouchableOpacity
                         style={styles.allBtn}
                         onPress={() =>
-                          navigation.navigate("Drawer", {
-                            screen: "AllRealtorAdverts",
-                            params: {
-                              name: "Emlak İlanları",
-                              slug: "emlak-ilanlari",
-                              data: filteredHomes,
-                              count: filteredHomes.length,
-                              type: "konut",
-                              optional: null,
-                              title: null,
-                              check: null,
-                              city: null,
-                              county: null,
-                              hood: null,
-                            },
+                          navigation.navigate("AllRealtorAdverts", {
+                            name: "Emlak İlanları",
+                            slug: "emlak-ilanlari",
+                            data: filteredHomes,
+                            count: filteredHomes.length,
+                            type: "konut",
+                            optional: null,
+                            title: null,
+                            check: null,
+                            city: null,
+                            county: null,
+                            hood: null,
                           })
                         }
                       >
@@ -257,6 +258,7 @@ const Estates = ({ index }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    
   },
   item: {
     padding: 20,

@@ -35,7 +35,9 @@ export default function SellAndRentFormPage(props) {
           </View>
           <TouchableOpacity
             activeOpacity={0.8}
-            onPress={() => {}}
+            onPress={() => {
+              navigation.navigate("ShareScreen");
+            }}
             style={styles.redButton}
           >
             <Text style={styles.redButtonText}>Hemen İlan Ver</Text>

@@ -21,28 +21,11 @@ import GraphicForRealtor from "./RealtorAdvertTabPages/GraphicForRealtor";
 import BalanceForRealtor from "./RealtorAdvertTabPages/BalanceForRealtor";
 import PendingBalance from "./RealtorAdvertTabPages/PendingBalance";
 import RejectBalance from "./RealtorAdvertTabPages/RejectBalance";
-const FirstRoute = () => (
-  <View style={{ flex: 1, backgroundColor: "#ff4081" }} />
-);
+import { apiRequestGetWithBearer } from "../../../components/methods/apiRequest";
+import { useEffect } from "react";
 
-const SecondRoute = () => (
-  <View style={{ flex: 1, backgroundColor: "#673ab7" }} />
-);
 
-const renderScene = ({ route, index }) => {
-  switch (route.key) {
-    case "first":
-      return <GraphicForRealtor index={index} />;
-    case "second":
-      return <BalanceForRealtor index={index} />;
-    case "shop":
-      return <PendingBalance index={index} />;
-    case "area":
-      return <RejectBalance index={index} />;
-    default:
-      return null;
-  }
-};
+
 
 const CustomTabBar = ({
   navigationState,
@@ -53,28 +36,28 @@ const CustomTabBar = ({
 }) => {
   const menuItems = [
     {
-      text: "Genel İstatistikler",
+      text: "Tüm İşlemler",
       color: "#EEEDEB",
       textColor: "#000000",
       Inactive: "#FFFFFF",
       InactiveTex: "#000000",
     },
     {
-      text: "Kazancım",
+      text: "Ciro",
       color: "#BFFFC5",
       textColor: "#00D21A",
       Inactive: "#FFFFFF",
       InactiveTex: "#000000",
     },
     {
-      text: "Onay Bekleyen Kazancım",
+      text: "Bekleyen İşlemler",
       color: "#FFECB2",
       textColor: "#FF9908",
       Inactive: "#FFFFFF",
       InactiveTex: "#000000",
     },
     {
-      text: "Reddedilen Kazancım",
+      text: "Reddedilen İşlemler",
       color: "#FBD5D5",
       textColor: "#EA2C2E",
       Inactive: "#FFFFFF",
@@ -122,11 +105,24 @@ const CustomTabBar = ({
     </View>
   );
 };
+
 export default function RealtorAdvertTab() {
-  const navigation = useNavigation();
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-  const toggleDrawer = () => {
-    setIsDrawerOpen(!isDrawerOpen);
+ 
+
+  const renderScene = ({ route, index }) => {
+  
+    switch (route.key) {
+      case "first":
+        return <GraphicForRealtor index={index}  />;
+      case "second":
+        return <BalanceForRealtor index={index} />;
+      case "shop":
+        return <PendingBalance index={index} />;
+      case "area":
+        return <RejectBalance index={index} />;
+      default:
+        return null;
+    }
   };
   const layout = useWindowDimensions();
   const [tab, settab] = React.useState(0);
@@ -140,20 +136,17 @@ export default function RealtorAdvertTab() {
   const indexChange = (index) => {
     setIndex(index);
     settab(index);
+   
   };
 
+ 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#F6F6F6" }}>
-      <View style={{ paddingLeft: 8, paddingRight: 8, paddingTop: 10 }}>
-        {/* <TextInput
-          style={{ padding: 6, backgroundColor: "#FFFFFF", borderRadius: 5 }}
-          placeholder="Kelime veya İlan no ile ara.."
-        /> */}
-      </View>
+
       <TabView
-        navigationState={{ index, routes }}
+        navigationState={{ index, routes, }}
         renderScene={({ route, jumpTo }) =>
-          renderScene({ route, jumpTo, index })
+          renderScene({ route, jumpTo, index  })
         }
         onIndexChange={indexChange}
         initialLayout={{ width: layout.width }}

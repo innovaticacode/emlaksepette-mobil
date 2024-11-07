@@ -8,15 +8,16 @@ import {
   StyleSheet,
   TouchableOpacity,
 } from "react-native";
+import { apiUrl, frontEndUriBase } from "../../components/methods/apiRequest";
 
-const apiUrl = "https://private.emlaksepette.com";
+
 const AllFranchiseBrands = (props) => {
   const { navigation } = props;
   const [brands, setBrands] = useState([]);
 
   const fetchBrands = async () => {
     try {
-      const response = await axios.get(`${apiUrl}/api/franchise-markalari`);
+      const response = await axios.get(`${apiUrl}franchise-markalari`);
       return setBrands(response.data.data);
     } catch (error) {
       return console.error("Error fetching brands:", error);
@@ -46,7 +47,7 @@ const AllFranchiseBrands = (props) => {
             >
               <Image
                 source={{
-                  uri: `${apiUrl}/logos/${item.logo}`,
+                  uri: `${frontEndUriBase}/logos/${item.logo}`,
                 }}
                 alt="brands"
                 resizeMode="contain"

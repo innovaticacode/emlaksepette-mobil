@@ -8,17 +8,15 @@ import {
   ScrollView,
 } from "react-native-gesture-handler";
 import { getValueFor } from "./methods/user";
+import { apiUrl, frontEndUriBase } from "./methods/apiRequest";
 
 export default function SliderBar() {
-  const apiUrl = "https://private.emlaksepette.com";
   const [loading, setloading] = useState(false);
   const [featuredStores, setFeaturedStores] = useState([]);
 
   const fetchFeaturedStores = async () => {
     try {
-      const response = await axios.get(
-        "https://private.emlaksepette.com/api/popular-construction-brands"
-      );
+      const response = await axios.get(`${apiUrl}popular-construction-brands`);
       if (response.data.length > 0) {
         setFeaturedStores(response.data);
         setloading(true);
@@ -38,26 +36,27 @@ export default function SliderBar() {
   const firstBrands = [
     {
       text: "Al Sat Acil",
-      image: "https://private.emlaksepette.com/images/al-sat-acil-image.png",
+      image: `${frontEndUriBase}images/al-sat-acil-image.png`,
       color: "#FF0000",
       url: "",
       isShow: "All",
     },
     {
       text: "Emlak Kulüp",
-      image: "https://private.emlaksepette.com/images/emlak-kulup.png",
+      image: `${frontEndUriBase}images/emlak-kulup.png`,
       color: "#F4A226",
       url: "RealtorClubExplore",
       isShow: "Emlak Ofisi",
     },
     {
       text: "Sat Kirala",
-      image: "https://private.emlaksepette.com/images/sat-kirala.png",
+      image: `${frontEndUriBase}images/sat-kirala.png`,
       color: "#0000FF",
       url: "SellAndRent",
       isShow: "All",
     },
   ];
+
   const [user, setuser] = useState({});
   useEffect(() => {
     getValueFor("user", setuser);
@@ -71,38 +70,7 @@ export default function SliderBar() {
           top: 0,
         }}
       >
-        {firstBrands.map((item, i) => (
-          <View
-            style={{
-              width: 80,
-              marginLeft: 3,
-              alignItems: "center",
-              display:
-                item.isShow == "All"
-                  ? "flex"
-                  : "none" &&
-                    (!user.access_token ||
-                      user.type == 1 ||
-                      item.isShow == user.corporate_type)
-                  ? "flex"
-                  : "none",
-            }}
-            key={i}
-          >
-            <SliderItem
-              navigationStatus={true}
-              borderColor={item.color}
-              image={item.image}
-              url={item.url}
-            />
-            <Text
-              numberOfLines={2}
-              style={{ fontSize: 11, textAlign: "center" }}
-            >
-              {capitalizeFirstLetter(item.text)}
-            </Text>
-          </View>
-        ))}
+       
 
         {featuredStores.map((item, index) => (
           <View
@@ -120,7 +88,8 @@ export default function SliderBar() {
                   borderColor={"#ebebeb"}
                   StoreID={item.id}
                   key={index}
-                  image={`${apiUrl}/storage/profile_images/${item.profile_image}`}
+                  image={`${frontEndUriBase}/storage/profile_images/${item.profile_image}`}
+                  userName={item.name}
                 />
                 <Text
                   numberOfLines={2}

@@ -15,6 +15,7 @@ import { FaLess } from "react-icons/fa";
 import { Alert } from "react-native";
 import RNPickerSelect from "react-native-picker-select";
 import axios from "axios";
+import { apiUrl } from "../../components/methods/apiRequest";
 
 export default function SendSellAndRentForm() {
   const [selectedIndexRadio, setIndexRadio] = useState(0);
@@ -181,7 +182,7 @@ export default function SendSellAndRentForm() {
   const fetchData = async () => {
     try {
       const response = await axios.get(
-        "https://private.emlaksepette.com/api/cities"
+        apiUrl+"cities"
       );
       return response.data;
     } catch (error) {
@@ -203,7 +204,7 @@ export default function SendSellAndRentForm() {
   const fetchDataCounty = async (value) => {
     try {
       const response = await axios.get(
-        `https://private.emlaksepette.com/api/counties/${value}`
+        `${apiUrl}counties/${value}`
       );
       return response.data;
     } catch (error) {
@@ -233,7 +234,7 @@ export default function SendSellAndRentForm() {
   const fetchDataNeigbour = async (value) => {
     try {
       const response = await axios.get(
-        `https://private.emlaksepette.com/api/neighborhoods/${value}`
+        `${apiUrl}neighborhoods/${value}`
       );
       return response.data;
     } catch (error) {

@@ -1,30 +1,39 @@
-import { View, Text, StyleSheet } from 'react-native'
-import React from 'react'
+import { View, Text, StyleSheet, ImageBackground } from 'react-native'
+import React, { useEffect, useState } from 'react'
 import Icon from 'react-native-vector-icons/Ionicons'
-export default function AdvertComponent() {
+import { addDotEveryThreeDigits } from '../../../components/methods/merhod'
+import { frontEndUriBase } from '../../../components/methods/apiRequest'
+export default function AdvertComponent({title,ımage,ID,price,item}) {
+  
+  
   return (
     <View style={styles.card}>
     <View style={{width:'25%'}}>
         <View style={{width:98,height:97,backgroundColor:'blue',borderRadius:8}}>
-
+          {
+            ımage ?
+            <ImageBackground source={{uri:ımage}} style={{width:'100%',height:'100%'}}/>:
+            <Text>Resim Yok Baba</Text>
+          }
+           
         </View>
     </View>
       <View style={{width:'72%'}}>
             <View style={{flex:1.2/2,flexDirection:'row'}}>
                     <View style={{width:'70%',gap:3,paddingTop:5,paddingLeft:5}}>
-                        <Text style={{fontSize:14,fontWeight:'600'}}>Kandıra Projesi 4 No’lu</Text>
-                        <Text style={{fontSize:13}}>İlan No: 121451</Text>
+                        <Text style={{fontSize:14,fontWeight:'600'}}>{title}</Text>
+                        <Text style={{fontSize:13}}>İlan No:{item.project ? `1000${ID}`: `2000${ID}`}</Text>
                     </View>
                     <View style={{width:'30%',paddingTop:6,gap:5}}>
                       
                   
                     <View>
-                        <Text style={{fontWeight:'600'}}>100.000 ₺</Text>
+                        <Text style={{fontWeight:'600'}}>{addDotEveryThreeDigits(price)} ₺</Text>
                     </View>
                     </View>
                    
             </View>
-            <View style={{flex:0.8/2,flexDirection:'row',justifyContent:'space-around'}}>
+            {/* <View style={{flex:0.8/2,flexDirection:'row',justifyContent:'space-around'}}>
             <View style={{flexDirection:'row',alignItems:'center',gap:6}}>
                         <Icon name='heart' color={'red'} size={15}/>
                         <Text style={{color:'grey',fontSize:12}}>100 </Text>
@@ -37,7 +46,7 @@ export default function AdvertComponent() {
                         <Icon name='eye' color={'grey'} size={16}/>
                         <Text style={{color:'grey',fontSize:12}}>100 </Text>
                 </View>
-            </View>
+            </View> */}
             <View>
                     
             </View>

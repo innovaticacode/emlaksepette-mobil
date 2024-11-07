@@ -50,7 +50,7 @@ export default function DetailsSettings({ data, HomeId }) {
                 key={index}
                 info={setting.label}
                 numbers={
-                  setting.label=='Krediye Uygun'?
+                 ( setting.label=='Krediye Uygun' || setting.label=='Eşyalı') ?
                   JSON.parse(data.projectHousingsList[HomeId][setting.column_name + "[]"]):
                   data.projectHousingsList[HomeId][setting.column_name + "[]"]
                 }

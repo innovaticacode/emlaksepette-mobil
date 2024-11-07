@@ -10,6 +10,7 @@ import {
   TouchableOpacity,
   ScrollView,
   Share,
+  BackHandler,
 } from "react-native";
 import Icon from "react-native-vector-icons/AntDesign";
 import ShoppingIcon from "react-native-vector-icons/Entypo";
@@ -37,9 +38,12 @@ import { useDispatch } from "react-redux";
 import { setNotificationsRedux } from "../../store/slices/Notifications/NotificationsSlice";
 import { Skeleton } from "@rneui/themed";
 import { id } from "date-fns/locale";
+import { setShoppingProfile } from "../../store/slices/Menu/MenuSlice";
+import { apiUrl, frontEndUriBase } from "../../components/methods/apiRequest";
 
 export default function ShoppingProfile() {
-  const { width, height, fontScale } = Dimensions.get("window");
+  const [checkImage, setCheckImage] = useState(null);
+  const isFocused = useIsFocused();
   const dispatch = useDispatch();
   const navigation = useNavigation();
   const route = useRoute();
@@ -53,7 +57,7 @@ export default function ShoppingProfile() {
   const [permissionsUser, setPermissionsUser] = useState([]);
   const [dialogVisible, setDialogVisible] = useState(false);
   const [openAccor, setOpenAccor] = useState({});
-  const PhotoUrl = "https://private.emlaksepette.com/storage/profile_images/";
+
   const [profileImage, setProfileImage] = useState(null);
   useEffect(() => {
     getValueFor("user", setUser);
@@ -68,14 +72,11 @@ export default function ShoppingProfile() {
           return;
         }
 
-        const response = await axios.get(
-          "https://private.emlaksepette.com/api/user/notification",
-          {
-            headers: {
-              Authorization: `Bearer ${user.access_token}`,
-            },
-          }
-        );
+        const response = await axios.get(apiUrl + "user/notification", {
+          headers: {
+            Authorization: `Bearer ${user.access_token}`,
+          },
+        });
 
         if (response.data) {
           setNotifications(response.data);
@@ -103,14 +104,11 @@ export default function ShoppingProfile() {
     setLoading(true);
     try {
       if (user.access_token && user) {
-        const response = await axios.get(
-          `https://private.emlaksepette.com/api/users/${user?.id}`,
-          {
-            headers: {
-              Authorization: `Bearer ${user?.access_token}`,
-            },
-          }
-        );
+        const response = await axios.get(`${apiUrl}users/${user?.id}`, {
+          headers: {
+            Authorization: `Bearer ${user?.access_token}`,
+          },
+        });
         setPermissionsUser(response.data.user.permissions);
       }
     } catch (error) {
@@ -179,10 +177,11 @@ export default function ShoppingProfile() {
         notificationsCount: 0,
       })
     );
+    await SecureStore.setItemAsync("user", "");
     setTimeout(() => {
-      SecureStore.setItemAsync("user", "");
+      dispatch(setShoppingProfile({ isShoppingProfile: false }));
       navigation.push("Drawer", { screen: "Home" }, { status: "logout" });
-    }, 500);
+    }, 150);
   };
 
   const toggleAccor = (index) => {
@@ -209,17 +208,17 @@ export default function ShoppingProfile() {
     setLoading(true);
     try {
       if (user?.access_token && user) {
-        const userInfo = await axios.get(
-          "https://private.emlaksepette.com/api/users/" + user?.id,
-          {
-            headers: {
-              Authorization: `Bearer ${user.access_token}`,
-            },
-          }
-        );
+        const userInfo = await axios.get(apiUrl + "users/" + user?.id, {
+          headers: {
+            Authorization: `Bearer ${user.access_token}`,
+          },
+        });
         const userData = userInfo?.data?.user;
         setnamFromGetUser(userData);
-        setProfileImage(PhotoUrl + userData.profile_image);
+
+        setProfileImage(
+          `${frontEndUriBase}storage/profile_images/${userData.profile_image}`
+        );
       }
     } catch (error) {
       console.error("Kullanıcı verileri güncellenirken hata oluştu:", error);
@@ -229,6 +228,31 @@ export default function ShoppingProfile() {
     }
   };
 
+  useEffect(() => {
+    if (profileImage) {
+      if (
+        profileImage.endsWith("indir.jpeg") ||
+        profileImage.endsWith("indir.jpg")
+      ) {
+        if (namFromGetUser?.name) {
+          const fullName = namFromGetUser.name.split(" ");
+          let checkImage = "";
+          if (fullName.length > 1) {
+            // İsim ve soyisim varsa, her iki kelimenin ilk harfini al
+            const name = fullName[0].charAt(0).toUpperCase();
+            const surname = fullName[1].charAt(0).toUpperCase();
+            checkImage = name + surname;
+          } else {
+            // Sadece tek isim varsa ilk iki harfi al
+            checkImage = fullName[0].slice(0, 2).toUpperCase();
+          }
+          setCheckImage(checkImage);
+        }
+      } else {
+        setCheckImage(null);
+      }
+    }
+  }, [profileImage, namFromGetUser]);
 
   useEffect(() => {
     GetUserInfo();
@@ -237,7 +261,7 @@ export default function ShoppingProfile() {
   const onShare = async () => {
     try {
       const result = await Share.share({
-        message: `https://private.emlaksepette.com/`,
+        message: frontEndUriBase,
       });
 
       if (result.action === Share.sharedAction) {
@@ -253,6 +277,25 @@ export default function ShoppingProfile() {
       alert(error.message);
     }
   };
+
+  useEffect(() => {
+    const backAction = () => {
+      dispatch(setShoppingProfile({ isShoppingProfile: false }));
+      return false;
+    };
+    const backHandler = BackHandler.addEventListener(
+      "hardwareBackPress",
+      backAction
+    );
+    return () => backHandler.remove();
+  }, [dispatch]);
+
+  useEffect(() => {
+    if (isFocused) {
+      dispatch(setShoppingProfile({ isShoppingProfile: true }));
+    }
+  }, [isFocused]);
+
   return (
     <>
       {loading ? (
@@ -658,7 +701,7 @@ export default function ShoppingProfile() {
             ></View>
 
             <ImageBackground
-              source={require("../../src/assets/images/profilePhoto.jpg")}
+              source={require("../../src/assets/images/profilePhoto.png")}
               style={{ width: "100%", height: "100%" }}
               imageStyle={{
                 borderBottomLeftRadius: 30,
@@ -676,19 +719,20 @@ export default function ShoppingProfile() {
                   gap: 20,
                 }}
               >
-                <View
-                  style={{
-                    width: 65,
-                    height: 65,
-                  }}
-                >
-                  <View style={style.profileImage}>
-                    <Image
-                      source={{ uri: profileImage }}
-                      style={{ width: "100%", height: "100%" }}
-                      borderRadius={50}
-                    />
-                  </View>
+                <View style={style.profileImgArea}>
+                  {checkImage ? (
+                    <View style={style.checkTextArea}>
+                      <Text style={style.checkText}>{checkImage}</Text>
+                    </View>
+                  ) : (
+                    <View style={style.profileImage}>
+                      <Image
+                        source={{ uri: profileImage }}
+                        style={{ width: "100%", height: "100%" }}
+                        borderRadius={50}
+                      />
+                    </View>
+                  )}
                 </View>
                 <View
                   style={{
@@ -711,9 +755,14 @@ export default function ShoppingProfile() {
                         {namFromGetUser.name}
                       </Text>
                       <View style={{ width: 20, height: 20, left: 10 }}>
-                        <ImageBackground
+                        <Image
                           source={require("../../src/assets/images/BadgeYellow.png")}
-                          style={{ flex: 1 }}
+                          style={{
+                            flex: 1,
+                            width: 20,
+                            height: 20,
+                            resizeMode: "contain",
+                          }}
                           onLoadEnd={() => setLoading(false)}
                         />
 
@@ -732,29 +781,90 @@ export default function ShoppingProfile() {
                         fontWeight: "bold",
                       }}
                     >
-                      {user.corporate_type || namFromGetUser?.role}
+                      ({user.corporate_type || namFromGetUser?.role}){" "}
+                      {namFromGetUser?.is_brand == 1 &&
+                        namFromGetUser?.brand_id && (
+                          <Text>- Franchise Markası</Text>
+                        )}
                     </Text>
                   </View>
                 </View>
-
               </View>
-              <View style={{ paddingTop: 20, alignItems: 'center' }}>
-                <View style={[style.card, { flexDirection: 'row', padding: 0, paddingVertical: 0, justifyContent: 'space-around', alignItems: 'center', marginVertical: 0, paddingHorizontal: 0, width: '91%' }]}>
-
-                  <TouchableOpacity style={{ width: '50%', padding: 10, flexDirection: 'row', gap: 5, alignItems: 'center', justifyContent: 'center' }}
+              <View style={{ paddingTop: 20, alignItems: "center" }}>
+                <View
+                  style={[
+                    style.card,
+                    {
+                      flexDirection: "row",
+                      padding: 0,
+                      paddingVertical: 0,
+                      justifyContent: "space-around",
+                      alignItems: "center",
+                      marginVertical: 0,
+                      paddingHorizontal: 0,
+                      width: "91%",
+                    },
+                  ]}
+                >
+                  <TouchableOpacity
+                    style={{
+                      width: "50%",
+                      padding: 10,
+                      flexDirection: "row",
+                      gap: 5,
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
                     onPress={() => {
-                      navigation.navigate('Profile', { name: '', id: namFromGetUser.id })
+                      navigation.navigate("Profile", {
+                        name: "",
+                        id: namFromGetUser.id,
+                      });
                     }}
                   >
-                    <ShoppingIcon name="shop" size={19} color={'#EA2C2E'} />
-                    <Text style={{ fontSize: 13, color: '#333', textAlign: 'center', fontWeight: '600' }}>Mağazama Git</Text>
+                    <ShoppingIcon name="shop" size={19} color={"#EA2C2E"} />
+                    <Text
+                      style={{
+                        fontSize: 13,
+                        color: "#333",
+                        textAlign: "center",
+                        fontWeight: "600",
+                      }}
+                    >
+                      Mağazama Git
+                    </Text>
                   </TouchableOpacity>
-                  <View style={{ padding: 1, height: '70%', backgroundColor: '#CCCCCC' }} />
-                  <TouchableOpacity style={{ padding: 10, width: '50%', flexDirection: 'row', gap: 5, alignItems: 'center', justifyContent: 'center' }} onPress={() => {
-                    onShare()
-                  }}>
-                    <ShoppingIcon name="upload" size={19} color={'#EA2C2E'} />
-                    <Text style={{ fontSize: 13, color: '#333', textAlign: 'center', fontWeight: '600' }}>Mağazamı Paylaş</Text>
+                  <View
+                    style={{
+                      padding: 1,
+                      height: "70%",
+                      backgroundColor: "#CCCCCC",
+                    }}
+                  />
+                  <TouchableOpacity
+                    style={{
+                      padding: 10,
+                      width: "50%",
+                      flexDirection: "row",
+                      gap: 5,
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                    onPress={() => {
+                      onShare();
+                    }}
+                  >
+                    <ShoppingIcon name="upload" size={19} color={"#EA2C2E"} />
+                    <Text
+                      style={{
+                        fontSize: 13,
+                        color: "#333",
+                        textAlign: "center",
+                        fontWeight: "600",
+                      }}
+                    >
+                      Mağazamı Paylaş
+                    </Text>
                   </TouchableOpacity>
                 </View>
               </View>
@@ -771,10 +881,10 @@ export default function ShoppingProfile() {
                       (user.type == 2 &&
                         user.corporate_type == "Emlak Ofisi" &&
                         group.label == "Satış Noktalarımız") ||
-                        (user.corporate_type !== "Emlak Ofisi" &&
-                          user.type == 2 &&
-                          group.label == "Emlak Kulüp") ||
-                        (user.type == 1 && group.label == "Satış Noktalarımız")
+                      (user.corporate_type !== "Emlak Ofisi" &&
+                        user.type == 2 &&
+                        group.label == "Emlak Kulüp") ||
+                      (user.type == 1 && group.label == "Satış Noktalarımız")
                         ? "none"
                         : "flex",
                   }}
@@ -913,7 +1023,7 @@ const style = StyleSheet.create({
   },
   header: {
     width: "100%",
-    height: width < 400 ? "30%" : '25%',
+    height: width < 400 ? "30%" : "25%",
     justifyContent: "center",
     borderBottomLeftRadius: 30,
     borderBottomRightRadius: 30,
@@ -1035,5 +1145,26 @@ const style = StyleSheet.create({
         elevation: 5,
       },
     }),
+  },
+  checkTextArea: {
+    justifyContent: "center",
+    alignItems: "center",
+    width: "100%",
+    height: "100%",
+    borderRadius: 50,
+    backgroundColor: "#C9C9C9",
+    opacity: 0.7,
+  },
+  checkText: {
+    fontSize: 24,
+    color: "#FFF",
+    fontWeight: "900",
+    textAlign: "center",
+    textAlignVertical: "center",
+    justifyContent: "center",
+  },
+  profileImgArea: {
+    width: 64,
+    height: 64,
   },
 });

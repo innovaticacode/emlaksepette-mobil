@@ -19,7 +19,7 @@ import EyeIcon from "react-native-vector-icons/Ionicons";
 import IconSocialMedia from "react-native-vector-icons/AntDesign";
 import MailCheck from "react-native-vector-icons/MaterialCommunityIcons";
 import Modal from "react-native-modal";
-import { apiRequestPost } from "../../../components/methods/apiRequest";
+import { apiRequestPost, apiUrl } from "../../../components/methods/apiRequest";
 import * as SecureStore from "expo-secure-store";
 import { useFocusEffect, useRoute } from "@react-navigation/native";
 import HTML from "react-native-render-html";
@@ -32,9 +32,12 @@ import {
   Dialog,
   AlertNotificationRoot,
 } from "react-native-alert-notification";
+import { useDispatch } from "react-redux";
+import { setShoppingProfile } from "../../../store/slices/Menu/MenuSlice";
 
 export default function Login({ navigation }) {
   const route = useRoute();
+  const dispatch = useDispatch();
   const [status, setStatus] = useState(false);
   const [statusMessage, setStatusMessage] = useState(false);
   const [showLengthAlert, setShowLengthAlert] = useState(false);
@@ -64,7 +67,7 @@ export default function Login({ navigation }) {
   const show = () => {
     setShow(!Show);
   };
-  
+
   const handleTextInputChange = (text) => {
     setEmail(text);
   };
@@ -86,9 +89,13 @@ export default function Login({ navigation }) {
             "PhoneVerify",
             JSON.stringify(res.data.phone_verification_status)
           );
+          // if (res.data.phone_verification_status==0) {
+          //   navigation.navigate('VerifyScreen')
+          // }
           setUser(res.data); // Kullanıcı durumunu günceller
           navigation.goBack(); // Modalı kapatır ve bir önceki sayfaya döner
-          navigation.replace('Home')
+          dispatch(setShoppingProfile({ isShoppingProfile: false }));
+          navigation.replace("Drawer", { screen: "Home" });
         } else {
           // setshowMailSendAlert(true);
           setStatus(false);
@@ -98,7 +105,6 @@ export default function Login({ navigation }) {
             textBody: `${res.data.message}`,
             button: "Tamam",
           });
-          console.log(res.data.message + "OKAN");
           // setStatusMessage(res.data.message);
         }
       })
@@ -122,7 +128,6 @@ export default function Login({ navigation }) {
       Login();
     }
   };
-    
 
   Login.navigationOptions = {
     headerShown: false,
@@ -151,7 +156,7 @@ export default function Login({ navigation }) {
 
   const fetchData = async () => {
     setloadingDeal(true);
-    const url = `https://private.emlaksepette.com/api/sayfa/bireysel-uyelik-sozlesmesi`;
+    const url = `${apiUrl}sayfa/bireysel-uyelik-sozlesmesi`;
     try {
       const data = await fetchFromURL(url);
       setDeals(data.content);
@@ -165,8 +170,10 @@ export default function Login({ navigation }) {
   const closeModal = () => {
     navigation.goBack();
   };
-  
-  
+
+  useEffect(() => {
+    dispatch(setShoppingProfile({ isShoppingProfile: false }));
+  }, [navigation]);
 
   return (
     <AlertNotificationRoot>
@@ -290,11 +297,9 @@ export default function Login({ navigation }) {
                             placeholder="Şifre"
                             secureTextEntry={Show ? false : true}
                             value={password}
-                            onChangeText={(value)=>setPassword(value)}
+                            onChangeText={(value) => setPassword(value)}
                           />
-                             </View>
-                         
-                     
+                        </View>
 
                         <View
                           style={{
@@ -349,14 +354,11 @@ export default function Login({ navigation }) {
                       </View>
                       <TouchableOpacity
                         style={{
-                         
                           backgroundColor: "#EA2C2E",
                           padding: 8,
                           borderRadius: 5,
                         }}
                         onPress={Submit}
-                        
-                       
                       >
                         {loadingForLogin ? (
                           <ActivityIndicator color="white" size={"small"} />

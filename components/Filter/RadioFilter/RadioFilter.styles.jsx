@@ -31,6 +31,7 @@ export const styles = StyleSheet.create({
     paddingTop: 15,
   },
   title: {
+    textAlign:'center',
     alignItems: "center",
     color: "#333",
     fontSize: 17,

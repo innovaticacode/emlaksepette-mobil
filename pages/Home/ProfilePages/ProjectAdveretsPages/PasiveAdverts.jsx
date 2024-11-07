@@ -11,7 +11,7 @@ import ProjectAdvertPost from "../profileComponents/ProjectAdvertPost";
 import Modal from "react-native-modal";
 import Icon from "react-native-vector-icons/AntDesign";
 import MaterialIcon from "react-native-vector-icons/MaterialCommunityIcons";
-import { apiRequestGetWithBearer } from "../../../../components/methods/apiRequest";
+import { apiRequestGetWithBearer, apiUrl } from "../../../../components/methods/apiRequest";
 import axios from "axios";
 import { getValueFor } from "../../../../components/methods/user";
 import { useNavigation } from "@react-navigation/native";
@@ -43,7 +43,7 @@ export default function ActiveAdverts({}) {
   const fetchProjects = async () => {
     try {
       const response = await axios.get(
-        "https://private.emlaksepette.com/api/get_my_projects?status=0&start=" +
+        apiUrl+"get_my_projects?status=0&start=" +
           start +
           "&take=" +
           take,

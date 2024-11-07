@@ -7,29 +7,12 @@ import {
   GestureHandlerRootView,
   ScrollView,
 } from "react-native-gesture-handler";
+import { apiUrl, frontEndUriBase } from "./methods/apiRequest";
 
 export default function SliderEstateBar() {
-  const apiUrl = "https://private.emlaksepette.com";
+
   const [loading, setloading] = useState(false);
-  const [featuredStores, setFeaturedStores] = useState([]);
 
-  const fetchFeaturedStores = async () => {
-    try {
-      const response = await axios.get(
-        "https://private.emlaksepette.com/api/popular-estate-brands"
-      );
-      if (response.data.length > 0) {
-        setFeaturedStores(response.data);
-        setloading(true);
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  useEffect(() => {
-    fetchFeaturedStores();
-  }, []);
   const capitalizeFirstLetter = (text) => {
     return text.charAt(0).toUpperCase() + text.slice(1);
   };
@@ -62,7 +45,7 @@ export default function SliderEstateBar() {
                   borderColor={"#e6e6e6"}
                   StoreID={item.id}
                   key={index}
-                  image={`${apiUrl}/storage/profile_images/${item.profile_image}`}
+                  image={`${frontEndUriBase}/storage/profile_images/${item.profile_image}`}
                 />
                 <Text
                   numberOfLines={2}

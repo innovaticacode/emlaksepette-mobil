@@ -9,6 +9,7 @@ import React from "react";
 import Icon2 from "react-native-vector-icons/Entypo";
 import { useNavigation } from "@react-navigation/native";
 import { Platform } from "react-native";
+import { frontEndUriBase } from "../../../../components/methods/apiRequest";
 export default function CollectionItemPanel({ collection, panelInfo }) {
   const navigation = useNavigation();
 
@@ -37,10 +38,10 @@ export default function CollectionItemPanel({ collection, panelInfo }) {
                   uri:
                     panelInf.item_type === 2 &&
                     panelInf.housing?.housing_type_data
-                      ? `https://private.emlaksepette.com/housing_images/${
+                      ? `${frontEndUriBase}housing_images/${
                           JSON.parse(panelInf.housing.housing_type_data).images
                         }`
-                      : `https://private.emlaksepette.com/${panelInf.project.image.replace(
+                      : `${frontEndUriBase}${panelInf.project.image.replace(
                           "public",
                           "storage"
                         )}`,

@@ -18,11 +18,11 @@ import axios from "axios";
 import { getValueFor } from "../../../components/methods/user";
 import { useNavigation } from "@react-navigation/native";
 import { ActivityIndicator } from "react-native-paper";
+import { apiUrl } from "../../../components/methods/apiRequest";
 
 export default function ShopVitrin({ data, housingdata, settab }) {
   const navigation = useNavigation();
-  const ApiUrl = "https://private.emlaksepette.com/storage/store_banners/";
-  const ApiUrls = "https://private.emlaksepette.com";
+ 
 
   const [banners, setBanners] = useState([]);
   const [owners, setOwners] = useState([]);
@@ -77,7 +77,7 @@ export default function ShopVitrin({ data, housingdata, settab }) {
     try {
       if (user?.access_token) {
         const response = await axios.post(
-          "https://private.emlaksepette.com/api/institutional/add_to_cart",
+          apiUrl+"institutional/add_to_cart",
           formData,
           {
             headers: {

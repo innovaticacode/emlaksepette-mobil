@@ -26,6 +26,7 @@ import Icon3 from "react-native-vector-icons/MaterialCommunityIcons";
 import HTML from "react-native-render-html";
 import Modal from "react-native-modal";
 import AwesomeAlert from "react-native-awesome-alerts";
+import { apiUrl, frontEndUriBase } from "../../components/methods/apiRequest";
 
 export default function EditCommentForProject() {
   const [data, setData] = useState({});
@@ -52,7 +53,7 @@ export default function EditCommentForProject() {
   const [selectedIndex, setselectedIndex] = useState(null);
   const [removeImage, setremoveImage] = useState(false);
   const [comment, setcomment] = useState(commentInfo.comment || "");
-  const API_URL = "https://private.emlaksepette.com/";
+
   const [rating, setRating] = useState(commentInfo.rate); // Başlangıçta hiçbir yıldız dolu değil
   const [rate, setrate] = useState(commentInfo.rate);
   const [checkedForm, setCheckedForm] = React.useState(false);
@@ -72,7 +73,7 @@ export default function EditCommentForProject() {
         if (Array.isArray(parsedImages)) {
           const updatedImages = parsedImages.map((img) => {
             const fixedUrl = img.replace("public/", "storage/");
-            const fullUrl = `${API_URL}${fixedUrl}`;
+            const fullUrl = `${frontEndUriBase}${fixedUrl}`;
             console.log("Image URL:", fullUrl); // URL'yi kontrol edin
             return fullUrl;
           });
@@ -97,7 +98,7 @@ export default function EditCommentForProject() {
 
 
   const fetchDataDeal = async () => {
-    const url = `https://private.emlaksepette.com/api/sayfa/emlaksepette-yorum-yazma-kurallari`;
+    const url = `${apiUrl}sayfa/emlaksepette-yorum-yazma-kurallari`;
     try {
       const response = await fetch(url);
       // const data = await fetchFromURL(url);
@@ -200,7 +201,7 @@ export default function EditCommentForProject() {
       if (user?.access_token && rating > 0) {
         setloading2(true);
         const response = await axios.post(
-          `https://private.emlaksepette.com/api/user/${user.id}/${info.id}/comments/${commentID}/update`,
+          `${apiUrl}user/${user.id}/${info.id}/comments/${commentID}/update`,
           formData,
           {
             headers: {

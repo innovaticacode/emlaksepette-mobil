@@ -22,7 +22,11 @@ import LinkIcon from "react-native-vector-icons/SimpleLineIcons";
 import Star from "react-native-vector-icons/MaterialIcons";
 import Team from "./ProfilePageItem/Team";
 import { useNavigation, useRoute } from "@react-navigation/native";
-import { apiRequestGet } from "../../components/methods/apiRequest";
+import {
+  apiRequestGet,
+  apiUrl,
+  frontEndUriBase,
+} from "../../components/methods/apiRequest";
 import Modal from "react-native-modal";
 import { CheckBox } from "@rneui/themed";
 import { Platform } from "react-native";
@@ -37,7 +41,6 @@ import Filter from "../../assets/filter.png";
 import ProjectBottomSheetFilter from "../../components/ProjectBottomSheetFilter";
 import EstateBottomSheetFilter from "../../components/EstateBottomSheetFilter";
 
-const ApiUrl = "https://private.emlaksepette.com/";
 export default function Profile() {
   const route = useRoute();
   const [Housings, setHousings] = useState([]);
@@ -68,6 +71,7 @@ export default function Profile() {
   const scrollViewRef = useRef(null); // ScrollView için ref
   const [tabWidth, setTabWidth] = useState(0);
   const [projectData, setProjectData] = useState([]);
+  const [checkImage, setCheckImage] = useState(null);
   const [items, setItems] = useState(() => {
     const initialItems = [
       {
@@ -125,7 +129,7 @@ export default function Profile() {
       formData.append("email", emailId);
 
       const response = await axios.post(
-        "https://private.emlaksepette.com/api/institutional/give_offer",
+        apiUrl + "institutional/give_offer",
         formData,
         {
           headers: {
@@ -252,7 +256,7 @@ export default function Profile() {
   const onShare = async () => {
     try {
       const result = await Share.share({
-        message: `https://private.emlaksepette.com/`,
+        message: frontEndUriBase,
       });
 
       if (result.action === Share.sharedAction) {
@@ -288,8 +292,31 @@ export default function Profile() {
   }, [storeData]);
 
   useEffect(() => {
-    console.debug("====>>", storeData?.data?.corporate_type);
+    if (storeData) {
+      if (
+        storeData?.data?.profile_image === "indir.jpeg" ||
+        storeData?.data?.profile_image === "indir.jpg"
+      ) {
+        const fullName = storeData?.data?.name.split(" ");
+        let checkImage = "";
+
+        if (fullName.length > 1) {
+          // İsim ve soyisim varsa, her iki kelimenin ilk harfini al
+          const name = fullName[0].charAt(0).toUpperCase();
+          const surname = fullName[1].charAt(0).toUpperCase();
+          checkImage = name + surname;
+        } else {
+          // Sadece tek isim varsa ilk iki harfi al
+          checkImage = fullName[0].slice(0, 2).toUpperCase();
+        }
+
+        setCheckImage(checkImage);
+      } else {
+        setCheckImage(null);
+      }
+    }
   }, [storeData]);
+
   return (
     <>
       {loadingShopping ? (
@@ -353,21 +380,57 @@ export default function Profile() {
                 >
                   <View
                     style={{
-                      backgroundColor: "#fff",
-                      borderRadius: 50,
+                      width: 64,
+                      height: 64,
                     }}
                   >
-                    <Image
-                      source={{
-                        uri: `https://private.emlaksepette.com/storage/profile_images/${storeData?.data?.profile_image}`,
-                      }}
-                      style={{
-                        width: 50,
-                        height: 50,
-                        borderRadius: 50,
-                      }}
-                    />
+                    {checkImage ? (
+                      <View
+                        style={{
+                          justifyContent: "center",
+                          alignItems: "center",
+                          width: "100%",
+                          height: "100%",
+                          borderRadius: 50,
+                          backgroundColor: "#C9C9C9",
+                          opacity: 0.7,
+                        }}
+                      >
+                        <Text
+                          style={{
+                            fontSize: 24,
+                            color: "#FFF",
+                            fontWeight: "900",
+                            textAlign: "center",
+                            textAlignVertical: "center",
+                            justifyContent: "center",
+                          }}
+                        >
+                          {checkImage}
+                        </Text>
+                      </View>
+                    ) : (
+                      <View
+                        style={{
+                          borderRadius: 50,
+                          justifyContent: "center",
+                          alignItems: "center",
+                        }}
+                      >
+                        <Image
+                          source={{
+                            uri: `${frontEndUriBase}storage/profile_images/${storeData?.data?.profile_image}`,
+                          }}
+                          style={{
+                            width: 64,
+                            height: 64,
+                            borderRadius: 50,
+                          }}
+                        />
+                      </View>
+                    )}
                   </View>
+
                   <View>
                     <View>
                       <View
@@ -395,7 +458,11 @@ export default function Profile() {
                           color: color ? color : "#000000",
                         }}
                       >
-                        {storeData?.data?.corporate_type}
+                        {storeData?.data?.corporate_type}{" "}
+                        {storeData?.data?.is_brand == 1 &&
+                          storeData?.data?.brand_id && (
+                            <Text>- Franchise Markası</Text>
+                          )}
                       </Text>
                     </View>
                   </View>

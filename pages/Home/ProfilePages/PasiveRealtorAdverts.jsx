@@ -19,6 +19,7 @@ import Icon4 from "react-native-vector-icons/FontAwesome5";
 import { ActivityIndicator } from "react-native-paper";
 import { CheckBox } from "react-native-elements";
 import { Stack } from "@react-native-material/core";
+import { apiUrl } from "../../../components/methods/apiRequest";
 export default function PasiveRealtorAdverts() {
   const navigation = useNavigation();
   const [user, setUser] = useState({});
@@ -41,7 +42,7 @@ export default function PasiveRealtorAdverts() {
     setloading(true);
     try {
       const res = await axios.get(
-        "https://private.emlaksepette.com/api/get_my_housings?orderByHousings=" +
+        apiUrl+"get_my_housings?orderByHousings=" +
           sort,
         {
           headers: { Authorization: "Bearer " + user.access_token },
@@ -292,7 +293,10 @@ export default function PasiveRealtorAdverts() {
                     alignItems: "center",
                     gap: 10,
                   }}
-                  onPress={{}}
+                  onPress={() => {
+                    navigation.navigate("EditPending");
+                    setEditModalVisible(false);
+                  }}
                 >
                   <Icon3 name="mode-edit-outline" size={23} color={"#333"} />
                   <Text
@@ -307,7 +311,10 @@ export default function PasiveRealtorAdverts() {
                     alignItems: "center",
                     gap: 10,
                   }}
-                  onPress={{}}
+                  onPress={() => {
+                    navigation.navigate("EditPending");
+                    setEditModalVisible(false);
+                  }}
                 >
                   <Icon3 name="photo-library" size={21} color={"#333"} />
                   <Text

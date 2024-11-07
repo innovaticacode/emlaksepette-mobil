@@ -19,6 +19,7 @@ import { useNavigation } from "@react-navigation/native";
 import axios from "axios";
 import { getValueFor } from "./methods/user";
 import CommentItem from "../pages/Home/RealtorPages/CommentItem";
+import { apiUrl } from "./methods/apiRequest";
 export default function CommentForProject({ projectId }) {
   const navigation = useNavigation();
   const [checked, setChecked] = React.useState(false);
@@ -48,7 +49,7 @@ export default function CommentForProject({ projectId }) {
     try {
       if (user?.access_token) {
         const response = await axios.get(
-          `https://private.emlaksepette.com/api/project/${projectId}/comments`
+          `${apiUrl}project/${projectId}/comments`
         );
         setcomments(response.data);
       }

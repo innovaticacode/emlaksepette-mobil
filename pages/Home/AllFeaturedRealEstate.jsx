@@ -11,8 +11,9 @@ import {
 } from "react-native";
 import { ALERT_TYPE, Dialog, AlertNotificationRoot } from "react-native-alert-notification";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import { apiUrl, frontEndUriBase } from "../../components/methods/apiRequest";
 
-const apiUrl = "https://private.emlaksepette.com";
+
 
 const AllFeaturedRealEstate = (prosp) => {
   const { navigation } = prosp;
@@ -21,7 +22,7 @@ const AllFeaturedRealEstate = (prosp) => {
 
   const fetchFeaturedStores = async () => {
     try {
-      const response = await axios.get(`${apiUrl}/api/popular-estate-brands`);
+      const response = await axios.get(`${apiUrl}popular-estate-brands`);
       if (response.data.length > 0) {
         setEstateBrands(response.data);
       }
@@ -70,7 +71,7 @@ const AllFeaturedRealEstate = (prosp) => {
                   <View style={styles.imageArea}>
                     <ImageBackground
                       source={{
-                        uri: `${apiUrl}/storage/profile_images/${item.profile_image}`,
+                        uri: `${frontEndUriBase}storage/profile_images/${item.profile_image}`,
                       }}
                       alt="brands"
                       resizeMode="contain"
