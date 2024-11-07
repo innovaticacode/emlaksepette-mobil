@@ -113,7 +113,7 @@ export const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#D4D4D4",
     paddingVertical: 8,
-    paddingHorizontal: 14,
+    paddingHorizontal: 12,
     borderRadius: 6,
     gap: 6,
   },
