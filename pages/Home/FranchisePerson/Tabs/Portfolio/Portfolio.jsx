@@ -3,6 +3,7 @@ import React from "react";
 import { BasicButtons } from "../../../../../components";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { styles } from "./Portfolio.styles";
+import RealtorPost from "../../../../../components/Card/RealtorCard/RealtorPost";
 
 const Portfolio = () => {
   return (
@@ -36,6 +37,9 @@ const Portfolio = () => {
           }}
           containerStyle={{ width: "48%" }}
         />
+      </View>
+      <View>
+        <RealtorPost chekView={true} />
       </View>
     </View>
   );

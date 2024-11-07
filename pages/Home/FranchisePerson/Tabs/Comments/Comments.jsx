@@ -37,6 +37,16 @@ const Comments = () => {
           containerStyle={{ width: "48%" }}
         />
       </View>
+      <View>
+        <View style={styles.commentBody}>
+          <MaterialCommunityIcons name="star" size={16} color="#FFC700" />
+          <Text style={styles.comment}>
+            Lorem ipsum dolor sit amet consectet. Pharetra morbi sed lorem
+            dignissim semper morbi habitant sit.
+          </Text>
+          <Text style={styles.commentName}>22 Eylül 2024 | K****</Text>
+        </View>
+      </View>
     </View>
   );
 };
