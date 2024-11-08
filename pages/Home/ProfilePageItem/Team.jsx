@@ -14,7 +14,7 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 import Filter from "../../../assets/filterRealtor.svg";
 import { useNavigation } from "@react-navigation/native";
 
-export default function Team({ team }) {
+export default function Team({ team, type }) {
   const navigation = useNavigation();
   return (
     <View style={styles.container}>
@@ -25,6 +25,7 @@ export default function Team({ team }) {
         renderItem={({ item }) => (
           <>
             <TouchableOpacity
+              disabled={type !== "Franchise Markası" ? true : false}
               style={styles.main}
               activeOpacity={0.8}
               onPress={() =>
