@@ -91,7 +91,6 @@ import SwapScreenNav from "./components/SwapScreenNav";
 import MapWiew from "./pages/Home/MapWiew";
 import CollectionsTab from "./pages/Home/Panel/CollectionsTab";
 import SwapForm from "./pages/Home/RealtorPages/SwapForm";
-import { Button } from "react-native";
 import VerifyScreen from "./pages/Home/VerifyScreen";
 import TypeListScreen from "./components/TypeListScreen";
 import Onboard from "./pages/Home/Onboarding/Onboard";
@@ -106,7 +105,6 @@ import { SheetProvider } from "react-native-actions-sheet";
 import AllFranchiseBrands from "./pages/Home/AllFranchiseBrands";
 import AllFeaturedRealEstate from "./pages/Home/AllFeaturedRealEstate";
 import SeeMyNeighbor from "./pages/Home/SeeMyNeighbor/SeeMyNeighbor";
-
 import { Provider, useSelector } from "react-redux";
 import { store } from "./store/store";
 import SalePageMain from "./pages/Home/PointOfSale/SalePageMain";
@@ -126,9 +124,19 @@ import EditPending from "./pages/Home/EditProject/EditPending";
 import ShareScreen from "./pages/Home/ShareScreen";
 import TeamFilter from "./pages/Home/ProfilePageItem/TeamFilter/TeamFilter";
 import FranchisePersonDetail from "./pages/Home/FranchisePerson/FranchisePersonDetail/FranchisePersonDetail";
+import * as Linking from "expo-linking";
 
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator(); // Drawer navigator
+
+const linking = {
+  prefixes: [Linking.createURL("/")], // Expo URL schema kullanarak bağlantı oluşturma
+  config: {
+    screens: {
+      PersonPortfolio: "FranchisePersonDetail/",
+    },
+  },
+};
 
 export default function App({ route }) {
   return (
@@ -244,7 +252,7 @@ const StackScreenNavigator = () => {
       <AlertNotificationRoot>
         <GestureHandlerRootView style={{ flex: 1 }}>
           <SheetProvider>
-            <NavigationContainer>
+            <NavigationContainer linking={linking}>
               <Stack.Navigator
                 screenOptions={{
                   gestureEnabled: true,
