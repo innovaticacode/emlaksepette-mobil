@@ -52,10 +52,7 @@ export default function Team({ team, type }) {
       {filteredTeam.length === 0 ? (
         <View style={styles.noResultsContainer}>
           <IconFilter name="emoticon-sad-outline" size={50} color="#EA2B2E" />
-          <Text style={styles.noResultsText}>Arama sonucu bulunamadı.</Text>
-          <Text style={styles.noResultsSubText}>
-            Lütfen başka bir terim deneyin.
-          </Text>
+          <Text style={styles.noResultsText}>Sonuç bulunamadı.</Text>
         </View>
       ) : (
         <FlatList
@@ -190,10 +187,5 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     color: "#333",
     marginTop: 10,
-  },
-  noResultsSubText: {
-    fontSize: 14,
-    color: "#555",
-    marginTop: 5,
   },
 });

@@ -106,7 +106,6 @@ export const styles = StyleSheet.create({
     lineHeight: 22,
   },
   description: {
-    color: "#000000",
     fontSize: 12,
     fontWeight: "500",
     lineHeight: 16,

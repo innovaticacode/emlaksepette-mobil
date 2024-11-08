@@ -73,22 +73,27 @@ const Introduction = (props) => {
   return (
     <>
       <View style={styles.container}>
-        <View>
-          <Image
-            source={{ uri: "https://www.dummyimage.co.uk/480x240/000000" }}
-            width={"100%"}
-            height={240}
-            resizeMode="cover"
-          />
-          <View style={styles.textArea}>
-            <Text style={styles.title}>Hakkımızda</Text>
-            {storeInfo?.about && (
-              <View style={styles.description}>
-                <HTML source={{ html: storeInfo?.about }} contentWidth={10} />
-              </View>
-            )}
+        <ScrollView>
+          <View>
+            <Image
+              source={{ uri: "https://www.dummyimage.co.uk/480x240/000000" }}
+              width={"100%"}
+              height={240}
+              resizeMode="cover"
+            />
+            <View style={styles.textArea}>
+              <Text style={styles.title}>Hakkımızda</Text>
+              {storeInfo?.about && (
+                <View style={styles.description}>
+                  <HTML
+                    source={{ html: storeInfo?.about }}
+                    contentWidth={100}
+                  />
+                </View>
+              )}
+            </View>
           </View>
-        </View>
+        </ScrollView>
       </View>
     </>
     // <View style={styles.container}>
