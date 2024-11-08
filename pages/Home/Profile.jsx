@@ -103,7 +103,10 @@ export default function Profile() {
         isShow: "All",
       },
       {
-        text: corporateType === "Franchise Markası" ? "Danışmanlar" : "Ekip",
+        text:
+          corporateType === "Franchise Markası"
+            ? "Danışmanlar"
+            : "Yönetim Ekibi",
         isShow: "All",
       },
       {
