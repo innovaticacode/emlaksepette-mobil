@@ -76,59 +76,50 @@ export default function Profile() {
   const [checkImage, setCheckImage] = useState(null);
   const [color, setColor] = useState("#000000");
   const [corporateType, setCorporateType] = useState(null);
-  const [items, setItems] = useState(() => {
-    const initialItems = [
-      {
-        text: "Tanıtım",
-        isShow: "All",
-      },
-      {
-        text: "Emlak İlanları",
-        isShow: "All",
-      },
-      {
-        text: "Proje İlanları",
-        isShow: "İnşaat Ofisi",
-      },
-      {
-        text: "Mağaza Profili",
-        isShow: "All",
-      },
-      {
-        text: "Satış Noktalarımız", // Koleksiyonlar yerine bu eklendi
-        isShow: "İnşaat Ofisi",
-      },
-      {
-        text: "Değerlendirmeler",
-        isShow: "All",
-      },
-      {
-        text:
-          corporateType === "Franchise Markası"
-            ? "Danışmanlar"
-            : "Yönetim Ekibi",
-        isShow: "All",
-      },
-      {
-        text: "Franchise Ol",
-        isShow: "Franchise Markası",
-      },
-      {
-        text: "Danışman Ol",
-        isShow: "Franchise Markası",
-      },
-    ];
 
-    // Değerleri kontrol et ve 'Satış Noktalarımız' öğesini kaldır
-    if (
-      storeData?.data?.corporate_type === "Emlak Ofisi" ||
-      storeData?.data?.type === 1
-    ) {
-      return initialItems.filter((item) => item.text !== "Satış Noktalarımız");
-    }
-
-    return initialItems;
-  });
+  const items = [
+    {
+      text: "Tanıtım",
+      isShow: "All",
+    },
+    {
+      text: "Emlak İlanları",
+      isShow: "All",
+    },
+    {
+      text: "Proje İlanları",
+      isShow: "İnşaat Ofisi",
+    },
+    {
+      text: "Mağaza Profili",
+      isShow: "All",
+    },
+    {
+      text: "Satış Noktalarımız", // Koleksiyonlar yerine bu eklendi
+      isShow: "İnşaat Ofisi",
+    },
+    {
+      text: "Değerlendirmeler",
+      isShow: "All",
+    },
+    {
+      text:
+        // storeData?.data?.is_brand == 0 &&
+        //     storeData?.data?.brand_id !== null
+        storeData?.data?.is_brand == 1 || corporateType == "Emlak Ofisi"
+          ? "Danışmanlar"
+          : "Yönetim Ekibi",
+      isShow: "All",
+    },
+    {
+      text: "Franchise Ol",
+      isShow: "Franchise Markası",
+    },
+    {
+      text: "Danışman Ol",
+      isShow: "Franchise Markası",
+    },
+  ];
 
   useEffect(() => {
     getValueFor("user", setUser);
