@@ -32,7 +32,7 @@ const TracingCard = ({ title, subTitle, date, description, onPress }) => {
           <Arrow width={18} height={18} />
         </View>
       </View>
-      <View style={{ backgroundColor: "#EEEEEE", height: 2, width: "100%" }} />
+      <View style={styles.icon} />
     </TouchableOpacity>
   );
 };

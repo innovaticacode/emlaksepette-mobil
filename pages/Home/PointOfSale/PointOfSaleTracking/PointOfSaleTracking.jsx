@@ -2,50 +2,9 @@ import React, { useState } from "react";
 import { View, Text, Dimensions } from "react-native";
 import { TabView, SceneMap, TabBar } from "react-native-tab-view";
 import { TracingCard } from "../../../../components";
-
-const Success = () => (
-  <View>
-    <Text>Success</Text>
-  </View>
-);
-
-const Pending = () => (
-  <View>
-    <TracingCard />
-  </View>
-);
-
-const Failed = () => (
-  <View>
-    <Text>Failed</Text>
-  </View>
-);
-
-const renderScene = SceneMap({
-  success: Success,
-  pending: Pending,
-  failed: Failed,
-});
-
-const renderTabBar = (props) => (
-  <TabBar
-    {...props}
-    indicatorStyle={{ backgroundColor: "#EA2B2E", height: 1 }}
-    style={{ backgroundColor: "#FFF" }}
-    renderLabel={({ route, focused }) => (
-      <Text
-        style={{
-          color: focused ? "#EA2B2E" : "#000000",
-          fontWeight: "600",
-          fontSize: 14,
-          lineHeight: 20,
-        }}
-      >
-        {route.title}
-      </Text>
-    )}
-  />
-);
+import Success from "./Tabs/Success/Success";
+import Pending from "./Tabs/Pending/Pending";
+import Failed from "./Tabs/Failed/Failed";
 
 const { width } = Dimensions.get("window");
 
@@ -56,6 +15,31 @@ const PointOfSaleTracking = () => {
     { key: "pending", title: "Onay Bekleyen" },
     { key: "failed", title: "Reddedilen" },
   ]);
+
+  const renderScene = SceneMap({
+    success: Success,
+    pending: Pending,
+    failed: Failed,
+  });
+  const renderTabBar = (props) => (
+    <TabBar
+      {...props}
+      indicatorStyle={{ backgroundColor: "#EA2B2E", height: 1 }}
+      style={{ backgroundColor: "#FFF" }}
+      renderLabel={({ route, focused }) => (
+        <Text
+          style={{
+            color: focused ? "#EA2B2E" : "#000000",
+            fontWeight: "600",
+            fontSize: 14,
+            lineHeight: 20,
+          }}
+        >
+          {route.title}
+        </Text>
+      )}
+    />
+  );
 
   return (
     <View style={{ flex: 1, backgroundColor: "#FFF" }}>

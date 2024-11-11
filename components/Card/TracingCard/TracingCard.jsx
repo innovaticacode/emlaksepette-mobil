@@ -49,4 +49,9 @@ export const styles = StyleSheet.create({
     marginLeft: 8,
     flex: 1,
   },
+  icon: {
+    backgroundColor: "#EEEEEE",
+    height: 2,
+    width: "100%",
+  },
 });
