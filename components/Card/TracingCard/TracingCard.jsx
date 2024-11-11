@@ -43,4 +43,10 @@ export const styles = StyleSheet.create({
     fontSize: 14,
     lineHeight: 24,
   },
+  info: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginLeft: 8,
+    flex: 1,
+  },
 });

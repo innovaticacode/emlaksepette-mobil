@@ -25,14 +25,7 @@ const TracingCard = ({ title, subTitle, date, description, onPress }) => {
         }}
       >
         <Text style={styles.message}>Mesaj:</Text>
-        <View
-          style={{
-            flexDirection: "row",
-            alignItems: "center",
-            marginLeft: 8,
-            flex: 1,
-          }}
-        >
+        <View style={styles.info}>
           <Text numberOfLines={2} style={styles.desc}>
             {description}
           </Text>
