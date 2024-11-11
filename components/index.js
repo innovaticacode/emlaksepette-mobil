@@ -10,6 +10,7 @@ import InfoCard from "./Card/InfoCard/InfoCard";
 import MySwapInfoBottom from "./BottomModals/MySwapInfoBottom/MySwapInfoBottom";
 import WhiteOrRedButtons from "./Buttons/WhiteOrRedButtons/WhiteOrRedButtons";
 import SalePointCard from "./Card/SalePointCard/SalePointCard";
+import TracingCard from "./Card/TracingCard/TracingCard.styles";
 
 export {
   CommentCard,
@@ -24,4 +25,5 @@ export {
   MySwapInfoBottom,
   WhiteOrRedButtons,
   SalePointCard,
+  TracingCard,
 };

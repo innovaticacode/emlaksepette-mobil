@@ -123,7 +123,8 @@ import AllTourismRent from "./pages/Home/AllTourismRent";
 import ViewAll from "./pages/Home/ViewAll/ViewAll";
 import RealEstateWallet from "./src/pages/RealEstateWallet";
 import EditPending from "./pages/Home/EditProject/EditPending";
-import ShareScreen from "./pages/Home/ShareScreen"
+import ShareScreen from "./pages/Home/ShareScreen";
+import PointOfSaleTracking from "./pages/Home/PointOfSale/PointOfSaleTracking/PointOfSaleTracking";
 
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator(); // Drawer navigator
@@ -1430,6 +1431,17 @@ const StackScreenNavigator = () => {
                   component={ShareScreen}
                   options={({ route }) => ({
                     title: "İlan Ver",
+                    headerBackTitleVisible: false,
+                    headerStyle: {
+                      backgroundColor: "#ffffff",
+                    },
+                  })}
+                />
+                <Stack.Screen
+                  name="PointOfSaleTracking"
+                  component={PointOfSaleTracking}
+                  options={({ route }) => ({
+                    title: "Satış Noktası Takibi",
                     headerBackTitleVisible: false,
                     headerStyle: {
                       backgroundColor: "#ffffff",

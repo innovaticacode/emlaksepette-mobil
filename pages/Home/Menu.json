@@ -163,6 +163,15 @@
   {
     "id": "GetSwapApplications",
     "label": "Başvurular",
+    "icon": "home",
+    "text": "Satış Nokası Taleplerim",
+    "key": "GetSwapApplications",
+    "url": "PointOfSaleTracking",
+    "activePath": ""
+  },
+  {
+    "id": "GetSwapApplications",
+    "label": "Başvurular",
     "icon": "swap-horizontal-bold",
     "text": "Takas Taleplerim",
     "key": "GetSwapApplications",
