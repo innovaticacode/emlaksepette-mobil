@@ -1,40 +1,57 @@
-import React from "react";
-import { View, Text, TouchableOpacity } from "react-native";
-import { styles } from "./TracingCard";
-import Arrow from "../../../assets/arrow-right.svg";
+import { StyleSheet } from "react-native";
 
-const TracingCard = ({ title, subTitle, date, description, onPress }) => {
-  return (
-    <TouchableOpacity
-      activeOpacity={0.8}
-      onPress={() => onPress}
-      style={styles.container}
-    >
-      <View style={styles.headTextArea}>
-        <View>
-          <Text style={styles.title}>{title}</Text>
-          <Text style={styles.address}>{subTitle}</Text>
-        </View>
-        <View>
-          <Text style={styles.date}>{date}</Text>
-        </View>
-      </View>
-      <View
-        style={{
-          flexDirection: "row",
-        }}
-      >
-        <Text style={styles.message}>Mesaj:</Text>
-        <View style={styles.info}>
-          <Text numberOfLines={2} style={styles.desc}>
-            {description}
-          </Text>
-          <Arrow width={18} height={18} />
-        </View>
-      </View>
-      <View style={styles.icon} />
-    </TouchableOpacity>
-  );
-};
-
-export default TracingCard;
+export const styles = StyleSheet.create({
+  container: {
+    height: "auto",
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    gap: 10,
+    minHeight: 130,
+  },
+  headTextArea: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    gap: 6,
+  },
+  title: {
+    color: "#000000",
+    fontWeight: "600",
+    fontSize: 16,
+    lineHeight: 24,
+  },
+  address: {
+    color: "#000000",
+    fontWeight: "500",
+    fontSize: 14,
+    lineHeight: 24,
+  },
+  date: {
+    fontWeight: "500",
+    color: "#5B5B5B",
+  },
+  message: {
+    color: "#000000",
+    fontWeight: "600",
+    fontSize: 14,
+    lineHeight: 24,
+  },
+  desc: {
+    flex: 1,
+    color: "#000000",
+    fontWeight: "500",
+    fontSize: 14,
+    lineHeight: 24,
+  },
+  info: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginLeft: 8,
+    flex: 1,
+  },
+  icon: {
+    backgroundColor: "#EEEEEE",
+    height: 2,
+    width: "100%",
+  },
+});
