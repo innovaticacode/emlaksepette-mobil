@@ -43,11 +43,11 @@ const PointOfSaleTracking = () => {
   const renderScene = ({ route }) => {
     switch (route.key) {
       case "success":
-        return <Success data={success} />;
+        return <Success data={success} loading={loading} />;
       case "pending":
-        return <Pending data={pending} />;
+        return <Pending data={pending} loading={loading} />;
       case "failed":
-        return <Failed data={failed} />;
+        return <Failed data={failed} loading={loading} />;
       default:
         return null;
     }
