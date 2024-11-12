@@ -188,13 +188,15 @@ export default function RealtorPost({
     try {
       if (user?.access_token) {
         const response = await axios.post(
-          `${apiUrl}institutional/add_to_cart`, 
-          formData, {
-          headers: {
-            Authorization: `Bearer ${user.access_token}`,
-            "Content-Type": "multipart/form-data",
-          },
-        });
+          `${apiUrl}institutional/add_to_cart`,
+          formData,
+          {
+            headers: {
+              Authorization: `Bearer ${user.access_token}`,
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
         updateUserData();
         setAddCartShow(false);
         navigation.navigate("Sepetim");
@@ -207,9 +209,7 @@ export default function RealtorPost({
   const [alertForSign, setalertForSign] = useState(false);
   const [alertForFavorite, setalertForFavorite] = useState(false);
   const [cartIsNull, setcartIsNull] = useState(false);
-  
 
-  
   return (
     <AlertNotificationRoot>
       <TouchableOpacity
@@ -465,7 +465,7 @@ export default function RealtorPost({
                   */}
                 </View>
                 <View style={styles.location}>
-                  <Icon name="location-dot" color={'#6b6b6b'} size={10} />
+                  <Icon name="location-dot" color={"#6b6b6b"} size={10} />
                   <Text style={{ fontSize: 10 }}>{location}</Text>
                 </View>
                 <View style={styles.PriceAndButtons}>
@@ -569,7 +569,7 @@ export default function RealtorPost({
                     </View>
                   ) : (
                     <View
-                      style={[styles.addBasket, { backgroundColor: "#FFA500" }]}
+                      style={[styles.addBasket, { backgroundColor: "#373737" }]}
                     >
                       <Text
                         style={{
@@ -588,11 +588,16 @@ export default function RealtorPost({
           </View>
         ) : (
           <View
-            style={{ padding: 8, borderBottomWidth: 1, borderColor: "#CACACA",gap:15 }}
+            style={{
+              padding: 8,
+              borderBottomWidth: 1,
+              borderColor: "#CACACA",
+              gap: 15,
+            }}
           >
             <View style={{ gap: 7 }}>
               <View style={{ width: "100%", height: 180 }}>
-              {!sold && (
+                {!sold && (
                   <TouchableOpacity
                     style={styles.heartBtn}
                     activeOpacity={0.8}
@@ -647,138 +652,153 @@ export default function RealtorPost({
 
                   <View>
                     <Text style={{ fontSize: 18, fontWeight: "600" }}>
-                    {formattedDiscountedPrice ? (
-                      <>
-                        <Text style={styles.discountedPriceText}>
-                          {formattedPrice}
-                        </Text>
+                      {formattedDiscountedPrice ? (
+                        <>
+                          <Text style={styles.discountedPriceText}>
+                            {formattedPrice}
+                          </Text>
+                          <Text style={styles.priceText}>
+                            {formattedDiscountedPrice}₺
+                          </Text>
+                        </>
+                      ) : housing.step2_slug == "gunluk-kiralik" ? (
                         <Text style={styles.priceText}>
-                          {formattedDiscountedPrice}₺
+                          {formattedPrice} ₺{" "}
+                          <Text style={{ fontSize: 11, color: "#D32729" }}>
+                            / Gecelik
+                          </Text>{" "}
                         </Text>
-                      </>
-                    ) : housing.step2_slug == "gunluk-kiralik" ? (
-                      <Text style={styles.priceText}>
-                        {formattedPrice} ₺{" "}
-                        <Text style={{ fontSize: 11, color: "#D32729" }}>
-                          / Gecelik
-                        </Text>{" "}
-                      </Text>
-                    ) : (
-                      <Text style={styles.priceText}>{formattedPrice} </Text>
-                    )}
+                      ) : (
+                        <Text style={styles.priceText}>{formattedPrice} </Text>
+                      )}
                     </Text>
                   </View>
                 </View>
-
-         
               </View>
             </View>
-            <View style={{gap:7}}>
-             
-              <View style={{justifyContent:'center',alignItems:'center'}}>
-              {!sold ? (
-                    housing?.user?.id == user.id && user.access_token ? (
-                      <TouchableOpacity
-                        style={[
-                          styles.addBasket,
-                          { backgroundColor: "#008001" ,
-                            padding:9,
-                            width:'100%',
-                            borderRadius:5
-                          },
-                        ]}
+            <View style={{ gap: 7 }}>
+              <View style={{ justifyContent: "center", alignItems: "center" }}>
+                {!sold ? (
+                  housing?.user?.id == user.id && user.access_token ? (
+                    <TouchableOpacity
+                      style={[
+                        styles.addBasket,
+                        {
+                          backgroundColor: "#008001",
+                          padding: 9,
+                          width: "100%",
+                          borderRadius: 5,
+                        },
+                      ]}
+                    >
+                      <Text
+                        style={{
+                          color: "white",
+                          fontWeight: "600",
+                        }}
                       >
+                        İlanı Düzenle
+                      </Text>
+                    </TouchableOpacity>
+                  ) : (
+                    <TouchableOpacity
+                      style={[
+                        styles.addBasket,
+                        {
+                          padding: 9,
+                          width: "100%",
+                          backgroundColor: "#EA2C2E",
+                          borderRadius: 5,
+                        },
+                      ]}
+                      onPress={() => {
+                        // Metin kontrolü yapılıyor
+                        if (
+                          (housing?.step2_slug &&
+                            housing?.step2_slug === "gunluk-kiralik") ||
+                          housing?.step1_slug === "mustakil-tatil"
+                        ) {
+                          navigation.navigate("Realtor details", {
+                            houseId: HouseId,
+                          });
+                        } else {
+                          handlePress();
+                        }
+                      }}
+                    >
+                      {(housing?.step2_slug &&
+                        housing?.step2_slug == "gunluk-kiralik") ||
+                      housing?.step1_slug == "mustakil-tatil" ? (
                         <Text
                           style={{
                             color: "white",
                             fontWeight: "600",
-                       
                           }}
                         >
-                          İlanı Düzenle
+                          Rezervasyon Yap
                         </Text>
-                      </TouchableOpacity>
-                    ) : (
-                      <TouchableOpacity
-                        style={[styles.addBasket,{padding:9,width:'100%',backgroundColor:'#EA2C2E',borderRadius:5}]}
-                        onPress={() => {
-                          // Metin kontrolü yapılıyor
-                          if (
-                            (housing?.step2_slug &&
-                              housing?.step2_slug === "gunluk-kiralik") ||
-                            housing?.step1_slug === "mustakil-tatil"
-                          ) {
-                            navigation.navigate("Realtor details", {
-                              houseId: HouseId,
-                            });
-                          } else {
-                            handlePress();
-                          }
-                        }}
-                      >
-                        {(housing?.step2_slug &&
-                          housing?.step2_slug == "gunluk-kiralik") ||
-                        housing?.step1_slug == "mustakil-tatil" ? (
-                          <Text
-                            style={{
-                              color: "white",
-                              fontWeight: "600",
-                             
-                            }}
-                          >
-                            Rezervasyon Yap
-                          </Text>
-                        ) : (
-                          <Text
-                            style={{
-                              color: "white",
-                              fontWeight: "600",
-                             
-                            }}
-                          >
-                            Sepete Ekle
-                          </Text>
-                        )}
-                      </TouchableOpacity>
-                    )
-                  ) : sold == 1 ? (
-                    <View
-                      style={[styles.addBasket, { backgroundColor: "#000000",padding:9,width:'100%',borderRadius:5}]}
+                      ) : (
+                        <Text
+                          style={{
+                            color: "white",
+                            fontWeight: "600",
+                          }}
+                        >
+                          Sepete Ekle
+                        </Text>
+                      )}
+                    </TouchableOpacity>
+                  )
+                ) : sold == 1 ? (
+                  <View
+                    style={[
+                      styles.addBasket,
+                      {
+                        backgroundColor: "#000000",
+                        padding: 9,
+                        width: "100%",
+                        borderRadius: 5,
+                      },
+                    ]}
+                  >
+                    <Text
+                      style={{
+                        color: "white",
+                        fontWeight: "600",
+                      }}
                     >
-                      <Text
-                        style={{
-                          color: "white",
-                          fontWeight: "600",
-                         
-                        }}
-                      >
-                        Satıldı
-                      </Text>
-                    </View>
-                  ) : (
-                    <View
-                      style={[styles.addBasket, { backgroundColor: "#FFA500",padding:9,width:'100%',borderRadius:5 }]}
+                      Satıldı
+                    </Text>
+                  </View>
+                ) : (
+                  <View
+                    style={[
+                      styles.addBasket,
+                      {
+                        backgroundColor: "#FFA500",
+                        padding: 9,
+                        width: "100%",
+                        borderRadius: 5,
+                      },
+                    ]}
+                  >
+                    <Text
+                      style={{
+                        color: "white",
+                        fontWeight: "600",
+                      }}
                     >
-                      <Text
-                        style={{
-                          color: "white",
-                          fontWeight: "600",
-                         
-                        }}
-                      >
-                        Rezerve Edildi
-                      </Text>
-                    </View>
-                  )}
-              {/* <TouchableOpacity style={{padding:9,width:'100%',backgroundColor:'#EA2C2E',borderRadius:5}} onPress={()=>{
+                      Rezerve Edildi
+                    </Text>
+                  </View>
+                )}
+                {/* <TouchableOpacity style={{padding:9,width:'100%',backgroundColor:'#EA2C2E',borderRadius:5}} onPress={()=>{
                 handlePress();
               }}>
               <Text style={{textAlign:'center',fontWeight:'600',color:'white'}}>Sepete Ekle</Text>
             </TouchableOpacity> */}
               </View>
-           
             </View>
-         
           </View>
         )}
       </TouchableOpacity>
