@@ -167,7 +167,13 @@
     "text": "Satış Noktası Talepleri",
     "key": "GetSwapApplications",
     "url": "PointOfSaleTracking",
-    "activePath": ""
+    "activePath": "",
+    "isActive": [
+      "Emlak Ofisi",
+      "İnşaat Ofisi",
+      "Turizm Amaçlı Kiralama",
+      "Üretici"
+    ]
   },
   {
     "id": "GetSwapApplications",
