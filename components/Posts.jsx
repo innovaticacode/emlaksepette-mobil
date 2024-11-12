@@ -1155,7 +1155,7 @@ const styles = StyleSheet.create({
     padding: 5,
     width: "100%",
     alignItems: "center",
-    backgroundColor: "#264ABB",
+    backgroundColor: "#EA2B2E",
     borderRadius: 5,
   },
   addBasketText: {

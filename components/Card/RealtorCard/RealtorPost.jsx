@@ -775,7 +775,7 @@ export default function RealtorPost({
                     style={[
                       styles.addBasket,
                       {
-                        backgroundColor: "#FFA500",
+                        backgroundColor: "#EA2B2E",
                         padding: 9,
                         width: "100%",
                         borderRadius: 5,
