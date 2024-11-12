@@ -5,7 +5,6 @@ import NoDataScreen from "../../../../../../components/NoDataScreen";
 import { styles } from "./Failed.styles";
 
 const Failed = ({ data, loading }) => {
-  console.debug("loading->", loading);
   return (
     <>
       {!loading && data.length === 0 ? (
@@ -29,7 +28,9 @@ const Failed = ({ data, loading }) => {
               }
               date={item?.updated_at}
               description={item?.message}
-              onPress={() => {}}
+              onPress={() => {
+                null;
+              }}
             />
           )}
         />

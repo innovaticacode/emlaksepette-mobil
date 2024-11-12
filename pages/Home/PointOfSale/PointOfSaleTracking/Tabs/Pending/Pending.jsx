@@ -1,4 +1,4 @@
-import { View, Text, FlatList } from "react-native";
+import { View, FlatList } from "react-native";
 import React from "react";
 import { TracingCard } from "../../../../../../components";
 import NoDataScreen from "../../../../../../components/NoDataScreen";
@@ -28,7 +28,9 @@ const Pending = ({ data, loading }) => {
               }
               date={item?.updated_at}
               description={item?.message}
-              onPress={() => {}}
+              onPress={() => {
+                null;
+              }}
             />
           )}
         />

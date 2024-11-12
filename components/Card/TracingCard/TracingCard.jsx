@@ -30,11 +30,7 @@ const TracingCard = ({
           <Text style={styles.date}>{formatDate(date)}</Text>
         </View>
       </View>
-      <View
-        style={{
-          flexDirection: "row",
-        }}
-      >
+      <View style={styles.descView}>
         <Text style={styles.message}>Mesaj:</Text>
         <View style={styles.info}>
           <Text numberOfLines={2} style={styles.desc}>
@@ -43,7 +39,6 @@ const TracingCard = ({
           <Arrow width={18} height={18} />
         </View>
       </View>
-      {/* <View style={styles.icon} /> */}
     </TouchableOpacity>
   );
 };

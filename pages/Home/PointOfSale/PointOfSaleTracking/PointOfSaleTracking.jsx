@@ -86,10 +86,10 @@ const PointOfSaleTracking = () => {
   }, [user]);
 
   return (
-    <View style={{ flex: 1, backgroundColor: "#FFF" }}>
-      {loading ? (
+    <View style={styles.container}>
+      {loading && (
         <ActivityIndicator size="large" color="#000" style={styles.loading} />
-      ) : null}
+      )}
       <TabView
         navigationState={{ index, routes }}
         renderTabBar={renderTabBar}
