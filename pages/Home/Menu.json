@@ -164,7 +164,7 @@
     "id": "GetSwapApplications",
     "label": "Başvurular",
     "icon": "home",
-    "text": "Satış Nokası Taleplerim",
+    "text": "Satış Noktası Talepleri",
     "key": "GetSwapApplications",
     "url": "PointOfSaleTracking",
     "activePath": ""

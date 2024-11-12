@@ -12,8 +12,10 @@ const Failed = ({ data }) => {
         renderItem={({ item }) => (
           <TracingCard
             colorKey={item?.id}
-            title={item?.store.username}
-            subTitle={item?.town.sehir_title + "/" + item.district.ilce_title}
+            title={item?.store?.username}
+            subTitle={
+              item?.town?.sehir_title + "/" + item?.district?.ilce_title
+            }
             date={item?.updated_at}
             description={item?.message}
             onPress={() => {}}

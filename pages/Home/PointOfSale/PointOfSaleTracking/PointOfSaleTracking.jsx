@@ -58,23 +58,26 @@ const PointOfSaleTracking = () => {
 
   const fetchData = async () => {
     setLoading(true);
-    try {
-      const result = await apiRequestGetWithBearer(
-        "satis-noktasi-basvurularim"
-      );
-      console.debug("*---------->>>", result?.data?.sales_points);
-      if (result.data.message === "success") {
-        const data = result?.data?.sales_points;
-        setPending(data?.filter((item) => item.status === "pending"));
-        setSuccess(data?.filter((item) => item.status === "approved"));
-        setFailed(data?.filter((item) => item.status === "rejected"));
-      } else {
-        Alert.alert("Hata", "Bir hata oluştu. Lütfen tekrar deneyin.");
+    var endpoint = "satis-noktasi-basvurularim";
+    if (user?.access_token) {
+      if (user?.corporate_type !== "Emlak Ofisi") {
+        endpoint = "satis-noktasi-basvurulari";
       }
-    } catch (error) {
-      Alert.alert("Hata", "Bir hata oluştu. Lütfen tekrar deneyin.");
-    } finally {
-      setLoading(false);
+      try {
+        const result = await apiRequestGetWithBearer(endpoint);
+        if (result.data.message === "success") {
+          const data = result?.data?.sales_points;
+          setPending(data?.filter((item) => item.status === "pending"));
+          setSuccess(data?.filter((item) => item.status === "approved"));
+          setFailed(data?.filter((item) => item.status === "rejected"));
+        } else {
+          Alert.alert("Hata", "Bir hata oluştu. Lütfen tekrar deneyin.");
+        }
+      } catch (error) {
+        Alert.alert("Hata", "Bir hata oluştu. Lütfen tekrar deneyin.");
+      } finally {
+        setLoading(false);
+      }
     }
   };
 
