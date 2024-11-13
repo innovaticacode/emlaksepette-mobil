@@ -946,8 +946,6 @@ export default function PostDetail() {
                   </View>
                 )}
 
-                {/* Açılmadan önceki yer burası */}
-                {/* ----------------------------- */}
                 <PagerView
                   key={currentIndex} // Yalnızca tam ekran kapatıldığında güncellenir
                   style={{ height: 250 }}
@@ -966,9 +964,8 @@ export default function PostDetail() {
                     >
                       <Image
                         source={{
-                          uri: `${frontEndUriBase}housing_images/${
-                            item.split("/")[item.split("/").length - 1]
-                          }`,
+                          uri: `${frontEndUriBase}housing_images/${item.split("/")[item.split("/").length - 1]
+                            }`,
                         }}
                         style={{ width: "100%", height: "100%" }}
                       />
@@ -976,9 +973,6 @@ export default function PostDetail() {
                   ))}
                 </PagerView>
 
-                {/* Full-screen image viewing */}
-                {/* açılınca gelen image burası */}
-                {/* --------------------------- */}
                 <ImageViewing
                   backgroundColor="#000"
                   images={imageURIs}
@@ -987,8 +981,7 @@ export default function PostDetail() {
                   presentationStyle="overFullScreen"
                   onRequestClose={() => {
                     setIsVisible(false);
-                    setCurrentIndex(tempIndexRef.current); // Kapanırken asıl index'i güncelle
-                    handlePageChange(tempIndexRef.current); // Gerekli işlemler için
+                    setCurrentIndex(tempIndexRef.current);
                   }}
                   onImageIndexChange={handleImageIndexChange}
                   FooterComponent={({ imageIndex }) => (
@@ -1071,20 +1064,20 @@ export default function PostDetail() {
                                   "price"
                                 ]
                                   ? JSON.parse(data.housing.housing_type_data)[
-                                      "price"
-                                    ]
+                                  "price"
+                                  ]
                                   : JSON.parse(data.housing.housing_type_data)[
-                                      "daily_rent"
-                                    ]
+                                  "daily_rent"
+                                  ]
                               )}{" "}
                               ₺{" "}
                               {JSON.parse(data.housing.housing_type_data)[
                                 "daily_rent"
                               ] && (
-                                <Text style={{ color: "#EA2A28" }}>
-                                  / Gecelik
-                                </Text>
-                              )}
+                                  <Text style={{ color: "#EA2A28" }}>
+                                    / Gecelik
+                                  </Text>
+                                )}
                             </Text>
                           )}
                       </View>
@@ -1094,7 +1087,7 @@ export default function PostDetail() {
                 {data.housing &&
                   data.housing.housing_type_data &&
                   JSON.parse(data.housing.housing_type_data)["swap"] ==
-                    "Evet" && (
+                  "Evet" && (
                     <View>
                       <TouchableOpacity
                         style={{
@@ -1240,7 +1233,7 @@ export default function PostDetail() {
                             }}
                           >
                             {user.type == 2 &&
-                            user.corporate_type == "Emlak Ofisi"
+                              user.corporate_type == "Emlak Ofisi"
                               ? "Portföye Ekle"
                               : "Koleksiyona Ekle"}
                           </Text>
@@ -1252,7 +1245,7 @@ export default function PostDetail() {
                             }}
                           >
                             {user.type == 2 &&
-                            user.corporate_type == "Emlak Ofisi"
+                              user.corporate_type == "Emlak Ofisi"
                               ? "Konutu portföylerinden birine ekleyebilir veya yeni bir portföy oluşturabilirsin"
                               : "Konutu koleksiyonlarından birine ekleyebilir veya yeni bir koleksiyon oluşturabilirsin"}
                           </Text>
@@ -1354,7 +1347,7 @@ export default function PostDetail() {
                                     }}
                                   >
                                     {user.type == 2 &&
-                                    user.corporate_type == "Emlak Ofisi"
+                                      user.corporate_type == "Emlak Ofisi"
                                       ? "Portföyünüze konut ekleyebilmeniz için giriş yapmanız gerekmektedir"
                                       : "Koleksiyonunuza konut ekleyebilmeniz için giriş yapmanız gerekmektedir"}
                                   </Text>
@@ -1408,7 +1401,7 @@ export default function PostDetail() {
                                     }}
                                   >
                                     {user.type == 2 &&
-                                    user.corporate_type == "Emlak Ofisi"
+                                      user.corporate_type == "Emlak Ofisi"
                                       ? "Portföyünüze konut ekleyebilmeniz için Emlak Kulüp üyesi olmanız gerekmektedir"
                                       : "Koleksiyonunuza konut ekleyebilmeniz için Emlak Kulüp üyesi olmanız gerekmektedir"}
                                   </Text>
@@ -1459,7 +1452,7 @@ export default function PostDetail() {
                                     }}
                                   >
                                     {user.type == 2 &&
-                                    user.corporate_type == "Emlak Ofisi"
+                                      user.corporate_type == "Emlak Ofisi"
                                       ? "Portföyünüze konut ekleyebilmeniz için Emlak Kulüp üyesi olmanız gerekmektedir"
                                       : "Koleksiyonunuza konut ekleyebilmeniz için Emlak Kulüp üyesi olmanız gerekmektedir"}
                                   </Text>
@@ -1490,7 +1483,7 @@ export default function PostDetail() {
                                     }}
                                   >
                                     {user.type == 2 &&
-                                    user.corporate_type == "Emlak Ofisi"
+                                      user.corporate_type == "Emlak Ofisi"
                                       ? "Portföyünüze konut ekleyebilmeniz için Emlak Kulüp üyesi olmanız gerekmektedir"
                                       : "Koleksiyonunuza konut ekleyebilmeniz için Emlak Kulüp üyesi olmanız gerekmektedir"}
                                   </Text>
@@ -1727,7 +1720,7 @@ export default function PostDetail() {
                             }}
                           >
                             {user.type == 2 &&
-                            user.corporate_type == "Emlak Ofisi"
+                              user.corporate_type == "Emlak Ofisi"
                               ? "Portföy Oluştur"
                               : "Koleksiyon Oluştur"}
                           </Text>
@@ -1748,7 +1741,7 @@ export default function PostDetail() {
                           }}
                         >
                           {user.type == 2 &&
-                          user.corporate_type == "Emlak Ofisi"
+                            user.corporate_type == "Emlak Ofisi"
                             ? "Portföy İsmi"
                             : "Koleksiyon İsmi"}
                         </Text>
@@ -1779,7 +1772,7 @@ export default function PostDetail() {
                             }}
                           >
                             {user.type == 2 &&
-                            user.corporate_type == "Emlak Ofisi"
+                              user.corporate_type == "Emlak Ofisi"
                               ? "Portföy Oluştur"
                               : "Koleksiyon Oluştur"}
                           </Text>

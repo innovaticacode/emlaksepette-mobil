@@ -13,6 +13,7 @@ import {
   Pressable,
   Share,
   Dimensions,
+  Image,
 } from "react-native";
 import {
   ALERT_TYPE,
@@ -45,7 +46,7 @@ import ImageViewing from "react-native-image-viewing";
 import TextAlertModal from "../../components/TextAlertModal";
 
 export default function Details({ navigation }) {
-  
+
   const [ColectionSheet, setColectionSheet] = useState(false);
   const [selectedTab, setSelectedTab] = useState(0);
   const [page, setPage] = useState(0);
@@ -358,7 +359,7 @@ export default function Details({ navigation }) {
     try {
       if (user.access_token) {
         const response = await axios.get(
-          apiUrl+"client/collections",
+          apiUrl + "client/collections",
           {
             headers: {
               Authorization: `Bearer ${user.access_token}`,
@@ -422,7 +423,7 @@ export default function Details({ navigation }) {
 
     axios
       .post(
-        apiUrl+"add/collection",
+        apiUrl + "add/collection",
         collectionData,
         {
           headers: {
@@ -474,7 +475,7 @@ export default function Details({ navigation }) {
     };
 
     axios
-      .post(apiUrl+"addLink", collectionData, {
+      .post(apiUrl + "addLink", collectionData, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${user.access_token}`,
@@ -621,7 +622,11 @@ export default function Details({ navigation }) {
       console.error("Telefon numarası bulunamadı.");
     }
   };
-const {width,height}=Dimensions.get("window")
+  const tempIndexRef = useRef(currentIndex); // To temporarily store the index
+  const handleImageIndexChange = (index) => {
+    tempIndexRef.current = index; //Update temporary index
+  };
+
   return (
     <>
       <AlertNotificationRoot>
@@ -630,8 +635,8 @@ const {width,height}=Dimensions.get("window")
             <ActivityIndicator size={"large"} color="#333" />
           ) : (
             <>
-             
-              
+
+
               <View style={{ position: 'absolute', width: '100%', bottom: 35, padding: 4, zIndex: 1, flexDirection: 'row', justifyContent: 'space-around' }}>
                 <TouchableOpacity style={{ width: '45%', backgroundColor: '#EA2B2E', padding: 12, borderRadius: 8 }} onPress={handleOpenPhone}>
                   <Text style={{ fontSize: 14, color: 'white', fontWeight: '600', textAlign: 'center' }} >Ara</Text>
@@ -813,8 +818,9 @@ const {width,height}=Dimensions.get("window")
                   </View>
 
                   <PagerView
+                    key={currentIndex}
+                    initialPage={currentIndex}
                     style={{ height: 250 }}
-                    initialPage={pagination}
                     onPageSelected={(e) =>
                       setPagination(e.nativeEvent.position)
                     }
@@ -823,11 +829,11 @@ const {width,height}=Dimensions.get("window")
                       <Pressable
                         key={index}
                         onPress={() => {
-                          setCurrentIndex(index);
                           setIsVisible(true);
+                          setCurrentIndex(index);
                         }}
                       >
-                        <ImageBackground
+                        <Image
                           source={{
                             uri: `${frontEndUriBase}${image?.image.replace(
                               "public",
@@ -841,10 +847,28 @@ const {width,height}=Dimensions.get("window")
                   </PagerView>
 
                   <ImageViewing
+                    backgroundColor="#000"
                     images={images}
                     imageIndex={currentIndex}
                     visible={isVisible}
-                    onRequestClose={() => setIsVisible(false)}
+                    presentationStyle="overFullScreen"
+                    onRequestClose={() => {
+                      setIsVisible(false);
+                      setCurrentIndex(tempIndexRef.current);
+                    }}
+                    onImageIndexChange={handleImageIndexChange}
+                    FooterComponent={({ imageIndex }) => (
+                      <>
+                        <Text style={{
+                          color: "#FFF",
+                          fontSize: 12,
+                          textAlign: "center",
+                          fontWeight: "500",
+                        }}>
+                          {imageIndex + 1} / {images.length}
+                        </Text>
+                      </>
+                    )}
                   />
                 </View>
                 {
@@ -1726,4 +1750,10 @@ const pickerSelectStyles = StyleSheet.create({
     padding: 10,
     fontSize: 14,
   },
+  fullViewImgText: {
+    color: "#FFF",
+    fontSize: 12,
+    textAlign: "center",
+    fontWeight: "500",
+  }
 });

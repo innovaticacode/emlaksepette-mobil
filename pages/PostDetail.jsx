@@ -151,7 +151,7 @@ export default function PostDetail() {
     try {
       if (user?.access_token && user) {
         const userInfo = await axios.get(
-          apiUrl+"users/" + user?.id,
+          apiUrl + "users/" + user?.id,
           {
             headers: {
               Authorization: `Bearer ${user.access_token}`,
@@ -932,6 +932,11 @@ export default function PostDetail() {
     }
   };
   const [show, setShow] = useState(false)
+  const tempIndexRef = useRef(currentIndex); // To temporarily store the index
+  const handleImageIndexChange = (index) => {
+    tempIndexRef.current = index; //Update temporary index
+  };
+
   return (
 
     <>
@@ -944,8 +949,8 @@ export default function PostDetail() {
           <SafeAreaView
             style={{ backgroundColor: "white", flex: 1, paddingTop: 30 }}
           >
-           
-           
+
+
             <View style={{ position: 'absolute', width: '100%', bottom: 35, padding: 4, zIndex: 1, flexDirection: 'row', justifyContent: 'space-around' }}>
               <TouchableOpacity style={{ width: '45%', backgroundColor: '#EA2B2E', padding: 12, borderRadius: 8 }} onPress={handleOpenPhone}>
                 <Text style={{ fontSize: 14, color: 'white', fontWeight: '600', textAlign: 'center' }}>Ara</Text>
@@ -1188,8 +1193,9 @@ export default function PostDetail() {
                     )}
                 </View>
                 <PagerView
+                  initialPage={currentIndex}
+                  key={currentIndex}
                   style={{ height: 250 }}
-                  initialPage={pagination}
                   onPageSelected={(e) =>
                     setPagination(e.nativeEvent.position)
                   }
@@ -1216,10 +1222,27 @@ export default function PostDetail() {
                 </PagerView>
 
                 <ImageViewing
+                  backgroundColor="#000"
                   images={images}
                   imageIndex={currentIndex}
                   visible={isVisible}
-                  onRequestClose={() => setIsVisible(false)}
+                  onRequestClose={() => {
+                    setIsVisible(false)
+                    setCurrentIndex(tempIndexRef.current)
+                  }}
+                  onImageIndexChange={handleImageIndexChange}
+                  FooterComponent={({ imageIndex }) => (
+                    <>
+                      <Text style={{
+                        color: "#FFF",
+                        fontSize: 12,
+                        textAlign: "center",
+                        fontWeight: "500",
+                      }}>
+                        {imageIndex + 1} / {images.length}
+                      </Text>
+                    </>
+                  )}
                 />
 
 
@@ -1780,71 +1803,71 @@ export default function PostDetail() {
                 </TouchableOpacity>
               )} */}
 
-            {roomData &&
-                  roomData['swap[]'] &&
-                  roomData['swap[]'] !== '[]' ?
-                   (
-                    <View style={{paddingLeft:10,paddingRight:10}}>
-                      <TouchableOpacity
+              {roomData &&
+                roomData['swap[]'] &&
+                roomData['swap[]'] !== '[]' ?
+                (
+                  <View style={{ paddingLeft: 10, paddingRight: 10 }}>
+                    <TouchableOpacity
+                      style={{
+                        backgroundColor: "#FEF4EB",
+                        flexDirection: "row",
+                        padding: 6,
+                        alignItems: "center",
+                        justifyContent: "space-between",
+                        borderRadius: 5,
+                      }}
+                      onPress={() => {
+                        if (user.access_token) {
+                          navigation.navigate("SwapForm", {
+                            projectId: projectId,
+                            houseid: HomeId,
+                            type: 1
+                          });
+                        } else {
+                          setShow(true)
+                        }
+
+                      }}
+                    >
+                      <View
                         style={{
-                          backgroundColor: "#FEF4EB",
                           flexDirection: "row",
-                          padding: 6,
                           alignItems: "center",
-                          justifyContent: "space-between",
-                          borderRadius: 5,
-                        }}
-                        onPress={() => {
-                          if (user.access_token) {
-                            navigation.navigate("SwapForm", {
-                              projectId:projectId,
-                              houseid: HomeId,
-                              type:1
-                            });
-                          }else{
-                            setShow(true)
-                          }
-                        
+                          gap: 10,
                         }}
                       >
                         <View
                           style={{
-                            flexDirection: "row",
-                            alignItems: "center",
-                            gap: 10,
+                            backgroundColor: "#F37919",
+                            padding: 6,
+                            borderRadius: 5,
                           }}
                         >
-                          <View
+                          <Icon2 name="plus" size={16} color={"#fff"} />
+                        </View>
+                        <View style={{}}>
+                          <Text
                             style={{
-                              backgroundColor: "#F37919",
-                              padding: 6,
-                              borderRadius: 5,
+                              fontSize: 12,
+                              color: "#333",
+                              fontWeight: "600",
                             }}
                           >
-                            <Icon2 name="plus" size={16} color={"#fff"} />
-                          </View>
-                          <View style={{}}>
-                            <Text
-                              style={{
-                                fontSize: 12,
-                                color: "#333",
-                                fontWeight: "600",
-                              }}
-                            >
-                              Takas Başvurusu Yap
-                            </Text>
-                          </View>
+                            Takas Başvurusu Yap
+                          </Text>
                         </View>
-                        <View>
-                          <Arrow
-                            name="arrow-forward-ios"
-                            size={16}
-                            color={"#333"}
-                          />
-                        </View>
-                      </TouchableOpacity>
-                    </View>
-                  ):null}
+                      </View>
+                      <View>
+                        <Arrow
+                          name="arrow-forward-ios"
+                          size={16}
+                          color={"#333"}
+                        />
+                      </View>
+                    </TouchableOpacity>
+                  </View>
+                ) : null}
               <View style={{ padding: 8 }}>
                 <SliderMenuPostDetails
                   tab={tabs}
@@ -2410,22 +2433,22 @@ export default function PostDetail() {
               </View>
             </Modal>
 
-         <AwesomeAlertComp
-          message={'Takas başvurusu yapmak için giriş yapmanız gerekmektedir'}
-          canselFunc={()=>{
-            setShow(false)
-          }}
-          confirmFunc={()=>{
-            setShow(false)
-            setTimeout(() => {
-              navigation.navigate('Login')
-            }, 200);
-           
-          }}
-          show={show}
-          setShow={setShow}
-         />
-            
+            <AwesomeAlertComp
+              message={'Takas başvurusu yapmak için giriş yapmanız gerekmektedir'}
+              canselFunc={() => {
+                setShow(false)
+              }}
+              confirmFunc={() => {
+                setShow(false)
+                setTimeout(() => {
+                  navigation.navigate('Login')
+                }, 200);
+
+              }}
+              show={show}
+              setShow={setShow}
+            />
+
             <AwesomeAlert
               show={ModalForAddToCart}
               showProgress={false}
