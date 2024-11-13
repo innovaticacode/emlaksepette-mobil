@@ -14,7 +14,7 @@ import {
   Share,
 } from "react-native";
 import ImageViewing from "react-native-image-viewing";
-import { React, useRef, useState, useEffect } from "react";
+import { React, useRef, useState, useEffect, useCallback } from "react";
 import Icon2 from "react-native-vector-icons/AntDesign";
 import * as Clipboard from "expo-clipboard";
 import { Platform } from "react-native";
@@ -617,7 +617,12 @@ export default function PostDetail() {
   // Handle page change in PagerView
   const [SeeAlertModal, setSeeAlertModal] = useState(false);
   const [show, setShow] = useState(false);
-  const [pagerKey, setPagerKey] = useState(0);
+
+  const tempIndexRef = useRef(currentIndex); // To temporarily store the index
+  const handleImageIndexChange = (index) => {
+    tempIndexRef.current = index; //Update temporary index
+  };
+
   return (
     <>
       <AlertNotificationRoot>
@@ -944,7 +949,7 @@ export default function PostDetail() {
                 {/* Açılmadan önceki yer burası */}
                 {/* ----------------------------- */}
                 <PagerView
-                  key={pagerKey} // Yalnızca tam ekran kapatıldığında güncellenir
+                  key={currentIndex} // Yalnızca tam ekran kapatıldığında güncellenir
                   style={{ height: 250 }}
                   initialPage={currentIndex} // Güncel indekse göre başlat
                   onPageSelected={(event) =>
@@ -975,15 +980,17 @@ export default function PostDetail() {
                 {/* açılınca gelen image burası */}
                 {/* --------------------------- */}
                 <ImageViewing
+                  backgroundColor="#000"
                   images={imageURIs}
                   imageIndex={currentIndex}
                   visible={isVisible}
                   presentationStyle="overFullScreen"
                   onRequestClose={() => {
                     setIsVisible(false);
-                    setPagerKey((prevKey) => prevKey + 1);
+                    setCurrentIndex(tempIndexRef.current); // Kapanırken asıl index'i güncelle
+                    handlePageChange(tempIndexRef.current); // Gerekli işlemler için
                   }}
-                  // onImageIndexChange={(index) => setCurrentIndex(index)}
+                  onImageIndexChange={handleImageIndexChange}
                   FooterComponent={({ imageIndex }) => (
                     <>
                       <Text style={styles.fulViewImgText}>
