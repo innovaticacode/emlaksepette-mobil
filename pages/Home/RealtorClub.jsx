@@ -260,7 +260,7 @@ const RealtorClub = () => {
         <TouchableOpacity
           style={styles.ctaButton}
           onPress={() => {
-            navigation.navigate("RealtorClub");
+            navigation.navigate("RealtorClubRegister");
           }}
         >
           <Text style={styles.ctaButtonText}>Hemen Üye Ol</Text>
@@ -327,7 +327,7 @@ const styles = StyleSheet.create({
   imageContainer: {
     width: width * 0.62, // ekran genişliğinin %80'i
     height: height * 0.40, // ekran yüksekliğinin %35'i
-    marginTop:20
+    marginTop: 20
   },
   circleImage: {
     width: "100%",

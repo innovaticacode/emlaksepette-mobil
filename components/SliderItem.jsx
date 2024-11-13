@@ -38,7 +38,7 @@ export default function SliderItem({
     <TouchableOpacity
       onPress={() => {
         if (navigationStatus == true) {
-          navigation.push(url);
+          navigation.navigate(url);
         } else {
           navigation.navigate("Profile", {
             name: "Master Realtor",
