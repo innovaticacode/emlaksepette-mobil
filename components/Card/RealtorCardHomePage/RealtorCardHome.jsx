@@ -232,7 +232,7 @@ export default function RealtorCardHome({
               <View style={[styles.addCardBtn, {backgroundColor:'#FFA500'}]}>
               <Text style={styles.butonText}>Rezerve Edildi</Text>
           </View>
-          
+            
           }
             </View>
             <AwesomeAlert

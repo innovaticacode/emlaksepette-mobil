@@ -7,7 +7,7 @@ import { styles } from "../RadioFilter/RadioFilter.styles";
 import { useNavigation } from "@react-navigation/native";
 
 
-const ViewFilter = ({selectedView,showViewModal,setshowViewModal, handleRadio}) => {
+const ViewFilter = ({selectedView,showViewModal,setshowViewModal, handleRadio,show}) => {
 const nav =useNavigation()
   return (
     <React.Fragment>
@@ -61,8 +61,14 @@ const nav =useNavigation()
                   handleRadio(2);
                   setshowViewModal(false);
                   setTimeout(() => {
-                        nav.navigate('MapWiew')
-                        handleRadio(0)
+                    if (show==1) {
+                      nav.navigate('MapFilterForProject')
+                      handleRadio(0)
+                    }else{
+                      nav.navigate('MapWiew')
+                      handleRadio(0)
+                    }
+                       
                   }, 200);
                 }}
                 checkedIcon="dot-circle-o"
