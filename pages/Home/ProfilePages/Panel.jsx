@@ -30,19 +30,19 @@ import enler from "../../../components/images/enler.png";
 import cerceve from "../../../components/images/cerceve.png";
 import { addDotEveryThreeDigits } from "../../../components/methods/merhod";
 
-  const ItemContainer=({text,style,dataText,TextHeader})=>{
-    return (
-      <View style={style}>
-         <View style={{  alignItems: "center" }}>
-                      <Text style={styles.title}>{TextHeader}</Text>
-                    </View>
-            <View >
-              <Text style={{textAlign:'center',fontSize:14,color:'#333',fontWeight:'600'}}>{dataText}</Text>
-            </View>
- 
-        </View>
-    )
-  }
+const ItemContainer = ({ text, style, dataText, TextHeader }) => {
+  return (
+    <View style={style}>
+      <View style={{ alignItems: "center" }}>
+        <Text style={styles.title}>{TextHeader}</Text>
+      </View>
+      <View >
+        <Text style={{ textAlign: 'center', fontSize: 14, color: '#333', fontWeight: '600' }}>{dataText}</Text>
+      </View>
+
+    </View>
+  )
+}
 
 export default function Panel({ options, onSelect }) {
   const [modalVisible, setModalVisible] = useState(false);
@@ -160,114 +160,114 @@ export default function Panel({ options, onSelect }) {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   }).format(panelInfo.totalSales);
-  
-    const Items=[
-      {
-        header:'Alt Çalışan Sayısı',
-        data:panelInfo?.sub_users?.length,
-        navigate:'UsersList',
-        tabSee:1
-      },
-      {
-        header:'Aktif Projeler',
-        data:panelInfo?.activeAdvertProjects,
-        tabSee:1,
-        navigate:'MyProject',
-        param:0
-      },
-      {
-        header:'Onay Bekleyen Projeler',
-        data:panelInfo?.pendingAdvertProjects ,
-        tabSee:1,
-        navigate:'MyProject',
-        param:1
-      },
-      {
-        header:'Askıya Alınan Projeler',
-        data:panelInfo?.passiveAdvertProjects ,
-        tabSee:1,
-        navigate:'MyProject',
-        param:3
-      },
-      {
-        header:'Reddedilen Projeler',
-        data:panelInfo?.rejectAdvertProjects ,
-        tabSee:1,
-        navigate:'MyProject',
-        param:2
-      },
-      {
-        header:'Satılan Proje İlanları',
-        data:panelInfo?.total_sales_count_projects,
-        tabSee:1,
-        navigate:'MyProject',
-        param:4
-      },
-      {
-        header:'Toplam Proje Sayısı ',
-        data:panelInfo?.total_adverts_count_project,
-        tabSee:1
-      },
-      {
-        header:'Görüntülenme Sayısı',
-        data:panelInfo?.viewCountProjects,
-        tabSee:1
-      },
-      {
-        header:'Alt Çalışan Sayısı',
-        data:panelInfo?.sub_users?.length,
-        navigate:'UsersList',
-        tabSee:0
-      },
-      {
-        header:'Aktif İlanlar',
-        data:panelInfo?.activeAdvertHousings,
-        tabSee:0,
-        navigate:'MyRealtor',
-        param:0
-      },
-      {
-        header:'Onay Bekleyen İlanlar',
-        data:panelInfo?.pendingAdvertHousings ,
-        tabSee:0,
-        navigate:'MyRealtor',
-        param:1
-      },
-      {
-        header:'Askıya Alınan İlanlar',
-        data:panelInfo?.passiveAdvertHousings,
-        tabSee:0,
-        navigate:'MyRealtor',
-        param:3
-      },
-      {
-        header:'Reddedilen İlanlar',
-        data:panelInfo?.rejectAdvertHousings ,
-        tabSee:0,
-        navigate:'MyRealtor',
-        param:2
-      },
-    
-      {
-        header:'Satılan İlanlar',
-        data:panelInfo?.total_sales_count_housing,
-        tabSee:0,
-        navigate:'MyRealtor',
-        param:4
-      },
-      {
-        header:'Toplam İlan Sayısı ',
-        data:panelInfo?.total_adverts_count_housing,
-        tabSee:0
-      },
-      {
-        header:'Görüntülenme Sayısı',
-        data:panelInfo?.viewCountHousings,
-        tabSee:0
-      },
-   
-    ]
-const [tab, settab] = useState(0)
+
+  const Items = [
+    {
+      header: 'Alt Çalışan Sayısı',
+      data: panelInfo?.sub_users?.length,
+      navigate: 'UsersList',
+      tabSee: 1
+    },
+    {
+      header: 'Aktif Projeler',
+      data: panelInfo?.activeAdvertProjects,
+      tabSee: 1,
+      navigate: 'MyProject',
+      param: 0
+    },
+    {
+      header: 'Onay Bekleyen Projeler',
+      data: panelInfo?.pendingAdvertProjects,
+      tabSee: 1,
+      navigate: 'MyProject',
+      param: 1
+    },
+    {
+      header: 'Askıya Alınan Projeler',
+      data: panelInfo?.passiveAdvertProjects,
+      tabSee: 1,
+      navigate: 'MyProject',
+      param: 3
+    },
+    {
+      header: 'Reddedilen Projeler',
+      data: panelInfo?.rejectAdvertProjects,
+      tabSee: 1,
+      navigate: 'MyProject',
+      param: 2
+    },
+    {
+      header: 'Satılan Proje İlanları',
+      data: panelInfo?.total_sales_count_projects,
+      tabSee: 1,
+      navigate: 'MyProject',
+      param: 4
+    },
+    {
+      header: 'Toplam Proje Sayısı ',
+      data: panelInfo?.total_adverts_count_project,
+      tabSee: 1
+    },
+    {
+      header: 'Görüntülenme Sayısı',
+      data: panelInfo?.viewCountProjects,
+      tabSee: 1
+    },
+    {
+      header: 'Alt Çalışan Sayısı',
+      data: panelInfo?.sub_users?.length,
+      navigate: 'UsersList',
+      tabSee: 0
+    },
+    {
+      header: 'Aktif İlanlar',
+      data: panelInfo?.activeAdvertHousings,
+      tabSee: 0,
+      navigate: 'MyRealtor',
+      param: 0
+    },
+    {
+      header: 'Onay Bekleyen İlanlar',
+      data: panelInfo?.pendingAdvertHousings,
+      tabSee: 0,
+      navigate: 'MyRealtor',
+      param: 1
+    },
+    {
+      header: 'Askıya Alınan İlanlar',
+      data: panelInfo?.passiveAdvertHousings,
+      tabSee: 0,
+      navigate: 'MyRealtor',
+      param: 3
+    },
+    {
+      header: 'Reddedilen İlanlar',
+      data: panelInfo?.rejectAdvertHousings,
+      tabSee: 0,
+      navigate: 'MyRealtor',
+      param: 2
+    },
+
+    {
+      header: 'Satılan İlanlar',
+      data: panelInfo?.total_sales_count_housing,
+      tabSee: 0,
+      navigate: 'MyRealtor',
+      param: 4
+    },
+    {
+      header: 'Toplam İlan Sayısı ',
+      data: panelInfo?.total_adverts_count_housing,
+      tabSee: 0
+    },
+    {
+      header: 'Görüntülenme Sayısı',
+      data: panelInfo?.viewCountHousings,
+      tabSee: 0
+    },
+
+  ]
+  const [tab, settab] = useState(0)
   return (
     <>
       <View style={style.container}>
@@ -281,73 +281,73 @@ const [tab, settab] = useState(0)
             contentContainerStyle={{ paddingBottom: 20 }}
           >
             <View style={style.container}>
-              <View style={{backgroundColor:'#FFFFFF'}}>
-            <View style={{backgroundColor:'#EA2C2E',padding:8}}>
-              <View style={{flexDirection:'row',alignItems:'center',gap:10}}>
-                  <View style={{width:65,height:65,borderRadius:50,backgroundColor:'yellow',borderWidth:2,borderColor:'white'}}>
-                  <ImageBackground
-                    source={{
-                      uri: `https://private.emlaksepette.com/storage/profile_images/${panelInfo?.user?.profile_image}`,
-                    }}
-                    style={{width:'100%',height:'100%'}}
-                    borderRadius={50}
-                    resizeMode="cover"
-                    
-                  />
-                  </View>
-                  <View>
-                  <Text style={{ color: "white", fontWeight: "700" }}>
-                      {panelInfo.user.name}
-                    </Text>
-                    <Text style={{ color: "white", fontWeight: "400" }}>
-                      {panelInfo.user.email}
-                    </Text>
-                  </View>
-              </View>
-            </View>
-                    <View style={{
-                      flexDirection:'row',
-                      alignItems:'center',
-                      justifyContent:'space-between'
-                    }}>
-                      <TouchableOpacity
-                      onPress={()=>{settab(0)}}
-                       style={{
-                        width:'45%',
-                        padding:10,
-                        borderBottomWidth:tab==0 ? 1 : 0,
-                        borderBottomColor:'#EA2C2E'
-                      }}>
-                        <Text style={{color:tab==0?'#EA2C2E':'#333',fontWeight:'500',fontSize:13,textAlign:'center'}}>Emlak İlanları İstatistiği</Text>
-                      </TouchableOpacity>
+              <View style={{ backgroundColor: '#FFFFFF' }}>
+                <View style={{ backgroundColor: '#EA2C2E', padding: 8 }}>
+                  <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10 }}>
+                    <View style={{ width: 65, height: 65, borderRadius: 50, backgroundColor: 'yellow', borderWidth: 2, borderColor: 'white' }}>
+                      <ImageBackground
+                        source={{
+                          uri: `https://private.emlaksepette.com/storage/profile_images/${panelInfo?.user?.profile_image}`,
+                        }}
+                        style={{ width: '100%', height: '100%' }}
+                        borderRadius={50}
+                        resizeMode="cover"
 
-                      <TouchableOpacity
-                        onPress={()=>{settab(1)}}
-                       style={{
-                        width:'45%',
-                        padding:10,
-                           borderBottomWidth:tab==1 ? 1 : 0,
-                        borderBottomColor:'#EA2C2E'
-                      }}>
-                      <Text style={{color:tab==1?'#EA2C2E':'#333',fontWeight:'500',fontSize:13,textAlign:'center'}}>Proje İlanları İstatistiği</Text>
-                      </TouchableOpacity>
+                      />
                     </View>
-            </View>
-              <View style={{ }}>
+                    <View>
+                      <Text style={{ color: "white", fontWeight: "700" }}>
+                        {panelInfo.user.name}
+                      </Text>
+                      <Text style={{ color: "white", fontWeight: "400" }}>
+                        {panelInfo.user.email}
+                      </Text>
+                    </View>
+                  </View>
+                </View>
+                <View style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  justifyContent: 'space-between'
+                }}>
+                  <TouchableOpacity
+                    onPress={() => { settab(0) }}
+                    style={{
+                      width: '45%',
+                      padding: 10,
+                      borderBottomWidth: tab == 0 ? 1 : 0,
+                      borderBottomColor: '#EA2C2E'
+                    }}>
+                    <Text style={{ color: tab == 0 ? '#EA2C2E' : '#333', fontWeight: '500', fontSize: 13, textAlign: 'center' }}>Emlak İlanları İstatistiği</Text>
+                  </TouchableOpacity>
+
+                  <TouchableOpacity
+                    onPress={() => { settab(1) }}
+                    style={{
+                      width: '45%',
+                      padding: 10,
+                      borderBottomWidth: tab == 1 ? 1 : 0,
+                      borderBottomColor: '#EA2C2E'
+                    }}>
+                    <Text style={{ color: tab == 1 ? '#EA2C2E' : '#333', fontWeight: '500', fontSize: 13, textAlign: 'center' }}>Proje İlanları İstatistiği</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+              <View style={{}}>
                 <View style={styles.rowContainer}>
 
                   {
-                    Items.map((item,index)=>(
-                      <TouchableOpacity disabled={item.navigate ? false:true} style={{
-                        display:item.tabSee==tab?'flex':'none'
-                      }} key={index} onPress={()=>{
-                        navigation.navigate(item.navigate?? item.navigate ,{tab:item.param ? item.param:0})
+                    Items.map((item, index) => (
+                      <TouchableOpacity disabled={item.navigate ? false : true} style={{
+                        display: item.tabSee == tab ? 'flex' : 'none'
+                      }} key={index} onPress={() => {
+                        navigation.navigate(item.navigate ?? item.navigate, { tab: item.param ? item.param : 0 })
                       }}>
-                      <ItemContainer style={[styles.card,{   width: (Dimensions.get("window").width - 30) / 2, flexDirection: "column",padding:15,paddingTop:10,paddingBottom:10,gap:8,borderWidth:1 }]} dataText={item.data} TextHeader={item.header} />
+                        <ItemContainer style={[styles.card, { width: (Dimensions.get("window").width - 30) / 2, flexDirection: "column", padding: 15, paddingTop: 10, paddingBottom: 10, gap: 8, borderWidth: 1 }]} dataText={item.data} TextHeader={item.header} />
                       </TouchableOpacity>
                     ))
                   }
-                                       
+
                 </View>
               </View>
               <View style={{ paddingLeft: 12, paddingRight: 12 }}>
@@ -447,9 +447,9 @@ const [tab, settab] = useState(0)
                   </View>
                 </View>
               </View>
-              
 
-              <View style={{ paddingRight:12,paddingLeft:12}}>
+
+              <View style={{ paddingRight: 12, paddingLeft: 12 }}>
                 <TouchableOpacity
                   onPress={() => navigation.navigate("AdvertPanel")}
                   style={[
@@ -459,7 +459,6 @@ const [tab, settab] = useState(0)
                       flexDirection: "row",
                       alignItems: "center",
                       gap: 15,
-                     
                     },
                   ]}
                 >
@@ -471,7 +470,7 @@ const [tab, settab] = useState(0)
                       borderColor: "red",
                     }}
                   >
-                    <Text style={{ borderLeftWidth: 3, borderColor: "red" }}>
+                    <Text style={{ fontWeight: '400', fontSize: 14, lineHeight: 18 }}>
                       İlan Yönetimi
                     </Text>
                   </View>
@@ -616,9 +615,9 @@ const styles = StyleSheet.create({
     flexWrap: "wrap", // Taşma durumunda yeni satıra geçmelerini sağlar
     // Öğeler arasında eşit boşluk bırakır
     alignItems: "center", //
-    justifyContent:'center',
-    gap:10,
-   
+    justifyContent: 'center',
+    gap: 10,
+
   },
   itemContainer: {
     width: (Dimensions.get("window").width - 60) / 2, // Genişliği ekran genişliğine göre ayarlar ve iki öğe yan yana gelir
@@ -674,7 +673,7 @@ const style = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#F7F7F9",
-    gap:15,
+    gap: 15,
   },
   cardContainer: {
     backgroundColor: "white",
