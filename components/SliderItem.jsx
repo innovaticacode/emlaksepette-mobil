@@ -88,6 +88,7 @@ const styles = StyleSheet.create({
   textArea: {
     justifyContent: "center",
     alignItems: "center",
+    width: "100%",
   },
   image: {
     width: "100%",

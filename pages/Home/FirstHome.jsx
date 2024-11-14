@@ -98,8 +98,9 @@ const FirstHome = (props) => {
       const response = await axios.get(
         `${apiUrl}markalar/uretici`
       );
-      if (response?.data?.markalar.length > 0) {
-        setcreatorBrands(response?.data?.markalar);
+      // console.log("Popular Construction Brands: ", response.data);
+      if (response?.data?.producer_users?.length > 0) {
+        setcreatorBrands(response?.data?.producer_users);
       }
     } catch (error) {
       console.log("Error fetching uretici:", error);
@@ -467,7 +468,7 @@ const FirstHome = (props) => {
                 </Text>
                 <TouchableOpacity
                   style={styles.allProjectsButton}
-                  onPress={() => navigation.navigate("AllFeaturedRealEstate")}
+                  onPress={() => navigation.navigate("AllTourismRent", { brandName: 'emlak-ofisi' })}
                 >
                   <Text style={styles.allProjectsButtonText}>Tümünü Gör</Text>
                 </TouchableOpacity>
@@ -761,7 +762,7 @@ const FirstHome = (props) => {
                 </Text>
                 <TouchableOpacity
                   style={styles.allProjectsButton}
-                  onPress={() => navigation.navigate("ViewAll")}
+                  onPress={() => navigation.navigate("AllTourismRent", { brandName: 'turizm-amacli-kiralama' })}
                 >
                   <Text style={styles.allProjectsButtonText}>Tümünü Gör</Text>
                 </TouchableOpacity>

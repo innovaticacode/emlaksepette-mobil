@@ -124,6 +124,7 @@ import ViewAll from "./pages/Home/ViewAll/ViewAll";
 import RealEstateWallet from "./src/pages/RealEstateWallet";
 import EditPending from "./pages/Home/EditProject/EditPending";
 import ShareScreen from "./pages/Home/ShareScreen"
+import MapFilterProject from "./components/Filter/MapViewFilter/MapFilterProject";
 
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator(); // Drawer navigator
@@ -1430,6 +1431,17 @@ const StackScreenNavigator = () => {
                   component={ShareScreen}
                   options={({ route }) => ({
                     title: "İlan Ver",
+                    headerBackTitleVisible: false,
+                    headerStyle: {
+                      backgroundColor: "#ffffff",
+                    },
+                  })}
+                />
+                    <Stack.Screen
+                  name="MapFilterForProject"
+                  component={MapFilterProject}
+                  options={({ route }) => ({
+                    title: "Harita Görünümü (Projeler)",
                     headerBackTitleVisible: false,
                     headerStyle: {
                       backgroundColor: "#ffffff",
