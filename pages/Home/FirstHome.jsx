@@ -96,11 +96,11 @@ const FirstHome = (props) => {
   const fetchPopularCreatorBrands = async () => {
     try {
       const response = await axios.get(
-        `${apiUrl}uretici-markalari`
+        `${apiUrl}markalar/uretici`
       );
       // console.log("Popular Construction Brands: ", response.data);
-      if (response?.data?.producer_users?.length > 0) {
-        setcreatorBrands(response?.data?.producer_users);
+      if (response?.data?.markalar?.length > 0) {
+        setcreatorBrands(response?.data?.markalar);
       }
     } catch (error) {
       console.log("Error fetching uretici:", error);
@@ -378,9 +378,18 @@ const FirstHome = (props) => {
                         ListHeaderComponent={
                           <View style={{gap:9}}>
                                        <View style={styles.sliderBarContainer}>
-              <Text style={styles.sliderBarTitle}>
-                Öne Çıkan İnşaat Markaları
-              </Text>
+                                       <View style={styles.featuredProjectsHeader}>
+                <Text style={styles.featuredProjectsTitle}>
+                  Öne Çıkan İnşaat Ofisleri
+                </Text>
+                <TouchableOpacity
+                  style={styles.allProjectsButton}
+                  onPress={() => navigation.navigate("AllTourismRent",{brandName:'insaat-ofisi'})}
+                >
+                  <Text style={styles.allProjectsButtonText}>Tümünü Gör</Text>
+                </TouchableOpacity>
+                <Arrow name="arrow-right" color={'#EA2C2E'}/>
+              </View>
               <SliderBar loading={loadingProjects} />
             </View>
                                <View style={styles.featuredProjectsHeader}>
@@ -454,7 +463,7 @@ const FirstHome = (props) => {
                 </Text>
                 <TouchableOpacity
                   style={styles.allProjectsButton}
-                  onPress={() => navigation.navigate("AllFeaturedRealEstate")}
+                  onPress={() => navigation.navigate("AllTourismRent",{brandName:'emlak-ofisi'})}
                 >
                   <Text style={styles.allProjectsButtonText}>Tümünü Gör</Text>
                 </TouchableOpacity>
@@ -754,7 +763,7 @@ const FirstHome = (props) => {
                 </Text>
                 <TouchableOpacity
                   style={styles.allProjectsButton}
-                  onPress={() => navigation.navigate("ViewAll")}
+                  onPress={() => navigation.navigate("AllTourismRent",{brandName:'turizm-amacli-kiralama'})}
                 >
                   <Text style={styles.allProjectsButtonText}>Tümünü Gör</Text>
                 </TouchableOpacity>
@@ -899,7 +908,7 @@ const FirstHome = (props) => {
                 </Text>
                 <TouchableOpacity
                   style={styles.allProjectsButton}
-                  onPress={() => navigation.navigate("AllFeaturedRealEstate")}
+                  onPress={() => navigation.navigate("AllTourismRent",{brandName:'uretici'})}
                 >
                   <Text style={styles.allProjectsButtonText}>Tümünü Gör</Text>
                 </TouchableOpacity>
