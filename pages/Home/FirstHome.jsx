@@ -99,8 +99,8 @@ const FirstHome = (props) => {
         `${apiUrl}markalar/uretici`
       );
       // console.log("Popular Construction Brands: ", response.data);
-      if (response?.data?.producer_users?.length > 0) {
-        setcreatorBrands(response?.data?.producer_users);
+      if (response?.data?.markalar.length > 0) {
+        setcreatorBrands(response?.data?.markalar);
       }
     } catch (error) {
       console.log("Error fetching uretici:", error);
