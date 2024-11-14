@@ -6,12 +6,14 @@ import {
   Text,
   FlatList,
   StyleSheet,
-  ActivityIndicator,
+
   ImageBackground,
 } from "react-native";
 import { ALERT_TYPE, Dialog } from "react-native-alert-notification";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { apiUrl, frontEndUriBase } from "../../components/methods/apiRequest";
+import { useRoute } from "@react-navigation/native";
+import { ActivityIndicator } from "react-native-paper";
 
 
 
@@ -19,14 +21,15 @@ export default function AllTourismRent(prosp) {
   const { navigation } = prosp;
   const [tourismBrand, setTourismBrand] = useState([]);
   const [loading, setLoading] = useState(true);
-
+  const route =useRoute()
+  const {brandName}=route.params
   const fetchFeaturedStores = async () => {
     try {
       const response = await axios.get(
-        `${apiUrl}get_featured_acente_brands`
+        `${apiUrl}markalar/${brandName}`
       );
-      if (response.data.length > 0) {
-        setTourismBrand(response.data);
+      if (response?.data?.markalar?.length > 0) {
+        setTourismBrand(response?.data?.markalar);
       }
       setLoading(false);
     } catch (error) {
@@ -46,14 +49,14 @@ export default function AllTourismRent(prosp) {
 
   useEffect(() => {
     fetchFeaturedStores();
-  }, []);
+  }, [route.params.brandName]);
 
   return (
     <View style={styles.container}>
       {loading ? (
         <ActivityIndicator
           size="large"
-          color="#0056b3"
+          color="#333"
           style={styles.loading}
         />
       ) : (
