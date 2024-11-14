@@ -985,11 +985,13 @@ export default function PostDetail() {
                   }}
                   onImageIndexChange={handleImageIndexChange}
                   FooterComponent={({ imageIndex }) => (
-                    <>
+                    <View style={{
+                      marginBottom: 50,
+                    }}>
                       <Text style={styles.fulViewImgText}>
                         {imageIndex + 1} / {images.length}
                       </Text>
-                    </>
+                    </View>
                   )}
                 />
               </View>

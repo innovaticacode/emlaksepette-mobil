@@ -858,7 +858,7 @@ export default function Details({ navigation }) {
                     }}
                     onImageIndexChange={handleImageIndexChange}
                     FooterComponent={({ imageIndex }) => (
-                      <>
+                      <View style={{ marginBottom: 50 }}>
                         <Text style={{
                           color: "#FFF",
                           fontSize: 12,
@@ -867,7 +867,7 @@ export default function Details({ navigation }) {
                         }}>
                           {imageIndex + 1} / {images.length}
                         </Text>
-                      </>
+                      </View>
                     )}
                   />
                 </View>
