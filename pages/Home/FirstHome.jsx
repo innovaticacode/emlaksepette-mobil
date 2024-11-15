@@ -457,6 +457,9 @@ const FirstHome = (props) => {
                       key={index}
                       image={`${frontEndUriBase}/logos/${item.logo}`}
                       text={item.title}
+                      onPress={() => navigation.navigate("Profile", {
+                        id: item?.user_id,
+                      })}
                     />
                   )}
                 />
