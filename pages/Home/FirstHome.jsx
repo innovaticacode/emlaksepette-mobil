@@ -159,7 +159,6 @@ const FirstHome = (props) => {
   const navigateToHousingProjects = () => navigateToProjects(null);
 
   const navigateToRealtorAdverts = (checkValue, name, slug, optional, type) => {
-    console.debug("navigateToRealtorAdverts------>>>", checkValue, name, slug, optional, type);
     navigation.navigate("AllRealtorAdverts", {
       name: name || "Emlak İlanları",
       slug: slug || "emlak-ilanlari",
@@ -489,21 +488,16 @@ const FirstHome = (props) => {
                   contentContainerStyle={{ gap: 10, paddingTop: 5, paddingBottom: 5 }}
                   showsHorizontalScrollIndicator={false}
                 >
-
                   <ProjectButton
                     color="#0E49B5"
                     text="Paylaşımlı İlanlar"
-                    onPress={() => navigateToRealtorAdverts(null, "Paylaşımlı İlanlar", "paylasimli-ilanlar")}
+                    onPress={() => navigateToRealtorAdverts(null, null, 'paylasimli-ilanlar', null, null)}
                   />
-
-                  <ProjectButton color="#A2DAE0" text="Sahibinden" onPress={() => navigateToRealtorAdverts(optional = 'sahibinden')} />
-
+                  <ProjectButton color="#A2DAE0" text="Sahibinden" onPress={() => navigateToRealtorAdverts(null, null, 'emlak-ilanlari', null, null)} />
                   <ProjectButton color="#A70107" text="Kiralık Konutlar" onPress={() => navigateToRealtorAdverts(
-                    optional = "kiralik",
+                    null, null, "konut  ", null, "kiralik"
                   )} />
-                  <ProjectButton color="#06065d" text="Emlak Ofisinden" onPress={() => navigateToRealtorAdverts(
-                    optional = "emlak-ofisinden",
-                  )} />
+                  <ProjectButton color="#06065d" text="Emlak Ofisinden" onPress={() => navigateToRealtorAdverts(null, null, 'emlak-ilanlari', null, null)} />
 
                 </ScrollView>
               </>
