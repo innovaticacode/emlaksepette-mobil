@@ -739,7 +739,7 @@ export default function PostDetail() {
                         }
                       }}
                       style={{
-                        backgroundColor: "#EB2B2E",
+                        backgroundColor: "#EA2B2E",
                         width: "45%",
                         padding: 12,
                         borderRadius: 5,
@@ -759,7 +759,7 @@ export default function PostDetail() {
                 ) : data?.housing?.sold == "1" ? (
                   <View
                     style={{
-                      backgroundColor: "#EA2C2E",
+                      backgroundColor: "#000000",
                       width: "100%",
                       padding: 12,
                       borderRadius: 5,
@@ -778,7 +778,7 @@ export default function PostDetail() {
                 ) : (
                   <View
                     style={{
-                      backgroundColor: "#FFA500",
+                      backgroundColor: "#373737",
                       padding: 12,
                       borderRadius: 5,
                       width: "100%",

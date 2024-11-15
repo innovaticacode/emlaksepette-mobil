@@ -729,6 +729,7 @@ navigation.navigate('PostDetails',{HomeId:roomOrder,projectId : data.project.id}
                           style={[
                             styles.payDetailBtn,
                             {
+                              backgroundColor:item.BackgroundColor,
                               display:
                                 user.type == 2
                                   ? Array.isArray(item.OnlySee) &&
@@ -823,6 +824,7 @@ navigation.navigate('PostDetails',{HomeId:roomOrder,projectId : data.project.id}
                           style={[
                             styles.payDetailBtn,
                             {
+                              backgroundColor:item.BackgroundColor,
                               display:
                                 user.type == 2
                                   ? Array.isArray(item.OnlySee) &&
@@ -969,6 +971,7 @@ navigation.navigate('PostDetails',{HomeId:roomOrder,projectId : data.project.id}
                           style={[
                             styles.payDetailBtn,
                             {
+                              backgroundColor:item.BackgroundColor,
                               display:
                                 user.type == 2
                                   ? Array.isArray(item.OnlySee) &&
@@ -1155,7 +1158,7 @@ const styles = StyleSheet.create({
     padding: 5,
     width: "100%",
     alignItems: "center",
-    backgroundColor: "#264ABB",
+    backgroundColor: "#EA2B2E",
     borderRadius: 5,
   },
   addBasketText: {
@@ -1211,7 +1214,7 @@ const styles = StyleSheet.create({
     padding: 5,
     width: "100%",
     alignItems: "center",
-    backgroundColor: "#EA2C2E",
+    backgroundColor: "#000000",
     borderRadius: 5,
   },
   soldText: {
@@ -1224,13 +1227,15 @@ const styles = StyleSheet.create({
     paddingRight: 20,
     padding: 5,
     alignItems: "center",
-    backgroundColor: "#000000",
+    backgroundColor: "#FFFFFF",
     borderRadius: 5,
+    borderWidth:1,
+    borderColor:'#DDDDDD'
   },
   payDetailText: {
-    fontWeight: "500",
+    fontWeight: "700",
     fontSize: 12,
-    color: "white",
+    color: "black",
   },
   ıconContainer: {
     width: 28,
