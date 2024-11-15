@@ -522,7 +522,7 @@ const StackScreenNavigator = () => {
                     }}
                   />
                   <Stack.Screen
-                    name="RealtorClub"
+                    name="RealtorClubRegister"
                     options={{
                       title: "Emlak Kulüp Üyesi Ol",
                       headerBackTitle: "",
