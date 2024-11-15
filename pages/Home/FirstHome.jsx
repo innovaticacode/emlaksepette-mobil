@@ -158,21 +158,24 @@ const FirstHome = (props) => {
   const navigateToVillaProjects = () => navigateToProjects("villa");
   const navigateToHousingProjects = () => navigateToProjects(null);
 
-  const navigateToRealtorAdverts = (checkValue, name, slug, optional) => {
+  const navigateToRealtorAdverts = (checkValue, name, slug, optional, type) => {
+    console.debug("navigateToRealtorAdverts------>>>", checkValue, name, slug, optional, type);
     navigation.navigate("AllRealtorAdverts", {
-      name: name ? name : "Emlak İlanları",
-      slug: slug ? slug : "emlak-ilanlari",
+      name: name || "Emlak İlanları",
+      slug: slug || "emlak-ilanlari",
       data: sellAdvert,
       count: sellAdvert.length,
-      type: "konut",
-      optional: optional ? optional : null,
+      type: type || "konut",
+      optional: optional || null,
       title: null,
-      check: checkValue,
+      check: checkValue || null,
       city: null,
       county: null,
       hood: null,
-    })
+    });
   };
+
+
 
   const advertsForSale = async () => {
     try {
@@ -778,11 +781,38 @@ const FirstHome = (props) => {
               showsHorizontalScrollIndicator={false}
             >
 
-              <ProjectButton color="#0E49B5" text="Kiralık Oteller" />
-              <ProjectButton color="#A70107" text="Kiralık Bungalov" />
+              <ProjectButton
+                color="#0E49B5"
+                text="Kiralık Oteller"
+                onPress={() => {
+                  navigateToRealtorAdverts(null, null, "mustakil-tatil", "otel", "gunluk-kiralik");
+                }}
+              />
 
-              <ProjectButton color="#A2DAE0" text="Kiralık Tiny House" />
-              <ProjectButton color="#06065d" text="Kiralık Müstakil Ev" />
+              <ProjectButton
+                color="#A70107"
+                text="Kiralık Bungalov"
+                onPress={() => {
+                  navigateToRealtorAdverts(null, null, "mustakil-tatil", "bungalov", "gunluk-kiralik");
+                }}
+              />
+
+              <ProjectButton
+                color="#A2DAE0"
+                text="Kiralık Tiny House"
+                onPress={() => {
+                  navigateToRealtorAdverts(null, null, "mustakil-tatil", "tiny-house", "gunluk-kiralik");
+                }}
+              />
+
+              <ProjectButton
+                color="#06065d"
+                text="Kiralık Müstakil Ev"
+                onPress={() => {
+                  navigateToRealtorAdverts(null, null, "mustakil-tatil", "mustakil-ev", "gunluk-kiralik");
+                }}
+              />
+
 
             </ScrollView>
             <View
