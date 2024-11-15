@@ -48,9 +48,9 @@ const MapWiew = () => {
         showsUserLocation={true}
         showsMyLocationButton={true}
       >
-        {markers.map((marker) => (
+        {markers.map((marker,_i) => (
           <Marker
-            key={marker.id}
+            key={_i}
             coordinate={{
               latitude: parseFloat(marker.latitude),
               longitude: parseFloat(marker.longitude),
