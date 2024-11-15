@@ -85,7 +85,7 @@ export default function UserTypeList() {
           Dialog.show({
             type: ALERT_TYPE.SUCCESS,
             title: "Başarılı",
-            textBody: `${selectedUserName} adlı kullanıcı silindi.`,
+            textBody: `${selectedUserName} adlı Yetki Grubu silindi.`,
             button: "Tamam",
             onHide: () => {
               fetchData();
@@ -113,7 +113,7 @@ export default function UserTypeList() {
 
   useEffect(() => {
     navigation.setOptions({
-      title: `Kullanıcı Tipleri (${transformedRoles?.length})`,
+      title: `Yetki Grupları (${transformedRoles?.length})`,
     });
   }, [navigation, transformedRoles]);
   const [isChoosed, setisChoosed] = useState(false);
@@ -153,26 +153,33 @@ export default function UserTypeList() {
           },
         }
       );
-
+    
+    
       console.log("deleted");
-      if (response.status === 200) {
+      if (response.status === 200 |response.status === 201) {
+        setSelectedUserIDS([]);
+        setisChoosed(false)
+        setisShowDeleteButon(false)
         setTimeout(() => {
           console.log("dialog");
           Dialog.show({
             type: ALERT_TYPE.SUCCESS,
             title: `Başarılı`,
-            textBody: `${SelectedUserIDS.length} Kullanıcı Tipi Silindi.`,
+            textBody: `${SelectedUserIDS.length} Yetki Grubu Silindi`,
             button: "Tamam",
             onHide: () => {
               fetchData();
-              setSelectedUserIDS([]);
+             
+              
             },
           });
           console.log("load");
           setloading(false);
+         
+       
         }, 2000);
-
-        setdeleteAllUserType(false); // Hide alert after confirmation
+     
+       
       }
     } catch (error) {
       console.error("Error making DELETE request:", error);
@@ -205,7 +212,7 @@ export default function UserTypeList() {
           Dialog.show({
             type: ALERT_TYPE.SUCCESS,
             title: `Başarılı`,
-            textBody: `${userList.length} İlan silindi.`,
+            textBody: `${userList.length} Yetki Grubu silindi.`,
             button: "Tamam",
             onHide: () => {
               fetchData();
@@ -252,7 +259,7 @@ export default function UserTypeList() {
           </View>
           <View>
             <Text style={styles.noCommentsText}>
-              Daha önce kullanıcı tipi oluşturmadınız.
+              Daha önce Yetki Grubu oluşturmadınız.
             </Text>
             <Text></Text>
           </View>
@@ -359,7 +366,7 @@ export default function UserTypeList() {
                   color: "#EC302E",
                 }}
               >
-                Lütfen Silmek İstediğiniz Kullanıcı Tiplerini Seçiniz!
+                Lütfen Silmek İstediğiniz Yetki Gruplarını Seçiniz!
               </Text>
             </View>
           )}
@@ -388,7 +395,7 @@ export default function UserTypeList() {
               textAlign: "center",
               margin: 5,
             }}
-            title={`${UsersId.length} Kullanıcı tipini silmek istediğinize emin misiniz?`}
+            title={`${UsersId.length} Yetki Grubu silmek istediğinize emin misiniz?`}
             messageStyle={{ textAlign: "center" }}
             closeOnTouchOutside={true}
             closeOnHardwareBackPress={false}
@@ -402,7 +409,11 @@ export default function UserTypeList() {
               setdeleteAllUserType(false);
             }}
             onConfirmPressed={() => {
-              deleteAllUsers();
+              setdeleteAllUserType(false);
+              setTimeout(() => {
+                deleteAllUsers();
+              }, 100);
+             
             }}
             confirmButtonTextStyle={{ marginLeft: 20, marginRight: 20 }}
             cancelButtonTextStyle={{ marginLeft: 20, marginRight: 20 }}
@@ -417,7 +428,7 @@ export default function UserTypeList() {
               textAlign: "center",
               margin: 5,
             }}
-            title={`${selectedUserName} adlı kullanıcı tipini silmek istediğinize emin misiniz?`}
+            title={`${selectedUserName} adlı Yetki Grubunu silmek istediğinize emin misiniz?`}
             messageStyle={{ textAlign: "center" }}
             closeOnTouchOutside={true}
             closeOnHardwareBackPress={false}
@@ -446,7 +457,7 @@ export default function UserTypeList() {
               textAlign: "center",
               margin: 5,
             }}
-            title={`${SelectedUserIDS.length} Kullanıcı tipini silmek istediğinize emin misiniz?`}
+            title={`${SelectedUserIDS.length} Yetki Grubunu silmek istediğinize emin misiniz?`}
             messageStyle={{ textAlign: "center" }}
             closeOnTouchOutside={true}
             closeOnHardwareBackPress={false}
@@ -460,7 +471,11 @@ export default function UserTypeList() {
               setdeleteUserModal(false);
             }}
             onConfirmPressed={() => {
-              deleteSelectedUserType();
+              setdeleteUserModal(false)
+              setTimeout(() => {
+                deleteSelectedUserType();
+              }, 100);
+           
             }}
             confirmButtonTextStyle={{ marginLeft: 20, marginRight: 20 }}
             cancelButtonTextStyle={{ marginLeft: 20, marginRight: 20 }}
@@ -473,6 +488,7 @@ export default function UserTypeList() {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: "#f5f5f7",
+  
   },
   noCommentsText: {
     fontSize: 18,
