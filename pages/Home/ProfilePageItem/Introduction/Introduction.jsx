@@ -17,9 +17,10 @@ import { Dialog } from "react-native-alert-notification";
 import { CommentCard, TotalStarCard } from "../../../../components";
 import ProjectPost from "../../../../components/ProjectPost";
 import Swiper from "react-native-swiper";
-import RealtorPost from "../../../../components/RealtorPost";
+
 import { TouchableOpacity } from "react-native";
 import HTML from "react-native-render-html";
+import RealtorPost from "../../../../components/Card/RealtorCard/RealtorPost";
 const Introduction = (props) => {
   const { id, setTab } = props;
   const [storeInfo, setStoreInfo] = useState({});
@@ -89,8 +90,10 @@ const Introduction = (props) => {
 
                 {storeInfo?.about && (
                   <Text style={styles.description}>
-                
-                    <HTML source={{ html:storeInfo?.about}} contentWidth={10} />
+                    <HTML
+                      source={{ html: storeInfo?.about }}
+                      contentWidth={10}
+                    />
                   </Text>
                 )}
               </View>

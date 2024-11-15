@@ -3,29 +3,38 @@ import {
   Text,
   StyleSheet,
   TouchableOpacity,
-  ImageBackground,
   Dimensions,
+  Image,
 } from "react-native";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Icon from "react-native-vector-icons/Ionicons";
 import Icon2 from "react-native-vector-icons/Entypo";
 import { frontEndUri, frontEndUriBase } from "../../../../components/methods/apiRequest";
 import { Platform } from "react-native";
 import { addDotEveryThreeDigits } from "../../../../components/methods/merhod";
 export default function RealtorAdvertPost({ Onpress, housing }) {
-  const [status, setStatus] = useState(housing.status);
-  
-  const { width, height } = Dimensions.get("window");
+  const [parsedImage, setParsedImage] = useState(null);
 
-  console.debug("housing", housing);
+  useEffect(() => {
+    if (housing?.housing_type_data) {
+      try {
+        const parsedData = JSON.parse(housing.housing_type_data);
+        setParsedImage(parsedData.image);
+      } catch (error) {
+        console.error("Error parsing JSON:", error);
+      }
+    }
+  }, [housing]);
+
   return (
     <View style={[style.card, { gap: 5 }]}>
       <View style={{ flexDirection: "row", width: "100%", gap: 10 }}>
-        <View style={{ backgroundColor: "red", width: 90, height: 80 }}>
-          <ImageBackground
-            source={{ uri: `${frontEndUriBase}housing_images/${housing.image}` }}
+        <View style={{ width: 90, height: 80 }}>
+          <Image
+            source={{ uri: `${frontEndUriBase}housing_images/${parsedImage}` }}
             style={{ width: "100%", height: "100%" }}
             resizeMode="cover"
+            borderRadius={4}
           />
         </View>
         <View>
@@ -43,20 +52,17 @@ export default function RealtorAdvertPost({ Onpress, housing }) {
                 </Text>
               </View>
               <View style={{ alignItems: "center", justifyContent: "center" }}>
-                <TouchableOpacity
-                  style={{}}
-                  onPress={() => {
-                    Onpress(housing.id);
-                  }}
-                >
+                <TouchableOpacity onPress={() => Onpress(housing.id)}>
                   <Icon2 name="dots-three-vertical" size={20} color={"#333"} />
                 </TouchableOpacity>
               </View>
             </View>
 
-            <Text style={{ fontSize: 11, color: "grey", fontWeight: "600" }}>
-              İlan Bitiş Tarihi: 1 Tem 2024 13:18
-            </Text>
+            {housing?.expires_at && (
+              <Text style={{ fontSize: 11, color: "grey", fontWeight: "600" }}>
+                {`İlan Bitiş Tarihi: ${housing?.expires_at}`}
+              </Text>
+            )}
           </View>
           <View style={{ paddingTop: 9 }}>
             <Text style={{ fontSize: 13, fontWeight: "700", color: "#333" }}>
@@ -75,30 +81,34 @@ export default function RealtorAdvertPost({ Onpress, housing }) {
       >
         <View style={{ flexDirection: "row", alignItems: "center", gap: 6 }}>
           <Icon name="heart" color={"red"} size={15} />
-          <Text style={{ color: "grey", fontSize: 12 }}>100 Favori</Text>
+          <Text style={{ color: "grey", fontSize: 12 }}>
+            {housing?.favorites_count}
+          </Text>
         </View>
-        <View style={{ flexDirection: "row", alignItems: "center", gap: 6 }}>
+        {/* <View style={{ flexDirection: "row", alignItems: "center", gap: 6 }}>
           <Icon name="bookmark" color={"#333"} size={13} />
           <Text style={{ color: "grey", fontSize: 12 }}>100</Text>
-        </View>
+        </View> */}
         <View style={{ flexDirection: "row", alignItems: "center", gap: 6 }}>
           <Icon name="eye" color={"grey"} size={16} />
-          <Text style={{ color: "grey", fontSize: 12 }}>100 </Text>
+          <Text style={{ color: "grey", fontSize: 12 }}>
+            {housing?.views_count}{" "}
+          </Text>
         </View>
-        {status == 0 && (
+        {housing?.status == 0 && (
           <Text style={{ fontSize: 13, color: "#B81900", fontWeight: "500" }}>
             Pasif
           </Text>
         )}
-        {status == 1 && (
+        {housing?.status == 1 && (
           <Text style={{ fontSize: 13, color: "#27B006" }}>Yayında</Text>
         )}
-        {status == 2 && (
+        {housing?.status == 2 && (
           <Text style={{ fontSize: 13, color: "#E57809" }}>
             Admin Onayı Bekliyor
           </Text>
         )}
-        {status == 3 && (
+        {housing?.status == 3 && (
           <Text style={{ fontSize: 13, color: "#B81900", fontWeight: "500" }}>
             Reddedildi
           </Text>

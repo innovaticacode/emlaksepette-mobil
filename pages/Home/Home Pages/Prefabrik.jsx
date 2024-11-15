@@ -9,7 +9,7 @@ import {
   ScrollView,
   Image,
 } from "react-native";
-import RealtorPost from "../../../components/RealtorPost";
+
 import axios from "axios";
 import { ActivityIndicator } from "react-native-paper";
 import Modal from "react-native-modal";
@@ -19,6 +19,7 @@ import Icon from "react-native-vector-icons/AntDesign";
 import { AlertNotificationRoot } from "react-native-alert-notification";
 import PrefabrikBanner from "../../../src/assets/images/prefabrik.png";
 import { apiUrl, frontEndUriBase } from "../../../components/methods/apiRequest";
+import RealtorPost from "../../../components/Card/RealtorCard/RealtorPost";
 const PAGE_SIZE = 10;
 
 const Prefabrik = ({ index }) => {

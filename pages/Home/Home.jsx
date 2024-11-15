@@ -35,6 +35,7 @@ const Home = ({ route }) => {
   useEffect(() => {
     if (route?.params?.status == "login") {
       getValueFor("user", setUser);
+      getValueFor("PhoneVerify", setverifyStatus);
     } else if (route?.params?.status == "logout") {
       setUser({});
     }

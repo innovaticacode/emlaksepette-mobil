@@ -25,10 +25,18 @@ import { RxDropdownMenu } from "react-icons/rx";
 import RNPickerSelect from "react-native-picker-select";
 import SortModal from "../../components/SortModal";
 import { DrawerMenu } from "../../components";
+import { useDispatch, useSelector } from "react-redux";
 import { apiUrl, frontEndUriBase } from "../../components/methods/apiRequest";
-
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import FilterRealtor from "../../assets/filterRealtor.svg";
+import ViewFilter from "../../components/Filter/ViewFilter/ViewFilter";
+import {
+  setCity,
+  setLocation,
+} from "../../store/slices/FilterProject/FilterProjectSlice";
 export default function AllProjects() {
   const [cityItems, setCityItems] = useState();
+  const dispatch = useDispatch();
   const [state, setState] = useState({
     loading: true,
     isDrawerOpen: false,
@@ -107,7 +115,6 @@ export default function AllProjects() {
     return intValue.toLocaleString("tr-TR");
   };
 
-  
   const route = useRoute();
   const navigation = useNavigation();
   const { params } = route;
@@ -115,7 +122,6 @@ export default function AllProjects() {
 
   useEffect(() => {
     if (params.href) {
-      
       const relativeUrl = params.href.replace(`${frontEndUriBase}kategori`, ""); // 'kategori' kısmını çıkar
       const urlSegments = relativeUrl.split("/").filter((segment) => segment);
 
@@ -141,6 +147,7 @@ export default function AllProjects() {
 
       setFilterDataState(apiUrlFilter);
       fetchFilteredProjects(apiUrlFilter, null);
+   
     } else {
       fetchFilteredProjects(buildApiUrl(params), null);
     }
@@ -187,6 +194,7 @@ export default function AllProjects() {
 
   const onChangeCity = (value) => {
     setState((prevState) => ({ ...prevState, selectedCity: value }));
+   
     if (value) {
       fetchDataCounty(value)
         .then((county) =>
@@ -222,6 +230,7 @@ export default function AllProjects() {
 
   const onChangeCounty = (value) => {
     setState((prevState) => ({ ...prevState, selectedCounty: value }));
+  
     if (value) {
       fetchDataNeighborhood(value)
         .then((neighborhood) =>
@@ -240,6 +249,7 @@ export default function AllProjects() {
 
   const onChangeNeighborhood = (value) => {
     setState((prevState) => ({ ...prevState, selectedNeighborhood: value }));
+ 
   };
 
   const onChangeProjectStatus = (value) => {
@@ -375,6 +385,11 @@ export default function AllProjects() {
   };
 
   const handleClearFilters = async () => {
+    dispatch(
+      setLocation({
+        city: null,
+      })
+    );
     setState((prevState) => ({
       ...prevState,
       selectedCheckboxes: {},
@@ -439,8 +454,30 @@ export default function AllProjects() {
   };
   const [index, setindex] = useState(0);
   const [tab, settab] = useState(0);
-  return (
+  const [showViewModal, setshowViewModal] = useState(false);
+  const [selectedView, setselectedView] = useState(0);
+  const [chekView, setchekView] = useState(false);
+  const handleRadio = (index, sort) => {
+    setselectedView(index);
+    if (index == 1) {
+      setchekView(true);
+    } else {
+      setchekView(false);
+    }
+    setTimeout(() => {
+      setshowViewModal(false);
+    }, 400);
+  };
+  // useEffect(() => {
+  //   dispatch(
+  //     setLocation({
+  //       city: null,
+  //     })
+  //   );
+  //   console.log('konum sıfırlandı')
+  // }, [filterData])
 
+  return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#FFF" }}>
       {/* <Header onPress={toggleDrawer} index={setindex} tab={settab} /> */}
 
@@ -472,9 +509,8 @@ export default function AllProjects() {
             setState((prevState) => ({ ...prevState, modalVisible: true }))
           }
         >
-          <Text style={{ color: "white", fontSize: 14, fontWeight: "bold" }}>
-            Filtrele
-          </Text>
+          <FilterRealtor />
+          <Text style={styles.btnText}>Filtrele</Text>
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() =>
@@ -486,11 +522,30 @@ export default function AllProjects() {
             borderLeftWidth: 1,
           }}
         >
-          <Text style={{ color: "white", fontSize: 14, fontWeight: "bold" }}>
-            Sırala
-          </Text>
+          <Icon name="swap-vertical" size={18} color={"#7C7C7C"} />
+          <Text style={styles.btnText}>Sırala</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() =>
+            // setState((prevState) => ({ ...prevState, sortModalVisible: true }))
+            setshowViewModal(true)
+          }
+          style={{
+            ...styles.btn,
+            borderRightWidth: 0,
+          }}
+        >
+          <Icon name="format-list-bulleted" size={18} color={"#7C7C7C"} />
+          <Text style={styles.btnText}>Görünüm</Text>
         </TouchableOpacity>
       </View>
+      <ViewFilter
+        selectedView={selectedView}
+        showViewModal={showViewModal}
+        setshowViewModal={setshowViewModal}
+        handleRadio={handleRadio}
+        show={1}
+      />
       <SortModal
         isVisible={state.sortModalVisible}
         onClose={() =>
@@ -709,6 +764,18 @@ export default function AllProjects() {
                 {state.openFilterIndex === "location" && (
                   <View style={styles.optionsContainer}>
                     <RNPickerSelect
+                    onDonePress={()=>{
+                      dispatch(
+                        setLocation({
+                          city: state.selectedCity
+                        })
+                      );
+                      dispatch(
+                        setLocation({
+                          county: null
+                        })
+                      );
+                    }}
                       doneText="Tamam"
                       placeholder={{
                         label: "Şehir Seçiniz",
@@ -723,6 +790,18 @@ export default function AllProjects() {
                     />
 
                     <RNPickerSelect
+                    onDonePress={()=>{
+                      dispatch(
+                        setLocation({
+                          county: state.selectedCounty
+                        })
+                      );
+                      dispatch(
+                        setLocation({
+                          neigbourhood: null
+                        })
+                      );
+                    }}
                       doneText="Tamam"
                       placeholder={{
                         label: "İlçe Seçiniz",
@@ -731,12 +810,24 @@ export default function AllProjects() {
                       style={pickerSelectStyles}
                       value={state.selectedCounty}
                       onValueChange={(value) => {
+                        // dispatch(
+                        //   setLocation({
+                        //     county: value ? value : null,
+                        //   })
+                        // );
                         onChangeCounty(value);
                       }}
                       items={state.counties}
                     />
 
                     <RNPickerSelect
+                    onDonePress={()=>{
+                      dispatch(
+                        setLocation({
+                          neigbourhood: state.selectedNeighborhood
+                        })
+                      );
+                    }}
                       doneText="Tamam"
                       placeholder={{
                         label: "Mahalle Seçiniz",
@@ -745,6 +836,11 @@ export default function AllProjects() {
                       style={pickerSelectStyles}
                       value={state.selectedNeighborhood}
                       onValueChange={(value) => {
+    //                        dispatch(
+    //   setLocation({
+    //     neigbourhood: value ? value : null,
+    //   })
+    // );
                         onChangeNeighborhood(value);
                       }}
                       items={state.neighborhoods}
@@ -1053,6 +1149,30 @@ export default function AllProjects() {
           </View>
         </View>
       </Modal>
+      <TouchableOpacity
+        onPress={() => navigation.navigate("MapFilterForProject")}
+      >
+        <View style={{ position: "relative", flex: 1 }}>
+          <View style={{ position: "absolute", bottom: 10, right: 10 }}>
+            <View
+              style={{
+                backgroundColor: "red",
+                width: 80,
+                height: 80,
+                borderRadius: 50,
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <ImageBackground
+                resizeMode="contain"
+                style={{ width: "100%", height: "100%", borderRadius: 50 }}
+                source={require("../../src/assets/images/mapView.png")}
+              />
+            </View>
+          </View>
+        </View>
+      </TouchableOpacity>
     </SafeAreaView>
   );
 }
@@ -1136,11 +1256,19 @@ const styles = StyleSheet.create({
     fontSize: 20,
   },
   btn: {
-    width: "50%",
-    backgroundColor: "#EA2B2E",
+    width: "33%",
+    borderRightWidth: 1,
+    borderColor: "#7C7C7C",
+    flexDirection: "row",
+    gap: 5,
     padding: 12,
     justifyContent: "center",
     alignItems: "center",
+  },
+  btnText: {
+    color: "#7C7C7C",
+    fontSize: 14,
+    fontWeight: "600",
   },
   switchInner: {
     width: 16,

@@ -5,16 +5,35 @@ import {
   StyleSheet,
   TouchableOpacity,
   ScrollView,
+  ImageBackground,
+  FlatList,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { getValueFor } from "../../../components/methods/user";
 import AwesomeAlert from "react-native-awesome-alerts";
+import Header from "../../../assets/salePageHeader.png";
+import { SalePointCard, WhiteOrRedButtons } from "../../../components";
+import Bg from "../../../assets/salePageBg.png";
+import CardDatajson from "../../../json/SalePage.json";
+import SaleMap from "../../../assets/saleMap.svg";
+import Docs from "../../../assets/docs.svg";
+import Line from "../../../assets/lineArrow.svg";
+import Clock from "../../../assets/clock.svg";
+import Okey from "../../../assets/okey.svg";
+import Faq from "../../../json/FaqSalePage.json";
+import Icon5 from "react-native-vector-icons/MaterialIcons";
+import { Dropdown } from "react-native-element-dropdown";
 
 export default function SalePageMain() {
   const [isUserHaveToken, setIsUserHaveToken] = useState(false);
   const [isCorporateTypeRight, setIsCorporateTypeRight] = useState(false);
+  const [selectedId, setSelectedId] = useState(null);
+  const [category, setCategory] = useState(
+    dropdownData ? dropdownData[0].value : null
+  );
   const [user, setUser] = useState({});
+
   useEffect(() => {
     getValueFor("user", setUser);
   }, []);
@@ -29,35 +48,42 @@ export default function SalePageMain() {
       navigation.navigate("SalePage");
     }
   };
-
   const navigateToLogin = () => {
     closeModal();
     setTimeout(() => {
       navigation.navigate("Login");
-    }, 400);
+    }, 100);
   };
-
   const closeModal = () => {
     setIsCorporateTypeRight(false);
     setIsUserHaveToken(false);
   };
+
+  const toggleExpand = (id) => {
+    setSelectedId(selectedId === id ? null : id);
+  };
+
+  const dropdownData = [
+    { label: "Kullanım", value: "use" },
+    { label: "Avantajlar", value: "advantages" },
+    { label: "Ödeme", value: "payment" },
+  ];
+
+  const filteredFaq = category
+    ? Faq.filter((item) => item.category === category.value)
+    : Faq;
+
   return (
     <ScrollView
       keyboardShouldPersistTaps="handled"
       contentContainerStyle={styles.scrollViewContent}
       scrollEventThrottle={16}
-      style={styles.container}
+      showsVerticalScrollIndicator={false}
     >
       <AwesomeAlert
         show={isUserHaveToken}
         showProgress={false}
-        titleStyle={{
-          color: "#333",
-          fontSize: 13,
-          fontWeight: "700",
-          textAlign: "center",
-          margin: 5,
-        }}
+        titleStyle={styles.alertTitle}
         messageStyle={{ textAlign: "center" }}
         message={`Başvuru yapabilmek için önce giriş yapmalısınız!`}
         closeOnTouchOutside={true}
@@ -76,13 +102,7 @@ export default function SalePageMain() {
       <AwesomeAlert
         show={isCorporateTypeRight}
         showProgress={false}
-        titleStyle={{
-          color: "#333",
-          fontSize: 13,
-          fontWeight: "700",
-          textAlign: "center",
-          margin: 5,
-        }}
+        titleStyle={styles.alertTitle}
         messageStyle={{ textAlign: "center" }}
         message={`Başvuru yapabilmek için emlak ofisi olmalısınız!`}
         closeOnTouchOutside={true}
@@ -94,209 +114,360 @@ export default function SalePageMain() {
         onCancelPressed={closeModal}
         cancelButtonTextStyle={{ marginLeft: 20, marginRight: 20 }}
       />
-      <View style={{ justifyContent: "center" }}>
-        <View style={styles.salePageImageContainer}>
+      <View style={{ backgroundColor: "#FFF", flex: 1 }}>
+        <View style={{ paddingHorizontal: 30, paddingTop: 20, gap: 20 }}>
           <Image
-            style={styles.salePageImage}
-            source={require("../../../src/assets/images/satisOfisi.png")}
-          ></Image>
+            source={Header}
+            width={"100%"}
+            height={200}
+            resizeMode="cover"
+          />
+          <View style={{ paddingTop: 14 }}>
+            <View style={{ gap: 14 }}>
+              <Text style={{ fontSize: 24, fontWeight: "600" }}>
+                TEK TIKLA BİNLERCE PORTFÖYDE SATIŞ YETKİSİNE SAHİP OL!
+              </Text>
+              <Text style={{ fontSize: 12, fontWeight: "500", lineHeight: 17 }}>
+                Emlak ofisleri, platformda bulunan "Satış Noktası Ol" butonuna
+                tıklayarak Emlaksepette yetkili satış noktası olma başvurusunda
+                bulunabilirler. Bu başvuru, emlak ofisinin bulunduğu bölgede
+                emlaksepette ile iş birliği yaparak çeşitli avantajlardan
+                faydalanma ve sınırsız kazanç elde etme imkanı sağlar.
+              </Text>
+              <WhiteOrRedButtons
+                bgColor={"#EA2B2E"}
+                text={"Hemen Başvur"}
+                onPress={() => handleSubmit()}
+              />
+            </View>
+          </View>
         </View>
-        <View style={styles.firstParStyle}>
-          <Text style={styles.bigTitle}>
-            İnşaat Projelerinin Satış Noktası Ol!
-          </Text>
-          <Text style={styles.paragraph}>
-            EmlaksepetteSatış Noktası, EmlakSepette.com platformunda inşaat
-            firmalarının projelerini tanıtarak satan ve bu sayede firmalar için
-            önemli bir iş ortağı olmanızı sağlayan bir sistemdir.
-            EmlaksepetteSatış Noktası olarak faaliyet gösteren firmalar,
-            platform üzerinden birçok inşaat projesine kolayca erişebilir ve bu
-            projeleri potansiyel müşterilere sunabilir. Böylece, portföy arama
-            veya stok yönetimi gibi zorluklarla uğraşmak zorunda kalmazlar. Aynı
-            zamanda, platformun sunduğu stok kontrol sistemi ile projelerin
-            güncel durumu hakkında doğru bilgi sağlayabilir, müşterilere en
-            uygun seçenekleri hızla sunarak satış süreçlerini daha verimli hale
-            getirebilirler. EmlaksepetteSatış Noktası iş ortakları, kendi
-            referans kodları ile yaptıkları satışlardan komisyon kazanabilir,
-            EmlakSepette.com'un sağladığı özel indirimler ve fırsatlar sayesinde
-            de müşterilerine cazip teklifler sunarak gelirlerini artırabilirler.
-            Platform ayrıca, potansiyel müşterileri doğrudan satış noktalarına
-            yönlendirerek aktif bir müşteri havuzu oluşturur ve satış
-            süreçlerini hızlandırır.
-          </Text>
-        </View>
-        <View style={styles.paragraphContainer}>
-          <Text style={styles.bigTitle2}>
-            EmlakSepette.com Satış Noktası Olmanın Avantajları
-          </Text>
-          <Text style={styles.title}>
-            Tek Tıkla Proje Satış Noktası Olursunuz:
-            <Text style={styles.text}>
-              EmlakSepette.com ile birçok inşaat firmasının satış noktası
-              olarak, geniş bir proje portföyüne sahip olursunuz. Bu sayede
-              farklı müşteri taleplerine uygun projeleri kolayca sunabilir, stok
-              arama derdi yaşamazsınız.
-            </Text>
-          </Text>
-          <Text style={styles.title}>
-            Stok Kontrolü Kolaylığı:
-            <Text style={styles.text}>
-              Stok kontrol yöntemi sayesinde projelerin güncel durumunu takip
-              etme ve doğru bilgilendirme yapma avantajına sahip olursunuz.
-              Satışlarınızı yönetmek ve potansiyel müşterilere en uygun
-              seçenekleri sunmak daha kolay hale gelir.
-            </Text>
-          </Text>
-          <Text style={styles.title}>
-            Referans Kodu:
-            <Text style={styles.text}>
-              Kendi referans kodunuzla yaptığınız satışlardan gelir elde
-              edersiniz. Bu sistem, size satış performansınızı artırma ve daha
-              fazla kazanma imkanı sunar.
-            </Text>
-          </Text>
-          <Text style={styles.title}>
-            Özel İndirimler ve Fırsatlar:
-            <Text style={styles.text}>
-              Satış noktası olarak EmlakSepette.com'un sizlere sunduğu özel
-              indirimler sayesinde müşterilerinize cazip fiyat avantajları
-              sağlayabilir ve bu sayede daha fazla müşteri çekebilirsiniz.
-            </Text>
-          </Text>
-          <Text style={styles.title}>
-            Müşteri Yönlendirme Avantajı:
-            <Text style={styles.text}>
-              Platform üzerinden müşteriler doğrudan size yönlendirilir, böylece
-              aktif bir müşteri havuzuna sahip olur ve potansiyel alıcılarla
-              hızlıca iletişim kurabilirsiniz.
-            </Text>
-          </Text>
-          <Text style={styles.title}>
-            Hızlı Satış İmkanı:
-            <Text style={styles.text}>
-              Portföy aramak zorunda kalmadan hızlı satışlar yapmanın keyfini
-              çıkarırsınız. EmlakSepette.com'un sağladığı altyapı, satış
-              sürecinizi hızlandırır ve verimliliğinizi artırır.
-            </Text>
-          </Text>
-        </View>
-        <View style={{ alignItems: "center" }}>
-          <TouchableOpacity
+        <View style={{ marginTop: 20 }}>
+          <ImageBackground
+            source={Bg}
             style={{
-              width: "90%",
-              backgroundColor: "#EA2B2E",
-              padding: 10,
-              margin: 5,
-              borderRadius: 10,
-              alignItems: "center",
-              marginBottom: 50,
+              width: "100%",
+              height: "auto",
             }}
-            onPress={handleSubmit}
           >
-            <Text
-              style={{
-                textAlign: "center",
-                color: "#fff",
-                fontWeight: "600",
-              }}
-            >
-              Başvuru Yap
+            <View style={{ paddingHorizontal: 10, paddingVertical: 10 }}>
+              <Text style={styles.bodyTitle}>
+                Emlaksepette Satış Noktası Olmanın Avantajları Nelerdir?
+              </Text>
+              <FlatList
+                data={CardDatajson}
+                keyExtractor={(item) => item.id}
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                renderItem={({ item }) => (
+                  <SalePointCard
+                    title={item.title}
+                    description={item.description}
+                    icon={item.image}
+                  />
+                )}
+              />
+            </View>
+          </ImageBackground>
+        </View>
+        <View style={{ paddingHorizontal: 30, paddingTop: 20 }}>
+          <View style={styles.mapCard}>
+            <Text style={{ fontWeight: "700", fontSize: 12 }}>
+              Emlaksepette Satış Noktaları
             </Text>
-          </TouchableOpacity>
+            <View style={styles.mapArea}>
+              <SaleMap style={styles.map} />
+            </View>
+
+            <View>
+              <Text style={{ fontSize: 12, fontWeight: "500", lineHeight: 17 }}>
+                ÇOK YAKINDA 81 İLDEYİZ !
+              </Text>
+              <Text
+                style={{
+                  fontWeight: "400",
+                  fontSize: 10,
+                  lineHeight: 12,
+                }}
+              >
+                Emlaksepette satış noktası olmak istiyorsanız, hemen başvurunuzu
+                yaparak bu büyüyen ağın bir parçası olabilirsiniz.
+              </Text>
+            </View>
+          </View>
+        </View>
+        <View
+          style={{
+            backgroundColor: "#F9F9F9",
+            paddingVertical: 20,
+          }}
+        >
+          <View style={{ paddingHorizontal: 40 }}>
+            {/* Section 1: Nasıl Satış Noktası Olurum? */}
+            <View style={styles.section}>
+              <Text style={styles.bigTitle}>Nasıl Satış Noktası Olurum?</Text>
+              <View style={[styles.svgArea]}>
+                <Docs width={50} height={50} />
+              </View>
+              <Text style={styles.title}>Başvuru Formu</Text>
+              <Text style={styles.desc}>
+                Emlak ofisleri, satış noktası başvuru formunu eksiksiz ve doğru
+                bir şekilde doldurmalıdır. Formda istenen bilgilerin eksiksiz
+                olması, başvurunun hızlı bir şekilde değerlendirilmesini sağlar.
+              </Text>
+              <Line style={{ marginTop: 20 }} />
+            </View>
+            {/* section 2: */}
+            <View style={styles.section}>
+              <View style={[styles.svgArea]}>
+                <Clock width={50} height={50} />
+              </View>
+              <Text style={styles.title}>Değerlendirme Süreci</Text>
+              <Text style={styles.desc}>
+                Başvuru tamamlandıktan sonra, emlaksepette tarafından başvuru
+                değerlendirilir. Bu süreçte, emlak ofisinin gerekli kriterlere
+                uygunluğu kontrol edilir. Bu kriterler, ofisin geçmiş
+                performansı, yerel pazar bilgisi ve profesyonel deneyim gibi
+                unsurları içerebilir.
+              </Text>
+              <Line style={{ marginTop: 20 }} />
+            </View>
+            {/* section 3: */}
+            <View style={styles.section}>
+              <View style={[styles.svgArea]}>
+                <Okey width={50} height={50} />
+              </View>
+              <Text style={styles.title}>Onay Süreci</Text>
+              <Text style={styles.desc}>
+                Başvurusu onaylanan emlak ofisleri, emlaksepette ile iş birliği
+                yaparak sektördeki rekabet avantajlarını artırabilir. Bu, onlara
+                bölgesel pazarda daha güçlü bir konum kazandırır.
+              </Text>
+            </View>
+          </View>
+        </View>
+        <View style={{ backgroundColor: "#FFF", paddingBottom: 20 }}>
+          <Text style={styles.faqTitle}>Sıkça Sorulan Sorular</Text>
+          <View style={styles.faqContainer}>
+            <Text style={styles.categoryTitle}>Kategori Seçimi</Text>
+            <Dropdown
+              style={styles.dropDown}
+              data={dropdownData}
+              placeholder={dropdownData[0].label}
+              containerStyle={styles.dropDownContainer}
+              labelField="label"
+              valueField="value"
+              value={category}
+              onChange={(value) => setCategory(value)}
+            />
+            <FlatList
+              data={filteredFaq}
+              renderItem={({ item }) => {
+                const isExpanded = selectedId === item.id;
+                return (
+                  <View style={styles.itemContainer}>
+                    <TouchableOpacity
+                      activeOpacity={0.8}
+                      style={[
+                        isExpanded
+                          ? styles.activeQuestion
+                          : styles.questionContainer,
+                      ]}
+                      onPress={() => toggleExpand(item.id)}
+                    >
+                      <Text
+                        style={[
+                          styles.questionText,
+                          isExpanded ? styles.activeQuestionText : null,
+                        ]}
+                      >
+                        {item.question}
+                      </Text>
+                      <Icon5
+                        name={
+                          isExpanded
+                            ? "keyboard-arrow-up"
+                            : "keyboard-arrow-down"
+                        }
+                        size={24}
+                        color={isExpanded ? "#fff" : "#999"}
+                      />
+                    </TouchableOpacity>
+                    {isExpanded && (
+                      <View style={styles.answerContainer}>
+                        <Text style={styles.answerText}>{item.answer}</Text>
+                      </View>
+                    )}
+                  </View>
+                );
+              }}
+              keyExtractor={(item) => item.id.toString()}
+              showsVerticalScrollIndicator={false}
+            />
+          </View>
         </View>
       </View>
     </ScrollView>
   );
 }
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#FFFFFF",
-    showsVerticalScrollIndicator: false,
-  },
-  bigTitle: {
+  bodyTitle: {
     fontSize: 20,
-    padding: 14,
-    paddingTop: 30,
-    color: "#EA2B2E",
-    fontWeight: "600",
-    paddingHorizontal: 20,
+    fontWeight: "700",
+    textAlign: "center",
+    justifyContent: "center",
+    color: "#FFF",
   },
-  bigTitle2: {
-    fontSize: 20,
-    padding: 14,
-    color: "#EA2B2E",
-    fontWeight: "600",
-    paddingHorizontal: 20,
-  },
-  modalView: {
-    margin: 20,
-    backgroundColor: "white",
-    borderRadius: 20,
-    padding: 35,
-    alignItems: "center",
+  mapCard: {
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
       height: 2,
     },
     shadowOpacity: 0.25,
-    shadowRadius: 4,
+    shadowRadius: 3.84,
     elevation: 5,
+    width: "100%",
+    backgroundColor: "#fff",
+    padding: 10,
+    borderRadius: 4,
+    gap: 16,
+    marginBottom: 20,
   },
-  modalText: {
-    marginBottom: 5,
+  map: {
+    width: "100%",
+    height: "auto",
+    resizeMode: "contain",
+  },
+  mapArea: {
+    width: "100%",
+    height: "auto",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  bigTitle: {
+    fontWeight: "700",
+    fontSize: 26,
+    lineHeight: 36,
+    color: "#000",
     textAlign: "center",
   },
-
-  centeredView: {
-    margin: 0,
-    flex: 1,
+  svgArea: {
+    backgroundColor: "#FFE3E3",
+    borderRadius: 8,
+    width: 70,
+    height: 70,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "rgba(0,0,0,0.5)", // modal dışı koyu arkaplan
+    marginTop: 30,
+    alignItems: "center",
   },
-  salePageImage: {
-    width: "100%",
-    height: 120,
-  },
-  salePageImageContainer: {
+  section: {
     justifyContent: "center",
     alignItems: "center",
   },
-  paragraph: {
+  desc: {
+    textAlign: "center",
     fontWeight: "400",
-    fontSize: 12,
-    marginBottom: 12,
-    lineHeight: 15,
-    paddingHorizontal: 20,
-  },
-  paragraphContainer: {
-    marginBottom: 30,
+    fontSize: 16,
+    lineHeight: 22,
   },
   title: {
-    fontWeight: "bold",
-    fontSize: 12,
-    marginVertical: 6,
-    lineHeight: 15,
-    paddingHorizontal: 20,
+    fontWeight: "700",
+    fontSize: 26,
+    lineHeight: 36,
+    color: "#000",
+    textAlign: "center",
+    marginTop: 18,
   },
-  text: {
-    fontSize: 12,
-    color: "#333333",
-    marginBottom: 12,
-    fontWeight: "400",
-    lineHeight: 15,
-    paddingHorizontal: 20,
+  itemContainer: {
+    marginBottom: 10,
   },
-  button: {
-    width: "50%",
-    backgroundColor: "#EA2B2E",
-    padding: 10,
-    marginTop: 20,
-    marginHorizontal: 5,
-    borderRadius: 10,
+  faqTitle: {
+    fontWeight: "700",
+    fontSize: 26,
+    lineHeight: 31,
+    textAlign: "center",
+    paddingVertical: 20,
+  },
+  questionContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
     alignItems: "center",
+    paddingVertical: 16,
+    paddingHorizontal: 20,
+    backgroundColor: "#F7F7F7",
+    borderRadius: 10,
   },
-  buttons: { flexDirection: "row", padding: 5 },
+  activeQuestion: {
+    backgroundColor: "#EC302E",
+    borderTopLeftRadius: 10,
+    borderTopRightRadius: 10,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingVertical: 16,
+    paddingHorizontal: 20,
+  },
+  questionText: {
+    fontSize: 16,
+    fontWeight: "bold",
+    color: "#333",
+    flex: 1,
+  },
+  activeQuestionText: {
+    color: "#fff",
+  },
+  answerContainer: {
+    padding: 16,
+    backgroundColor: "#f9f9f9",
+    borderBottomLeftRadius: 10,
+    borderBottomRightRadius: 10,
+  },
+  answerText: {
+    fontSize: 14,
+    color: "#666",
+  },
+  faqContainer: {
+    paddingHorizontal: 20,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 4,
+    marginHorizontal: 16,
+    paddingVertical: 22,
+    borderRadius: 14,
+    backgroundColor: "#fff",
+    gap: 20,
+  },
+  dropDownContainer: {
+    marginTop: 10,
+    marginBottom: 20,
+    borderWidth: 1,
+    borderColor: "#DCDCDC",
+    borderRadius: 8,
+  },
+  dropDown: {
+    width: "100%",
+    borderWidth: 1,
+    borderColor: "#DCDCDC",
+    borderRadius: 8,
+    padding: 10,
+  },
+  categoryTitle: {
+    fontWeight: "700",
+    fontSize: 12,
+    lineHeight: 14,
+  },
+  alertTitle: {
+    color: "#333",
+    fontSize: 13,
+    fontWeight: "700",
+    textAlign: "center",
+    margin: 5,
+  },
 });

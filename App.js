@@ -113,9 +113,6 @@ import SalePageMain from "./pages/Home/PointOfSale/SalePageMain";
 import SalePage from "./pages/Home/PointOfSale/SalePage";
 import { createDrawerNavigator } from "@react-navigation/drawer"; // Drawer için import
 import { DrawerMenu } from "./components";
-import { TouchableOpacity } from "react-native";
-import IconAntDesign from "react-native-vector-icons/AntDesign";
-import { DrawerActions } from "@react-navigation/native";
 import Header from "./components/Header";
 import SuccessForRent from "./pages/Home/ProfilePages/SuccessForRent";
 import RentByMeDetails from "./pages/Home/ProfilePages/RentByMeDetails";
@@ -125,6 +122,9 @@ import SliderTourismRent from "./pages/Home/SliderTourismRent";
 import AllTourismRent from "./pages/Home/AllTourismRent";
 import ViewAll from "./pages/Home/ViewAll/ViewAll";
 import RealEstateWallet from "./src/pages/RealEstateWallet";
+import EditPending from "./pages/Home/EditProject/EditPending";
+import ShareScreen from "./pages/Home/ShareScreen"
+import MapFilterProject from "./components/Filter/MapViewFilter/MapFilterProject";
 
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator(); // Drawer navigator
@@ -156,12 +156,10 @@ const DrawerNavigator = () => {
       <Drawer.Screen
         name="Home"
         component={Home}
-        
         options={{
-          
           header: () => <Header />,
           headerShown: isShoppingProfile ? false : true,
-          gestureEnabled: false, 
+          gestureEnabled: false,
         }}
       />
 
@@ -1351,7 +1349,7 @@ const StackScreenNavigator = () => {
                   name="SalePage"
                   component={SalePage}
                   options={({ route }) => ({
-                    title: "Satış Noktası Başvur",
+                    title: "Satış Noktası Başvurusu",
                     headerBackTitleVisible: false,
                     headerStyle: {
                       backgroundColor: "#ffffff",
@@ -1405,6 +1403,50 @@ const StackScreenNavigator = () => {
                     },
                     headerBackTitleVisible: false,
                   }}
+                />
+                <Stack.Screen
+                  name="EditPending"
+                  component={EditPending}
+                  options={({ route }) => ({
+                    title: "İlanı Düzenle",
+                    headerBackTitleVisible: false,
+                    headerStyle: {
+                      backgroundColor: "#f2f2f2",
+                    },
+                  })}
+                />
+                <Stack.Screen
+                  name="SellAndRentAdvantage"
+                  component={SellAndRentAdvantage}
+                  options={({ route }) => ({
+                    title: "Sat Kirala Avantajları",
+                    headerBackTitleVisible: false,
+                    headerStyle: {
+                      backgroundColor: "#ffffff",
+                    },
+                  })}
+                />
+                <Stack.Screen
+                  name="ShareScreen"
+                  component={ShareScreen}
+                  options={({ route }) => ({
+                    title: "İlan Ver",
+                    headerBackTitleVisible: false,
+                    headerStyle: {
+                      backgroundColor: "#ffffff",
+                    },
+                  })}
+                />
+                    <Stack.Screen
+                  name="MapFilterForProject"
+                  component={MapFilterProject}
+                  options={({ route }) => ({
+                    title: "Harita Görünümü (Projeler)",
+                    headerBackTitleVisible: false,
+                    headerStyle: {
+                      backgroundColor: "#ffffff",
+                    },
+                  })}
                 />
               </Stack.Navigator>
             </NavigationContainer>

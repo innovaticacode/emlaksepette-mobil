@@ -61,14 +61,11 @@ export default function Verification({ nextStep, prevStep }) {
   const [falseCodeAlert, setfalseCodeAlert] = useState(false);
   const updateUserData = async () => {
     try {
-      const updateResponse = await axios.get(
-        apiUrl+"users/" + user?.id,
-        {
-          headers: {
-            Authorization: `Bearer ${user.access_token}`,
-          },
-        }
-      );
+      const updateResponse = await axios.get(apiUrl + "users/" + user?.id, {
+        headers: {
+          Authorization: `Bearer ${user.access_token}`,
+        },
+      });
 
       // Mevcut kullanıcı verilerini güncellenmiş verilerle birleştirme
       const updatedUser = {
@@ -93,7 +90,7 @@ export default function Verification({ nextStep, prevStep }) {
     try {
       // POST isteği yap
       const response = await axios.post(
-        apiUrl+"phone-verification/verify",
+        apiUrl + "phone-verification/verify",
         { code: codes },
         {
           headers: {
@@ -105,13 +102,12 @@ export default function Verification({ nextStep, prevStep }) {
       updateUserData();
       setCodes("");
       setsucces(true);
-    
+
       SecureStore.setItemAsync("PhoneVerify", "1");
       setIsucces(true);
       setTimeout(() => {
         setIsucces(false);
       }, 2000);
-      
     } catch (error) {
       console.error("Doğrulama isteği başarısız:", error);
       setfalseCodeAlert(true);
@@ -121,7 +117,6 @@ export default function Verification({ nextStep, prevStep }) {
       setTimeout(() => {
         navigation.navigate("Drawer", { screen: "Home" });
       }, 1000);
-  
     }
   };
 
@@ -189,7 +184,7 @@ export default function Verification({ nextStep, prevStep }) {
       };
       if (user?.access_token) {
         const response = await axios.post(
-          apiUrl+"phone-verification/generate",
+          apiUrl + "phone-verification/generate",
           {},
           config
         );
@@ -202,7 +197,7 @@ export default function Verification({ nextStep, prevStep }) {
       console.error("Post isteği başarısız oldu:", error);
     }
   };
-  console.log(isActive)
+  console.log(isActive);
   return (
     <SafeAreaView style={styles.container}>
       <View style={{ padding: 10 }}>
@@ -275,25 +270,50 @@ export default function Verification({ nextStep, prevStep }) {
           ))}
         </View>
         <View style={{ padding: 10, paddingTop: 50, gap: 20 }}>
-          {
-            isActive ?
+          {isActive ? (
             <TouchableOpacity
-            disabled={codes.length == 6 ? false : true}
-            onPress={() => {
-              handleSubmit();
-            }}
-            style={{
-              backgroundColor: "#EA2A28",
-              padding: 9,
-              borderRadius: 5,
-              opacity: codes.length == 6 ? 1 : 0.5,
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            {loading ? (
-              <ActivityIndicator color="white" />
-            ) : (
+              disabled={codes.length == 6 ? false : true}
+              onPress={() => {
+                handleSubmit();
+              }}
+              style={{
+                backgroundColor: "#EA2A28",
+                padding: 9,
+                borderRadius: 5,
+                opacity: codes.length == 6 ? 1 : 0.5,
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              {loading ? (
+                <ActivityIndicator color="white" />
+              ) : (
+                <Text
+                  style={{
+                    color: "white",
+                    textAlign: "center",
+                    fontWeight: "600",
+                  }}
+                >
+                  Onayla
+                </Text>
+              )}
+            </TouchableOpacity>
+          ) : (
+            <TouchableOpacity
+              onPress={() => {
+                resetTimer();
+                sendPostRequest();
+              }}
+              style={{
+                backgroundColor: "#EA2A28",
+                padding: 9,
+                borderRadius: 5,
+
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
               <Text
                 style={{
                   color: "white",
@@ -301,41 +321,10 @@ export default function Verification({ nextStep, prevStep }) {
                   fontWeight: "600",
                 }}
               >
-                Onayla
+                Kod Gönder
               </Text>
-            )}
-          </TouchableOpacity>:
-             <TouchableOpacity
-            
-             onPress={() => {
-              resetTimer()
-             sendPostRequest()
-             }}
-             style={{
-               backgroundColor: "#EA2A28",
-               padding: 9,
-               borderRadius: 5,
-          
-               alignItems: "center",
-               justifyContent: "center",
-             }}
-           >
-            
-               <Text
-                 style={{
-                   color: "white",
-                   textAlign: "center",
-                   fontWeight: "600",
-                 }}
-               >
-                 Kod Gönder
-               </Text>
-            
-           </TouchableOpacity>
-
-          }
-        
-          
+            </TouchableOpacity>
+          )}
         </View>
       </View>
       <Modal

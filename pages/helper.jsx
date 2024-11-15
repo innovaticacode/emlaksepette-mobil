@@ -175,6 +175,7 @@ export const PriceStatus = [
     },
 ]
 
+
 export  const areaData = [
     { label: "İstanbul Avrupa (212)", value: 212 },
     { label: "İstanbul Anadolu (216)", value: 216 },
@@ -260,3 +261,4 @@ export  const areaData = [
     { label: "Yozgat (354)", value: 354 },
     { label: "Zonguldak (372)", value: 372 },
   ];
+

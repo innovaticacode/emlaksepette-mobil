@@ -22,6 +22,9 @@ export const styles = StyleSheet.create({
     color: "#000",
     fontSize: 14,
     marginVertical: 10,
+    width: "100%",
+    height: "auto",
+    paddingHorizontal: 10,
   },
   list: {
     paddingHorizontal: 6,

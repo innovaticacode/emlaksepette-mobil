@@ -42,7 +42,8 @@ import { setShoppingProfile } from "../../store/slices/Menu/MenuSlice";
 import { apiUrl, frontEndUriBase } from "../../components/methods/apiRequest";
 
 export default function ShoppingProfile() {
-  const { width, height, fontScale } = Dimensions.get("window");
+  const [checkImage, setCheckImage] = useState(null);
+  const isFocused = useIsFocused();
   const dispatch = useDispatch();
   const navigation = useNavigation();
   const route = useRoute();
@@ -56,7 +57,7 @@ export default function ShoppingProfile() {
   const [permissionsUser, setPermissionsUser] = useState([]);
   const [dialogVisible, setDialogVisible] = useState(false);
   const [openAccor, setOpenAccor] = useState({});
-  
+
   const [profileImage, setProfileImage] = useState(null);
   useEffect(() => {
     getValueFor("user", setUser);
@@ -71,14 +72,11 @@ export default function ShoppingProfile() {
           return;
         }
 
-        const response = await axios.get(
-          apiUrl+"user/notification",
-          {
-            headers: {
-              Authorization: `Bearer ${user.access_token}`,
-            },
-          }
-        );
+        const response = await axios.get(apiUrl + "user/notification", {
+          headers: {
+            Authorization: `Bearer ${user.access_token}`,
+          },
+        });
 
         if (response.data) {
           setNotifications(response.data);
@@ -106,14 +104,11 @@ export default function ShoppingProfile() {
     setLoading(true);
     try {
       if (user.access_token && user) {
-        const response = await axios.get(
-          `${apiUrl}users/${user?.id}`,
-          {
-            headers: {
-              Authorization: `Bearer ${user?.access_token}`,
-            },
-          }
-        );
+        const response = await axios.get(`${apiUrl}users/${user?.id}`, {
+          headers: {
+            Authorization: `Bearer ${user?.access_token}`,
+          },
+        });
         setPermissionsUser(response.data.user.permissions);
       }
     } catch (error) {
@@ -213,18 +208,17 @@ export default function ShoppingProfile() {
     setLoading(true);
     try {
       if (user?.access_token && user) {
-        const userInfo = await axios.get(
-          apiUrl+"users/" + user?.id,
-          {
-            headers: {
-              Authorization: `Bearer ${user.access_token}`,
-            },
-          }
-        );
+        const userInfo = await axios.get(apiUrl + "users/" + user?.id, {
+          headers: {
+            Authorization: `Bearer ${user.access_token}`,
+          },
+        });
         const userData = userInfo?.data?.user;
         setnamFromGetUser(userData);
-       
-        setProfileImage(`${frontEndUriBase}storage/profile_images/${userData.profile_image}`);
+
+        setProfileImage(
+          `${frontEndUriBase}storage/profile_images/${userData.profile_image}`
+        );
       }
     } catch (error) {
       console.error("Kullanıcı verileri güncellenirken hata oluştu:", error);
@@ -235,13 +229,39 @@ export default function ShoppingProfile() {
   };
 
   useEffect(() => {
+    if (profileImage) {
+      if (
+        profileImage.endsWith("indir.jpeg") ||
+        profileImage.endsWith("indir.jpg")
+      ) {
+        if (namFromGetUser?.name) {
+          const fullName = namFromGetUser.name.split(" ");
+          let checkImage = "";
+          if (fullName.length > 1) {
+            // İsim ve soyisim varsa, her iki kelimenin ilk harfini al
+            const name = fullName[0].charAt(0).toUpperCase();
+            const surname = fullName[1].charAt(0).toUpperCase();
+            checkImage = name + surname;
+          } else {
+            // Sadece tek isim varsa ilk iki harfi al
+            checkImage = fullName[0].slice(0, 2).toUpperCase();
+          }
+          setCheckImage(checkImage);
+        }
+      } else {
+        setCheckImage(null);
+      }
+    }
+  }, [profileImage, namFromGetUser]);
+
+  useEffect(() => {
     GetUserInfo();
   }, [user]);
 
   const onShare = async () => {
     try {
       const result = await Share.share({
-        message:frontEndUriBase,
+        message: frontEndUriBase,
       });
 
       if (result.action === Share.sharedAction) {
@@ -269,6 +289,12 @@ export default function ShoppingProfile() {
     );
     return () => backHandler.remove();
   }, [dispatch]);
+
+  useEffect(() => {
+    if (isFocused) {
+      dispatch(setShoppingProfile({ isShoppingProfile: true }));
+    }
+  }, [isFocused]);
 
   return (
     <>
@@ -675,7 +701,7 @@ export default function ShoppingProfile() {
             ></View>
 
             <ImageBackground
-              source={require("../../src/assets/images/profilePhoto.jpg")}
+              source={require("../../src/assets/images/profilePhoto.png")}
               style={{ width: "100%", height: "100%" }}
               imageStyle={{
                 borderBottomLeftRadius: 30,
@@ -693,19 +719,20 @@ export default function ShoppingProfile() {
                   gap: 20,
                 }}
               >
-                <View
-                  style={{
-                    width: 65,
-                    height: 65,
-                  }}
-                >
-                  <View style={style.profileImage}>
-                    <Image
-                      source={{ uri: profileImage }}
-                      style={{ width: "100%", height: "100%" }}
-                      borderRadius={50}
-                    />
-                  </View>
+                <View style={style.profileImgArea}>
+                  {checkImage ? (
+                    <View style={style.checkTextArea}>
+                      <Text style={style.checkText}>{checkImage}</Text>
+                    </View>
+                  ) : (
+                    <View style={style.profileImage}>
+                      <Image
+                        source={{ uri: profileImage }}
+                        style={{ width: "100%", height: "100%" }}
+                        borderRadius={50}
+                      />
+                    </View>
+                  )}
                 </View>
                 <View
                   style={{
@@ -728,9 +755,14 @@ export default function ShoppingProfile() {
                         {namFromGetUser.name}
                       </Text>
                       <View style={{ width: 20, height: 20, left: 10 }}>
-                        <ImageBackground
+                        <Image
                           source={require("../../src/assets/images/BadgeYellow.png")}
-                          style={{ flex: 1 }}
+                          style={{
+                            flex: 1,
+                            width: 20,
+                            height: 20,
+                            resizeMode: "contain",
+                          }}
                           onLoadEnd={() => setLoading(false)}
                         />
 
@@ -749,10 +781,11 @@ export default function ShoppingProfile() {
                         fontWeight: "bold",
                       }}
                     >
-                     ({user.corporate_type || namFromGetUser?.role})  {
-                        (namFromGetUser?.is_brand==1 && namFromGetUser?.brand_id)&&
-                        <Text>- Franchise Markası</Text>
-                      }
+                      ({user.corporate_type || namFromGetUser?.role}){" "}
+                      {namFromGetUser?.is_brand == 1 &&
+                        namFromGetUser?.brand_id && (
+                          <Text>- Franchise Markası</Text>
+                        )}
                     </Text>
                   </View>
                 </View>
@@ -1112,5 +1145,26 @@ const style = StyleSheet.create({
         elevation: 5,
       },
     }),
+  },
+  checkTextArea: {
+    justifyContent: "center",
+    alignItems: "center",
+    width: "100%",
+    height: "100%",
+    borderRadius: 50,
+    backgroundColor: "#C9C9C9",
+    opacity: 0.7,
+  },
+  checkText: {
+    fontSize: 24,
+    color: "#FFF",
+    fontWeight: "900",
+    textAlign: "center",
+    textAlignVertical: "center",
+    justifyContent: "center",
+  },
+  profileImgArea: {
+    width: 64,
+    height: 64,
   },
 });

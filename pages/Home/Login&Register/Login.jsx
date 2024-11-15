@@ -96,7 +96,6 @@ export default function Login({ navigation }) {
           navigation.goBack(); // Modalı kapatır ve bir önceki sayfaya döner
           dispatch(setShoppingProfile({ isShoppingProfile: false }));
           navigation.replace("Drawer", { screen: "Home" });
-          
         } else {
           // setshowMailSendAlert(true);
           setStatus(false);

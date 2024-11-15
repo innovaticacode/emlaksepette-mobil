@@ -29,9 +29,9 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     marginVertical: 6,
-    width: "100%",
+
     height: "auto",
-    minWidth: "46%",
+
   },
   text: {
     color: "#FFF",
