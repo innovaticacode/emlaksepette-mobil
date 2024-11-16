@@ -35,7 +35,7 @@ export const styles = StyleSheet.create({
   },
   addCardBtn:{
     padding:8,
-    backgroundColor:'#ea2c2e',
+    backgroundColor:'#EA2B2E',
     borderRadius:5
   },
   butonText:{

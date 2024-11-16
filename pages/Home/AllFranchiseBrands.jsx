@@ -18,6 +18,7 @@ const AllFranchiseBrands = (props) => {
   const fetchBrands = async () => {
     try {
       const response = await axios.get(`${apiUrl}franchise-markalari`);
+      console.debug("Brands response:>>>>>>>>>>>>>>", response.data);
       return setBrands(response.data.data);
     } catch (error) {
       return console.error("Error fetching brands:", error);
@@ -41,7 +42,7 @@ const AllFranchiseBrands = (props) => {
               style={styles.imageArea}
               onPress={() => {
                 navigation.navigate("Profile", {
-                  id: item.id,
+                  id: item?.user_id,
                 });
               }}
             >

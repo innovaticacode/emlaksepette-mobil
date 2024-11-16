@@ -226,13 +226,15 @@ export default function RealtorCardHome({
                     </TouchableOpacity>
                   )
                 ):sold==1 ?
-                <View style={[styles.addCardBtn, {backgroundColor:'#EA2C2E'}]}>
+
+                <View style={[styles.addCardBtn, {backgroundColor:'#000000'}]}>
+
                     <Text style={styles.butonText}>Satıldı</Text>
                 </View> :
-              <View style={[styles.addCardBtn, {backgroundColor:'#FFA500'}]}>
+              <View style={[styles.addCardBtn, {backgroundColor:'#373737'}]}>
               <Text style={styles.butonText}>Rezerve Edildi</Text>
           </View>
-          
+            
           }
             </View>
             <AwesomeAlert

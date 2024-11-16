@@ -125,6 +125,8 @@ import RealEstateWallet from "./src/pages/RealEstateWallet";
 import EditPending from "./pages/Home/EditProject/EditPending";
 import ShareScreen from "./pages/Home/ShareScreen";
 import PointOfSaleTracking from "./pages/Home/PointOfSale/PointOfSaleTracking/PointOfSaleTracking";
+import ShareScreen from "./pages/Home/ShareScreen"
+import MapFilterProject from "./components/Filter/MapViewFilter/MapFilterProject";
 
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator(); // Drawer navigator
@@ -522,7 +524,7 @@ const StackScreenNavigator = () => {
                     }}
                   />
                   <Stack.Screen
-                    name="RealtorClub"
+                    name="RealtorClubRegister"
                     options={{
                       title: "Emlak Kulüp Üyesi Ol",
                       headerBackTitle: "",
@@ -1442,12 +1444,24 @@ const StackScreenNavigator = () => {
                   component={PointOfSaleTracking}
                   options={({ route }) => ({
                     title: "Satış Noktası Takibi",
+                    headerStyle: {
+                      backgroundColor: "#ffffff",
+                    },
+                  })}
+                />
+
+                <Stack.Screen
+                  name="MapFilterForProject"
+                  component={MapFilterProject}
+                  options={({ route }) => ({
+                    title: "Harita Görünümü (Projeler)",
                     headerBackTitleVisible: false,
                     headerStyle: {
                       backgroundColor: "#ffffff",
                     },
                   })}
                 />
+
               </Stack.Navigator>
             </NavigationContainer>
           </SheetProvider>

@@ -4,9 +4,8 @@ import {
   StyleSheet,
   TouchableOpacity,
   SafeAreaView,
-  Platform,
 } from "react-native";
-import React, { useState, useRef, useEffect, useCallback } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { TextInput } from "react-native";
 import { getValueFor } from "../../../components/methods/user";
 import axios from "axios";
@@ -14,7 +13,6 @@ import Modal from "react-native-modal";
 import { ActivityIndicator } from "react-native-paper";
 import Icon from "react-native-vector-icons/AntDesign";
 import {
-  useFocusEffect,
   useIsFocused,
   useNavigation,
 } from "@react-navigation/native";
@@ -85,6 +83,7 @@ export default function Verification({ nextStep, prevStep }) {
   };
 
   const [loading, setloading] = useState(false);
+
   const handleSubmit = async () => {
     setloading(true);
     try {
@@ -99,33 +98,39 @@ export default function Verification({ nextStep, prevStep }) {
           },
         }
       );
-      updateUserData();
-      setCodes("");
-      setsucces(true);
+      console.debug("Doğrulama isteği başarılı:", response.data);
 
-      SecureStore.setItemAsync("PhoneVerify", "1");
-      setIsucces(true);
-      setTimeout(() => {
-        setIsucces(false);
-      }, 2000);
+      if (response.data.success) {
+
+        // Başarılı doğrulama sonrası işlemler
+        updateUserData();
+        setCodes("");
+        setsucces(true);
+        // Doğrulama durumunu kaydet
+        await SecureStore.setItemAsync("PhoneVerify", "1");
+        setIsucces(true);
+        // Başarı mesajını 2 saniye göster
+        setTimeout(() => {
+          setIsucces(false);
+        }, 2000);
+        // Başarıyla yönlendir
+        setTimeout(() => {
+          navigation.navigate("Drawer", { screen: "Home" });
+        }, 1000);
+      }
     } catch (error) {
       console.error("Doğrulama isteği başarısız:", error);
       setfalseCodeAlert(true);
       setsucces(false);
     } finally {
+      // Loading durumunu sonlandır
       setloading(false);
-      setTimeout(() => {
-        navigation.navigate("Drawer", { screen: "Home" });
-      }, 1000);
     }
   };
 
-  const [response, setResponse] = useState(null);
+
   const [error, setError] = useState(null);
-  const [butonDisabled, setbutonDisabled] = useState(false);
   const [verifyStatu, setverifyStatu] = useState(null);
-  const isfocused = useIsFocused();
-  const [hasRun, setHasRun] = useState(false);
   const [user, setuser] = useState({});
 
   const [succes, setsucces] = useState(true);
