@@ -176,8 +176,13 @@ export default function RealtorCardHome({
      
         </View>
             <View style={{gap:4}}>
+            {
+              housing.step2_slug == "gunluk-kiralik" ? 
+              <Text  style={{fontSize:15,color:'#EA2C2E',fontWeight:'700'}}>{price}₺ / <Text style={{ fontSize: 13, color: "#D32729" }}>Gecelik</Text></Text>:
+              <Text style={{fontSize:15,color:'#EA2C2E',fontWeight:'700'}}>{addDotEveryThreeDigits(price)}₺</Text>
+            }
             <View>
-            <Text style={{fontSize:15,color:'#EA2C2E',fontWeight:'700'}}>{addDotEveryThreeDigits(price)}₺</Text>
+          
         </View>
         {!sold ? (
                   housing?.user?.id == user.id && user.access_token ? (
