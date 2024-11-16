@@ -1,8 +1,7 @@
 import React from "react";
 import { TouchableOpacity, Text, StyleSheet } from "react-native";
 
-const ProjectButton = (props) => {
-  const { text, color, onPress } = props;
+const ProjectButton = ({ text, color, onPress }) => {
 
   const getColor = () => {
     return color;
