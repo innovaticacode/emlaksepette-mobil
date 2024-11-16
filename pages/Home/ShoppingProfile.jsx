@@ -884,7 +884,9 @@ export default function ShoppingProfile() {
                       (user.corporate_type !== "Emlak Ofisi" &&
                         user.type == 2 &&
                         group.label == "Emlak Kulüp") ||
-                      (user.type == 1 && group.label == "Satış Noktalarımız")
+                      (user.type == 1 && group.label == "Satış Noktalarımız") ||
+                      (user.type == 1 &&
+                        group.text == "Satış Noktası Talepleri")
                         ? "none"
                         : "flex",
                   }}
@@ -939,6 +941,13 @@ export default function ShoppingProfile() {
                       ) : (
                         <View>
                           <TouchableOpacity
+                            style={{
+                              display: item?.isActive
+                                ? item.isActive.includes(user.corporate_type)
+                                  ? "flex"
+                                  : "none"
+                                : "flex",
+                            }}
                             onPress={() => navigation.navigate(item.url)}
                           >
                             <ProfileSettingsItem

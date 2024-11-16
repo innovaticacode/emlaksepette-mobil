@@ -163,6 +163,21 @@
   {
     "id": "GetSwapApplications",
     "label": "Başvurular",
+    "icon": "home",
+    "text": "Satış Noktası Talepleri",
+    "key": "GetSwapApplications",
+    "url": "PointOfSaleTracking",
+    "activePath": "",
+    "isActive": [
+      "Emlak Ofisi",
+      "İnşaat Ofisi",
+      "Turizm Amaçlı Kiralama",
+      "Üretici"
+    ]
+  },
+  {
+    "id": "GetSwapApplications",
+    "label": "Başvurular",
     "icon": "swap-horizontal-bold",
     "text": "Takas Taleplerim",
     "key": "GetSwapApplications",

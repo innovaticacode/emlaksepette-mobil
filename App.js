@@ -123,7 +123,8 @@ import AllTourismRent from "./pages/Home/AllTourismRent";
 import ViewAll from "./pages/Home/ViewAll/ViewAll";
 import RealEstateWallet from "./src/pages/RealEstateWallet";
 import EditPending from "./pages/Home/EditProject/EditPending";
-import ShareScreen from "./pages/Home/ShareScreen"
+import ShareScreen from "./pages/Home/ShareScreen";
+import PointOfSaleTracking from "./pages/Home/PointOfSale/PointOfSaleTracking/PointOfSaleTracking";
 import MapFilterProject from "./components/Filter/MapViewFilter/MapFilterProject";
 
 const Stack = createNativeStackNavigator();
@@ -1437,7 +1438,19 @@ const StackScreenNavigator = () => {
                     },
                   })}
                 />
-                    <Stack.Screen
+                <Stack.Screen
+                  name="PointOfSaleTracking"
+                  component={PointOfSaleTracking}
+                  options={({ route }) => ({
+                    title: "Satış Noktası Takibi",
+                    headerBackTitleVisible:false,
+                    headerStyle: {
+                      backgroundColor: "#ffffff",
+                    },
+                  })}
+                />
+
+                <Stack.Screen
                   name="MapFilterForProject"
                   component={MapFilterProject}
                   options={({ route }) => ({
