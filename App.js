@@ -1443,6 +1443,7 @@ const StackScreenNavigator = () => {
                   component={PointOfSaleTracking}
                   options={({ route }) => ({
                     title: "Satış Noktası Takibi",
+                    headerBackTitleVisible:false,
                     headerStyle: {
                       backgroundColor: "#ffffff",
                     },
