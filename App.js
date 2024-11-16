@@ -125,7 +125,6 @@ import RealEstateWallet from "./src/pages/RealEstateWallet";
 import EditPending from "./pages/Home/EditProject/EditPending";
 import ShareScreen from "./pages/Home/ShareScreen";
 import PointOfSaleTracking from "./pages/Home/PointOfSale/PointOfSaleTracking/PointOfSaleTracking";
-import ShareScreen from "./pages/Home/ShareScreen"
 import MapFilterProject from "./components/Filter/MapViewFilter/MapFilterProject";
 
 const Stack = createNativeStackNavigator();
@@ -1461,7 +1460,6 @@ const StackScreenNavigator = () => {
                     },
                   })}
                 />
-
               </Stack.Navigator>
             </NavigationContainer>
           </SheetProvider>
