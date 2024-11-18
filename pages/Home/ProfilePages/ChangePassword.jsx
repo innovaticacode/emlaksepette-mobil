@@ -47,9 +47,6 @@ export default function ChangePassword() {
   const postData = async () => {
     setchangeLoading(true);
 
-   
- 
-
     try {
       var formData = new FormData();
       formData.append("current_password", currentPasword);
@@ -57,11 +54,12 @@ export default function ChangePassword() {
       formData.append("new_password_confirmation", newPasswordconfirmation);
 
       const response = await axios.post(
-        apiUrl+"client/password/update",
+        apiUrl + "client/password/update",
         formData,
         {
           headers: {
             Authorization: `Bearer ${user.access_token}`,
+            "Content-Type": "multipart/form-data",
           },
         }
       );
@@ -106,6 +104,7 @@ export default function ChangePassword() {
   };
 
   const HandleSubmit = () => {
+    // Şifre koşullarının kontrolü
     if (!currentPasword || !newPassword || !newPasswordconfirmation) {
       Dialog.show({
         type: ALERT_TYPE.WARNING,
@@ -126,8 +125,22 @@ export default function ChangePassword() {
       return;
     }
 
+    // Şifre koşulları kontrolü
+    if (!colorForLength || !colorForNumberAlert || !colorForUpper || !colorForSymbol) {
+      Dialog.show({
+        type: ALERT_TYPE.WARNING,
+        title: "Geçersiz Şifre",
+        textBody: "Şifreniz gerekli kriterlere uymuyor. Lütfen kontrol edin.",
+        button: "Tamam",
+      });
+      return;
+    }
+
+    // Eğer tüm kontroller geçerliyse, veri gönderimini başlat
     postData();
   };
+
+
   const [showLengthAlert, setShowLengthAlert] = useState(false);
   const [showUpperAlert, setShowUpperAlert] = useState(false);
   const [showSymbolAlert, setShowSymbolAlert] = useState(false);
@@ -137,46 +150,47 @@ export default function ChangePassword() {
   const [colorForNumberAlert, setcolorForNumberAlert] = useState(false)
   const [colorForUpper, setcolorForUpper] = useState(false)
   const [colorForSymbol, setcolorForSymbol] = useState(false)
-const handlePasswordChange = (text) => {
-  setnewPassword(text)
-  // Şifre uzunluğunu kontrol edin ve uyarıyı göstermek/gizlemek için durumu güncelleyin
 
-  if (text.length+1 <= 8) {
-    setShowLengthAlert(true)
-    setcolorForLength(false)
-  } else {
+  const handlePasswordChange = (text) => {
+    setnewPassword(text)
+    // Şifre uzunluğunu kontrol edin ve uyarıyı göstermek/gizlemek için durumu güncelleyin
 
-    setcolorForLength(true)
-  }
+    if (text.length + 1 <= 8) {
+      setShowLengthAlert(true)
+      setcolorForLength(false)
+    } else {
 
-  //rakam kontrölü
-  const numberRegex = /[0-9]/;
-  if (!numberRegex.test(text)) {
-    setShowNumberAlert(true);
-    setcolorForNumberAlert(false)
-  } else {
-    
-    setcolorForNumberAlert(true)
-  }
-  //Büyük harf kontrolü
-  const upperCaseRegex = /[A-Z]/;
-  if (!upperCaseRegex.test(text)) {
-    setShowUpperAlert(true)
-    setcolorForUpper(false)
-  } else {
-    
-    setcolorForUpper(true)
-  }
-  // Sembole kontrolü
-  const symbolRegex = /[!@#$%^&*(),.?":{}|<>]/;
-  if (!symbolRegex.test(text)) {
-    setShowSymbolAlert(true)
-    setcolorForSymbol(false)
-  } else {
-   
-    setcolorForSymbol(true)
-  }
-};
+      setcolorForLength(true)
+    }
+
+    //rakam kontrölü
+    const numberRegex = /[0-9]/;
+    if (!numberRegex.test(text)) {
+      setShowNumberAlert(true);
+      setcolorForNumberAlert(false)
+    } else {
+
+      setcolorForNumberAlert(true)
+    }
+    //Büyük harf kontrolü
+    const upperCaseRegex = /[A-Z]/;
+    if (!upperCaseRegex.test(text)) {
+      setShowUpperAlert(true)
+      setcolorForUpper(false)
+    } else {
+
+      setcolorForUpper(true)
+    }
+    // Sembole kontrolü
+    const symbolRegex = /[!@#$%^&*(),.?":{}|<>]/;
+    if (!symbolRegex.test(text)) {
+      setShowSymbolAlert(true)
+      setcolorForSymbol(false)
+    } else {
+
+      setcolorForSymbol(true)
+    }
+  };
   return (
     <AlertNotificationRoot>
       <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
@@ -184,149 +198,128 @@ const handlePasswordChange = (text) => {
           <View style={styles.Form}>
             <View>
               <View>
-              <Text style={styles.label}>Mevcut Şifre</Text>
+                <Text style={styles.label}>Mevcut Şifre</Text>
               </View>
               <View>
-              <View style={{position:'absolute',right:12,zIndex:1,height:'100%',justifyContent:'center'}}>
-              <TouchableOpacity
-                style={{}}
-                onPress={ToggleForPass1}
-              >
-                <Eye
-                  name={SecureTextForPass1 ? "eye-off-outline" : "eye-outline"}
-                  size={22}
-                />
-              </TouchableOpacity>
-              </View>
-              <TextInput
-                style={styles.Input}
-                value={currentPasword}
-                onChangeText={(value) => setcurrentPasword(value)}
-                secureTextEntry={SecureTextForPass1}
-              />
-              </View>
-           
-             
-            
-            </View>
-            <View>
-            <View>
-              <View>
-              <Text style={styles.label}>Yeni Şifre</Text>
-              </View>
-              <View>
-                <View style={{position:'absolute',right:12,zIndex:1,height:'100%',justifyContent:'center'}}>
-                <TouchableOpacity
-             
-                onPress={ToggleForPass2}
-              >
-                <Eye
-                  name={
-                    SecuretextForNewPass ? "eye-off-outline" : "eye-outline"
-                  }
-                  size={22}
-                />
-              </TouchableOpacity>
+                <View style={{ position: 'absolute', right: 12, zIndex: 1, height: '100%', justifyContent: 'center' }}>
+                  <TouchableOpacity onPress={() => ToggleForPass1()}>
+                    <Eye
+                      name={SecureTextForPass1 ? "eye-off-outline" : "eye-outline"}
+                      size={22}
+                    />
+                  </TouchableOpacity>
                 </View>
-            
-              <TextInput
-                style={styles.Input}
-                value={newPassword}
-                onChangeText={(value) => handlePasswordChange(value) }
-                secureTextEntry={SecuretextForNewPass}
-                autoCapitalize="none" 
-              />
-            
+                <TextInput
+                  style={styles.Input}
+                  value={currentPasword}
+                  onChangeText={(value) => setcurrentPasword(value)}
+                  secureTextEntry={SecureTextForPass1}
+                />
               </View>
-           
             </View>
-            {
-              newPassword.length!==0 &&
-              <View style={{gap:5,paddingTop:5}}>
-              {passControl && (
-                <Text
-                  style={{
-                    color: "red",
-                    fontWeight: "500",
-                    fontSize: 12,
-                  }}
-                >
-                  Lütfen Şifrenizi girin!
-                </Text>
-              )}
-              {showLengthAlert  && (
-                <Text style={{ color: colorForLength? 'green': "red" }}>
-                  Şifreniz en az 8 karakter olmalıdır!
-                </Text>
-              )}
-              {showNumberAlert && (
-                <Text style={{ color: colorForNumberAlert? 'green': "red" }}>
-                  Şifrenizde en az bir rakam olmalıdır.
-                </Text>
-              )}
-              {showUpperAlert && (
-                <Text style={{ color: colorForUpper? 'green': "red" }}>
-                  Şifrenizde en az bir büyük harf olmalıdır!
-                </Text>
-              )}
-              {showSymbolAlert  && (
-                <Text style={{ color: colorForSymbol?'green': "red" }}>
-                  Şifrenizde en az bir özel karakter olmalıdır!
-                </Text>
-              )}
-              </View>
-            }
-          
-            </View>
-         
-       
             <View>
               <View>
-              <Text style={styles.label}>Yeni Şifre (Tekrar)</Text>
-              </View>
-              <View>
-                <View  style={{position:'absolute',right:12,zIndex:1,height:'100%',justifyContent:'center'}}>
-                <TouchableOpacity
-                
-                onPress={ToggleForPass3}
-              >
-                <Eye
-                  name={
-                    SecureTextForNewPassAgain
-                      ? "eye-off-outline"
-                      : "eye-outline"
-                  }
-                  size={22}
-                />
-              </TouchableOpacity>
+                <View>
+                  <Text style={styles.label}>Yeni Şifre</Text>
                 </View>
-              <TextInput
-                style={styles.Input}
-                value={newPasswordconfirmation}
-                onChangeText={(value) => setnewPasswordconfirmation(value)}
-                secureTextEntry={SecureTextForNewPassAgain}
-              />
-          
+                <View>
+                  <View style={{ position: 'absolute', right: 12, zIndex: 1, height: '100%', justifyContent: 'center' }}>
+                    <TouchableOpacity
+                      onPress={ToggleForPass2}
+                    >
+                      <Eye
+                        name={
+                          SecuretextForNewPass ? "eye-off-outline" : "eye-outline"
+                        }
+                        size={22}
+                      />
+                    </TouchableOpacity>
+                  </View>
+                  <TextInput
+                    style={styles.Input}
+                    value={newPassword}
+                    onChangeText={(value) => handlePasswordChange(value)}
+                    secureTextEntry={SecuretextForNewPass}
+                    autoCapitalize="none"
+                  />
+                </View>
               </View>
-         
-            </View>
-           
-            <View style={{ alignItems: "center",justifyContent:'center' }}>
               {
-                changeLoading ?
-                <ActivityIndicator color="white"/>
-
-                :
-                <TouchableOpacity style={styles.updatebtn} onPress={HandleSubmit}>
-                <Text style={styles.btnText}>Şifre Yenile</Text>
-              </TouchableOpacity>
+                newPassword.length !== 0 &&
+                <View style={{ gap: 5, paddingTop: 5 }}>
+                  {passControl && (
+                    <Text
+                      style={{
+                        color: "red",
+                        fontWeight: "500",
+                        fontSize: 12,
+                      }}
+                    >
+                      Lütfen Şifrenizi girin!
+                    </Text>
+                  )}
+                  {showLengthAlert && (
+                    <Text style={{ color: colorForLength ? 'green' : "red" }}>
+                      Şifreniz en az 8 karakter olmalıdır!
+                    </Text>
+                  )}
+                  {showNumberAlert && (
+                    <Text style={{ color: colorForNumberAlert ? 'green' : "red" }}>
+                      Şifrenizde en az bir rakam olmalıdır.
+                    </Text>
+                  )}
+                  {showUpperAlert && (
+                    <Text style={{ color: colorForUpper ? 'green' : "red" }}>
+                      Şifrenizde en az bir büyük harf olmalıdır!
+                    </Text>
+                  )}
+                  {showSymbolAlert && (
+                    <Text style={{ color: colorForSymbol ? 'green' : "red" }}>
+                      Şifrenizde en az bir özel karakter olmalıdır!
+                    </Text>
+                  )}
+                </View>
               }
 
-
-          
+            </View>
+            <View>
+              <View>
+                <Text style={styles.label}>Yeni Şifre (Tekrar)</Text>
+              </View>
+              <View>
+                <View style={{ position: 'absolute', right: 12, zIndex: 1, height: '100%', justifyContent: 'center' }}>
+                  <TouchableOpacity
+                    onPress={() => ToggleForPass3()}
+                  >
+                    <Eye
+                      name={
+                        SecureTextForNewPassAgain
+                          ? "eye-off-outline"
+                          : "eye-outline"
+                      }
+                      size={22}
+                    />
+                  </TouchableOpacity>
+                </View>
+                <TextInput
+                  style={styles.Input}
+                  value={newPasswordconfirmation}
+                  onChangeText={(value) => setnewPasswordconfirmation(value)}
+                  secureTextEntry={SecureTextForNewPassAgain}
+                />
+              </View>
+            </View>
+            <View style={{ alignItems: "center", justifyContent: 'center', }}>
+              {
+                changeLoading ?
+                  <ActivityIndicator color="#000" size={"small"} />
+                  :
+                  <TouchableOpacity style={styles.updatebtn} onPress={() => HandleSubmit()}>
+                    <Text style={styles.btnText}>Yeni Şifre Oluştur</Text>
+                  </TouchableOpacity>
+              }
             </View>
           </View>
-     
         </View>
       </TouchableWithoutFeedback>
     </AlertNotificationRoot>
