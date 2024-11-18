@@ -125,7 +125,7 @@ export default function Favorites() {
     setLoading(true);
 
     const deleteHousingRequest = axios.delete(
-      apiUrl+"institutional/housing-favorite",
+      apiUrl + "institutional/housing-favorite",
       {
         headers: {
           Authorization: `Bearer ${user.access_token}`,
@@ -134,7 +134,7 @@ export default function Favorites() {
     );
 
     const deleteProjectRequest = axios.delete(
-      apiUrl+"institutional/project-favorite",
+      apiUrl + "institutional/project-favorite",
       {
         headers: {
           Authorization: `Bearer ${user.access_token}`,
@@ -263,7 +263,7 @@ export default function Favorites() {
 
     try {
       const response = await axios.delete(
-        apiUrl+"institutional/favorites/delete",
+        apiUrl + "institutional/favorites/delete",
         {
           data: data,
           headers: { Authorization: `Bearer ${user.access_token}` },
@@ -386,15 +386,9 @@ export default function Favorites() {
   };
 
   const extractProjectData = (favorite) => {
-    const image =
-      frontEndUriBase +
-      "project_housing_images/" +
-      favorite?.project.room_info[0]?.value;
-
     const column1 = getColumnData(favorite, 1);
     const column2 = getColumnData(favorite, 2);
     const column3 = getColumnData(favorite, 3);
-
     const no = 1000000 + favorite?.project?.id;
     const location =
       favorite?.project?.city?.title +
@@ -406,7 +400,12 @@ export default function Favorites() {
       favorite?.housing_id +
       " No'lu konut";
 
-    const price = favorite?.project.room_info[1]?.value;
+    const housingId = favorite?.housing_id;
+    const listHousing = favorite?.project?.listHousing;
+    const imageSearch = listHousing?.[housingId]?.["image[]"]; // get the value “image[]” that matches the housingId
+    const image = frontEndUriBase + "project_housing_images/" + imageSearch;
+    const price = listHousing?.[housingId]?.["price[]"]; // get the value “price[]” that matches the housingId
+
     return { image, column1, column2, column3, no, location, title, price };
   };
 
@@ -415,7 +414,7 @@ export default function Favorites() {
       favorite?.housing?.housing_type_data || "{}"
     );
     const image = housingData?.image
-      ? frontEndUriBase+"housing_images/" + housingData?.image
+      ? frontEndUriBase + "housing_images/" + housingData?.image
       : "";
     const column1 =
       housingData[favorite?.housing?.list_items?.column1_name] || "";
@@ -437,8 +436,8 @@ export default function Favorites() {
       (housing) =>
         housing.room_order === favorite?.housing_id &&
         housing.name ===
-          favorite?.project?.list_item_values[`column${columnIndex}_name`] +
-            "[]" &&
+        favorite?.project?.list_item_values[`column${columnIndex}_name`] +
+        "[]" &&
         housing.project_id === favorite?.project?.id
     );
 
