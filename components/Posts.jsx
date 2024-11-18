@@ -69,6 +69,7 @@ export default function Posts({
   isUserSame,
   haveBlocks,
   lastBlockItemCount,
+  isFavorite,
 }) {
   const navigation = useNavigation();
   const [heart, setHeart] = useState("hearto");
@@ -124,7 +125,7 @@ export default function Posts({
       : "Başlık bulunamadı";
     const amount = 250; // Fiyatı burada belirliyoruz
     const imageUrl = selectedRoom
-      ? frontEndUriBase+"project_housing_images/" +
+      ? frontEndUriBase + "project_housing_images/" +
       selectedRoom["image[]"]
       : ""; // Resim URL'sini burada belirleyin
     const neightboord = false;
@@ -173,11 +174,11 @@ export default function Posts({
   const formatPrice = (price) => addDotEveryThreeDigits(Math.round(price));
 
   function navigateToPostDetails() {
-   
-navigation.navigate('PostDetails',{HomeId:roomOrder,projectId : data.project.id})
-  
+
+    navigation.navigate('PostDetails', { HomeId: roomOrder, projectId: data.project.id })
+
   }
-  
+
   const changeFavorite = () => {
     setShowAlert(true);
   };
@@ -342,7 +343,7 @@ navigation.navigate('PostDetails',{HomeId:roomOrder,projectId : data.project.id}
     }
   };
 
-  console.log(data?.neighborViews[roomOrder]?.user_id == user.id)
+
   return (
     <View style={styles.container}>
       <AwesomeAlert
@@ -522,7 +523,7 @@ navigation.navigate('PostDetails',{HomeId:roomOrder,projectId : data.project.id}
             <Image
               source={{
                 uri:
-                  frontEndUriBase+"project_housing_images/" +
+                  frontEndUriBase + "project_housing_images/" +
                   roomData["image[]"],
               }}
               style={styles.image}
@@ -729,7 +730,7 @@ navigation.navigate('PostDetails',{HomeId:roomOrder,projectId : data.project.id}
                           style={[
                             styles.payDetailBtn,
                             {
-                              backgroundColor:item.BackgroundColor,
+                              backgroundColor: item.BackgroundColor,
                               display:
                                 user.type == 2
                                   ? Array.isArray(item.OnlySee) &&
@@ -824,7 +825,7 @@ navigation.navigate('PostDetails',{HomeId:roomOrder,projectId : data.project.id}
                           style={[
                             styles.payDetailBtn,
                             {
-                              backgroundColor:item.BackgroundColor,
+                              backgroundColor: item.BackgroundColor,
                               display:
                                 user.type == 2
                                   ? Array.isArray(item.OnlySee) &&
@@ -869,7 +870,7 @@ navigation.navigate('PostDetails',{HomeId:roomOrder,projectId : data.project.id}
                   >
 
                     {(!sold && project.user.id == user.id) ||
-                    (!sold && project.user.id == user.parent_id) ? (
+                      (!sold && project.user.id == user.parent_id) ? (
 
                       <View style={styles.priceContainer}>
                         <TouchableOpacity style={styles.addBasket}>
@@ -971,7 +972,7 @@ navigation.navigate('PostDetails',{HomeId:roomOrder,projectId : data.project.id}
                           style={[
                             styles.payDetailBtn,
                             {
-                              backgroundColor:item.BackgroundColor,
+                              backgroundColor: item.BackgroundColor,
                               display:
                                 user.type == 2
                                   ? Array.isArray(item.OnlySee) &&
@@ -1062,38 +1063,38 @@ navigation.navigate('PostDetails',{HomeId:roomOrder,projectId : data.project.id}
         <View style={styles.infoContainer}>
           <View style={styles.infoRow}>
             {
-               roomData[`${data?.project?.list_item_values?.column1_name}[]`] &&
-               <Info
-               text={
-                 roomData[`${data?.project?.list_item_values?.column1_name}[]`] +
-                 " " +
-                 (data.project.list_item_values.column1_additional || "")
-               }
-             />
+              roomData[`${data?.project?.list_item_values?.column1_name}[]`] &&
+              <Info
+                text={
+                  roomData[`${data?.project?.list_item_values?.column1_name}[]`] +
+                  " " +
+                  (data.project.list_item_values.column1_additional || "")
+                }
+              />
             }
-           
+
             {
               roomData[`${data?.project?.list_item_values?.column2_name}[]`] &&
               <Info
-              text={
-                roomData[`${data?.project?.list_item_values?.column2_name}[]`] +
-                " " +
-                (data.project.list_item_values.column2_additional || "")
-              }
-            />
+                text={
+                  roomData[`${data?.project?.list_item_values?.column2_name}[]`] +
+                  " " +
+                  (data.project.list_item_values.column2_additional || "")
+                }
+              />
             }
-           
+
             {
               roomData[`${data?.project?.list_item_values?.column3_name}[]`] &&
               <Info
-              text={
-                roomData[`${data?.project?.list_item_values?.column3_name}[]`] ? roomData[`${data?.project?.list_item_values?.column3_name}[]`]:null +
-                " " +
-                (data.project.list_item_values.column3_additional || "")
-              }
-            />
+                text={
+                  roomData[`${data?.project?.list_item_values?.column3_name}[]`] ? roomData[`${data?.project?.list_item_values?.column3_name}[]`] : null +
+                    " " +
+                    (data.project.list_item_values.column3_additional || "")
+                }
+              />
             }
-           
+
             <Info text={moment(project.created_at).locale("tr").format("LL")} />
           </View>
           <View style={styles.infoLocation}>
@@ -1229,8 +1230,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: "#FFFFFF",
     borderRadius: 5,
-    borderWidth:1,
-    borderColor:'#DDDDDD'
+    borderWidth: 1,
+    borderColor: '#DDDDDD'
   },
   payDetailText: {
     fontWeight: "700",

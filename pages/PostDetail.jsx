@@ -1316,16 +1316,19 @@ export default function PostDetail() {
 
                     }}
                   >
-                    {ProjectHomeData?.projectHousingsList[HomeId]
-                      ? ProjectHomeData?.projectHousingsList[HomeId]["advertise_title[]"]?.toLocaleUpperCase('tr-TR') +
-                      " " +
-                      HomeId +
-                      " No'lu " +
-                      ProjectHomeData.project.step1_slug
-                        .charAt(0)
-                        .toUpperCase() + // İlk harfi büyütme
-                      ProjectHomeData.project.step1_slug.slice(1) // Geri kalanı olduğu gibi bırakma
-                      : ""}
+                    {/* my working area */}
+                    {
+                      ProjectHomeData?.projectHousingsList[HomeId]
+                        ? (ProjectHomeData?.projectHousingsList[HomeId]["advertise_title[]"]
+                          ? ProjectHomeData?.projectHousingsList[HomeId]["advertise_title[]"]?.toLocaleUpperCase('tr-TR')
+                          : "") +
+                        " " +
+                        HomeId +
+                        " No'lu " +
+                        ProjectHomeData.project.step1_slug.charAt(0).toUpperCase() +
+                        ProjectHomeData.project.step1_slug.slice(1)
+                        : ""
+                    }
                   </Text>
                 </View>
                 {
