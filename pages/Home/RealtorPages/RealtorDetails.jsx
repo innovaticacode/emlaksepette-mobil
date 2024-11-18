@@ -411,6 +411,7 @@ export default function PostDetail() {
           {
             headers: {
               Authorization: `Bearer ${user?.access_token}`,
+              "Content-Type": "multipart/form-data",
             },
           }
         );
@@ -622,17 +623,17 @@ export default function PostDetail() {
   const handleImageIndexChange = (index) => {
     tempIndexRef.current = index; //Update temporary index
   };
-const goToSwapScreen=()=>{
-  if (user.access_token) {
-    navigation.navigate("SwapForm", {
-      houseid: data?.housing?.id,
-      type: 2,
-      projectId: null,
-    });
-  } else {
-    setShow(true);
+  const goToSwapScreen = () => {
+    if (user.access_token) {
+      navigation.navigate("SwapForm", {
+        houseid: data?.housing?.id,
+        type: 2,
+        projectId: null,
+      });
+    } else {
+      setShow(true);
+    }
   }
-}
   return (
     <>
       <AlertNotificationRoot>
@@ -662,139 +663,139 @@ const goToSwapScreen=()=>{
                 }}
               >
                 {
-                  (!data?.housing?.sold  || data?.housing?.sold  >1) 
-                  ?
-                  <>
-                    {
-                      data?.housing?.user?.id == user?.id ?
-                      <TouchableOpacity
-                      style={{
-                        backgroundColor: "#008001",
-                        width: "100%",
-                        padding: 12,
-                        borderRadius: 5,
-                      }}
-                    >
-                      <Text
-                        style={{
-                          textAlign: "center",
-                          color: "#ffffff",
-                          fontWeight: "700",
-                        }}
-                      >
-                        İlanı Düzenle
-                      </Text>
-                    </TouchableOpacity>:
+                  (!data?.housing?.sold || data?.housing?.sold > 1)
+                    ?
                     <>
-                       <TouchableOpacity
-                    style={{
-                      width: "45%",
-                      backgroundColor: "#EA2B2E",
-                      padding: 12,
-                      borderRadius: 8,
-                    }}
-                    onPress={handleOpenPhone}
-                  >
-                    <Text
-                      style={{
-                        fontSize: 14,
-                        color: "white",
-                        fontWeight: "600",
-                        textAlign: "center",
-                      }}
-                    >
-                      Ara
-                    </Text>
-                  </TouchableOpacity>
-                    {
-                      data?.housing?.step1_slug == "mustakil-tatil" &&
-                      data?.housing?.step2_slug == "gunluk-kiralik" ? (
-                      <TouchableOpacity
-                        onPress={() => {
-                          navigation.navigate("CreateReservation", {
-                            data: data,
-                          });
-                        }}
-                        style={{
-                          backgroundColor: "#EB2B2E",
-                          width: "45%",
-                          padding: 12,
-                          borderRadius: 5,
-                        }}
-                      >
-                        <Text
-                          style={{
-                            textAlign: "center",
-                            color: "#ffffff",
-                            fontWeight: "700",
-                          }}
-                        >
-                          Rezervasyon Yap
-                        </Text>
-                      </TouchableOpacity>
-                    ) : (
-                      <TouchableOpacity
-                        onPress={() => {
-                          if (user.access_token) {
-                            setModalForAddToCart(true);
-                          } else {
-                            setAlertForAddToCard(true);
-                          }
-                        }}
-                        style={{
-                          backgroundColor: "#EA2B2E",
-                          width: "45%",
-                          padding: 12,
-                          borderRadius: 5,
-                        }}
-                      >
-                        <Text
-                          style={{
-                            textAlign: "center",
-                            color: "#ffffff",
-                            fontWeight: "700",
-                          }}
-                        >
-                          Sepete Ekle
-                        </Text>
-                      </TouchableOpacity>
-                    )
-                    }
+                      {
+                        data?.housing?.user?.id == user?.id ?
+                          <TouchableOpacity
+                            style={{
+                              backgroundColor: "#008001",
+                              width: "100%",
+                              padding: 12,
+                              borderRadius: 5,
+                            }}
+                          >
+                            <Text
+                              style={{
+                                textAlign: "center",
+                                color: "#ffffff",
+                                fontWeight: "700",
+                              }}
+                            >
+                              İlanı Düzenle
+                            </Text>
+                          </TouchableOpacity> :
+                          <>
+                            <TouchableOpacity
+                              style={{
+                                width: "45%",
+                                backgroundColor: "#EA2B2E",
+                                padding: 12,
+                                borderRadius: 8,
+                              }}
+                              onPress={handleOpenPhone}
+                            >
+                              <Text
+                                style={{
+                                  fontSize: 14,
+                                  color: "white",
+                                  fontWeight: "600",
+                                  textAlign: "center",
+                                }}
+                              >
+                                Ara
+                              </Text>
+                            </TouchableOpacity>
+                            {
+                              data?.housing?.step1_slug == "mustakil-tatil" &&
+                                data?.housing?.step2_slug == "gunluk-kiralik" ? (
+                                <TouchableOpacity
+                                  onPress={() => {
+                                    navigation.navigate("CreateReservation", {
+                                      data: data,
+                                    });
+                                  }}
+                                  style={{
+                                    backgroundColor: "#EB2B2E",
+                                    width: "45%",
+                                    padding: 12,
+                                    borderRadius: 5,
+                                  }}
+                                >
+                                  <Text
+                                    style={{
+                                      textAlign: "center",
+                                      color: "#ffffff",
+                                      fontWeight: "700",
+                                    }}
+                                  >
+                                    Rezervasyon Yap
+                                  </Text>
+                                </TouchableOpacity>
+                              ) : (
+                                <TouchableOpacity
+                                  onPress={() => {
+                                    if (user.access_token) {
+                                      setModalForAddToCart(true);
+                                    } else {
+                                      setAlertForAddToCard(true);
+                                    }
+                                  }}
+                                  style={{
+                                    backgroundColor: "#EA2B2E",
+                                    width: "45%",
+                                    padding: 12,
+                                    borderRadius: 5,
+                                  }}
+                                >
+                                  <Text
+                                    style={{
+                                      textAlign: "center",
+                                      color: "#ffffff",
+                                      fontWeight: "700",
+                                    }}
+                                  >
+                                    Sepete Ekle
+                                  </Text>
+                                </TouchableOpacity>
+                              )
+                            }
+                          </>
+                      }
+
                     </>
-                    }
-                  
-                  </> 
-                  :
-                  data?.housing?.sold == 1 ? (
-                    <View
-                      style={[{ backgroundColor: "#000000",width:'100%',padding:15,borderRadius:10}]}
-                    >
-                      <Text
-                        style={{
-                          color: "white",
-                          fontWeight: "600",
-                          textAlign:'center',
-                          fontSize: 14,
-                        }}
+                    :
+                    data?.housing?.sold == 1 ? (
+                      <View
+                        style={[{ backgroundColor: "#000000", width: '100%', padding: 15, borderRadius: 10 }]}
                       >
-                        Satıldı
-                      </Text>
-                    </View>
-                  ) : (
-                    <View
-                      style={[ { backgroundColor: "#373737" ,width:'100%',padding:15,borderRadius:10}]}
-                    >
-                      <Text
-                        style={{
-                          color: "white",
-                          fontWeight: "600",
-                          textAlign:'center',
-                          fontSize: 14,
-                        }}
+                        <Text
+                          style={{
+                            color: "white",
+                            fontWeight: "600",
+                            textAlign: 'center',
+                            fontSize: 14,
+                          }}
+                        >
+                          Satıldı
+                        </Text>
+                      </View>
+                    ) : (
+                      <View
+                        style={[{ backgroundColor: "#373737", width: '100%', padding: 15, borderRadius: 10 }]}
                       >
-                        Rezerve Edildi
-                      </Text>
-                    </View>
+                        <Text
+                          style={{
+                            color: "white",
+                            fontWeight: "600",
+                            textAlign: 'center',
+                            fontSize: 14,
+                          }}
+                        >
+                          Rezerve Edildi
+                        </Text>
+                      </View>
                     )
                 }
                 {/* {data?.housing?.user?.id == user?.id || data?.housing?.sold ? (
@@ -1237,7 +1238,7 @@ const goToSwapScreen=()=>{
                 {data.housing &&
                   data.housing.housing_type_data &&
                   JSON.parse(data.housing.housing_type_data)["swap"] ==
-                  "Evet" &&  (!data?.housing?.sold  || data?.housing?.sold  >1) &&(
+                  "Evet" && (!data?.housing?.sold || data?.housing?.sold > 1) && (
                     <View>
                       <TouchableOpacity
                         style={styles.swapContainer}
@@ -2410,7 +2411,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontWeight: "500",
   },
-  swapContainer:{
+  swapContainer: {
     backgroundColor: "#FEF4EB",
     flexDirection: "row",
     padding: 6,
