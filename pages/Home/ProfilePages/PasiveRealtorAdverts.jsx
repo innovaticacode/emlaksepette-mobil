@@ -39,8 +39,9 @@ export default function PasiveRealtorAdverts() {
   const [loading, setloading] = useState(false);
   const [housingRecords, sethousingRecords] = useState([]);
   const fetchInactiveHousings = async (sort) => {
-    setloading(true);
+  
     try {
+      
       const res = await axios.get(
         apiUrl + "get_my_housings?orderByHousings=" +
         sort,
@@ -143,7 +144,12 @@ export default function PasiveRealtorAdverts() {
             </TouchableOpacity>
           </View>
           <View style={{ paddingTop: 10, gap: 10 }}>
-            {housingRecords.map((item, index) => (
+            {
+            !searchValue  && housingRecords.length==0 ?
+            <Text>Emlak İlanınız Bulunmamaktadır</Text>:
+            (searchValue && housingRecords.length==0) ?
+            <Text style={{textAlign:'center',color:'#333',fontWeight:'700'}}>Sonuç Bulunamadı</Text>:
+            housingRecords.map((item, index) => (
               <RealtorAdvertPost
                 key={index}
                 housing={item}

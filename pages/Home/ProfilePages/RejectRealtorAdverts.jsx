@@ -142,7 +142,12 @@ export default function RejectRealtorAdverts() {
             </TouchableOpacity>
           </View>
           <View style={{ paddingTop: 10, gap: 10 }}>
-            {housingRecords.map((item, index) => (
+            {
+              !searchValue  && housingRecords.length==0 ?
+              <Text>Rededilen İlanınız Bulunmamaktadır</Text>:
+              (searchValue && housingRecords.length==0) ?
+              <Text style={{textAlign:'center',color:'#333',fontWeight:'700'}}>Sonuç Bulunamadı</Text>:
+            housingRecords.map((item, index) => (
               <RealtorAdvertPost
                 key={index}
                 housing={item}

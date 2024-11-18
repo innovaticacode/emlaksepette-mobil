@@ -144,7 +144,12 @@ export default function WaitRealtorAdverts({ index }) {
             </TouchableOpacity>
           </View>
           <View style={{ gap: 10, paddingTop: 10 }}>
-            {housingRecords.map((item, index) => (
+            {
+            !searchValue  && housingRecords.length==0 ?
+            <Text>Onay Bekleyen İlanınız Bulunmamaktadır</Text>:
+            (searchValue && housingRecords.length==0) ?
+            <Text style={{textAlign:'center',color:'#333',fontWeight:'700'}}>Sonuç Bulunamadı</Text>:
+            housingRecords.map((item, index) => (
               <RealtorAdvertPost
                 key={index}
                 housing={item}
