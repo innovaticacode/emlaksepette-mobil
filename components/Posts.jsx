@@ -541,10 +541,12 @@ export default function Posts({
               </Text>
             </View>
             <View
-              style={{
-                ...styles.icons,
-                justifyContent: bookmarkStatus ? "space-between" : "flex-end",
-              }}
+              style={[
+                styles.icons,
+                {
+                  // justifyContent: bookmarkStatus ? "space-between" : "flex-end",
+                  justifyContent: "flex-end",
+                }]}
             >
               {/* {BookmarkStatus.map((item) => (
                 <TouchableOpacity
@@ -1060,7 +1062,7 @@ export default function Posts({
       }
 
       {data?.project?.list_item_values && (
-        <View style={styles.infoContainer}>
+        <View style={[styles.infoContainer, { gap: 16 }]}>
           <View style={styles.infoRow}>
             {
               roomData[`${data?.project?.list_item_values?.column1_name}[]`] &&
