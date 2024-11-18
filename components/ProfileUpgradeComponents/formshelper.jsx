@@ -29,7 +29,7 @@ export const Forms = [
   
   { key: "iban", label: "Iban Numarası", tab: [0], type: "input" },
   { key: "idNumber", label: "TC Kimlik Numarası", tab: [0], type: "input",maxlength:11 },
-  { key: "bday", label: "Doğum Tarihi", tab: [0], type: "input" },
+  // { key: "bday", label: "Doğum Tarihi", tab: [0], type: "input" },
   {
     key: "email",
     label: "Mevcut E-Posta",

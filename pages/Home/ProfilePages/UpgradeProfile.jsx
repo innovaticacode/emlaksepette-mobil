@@ -188,7 +188,26 @@ export default function UpgradeProfile() {
   const onchangeTaxOffice = (value) => {
     fetchTaxOffice(value);
   };
+  const fetchCity = async () => {
+    try {
+      const response = await axios.get(
+        `${apiUrl}cities`
+      );
+      
+      return response.data;
+    } catch (error) {
+      console.error("Hata:", error);
+      throw error;
+    }
+  };
 
+  useEffect(() => {
+    fetchCity()
+      .then((citites) => setCities(citites.data))
+      .catch((error) =>
+        console.error("Veri alınırken bir hata oluştu:", error)
+      );
+  }, []);
   const fetchCounties = async (value) => {
     try {
       const response = await axios.get(
@@ -423,23 +442,67 @@ useEffect(() => {
   //   );
   // }
 
-  const postData = async () => {
+  const postData = async (param) => {
    
   
     var data = new FormData()
     // Forms'u döngü ile dolaşıyoruz
-    Forms.forEach((item) => {
+    Forms.map((item) => {
        if (Array.isArray(item.tab) && item.tab.includes(tab)) {
         data.append(item.key,formData[item.key])
        }
     });
-    
-    const jsonData = JSON.stringify(data);
-    
+   data.append('_method','PUT')
+    data.append('banner_hex_code',currentColor)
+    // if (param) {
+    //     data.append('delete_profile_image',param)
+    // }
+    if (tab==2) {
+      data.append(
+        `verify_document`,
+     file
+          ? {
+              uri:
+                Platform.OS === "android"
+                  ? file
+                  :file.uri.replace("file://", ""), // Android ve iOS için uygun URI
+              type: file.mimeType,
+              name:
+               file == null
+                  ? "İmage.jpeg"
+                  : file.name?.slice(-3) == "pdf"
+                  ? file?.name
+                  : file?.fileName, // Sunucuya gönderilecek dosya adı
+            }
+          : null
+      );
+    }
+if (tab==0) {
+  data.append(
+    `profile_image`,
+ image
+      ? {
+          uri:
+            Platform.OS === "android"
+              ? image
+              :image.uri.replace("file://", ""), // Android ve iOS için uygun URI
+          type: image.mimeType,
+          name:
+           file == null
+              ? "İmage.jpeg"
+              : image.name?.slice(-3) == "pdf"
+              ? image?.name
+              : image?.fileName, // Sunucuya gönderilecek dosya adı
+        }
+      : namFromGetUser.profile_image
+  );
+}
+  
+    console.log(data)
     try {
-      const response = await axios.put(
+      const response = await axios.post(
         `${apiUrl}client/profile/update`, // API URL'nizi belirtin
-        jsonData, // JSON formatında veri gönderiyoruz
+        data, // JSON formatında veri gönderiyoruz
         {
           headers: {
             Authorization: `Bearer ${user?.access_token}`,
@@ -559,9 +622,8 @@ useEffect(() => {
     //   });
     // }
   };
-const checkInput=()=>{
 
-}
+console.log(namFromGetUser?.profile_image)
   return (
     
     <KeyboardAvoidingView
@@ -848,6 +910,7 @@ const checkInput=()=>{
                                   handleInputChange(item.key, value);
                                   if (item.key === "city_id") {
                                     onChangeCity(value);
+                                   
                                   } else if (item.key === "county_id") {
                                     onChangeCounty(value);
                                   } else if (item.key === "neighborhood_id") {
@@ -1157,7 +1220,10 @@ const checkInput=()=>{
                       alignItems: "center",
                       gap: 10,
                     }}
-                    onPress={removeProfileImage} // Yalnızca yerelde kaldırmak isterseniz bu işlevi kullanın
+                    onPress={()=>{
+                      removeProfileImage()
+                      postData(1)
+                    }} // Yalnızca yerelde kaldırmak isterseniz bu işlevi kullanın
                     // onPress={removeProfileImageFromServer} // Sunucudan da kaldırmak isterseniz bu işlevi kullanın
                   >
                     <Icon3
