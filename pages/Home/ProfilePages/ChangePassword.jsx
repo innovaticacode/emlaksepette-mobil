@@ -47,13 +47,8 @@ export default function ChangePassword() {
   const postData = async () => {
     setchangeLoading(true);
 
-    // İşlem başladığında kullanıcıya bilgi verme
-    Dialog.show({
-      type: ALERT_TYPE.INFO,
-      title: "İşlem Devam Ediyor",
-      textBody: "Şifreniz güncelleniyor, lütfen bekleyin...",
-      button: "Tamam",
-    });
+   
+ 
 
     try {
       var formData = new FormData();
@@ -188,15 +183,13 @@ const handlePasswordChange = (text) => {
         <View style={styles.container}>
           <View style={styles.Form}>
             <View>
+              <View>
               <Text style={styles.label}>Mevcut Şifre</Text>
-              <TextInput
-                style={styles.Input}
-                value={currentPasword}
-                onChangeText={(value) => setcurrentPasword(value)}
-                secureTextEntry={SecureTextForPass1}
-              />
+              </View>
+              <View>
+              <View style={{position:'absolute',right:12,zIndex:1,height:'100%',justifyContent:'center'}}>
               <TouchableOpacity
-                style={{ position: "absolute", right: 15, top: 25 }}
+                style={{}}
                 onPress={ToggleForPass1}
               >
                 <Eye
@@ -204,19 +197,27 @@ const handlePasswordChange = (text) => {
                   size={22}
                 />
               </TouchableOpacity>
+              </View>
+              <TextInput
+                style={styles.Input}
+                value={currentPasword}
+                onChangeText={(value) => setcurrentPasword(value)}
+                secureTextEntry={SecureTextForPass1}
+              />
+              </View>
+           
+             
+            
             </View>
             <View>
             <View>
+              <View>
               <Text style={styles.label}>Yeni Şifre</Text>
-              <TextInput
-                style={styles.Input}
-                value={newPassword}
-                onChangeText={(value) => handlePasswordChange(value) }
-                secureTextEntry={SecuretextForNewPass}
-                autoCapitalize="none" 
-              />
-              <TouchableOpacity
-                style={{ position: "absolute", right: 15, top: 25 }}
+              </View>
+              <View>
+                <View style={{position:'absolute',right:12,zIndex:1,height:'100%',justifyContent:'center'}}>
+                <TouchableOpacity
+             
                 onPress={ToggleForPass2}
               >
                 <Eye
@@ -226,6 +227,18 @@ const handlePasswordChange = (text) => {
                   size={22}
                 />
               </TouchableOpacity>
+                </View>
+            
+              <TextInput
+                style={styles.Input}
+                value={newPassword}
+                onChangeText={(value) => handlePasswordChange(value) }
+                secureTextEntry={SecuretextForNewPass}
+                autoCapitalize="none" 
+              />
+            
+              </View>
+           
             </View>
             {
               newPassword.length!==0 &&
@@ -268,15 +281,13 @@ const handlePasswordChange = (text) => {
          
        
             <View>
+              <View>
               <Text style={styles.label}>Yeni Şifre (Tekrar)</Text>
-              <TextInput
-                style={styles.Input}
-                value={newPasswordconfirmation}
-                onChangeText={(value) => setnewPasswordconfirmation(value)}
-                secureTextEntry={SecureTextForNewPassAgain}
-              />
-              <TouchableOpacity
-                style={{ position: "absolute", right: 15, top: 25 }}
+              </View>
+              <View>
+                <View  style={{position:'absolute',right:12,zIndex:1,height:'100%',justifyContent:'center'}}>
+                <TouchableOpacity
+                
                 onPress={ToggleForPass3}
               >
                 <Eye
@@ -288,34 +299,34 @@ const handlePasswordChange = (text) => {
                   size={22}
                 />
               </TouchableOpacity>
+                </View>
+              <TextInput
+                style={styles.Input}
+                value={newPasswordconfirmation}
+                onChangeText={(value) => setnewPasswordconfirmation(value)}
+                secureTextEntry={SecureTextForNewPassAgain}
+              />
+          
+              </View>
+         
             </View>
            
-            <View style={{ alignItems: "center" }}>
-              <TouchableOpacity style={styles.updatebtn} onPress={HandleSubmit}>
+            <View style={{ alignItems: "center",justifyContent:'center' }}>
+              {
+                changeLoading ?
+                <ActivityIndicator color="white"/>
+
+                :
+                <TouchableOpacity style={styles.updatebtn} onPress={HandleSubmit}>
                 <Text style={styles.btnText}>Şifre Yenile</Text>
               </TouchableOpacity>
+              }
+
+
+          
             </View>
           </View>
-          <Modal
-            isVisible={changeLoading}
-            style={styles.modal}
-            animationIn={"fadeInRight"}
-            animationOut={"fadeOutLeft"}
-          >
-            <View style={styles.modalContent}>
-              <View
-                style={{
-                  backgroundColor: "white",
-                  padding: 20,
-                  borderRadius: 5,
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                <ActivityIndicator size="large" color="#333" />
-              </View>
-            </View>
-          </Modal>
+     
         </View>
       </TouchableWithoutFeedback>
     </AlertNotificationRoot>
@@ -338,19 +349,22 @@ const styles = StyleSheet.create({
     marginVertical: 10,
   },
   Input: {
-    padding: 9,
-    backgroundColor: "transparent",
+    padding: 10,
+    borderWidth: 0.9,
+    borderColor: "#DDDDDD",
     borderRadius: 5,
-    fontSize: 15,
-    borderWidth: 1,
-    borderColor: "#ebebeb",
+    fontSize: 13,
+    backgroundColor: "#fafafafa",
+    color: "#717171",
+    fontWeight: "600",
   },
   label: {
-    fontSize: 14,
-    bottom: 5,
-    left: 2,
-    fontWeight: "300",
+    fontSize: 13,
+    bottom: 3,
+    left: 6,
+    fontWeight: "600",
     letterSpacing: 0.5,
+    color: "#333",
   },
   updatebtn: {
     width: "100%",
