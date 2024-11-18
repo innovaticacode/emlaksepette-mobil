@@ -140,7 +140,7 @@ export default function RealtorCardHome({
   
                 <ImageBackground source={{uri:image}} style={styles.ımage} borderRadius={6}/>
                 {
-                  !sold &&
+                  (!sold || sold >1) &&
                   <TouchableOpacity
                   style={styles.ıconContainer}
                   activeOpacity={0.8}
@@ -184,7 +184,7 @@ export default function RealtorCardHome({
             <View>
           
         </View>
-        {!sold ? (
+        {(!sold || sold >1)? (
                   housing?.user?.id == user.id && user.access_token ? (
                     <TouchableOpacity
                       style={[styles.addCardBtn, { backgroundColor: "#008001" }]}
