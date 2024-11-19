@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useMemo } from "react";
 import {
   View,
   Text,
@@ -8,99 +8,48 @@ import {
   RefreshControl,
   Image,
 } from "react-native";
-
-import axios from "axios";
 import { ActivityIndicator } from "react-native-paper";
-import Modal from "react-native-modal";
-import { getValueFor } from "../../../components/methods/user";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
-import Icon from "react-native-vector-icons/AntDesign";
-import SliderEstateBar from "../../../components/SliderEstateBar";
 import { AlertNotificationRoot } from "react-native-alert-notification";
 import Housing from "../../../src/assets/images/Konut.png";
-import { apiUrl, frontEndUriBase } from "../../../components/methods/apiRequest";
+import { frontEndUriBase } from "../../../components/methods/apiRequest";
 import RealtorPost from "../../../components/Card/RealtorCard/RealtorPost";
-const PAGE_SIZE = 10;
+import { UsePaginatedData } from "../../../hooks";
 
 const Estates = ({ index }) => {
   const navigation = useNavigation();
-  
-  const [featuredEstates, setFeaturedEstates] = useState([]);
-  const [page, setPage] = useState(1);
-  const [loading, setLoading] = useState(false);
-  const [hasMore, setHasMore] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
-  const [user, setuser] = useState({});
+  const [loading, setLoading] = useState(false);
 
-  const fetchFeaturedEstates = async (reset = false) => {
-    if (loading || (!hasMore && !reset)) return;
-    setLoading(true);
-    const config = {
-      headers: {
-        Authorization: `Bearer ${user?.access_token}`,
-      },
-    };
-
-    try {
-      const response = await axios.get(
-        `${apiUrl}real-estates?page=${reset ? 1 : page}&limit=${PAGE_SIZE}`,
-        config
-      );
-      const newEstates = Object.values(response.data);
-
-      if (reset) {
-        setFeaturedEstates(newEstates);
-        setPage(2);
-        setHasMore(true);
-      } else {
-        if (newEstates.length > 0) {
-          setFeaturedEstates((prevEstates) => {
-            const newUniqueEstates = newEstates.filter(
-              (estate) =>
-                !prevEstates.some((prevEstate) => prevEstate.id === estate.id)
-            );
-            return [...prevEstates, ...newUniqueEstates];
-          });
-          setPage((prevPage) => prevPage + 1);
-        } else {
-          setHasMore(false);
-        }
-      }
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setLoading(false);
-      setRefreshing(false);
-    }
-  };
+  const { data, hooksLoading, error, loadMore, setSkip, } = UsePaginatedData("real-estates");// limit 10
 
   useFocusEffect(
     useCallback(() => {
       if (index == 2) {
-        fetchFeaturedEstates(true);
-      } else {
-        setFeaturedEstates([]);
+        setLoading(true);
+        loadMore();
+        setLoading(false);
       }
-    }, [index, user])
+    }, [index])
   );
 
-  useEffect(() => {
-    getValueFor("user", setuser);
-  }, []);
+  const filteredHomes = useMemo(() => {
+    return data.filter(estate => estate.step1_slug === "konut");
+  }, [data]);
 
-  const filteredHomes = featuredEstates.filter(
-    (estate) => estate.step1_slug === "konut"
-  );
 
-  const onRefresh = () => {
+  const onRefresh = async () => {
     setRefreshing(true);
-    fetchFeaturedEstates(true);
+    await loadMore();
+    setRefreshing(false);
   };
 
   const renderFooter = () => {
-    if (!loading) return null;
+    if (!hooksLoading) return null;
     return (
-      <ActivityIndicator style={{ margin: 0 }} size="small" color="#333" />
+      <View style={{ height: 100 }}>
+        <ActivityIndicator style={{ marginVertical: 16 }} size="small" color="#333" />
+      </View>
     );
   };
 
@@ -146,6 +95,17 @@ const Estates = ({ index }) => {
             ) : (
               <FlatList
                 data={filteredHomes}
+                keyExtractor={(item, index) =>
+                  item.id ? item.id.toString() : index.toString()
+                }
+                onEndReached={() => {
+                  console.debug("onEndReached çalışıyor");
+                  loadMore();
+                }}
+                initialNumToRender={10}
+                maxToRenderPerBatch={5}
+                onEndReachedThreshold={0.5}
+                refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
                 renderItem={({ item }) => (
                   <RealtorPost
                     sold={item.sold}
@@ -155,9 +115,8 @@ const Estates = ({ index }) => {
                     title={item.housing_title}
                     loading={loading}
                     location={item.city_title + " / " + item.county_title}
-                    image={`${frontEndUriBase}housing_images/${
-                      JSON.parse(item.housing_type_data).image
-                    }`}
+                    image={`${frontEndUriBase}housing_images/${JSON.parse(item.housing_type_data).image
+                      }`}
                     openSharing={
                       JSON.parse(item.housing_type_data)["open_sharing1"]
                     }
@@ -190,16 +149,7 @@ const Estates = ({ index }) => {
                     isFavorite={item.is_favorite}
                   />
                 )}
-                keyExtractor={(item, index) =>
-                  item.id ? item.id.toString() : index.toString()
-                }
-                onEndReachedThreshold={0.1}
-                refreshControl={
-                  <RefreshControl
-                    refreshing={refreshing}
-                    onRefresh={onRefresh}
-                  />
-                }
+
                 ListHeaderComponent={
                   <>
                     <View style={{ paddingHorizontal: 0 }}>
@@ -246,6 +196,7 @@ const Estates = ({ index }) => {
                   </>
                 }
                 ListFooterComponent={renderFooter}
+
               />
             )}
           </AlertNotificationRoot>
@@ -258,7 +209,7 @@ const Estates = ({ index }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    
+
   },
   item: {
     padding: 20,
