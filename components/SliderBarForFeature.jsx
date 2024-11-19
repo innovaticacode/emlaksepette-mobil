@@ -22,31 +22,50 @@ export default function SliderBarForFeature() {
 
   const firstBrands = [
     {
-      text: "Al Sat Acil",
-      image: `${frontEndUriBase}images/al-sat-acil-image.png`,
-      color: "#FF0000",
-      url: "",
-      isShow: "All",
-      urgent: true,
-      navigationStatus: false,
-    },
-    {
       text: "Emlak Kulüp",
-      image: `${frontEndUriBase}images/emlak-kulup.png`,
-      color: "#F4A226",
+      image: `${frontEndUriBase}privilege/privilege1.png`,
+      color: "white",
       url: "RealtorClubExplore",
       isShow: "Emlak Ofisi",
       navigationStatus: true,
     },
     {
       text: "Sat Kirala",
-      image: `${frontEndUriBase}images/sat-kirala.png`,
-      color: "#0000FF",
+      image: `${frontEndUriBase}privilege/privilege2.png`,
+      color: "white",
       url: "SellAndRent",
       isShow: "All",
       navigationStatus: true,
 
     },
+    {
+      text: "Gayrimenkul Ligi",
+      image: `${frontEndUriBase}privilege/privilege3.png`,
+      color: "white",
+      url: "SellAndRent",
+      isShow: "All",
+      navigationStatus: true,
+
+    },
+    {
+      text: "Al Sat Acil",
+      image: `${frontEndUriBase}privilege/privilege4.png`,
+      color: "white",
+      url: "",
+      isShow: "All",
+      urgent: true,
+      navigationStatus: false,
+    },
+    {
+      text: "Komşumu Gör",
+      image: `${frontEndUriBase}privilege/privilege5.png`,
+      color: "white",
+      url: "SeeMyNeighbor",
+      isShow: "All",
+      navigationStatus: true,
+    },
+   
+  
   ];
   const [user, setuser] = useState({});
   useEffect(() => {
