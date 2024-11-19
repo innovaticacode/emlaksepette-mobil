@@ -139,25 +139,25 @@ const FirstHome = (props) => {
     getValueFor("user", setUser);
   }, []);
 
-  const navigateToProjects = (checkValue) => {
+  const navigateToProjects = (title,optional,type) => {
     navigation.navigate("AllProject", {
       name: "Tüm Projeler",
       slug: "tum-projeler",
       data: featuredProjects,
       count: featuredProjects.length,
-      type: null,
-      optional: "satilik",
-      title: "konut",
-      check: checkValue,
+      title: title,
+      optional: optional,
+      type: type,
+      check: null,
       city: null,
       county: null,
       hood: null,
     });
   };
-  const navigateToAllProjects = () => navigateToProjects("villa");
-  const navigateToVillaProjects = () => navigateToProjects("villa");
+  const navigateToAllProjects = () => navigateToProjects(null,null,null);
+  const navigateToVillaProjects = () => navigateToProjects('konut','satilik','villa');
   const navigateToHousingProjects = () => navigateToProjects(null);
-
+  const navigateToShopProject=()=>navigateToProjects('is-yeri','satilik',null)
   const navigateToRealtorAdverts = (checkValue, name, slug, optional, type) => {
     navigation.navigate("AllRealtorAdverts", {
       name: name || "Emlak İlanları",
@@ -338,25 +338,36 @@ const FirstHome = (props) => {
                         contentContainerStyle={{ gap: 10 }}
                         showsHorizontalScrollIndicator={false}
                       >
+                         <ProjectButton
+                          color="#DADAE7"
+                          text="Fırsat Projeleri"
+                          onPress={navigateToProjects}
+                          textColor='#06065C'
+                        />
                         <ProjectButton
-                          color="#0E49B5"
+                          color="#D7E1F3"
                           text="Yatırım Projeleri"
                           onPress={navigateToProjects}
-                        />
+                          textColor={'#456195'}
+                        /> 
+                         <ProjectButton
+                        color="#DCF1F2"
+                        text="Lansman Projeleri"
+                        onPress={navigateToProjects}
+                        textColor={'#3E8F97'}
+                      />
                         <ProjectButton
-                          color="#A2DAE0"
+                          color="#FCCCCC"
                           text="Villa Projeleri"
                           onPress={navigateToVillaProjects}
+                          textColor={'#9E0101'}
                         />
+                      
                         <ProjectButton
-                          color="#A70107"
-                          text="Lansman Projeleri"
-                          onPress={navigateToHousingProjects}
-                        />
-                        <ProjectButton
-                          color="#06065d"
+                          color="#FBC3C6"
                           text="Ticari Projeler"
-                          onPress={navigateToHousingProjects}
+                          onPress={navigateToShopProject}
+                          textColor={'#CF2C2F'}
                         />
 
                       </ScrollView>
@@ -491,6 +502,11 @@ const FirstHome = (props) => {
                   contentContainerStyle={{ gap: 10, paddingTop: 5, paddingBottom: 5 }}
                   showsHorizontalScrollIndicator={false}
                 >
+                     <ProjectButton
+                    color="#EA2C2E"
+                    text="Acil Satılık"
+                    onPress={() => navigateToRealtorAdverts(null, null, 'al-sat-acil', null, null)}
+                  />
                   <ProjectButton
                     color="#0E49B5"
                     text="Paylaşımlı İlanlar"
