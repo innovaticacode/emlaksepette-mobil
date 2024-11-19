@@ -120,8 +120,8 @@ export default function SliderItem({
 const styles = StyleSheet.create({
   container: {
     backgroundColor: "transparent",
-    width: 50,
-    height: 50,
+    width: 55,
+    height: 55,
     flexWrap: "wrap",
     borderRadius: 50,
     margin: 6,
