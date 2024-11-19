@@ -493,7 +493,7 @@ const StackScreenNavigator = () => {
                     component={Rent}
                     options={({ route }) => ({
                       animationTypeForReplace: "pop",
-                      title: "Kiraladıklarım",
+                      title: "Kiraya Verdiklerim",
                       headerBackTitle: "",
                       headerBackTitleVisible: false,
                       headerTintColor: "black",

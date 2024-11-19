@@ -14,6 +14,7 @@ import axios from "axios";
 import { Platform } from "react-native";
 import { getValueFor } from "../../../components/methods/user";
 import { apiUrl } from "../../../components/methods/apiRequest";
+import { ActivityIndicator } from "react-native-paper";
 
 export default function RentByMe() {
   const [Tabs, setTabs] = useState(0);
@@ -63,8 +64,10 @@ export default function RentByMe() {
   ];
 
   const getRentCategoriesAnItem = async (tabValue, page) => {
+    setLoading(true)
+    if (user?.access_token && user) {
     try {
-      if (user?.access_token) {
+    
         const skipValue = page * 10; // Calculate skip value
         console.log("Fetching items with skip:", skipValue, "and take:", 10);
         const response = await axios.get(
@@ -88,8 +91,8 @@ export default function RentByMe() {
           return updatedItems; // Append new items
         });
         setHasMore(newItems.length === 10);
-      }
-    } catch (error) {
+     
+    }  catch (error) {
       console.error("Hata:", error.response?.data || error.message);
 
       console.error("Hata:", error);
@@ -97,6 +100,7 @@ export default function RentByMe() {
     } finally {
       setLoading(false); // Ensure loading state is reset
     }
+   }
   };
   const handleScroll = (event) => {
     const { contentOffset, layoutMeasurement, contentSize } = event.nativeEvent;
@@ -122,15 +126,10 @@ export default function RentByMe() {
       setRentItems([]); // Clear previous items when switching tabs
       setCurrentPage(0);
       setLoading(true);
-      getRentCategoriesAnItem(Tabs, currentPage); // Fetch initial page
+      getRentCategoriesAnItem(TabBarItem[0].value, currentPage); // Fetch initial page
     }
   }, [user, Tabs]); // Include Tabs as a dependency
-  useEffect(() => {
-    if (user?.access_token && Tabs === 0) {
-      setLoading(true);
-      getRentCategoriesAnItem(TabBarItem[0].value, 0); // Load "Onaylananlar" by default
-    }
-  }, [user]);
+
 
   return (
     <View style={{ flex: 1 }}>
@@ -189,35 +188,42 @@ export default function RentByMe() {
                       <Text>Notes: {reservation.notes}</Text>
                   </View>
               ))} */}
-          <View style={styles.OrdersArea}>
-            {RentItems.length > 0 ? (
-              RentItems.map((item) => (
-                <TouchableOpacity
-                  key={item.id} // Use item.id as the key
-                  onPress={() => {
-                    navigation.navigate("RentByMeDetails", {
-                      id: item.id, // Pass the item.id to navigate
-                    });
-                  }}
-                >
-                  <RentOrder
-                    id={item?.id}
-                    title={item?.housing?.title}
-                    display={"flex"}
-                    checkIn={item?.check_in_date}
-                    checkOut={item?.check_out_date}
-                    price={item?.price}
-                    status={item?.status}
-                    address={item?.address}
-                    email={item?.email}
-                    totalPrice={item?.total_price}
-                  />
-                </TouchableOpacity>
-              ))
-            ) : (
-              <Text>Rezervasyon bulunamadı.</Text>
-            )}
-          </View>
+              {
+                loading ?
+                <View style={{width:'100%',height:'100%',alignItems:'center',justifyContent:'center'}}>
+                  <ActivityIndicator/>
+                </View>:
+                  <View style={styles.OrdersArea}>
+                  {RentItems.length > 0 ? (
+                    RentItems.map((item) => (
+                      <TouchableOpacity
+                        key={item.id} // Use item.id as the key
+                        onPress={() => {
+                          navigation.navigate("RentByMeDetails", {
+                            id: item.id, // Pass the item.id to navigate
+                          });
+                        }}
+                      >
+                        <RentOrder
+                          id={item?.id}
+                          title={item?.housing?.title}
+                          display={"flex"}
+                          checkIn={item?.check_in_date}
+                          checkOut={item?.check_out_date}
+                          price={item?.price}
+                          status={item?.status}
+                          address={item?.address}
+                          email={item?.email}
+                          totalPrice={item?.total_price}
+                        />
+                      </TouchableOpacity>
+                    ))
+                  ) : (
+                    <Text style={{textAlign:'center',fontSize:15,color:'#333',fontWeight:'600'}}>Rezervasyon bulunamadı.</Text>
+                  )}
+                </View>
+              }
+        
         </ScrollView>
       </View>
     </View>
