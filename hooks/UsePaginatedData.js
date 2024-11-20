@@ -6,11 +6,11 @@ import { apiUrl } from "../components/methods/apiRequest";
 /**
  * UsePaginatedData Hook: Pagination veri çekme işlemleri için kullanılır.
  * @param {string} endpoint - API'nin son noktası (örneğin, "/products").
- * @param {number} limit - Bir seferde alınacak veri sayısı (varsayılan 10).
+ * @param {number} take - Bir seferde alınacak veri sayısı (varsayılan 10).
  * @returns {object} - Veriler, yükleme durumu, hata ve kontrol işlevleri.
  */
 
-const UsePaginatedData = (endpoint, limit = 10) => {
+const UsePaginatedData = (endpoint, take = 10) => {
   const [data, setData] = useState([]);
   const [skip, setSkip] = useState(0);
   const [hooksLoading, setHooksLoading] = useState(false);
@@ -29,10 +29,6 @@ const UsePaginatedData = (endpoint, limit = 10) => {
   const fetchData = async () => {
     setHooksLoading(true);
     setError(null);
-    console.debug(
-      `Fetching data for ${endpoint}, skip: ${skip}, limit: ${limit}`
-    );
-
     try {
       const headers = user?.access_token
         ? { Authorization: `Bearer ${user.access_token}` }
@@ -41,26 +37,22 @@ const UsePaginatedData = (endpoint, limit = 10) => {
       const response = await axios.get(`${apiUrl}${endpoint}`, {
         headers,
         params: {
-          take: limit,
-          skip: skip * limit,
+          take: take,
+          skip: skip,
         },
       });
 
       if (response.data && Array.isArray(response.data)) {
-        console.debug("Data received:", response.data);
         setData((prevData) =>
           skip === 0 ? response.data : [...prevData, ...response.data]
         );
       } else {
         setError("Unexpected data structure");
-        console.error("Unexpected data structure");
       }
     } catch (err) {
       setError(err.message);
-      console.error("Error fetching data:", err.message);
     } finally {
       setHooksLoading(false);
-      console.debug("Fetching complete");
     }
   };
 
@@ -69,9 +61,7 @@ const UsePaginatedData = (endpoint, limit = 10) => {
   }, [user, skip]);
 
   const loadMore = () => {
-    console.debug("Loading more data... current skip:", skip);
-    setSkip((prevSkip) => prevSkip + limit);
-    console.debug("New skip value:", skip + limit);
+    setSkip((prevSkip) => prevSkip + take);
   };
 
   return {

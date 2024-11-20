@@ -20,8 +20,7 @@ const Estates = ({ index }) => {
   const navigation = useNavigation();
   const [refreshing, setRefreshing] = useState(false);
   const [loading, setLoading] = useState(false);
-
-  const { data, hooksLoading, error, loadMore, setSkip, } = UsePaginatedData("real-estates");// limit 10
+  const { data, hooksLoading, error, loadMore, } = UsePaginatedData("real-estates", 10);// take 10
 
   useFocusEffect(
     useCallback(() => {
@@ -55,6 +54,17 @@ const Estates = ({ index }) => {
 
   return (
     <>
+      {
+        error && (
+          <>
+            <Text style={{
+              justifyContent: "center",
+              alignItems: "center",
+              textAlign: "center",
+            }}>Bir şeyler ters gitti:{error}</Text>
+          </>
+        )
+      }
       {loading ? (
         <View
           style={{ alignItems: "center", justifyContent: "center", flex: 1 }}
