@@ -5,7 +5,7 @@ import { apiUrl } from "../components/methods/apiRequest";
 
 /**
  * UsePaginatedData Hook: Pagination veri çekme işlemleri için kullanılır.
- * @param {string} endpoint - API'nin son noktası (örneğin, "/products").
+ * @param {string} endpoint - API'nin son noktası (örneğin, "real-estates").
  * @param {number} take - Bir seferde alınacak veri sayısı (varsayılan 10).
  * @returns {object} - Veriler, yükleme durumu, hata ve kontrol işlevleri.
  */

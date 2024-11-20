@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo } from "react";
+import React, { useState, useCallback, useMemo } from "react";
 import {
   View,
   Text,
@@ -57,11 +57,7 @@ const Estates = ({ index }) => {
       {
         error && (
           <>
-            <Text style={{
-              justifyContent: "center",
-              alignItems: "center",
-              textAlign: "center",
-            }}>Bir şeyler ters gitti:{error}</Text>
+            <Text style={styles.errorText}>Bir şeyler ters gitti:{error}</Text>
           </>
         )
       }
@@ -113,7 +109,7 @@ const Estates = ({ index }) => {
                   loadMore();
                 }}
                 initialNumToRender={10}
-                maxToRenderPerBatch={5}
+                maxToRenderPerBatch={10}
                 onEndReachedThreshold={0.5}
                 refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
                 renderItem={({ item }) => (
@@ -219,7 +215,6 @@ const Estates = ({ index }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-
   },
   item: {
     padding: 20,
@@ -254,6 +249,11 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     marginTop: 20,
   },
+  errorText: {
+    justifyContent: "center",
+    alignItems: "center",
+    textAlign: "center",
+  }
 });
 
 export default Estates;
