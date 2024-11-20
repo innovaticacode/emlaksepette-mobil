@@ -20,9 +20,13 @@ const UsePaginatedData = (endpoint, take = 10) => {
 
   useEffect(() => {
     (async () => {
-      const retrievedUser = await getValueFor("user");
-      if (retrievedUser) {
-        setUser(retrievedUser);
+      try {
+        const retrievedUser = await getValueFor("user");
+        if (retrievedUser) {
+          setUser(retrievedUser);
+        }
+      } catch (error) {
+        console.error("Error getting user from async storage", error);
       }
     })();
   }, [endpoint]);

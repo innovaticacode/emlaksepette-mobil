@@ -20,7 +20,7 @@ const Estates = ({ index }) => {
   const navigation = useNavigation();
   const [refreshing, setRefreshing] = useState(false);
   const [loading, setLoading] = useState(false);
-  const { data, hooksLoading, error, loadMore } = UsePaginatedData("real-estates", 10);// take 10
+  const { data, hooksLoading, error, loadMore, setSkip } = UsePaginatedData("real-estates", 10);// take 10
 
 
   useFocusEffect(
@@ -40,7 +40,7 @@ const Estates = ({ index }) => {
 
   const onRefresh = async () => {
     setRefreshing(true);
-    await loadMore();
+    await setSkip(0);
     setRefreshing(false);
   };
 
@@ -102,11 +102,12 @@ const Estates = ({ index }) => {
             ) : (
               <FlatList
                 data={filteredHomes}
-                keyExtractor={(item) => item.id.toString()}
+                keyExtractor={(item, index) => index.toString()}  // İndeks ile key
                 onEndReached={() => { loadMore() }}
                 initialNumToRender={10}
                 maxToRenderPerBatch={10}
-                onEndReachedThreshold={0.5}
+                windowSize={24}
+                onEndReachedThreshold={0.3}
                 refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
                 renderItem={({ item }) => (
                   <RealtorPost
