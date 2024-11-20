@@ -53,6 +53,87 @@ const Estates = ({ index }) => {
     );
   };
 
+  const renderHeader = () => {
+    return (
+      <>
+        <View style={{ paddingHorizontal: 0 }}>
+          <Image
+            source={Housing}
+            style={{ width: "100%", height: 120 }}
+          />
+        </View>
+
+        <View style={styles.header}>
+          <Text style={{ fontSize: 14, fontWeight: 700 }}>
+            ÖNE ÇIKAN EMLAK İLANLARI
+          </Text>
+
+          <TouchableOpacity
+            style={styles.allBtn}
+            onPress={() =>
+              navigation.navigate("AllRealtorAdverts", {
+                name: "Emlak İlanları",
+                slug: "emlak-ilanlari",
+                data: filteredHomes,
+                count: filteredHomes.length,
+                type: "konut",
+                optional: null,
+                title: null,
+                check: null,
+                city: null,
+                county: null,
+                hood: null,
+              })
+            }
+          >
+            <Text
+              style={{
+                color: "white",
+                fontSize: 12,
+                fontWeight: "bold",
+              }}
+            >
+              Tüm İlanları Gör
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </>
+    )
+  };
+
+  const renderItem = useMemo(() => ({ item }) => {
+    const housingTypeData = JSON.parse(item.housing_type_data);
+
+    const getColumnName = (columnNameKey) => {
+      return housingTypeData[columnNameKey] || "";
+    };
+
+    return (
+      <RealtorPost
+        sold={item?.sold}
+        HouseId={item?.id}
+        price={`${housingTypeData["price"]} `}
+        housing={item}
+        title={item?.housing_title}
+        loading={loading}
+        location={`${item?.city_title} / ${item?.county_title}`}
+        image={`${frontEndUriBase}housing_images/${housingTypeData?.image}`}
+        openSharing={housingTypeData["open_sharing1"]}
+        column1_additional={item?.column1_additional}
+        column1_name={getColumnName(item?.column1_name)}
+        column2_name={getColumnName(item?.column2_name)}
+        column2_additional={item?.column2_additional}
+        column3_name={getColumnName(item?.column3_name)}
+        column3_additional={item?.column3_additional}
+        column4_name={getColumnName(item?.column4_name)}
+        column4_additional={item?.column4_additional}
+        bookmarkStatus={true}
+        dailyRent={false}
+        isFavorite={item?.is_favorite}
+      />
+    );
+  }, [hooksLoading, loadMore]);
+
   return (
     <>
       {
@@ -109,95 +190,8 @@ const Estates = ({ index }) => {
                 windowSize={24}
                 onEndReachedThreshold={0.3}
                 refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
-                renderItem={({ item }) => (
-                  <RealtorPost
-                    sold={item.sold}
-                    HouseId={item.id}
-                    price={`${JSON.parse(item.housing_type_data)["price"]} `}
-                    housing={item}
-                    title={item.housing_title}
-                    loading={loading}
-                    location={item.city_title + " / " + item.county_title}
-                    image={`${frontEndUriBase}housing_images/${JSON.parse(item.housing_type_data).image
-                      }`}
-                    openSharing={
-                      JSON.parse(item.housing_type_data)["open_sharing1"]
-                    }
-                    column1_additional={item.column1_additional}
-                    column1_name={
-                      JSON.parse(item.housing_type_data)[item.column1_name]
-                        ? JSON.parse(item.housing_type_data)[item.column1_name]
-                        : ""
-                    }
-                    column2_name={
-                      JSON.parse(item.housing_type_data)[item.column2_name]
-                        ? JSON.parse(item.housing_type_data)[item.column2_name]
-                        : ""
-                    }
-                    column2_additional={item.column2_additional}
-                    column3_name={
-                      JSON.parse(item.housing_type_data)[item.column3_name]
-                        ? JSON.parse(item.housing_type_data)[item.column3_name]
-                        : ""
-                    }
-                    column3_additional={item.column3_additional}
-                    column4_name={
-                      JSON.parse(item.housing_type_data)[item.column4_name]
-                        ? JSON.parse(item.housing_type_data)[item.column4_name]
-                        : ""
-                    }
-                    column4_additional={item.column4_additional}
-                    bookmarkStatus={true}
-                    dailyRent={false}
-                    isFavorite={item.is_favorite}
-                  />
-                )}
-
-                ListHeaderComponent={
-                  <>
-                    <View style={{ paddingHorizontal: 0 }}>
-                      <Image
-                        source={Housing}
-                        style={{ width: "100%", height: 120 }}
-                      />
-                    </View>
-
-                    <View style={styles.header}>
-                      <Text style={{ fontSize: 14, fontWeight: 700 }}>
-                        ÖNE ÇIKAN EMLAK İLANLARI
-                      </Text>
-
-                      <TouchableOpacity
-                        style={styles.allBtn}
-                        onPress={() =>
-                          navigation.navigate("AllRealtorAdverts", {
-                            name: "Emlak İlanları",
-                            slug: "emlak-ilanlari",
-                            data: filteredHomes,
-                            count: filteredHomes.length,
-                            type: "konut",
-                            optional: null,
-                            title: null,
-                            check: null,
-                            city: null,
-                            county: null,
-                            hood: null,
-                          })
-                        }
-                      >
-                        <Text
-                          style={{
-                            color: "white",
-                            fontSize: 12,
-                            fontWeight: "bold",
-                          }}
-                        >
-                          Tüm İlanları Gör
-                        </Text>
-                      </TouchableOpacity>
-                    </View>
-                  </>
-                }
+                renderItem={renderItem}
+                ListHeaderComponent={renderHeader}
                 ListFooterComponent={renderFooter}
 
               />
