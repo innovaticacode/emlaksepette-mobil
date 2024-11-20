@@ -101,13 +101,8 @@ const Estates = ({ index }) => {
             ) : (
               <FlatList
                 data={filteredHomes}
-                keyExtractor={(item, index) =>
-                  item.id ? item.id.toString() : index.toString()
-                }
-                onEndReached={() => {
-                  console.debug("onEndReached çalışıyor");
-                  loadMore();
-                }}
+                keyExtractor={(item) => item.id.toString()}
+                onEndReached={() => { loadMore() }}
                 initialNumToRender={10}
                 maxToRenderPerBatch={10}
                 onEndReachedThreshold={0.5}
