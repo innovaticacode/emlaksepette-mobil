@@ -16,6 +16,7 @@ const UsePaginatedData = (endpoint, take = 10) => {
   const [hooksLoading, setHooksLoading] = useState(false);
   const [error, setError] = useState(null);
   const [user, setUser] = useState({});
+  const [isLastPage, setIsLastPage] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -27,13 +28,15 @@ const UsePaginatedData = (endpoint, take = 10) => {
   }, [endpoint]);
 
   const fetchData = async () => {
+    if (isLastPage) {
+      return null;
+    }
     setHooksLoading(true);
     setError(null);
     try {
       const headers = user?.access_token
         ? { Authorization: `Bearer ${user.access_token}` }
         : {};
-
       const response = await axios.get(`${apiUrl}${endpoint}`, {
         headers,
         params: {
@@ -41,11 +44,13 @@ const UsePaginatedData = (endpoint, take = 10) => {
           skip: skip,
         },
       });
-
       if (response.data && Array.isArray(response.data)) {
         setData((prevData) =>
           skip === 0 ? response.data : [...prevData, ...response.data]
         );
+        if (response.data.length < take) {
+          setIsLastPage(true);
+        }
       } else {
         setError("Unexpected data structure");
       }
@@ -61,16 +66,12 @@ const UsePaginatedData = (endpoint, take = 10) => {
   }, [user, skip]);
 
   const loadMore = () => {
-    setSkip((prevSkip) => prevSkip + take);
+    if (!isLastPage) {
+      setSkip((prevSkip) => prevSkip + take);
+    }
   };
 
-  return {
-    data,
-    hooksLoading,
-    error,
-    loadMore,
-    setSkip,
-  };
+  return { data, hooksLoading, error, loadMore, setSkip };
 };
 
 export default UsePaginatedData;

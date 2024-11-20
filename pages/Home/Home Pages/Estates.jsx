@@ -20,7 +20,8 @@ const Estates = ({ index }) => {
   const navigation = useNavigation();
   const [refreshing, setRefreshing] = useState(false);
   const [loading, setLoading] = useState(false);
-  const { data, hooksLoading, error, loadMore, } = UsePaginatedData("real-estates", 10);// take 10
+  const { data, hooksLoading, error, loadMore } = UsePaginatedData("real-estates", 10);// take 10
+
 
   useFocusEffect(
     useCallback(() => {
