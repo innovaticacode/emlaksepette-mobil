@@ -20,7 +20,9 @@ const Estates = ({ index }) => {
   const navigation = useNavigation();
   const [refreshing, setRefreshing] = useState(false);
   const [loading, setLoading] = useState(false);
-  const { data, hooksLoading, error, loadMore, setSkip } = UsePaginatedData("real-estates", 10);// take 10
+  const apiData = [{ key: "step1_slug", value: "konut" }];
+
+  const { data, hooksLoading, error, loadMore, setSkip } = UsePaginatedData("real-estates", 10, apiData);// take 10
 
 
   useFocusEffect(
@@ -33,10 +35,11 @@ const Estates = ({ index }) => {
     }, [index])
   );
 
-  const filteredHomes = useMemo(() => {
-    return data.filter(estate => estate.step1_slug === "konut");
-  }, [data]);
+  const filteredHomes = data;
 
+  // const filteredHomes = useMemo(() => {
+  //   return data.filter(estate => estate.step1_slug === "konut");
+  // }, [data]);
 
   const onRefresh = async () => {
     setRefreshing(true);
