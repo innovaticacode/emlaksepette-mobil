@@ -37,11 +37,7 @@ const Shop = ({ index }) => {
     }, [index])
   );
 
-  const filteredHomes = data;
 
-  // const filteredHomes = useMemo(() => {
-  //   return data.filter(estate => estate.step1_slug === "is-yeri");
-  // }, [data]);
 
   const onRefresh = async () => {
     setRefreshing(true);
@@ -96,8 +92,8 @@ const Shop = ({ index }) => {
               navigation.navigate("AllRealtorAdverts", {
                 name: "Emlak İlanları",
                 slug: "emlak-ilanlari",
-                data: filteredHomes,
-                count: filteredHomes.length,
+                data: data,
+                count: data.length,
                 type: "is-yeri",
                 optional: null,
                 title: null,
@@ -197,7 +193,7 @@ const Shop = ({ index }) => {
               </View>
             ) : (
               <FlatList
-                data={filteredHomes}
+                data={data}
                 keyExtractor={(item, index) => index.toString()}  // İndeks ile key
                 onEndReached={() => { loadMore() }}
                 initialNumToRender={10}

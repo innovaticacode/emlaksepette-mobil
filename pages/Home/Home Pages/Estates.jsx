@@ -35,11 +35,8 @@ const Estates = ({ index }) => {
     }, [index])
   );
 
-  const filteredHomes = data;
 
-  // const filteredHomes = useMemo(() => {
-  //   return data.filter(estate => estate.step1_slug === "konut");
-  // }, [data]);
+
 
   const onRefresh = async () => {
     setRefreshing(true);
@@ -77,8 +74,8 @@ const Estates = ({ index }) => {
               navigation.navigate("AllRealtorAdverts", {
                 name: "Emlak İlanları",
                 slug: "emlak-ilanlari",
-                data: filteredHomes,
-                count: filteredHomes.length,
+                data: data,
+                count: data.length,
                 type: "konut",
                 optional: null,
                 title: null,
@@ -171,7 +168,7 @@ const Estates = ({ index }) => {
           )}
 
           <AlertNotificationRoot>
-            {filteredHomes.length == 0 ? (
+            {data.length == 0 ? (
               <View style={{ width: "100%", paddingTop: 10 }}>
                 <Text
                   style={{
@@ -185,7 +182,7 @@ const Estates = ({ index }) => {
               </View>
             ) : (
               <FlatList
-                data={filteredHomes}
+                data={data}
                 keyExtractor={(item, index) => index.toString()}  // İndeks ile key
                 onEndReached={() => { loadMore() }}
                 initialNumToRender={10}
