@@ -21,8 +21,9 @@ export default function SettingsItem({
         flexDirection: "row",
         justifyContent: "space-between",
         padding: 10,
-        borderBottomWidth: border === "0" ? 0 : 1,
-        borderColor: "#EBEBEB",
+        borderWidth:border==='0'? 0 :1,
+          borderRadius:10,
+        borderColor: "#DBDBDB",
       }}
     >
       <View style={{ justifyContent: "center" }}>
@@ -30,7 +31,7 @@ export default function SettingsItem({
           style={{
             fontSize: 12,
             color: color ? color : "black",
-            fontWeight: fontWeight ? fontWeight : 400,
+            fontWeight: fontWeight ? fontWeight : 500,
           }}
         >
           {number ?? number} {info}
@@ -43,7 +44,7 @@ export default function SettingsItem({
             alignItems: "center",
             fontSize: 12,
             color: color ? color : "black",
-            fontWeight: 700,
+            fontWeight: 500,
           }}
         >
           {icon && icon} {numbers}

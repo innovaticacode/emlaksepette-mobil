@@ -11,6 +11,11 @@ import PaymentItem from "./PaymentItem";
 import { useState } from "react";
 import { useEffect } from "react";
 import { ScrollView } from "react-native-gesture-handler";
+import { Image } from "react-native";
+import WhiteOrRedButtons from "./Buttons/WhiteOrRedButtons/WhiteOrRedButtons";
+import axios from "axios";
+import { useNavigation } from "@react-navigation/native";
+import { getValueFor } from "./methods/user";
 export default function PaymentPlanModal({
   visible,
   onClose,
@@ -18,6 +23,8 @@ export default function PaymentPlanModal({
   content,
   data,
   RoomOrder,
+  deposit_rate,
+  addToCard
 }) {
 
     const [totalPrice, setTotalPrice] = useState(0);
@@ -73,6 +80,7 @@ export default function PaymentPlanModal({
                 price={formatPrice(price)}
                 date={formattedDate}
                 dFlex="column"
+                index={_index}
               />
             </View>
           );
@@ -87,6 +95,13 @@ export default function PaymentPlanModal({
 
     const [MonthlyPriceWithoutShare, setMonthlyPriceWithoutShare] = useState(null)
     const [MonthlyPriceWithShare, setMonthlyPriceWithShare] = useState(null)
+    const navigation=useNavigation()
+    const [user, setuser] = useState({})
+    useEffect(() => {
+        getValueFor('user',setuser)
+    }, [])
+    
+
   return (
     <Modal
     animationType="fade" 
@@ -97,6 +112,7 @@ export default function PaymentPlanModal({
     >
       <View style={styles.modalBackground}>
         <View style={styles.modalContainer}>
+       
           <View style={styles.ModalHeader}>
             <View style={{ width: "70%" }}>
               <Text style={{ color: "white", fontSize: 14, fontWeight: "600" }}>
@@ -110,36 +126,36 @@ export default function PaymentPlanModal({
             </View>
           </View>
 
-          <View style={{ gap:6}}>
-                <TouchableOpacity style={{flexDirection:'row',alignItems:'center',gap:5,paddingTop:5,paddingLeft: 12,paddingRight: 12}}>
-                    <View style={styles.Icon}>
-                    <Icon2 name="logo-whatsapp" color={'white'} size={20}/>
-                    </View>
-                    <View>
-                        <Text style={{fontSize:12,color:'#40C351',fontWeight:'600'}}>Ödeme Planı'nı paylaş</Text>
-                    </View>
-                </TouchableOpacity>
-                <View style={styles.headerGrey}>
-                <Text style={{ color: "#212529", fontSize: 13, fontWeight: "700",textAlign:'center' }}>
-                {title} Projesinde {RoomOrder} No'lu İlan Ödeme Detayı
-              </Text>
-                </View>
-                <View style={styles.ongorulenView}>
-                    <View style={{flexDirection:'row',alignItems:'center',gap:5}}>
-                        <IconGraph name="graph" color={'#008001'} size={22}/>
-                        <Text style={{color:'#28A745',fontSize:13,fontWeight:'600'}}>Öngörülen Yıllık Kazanç: %{data['projected_earnings[]']}</Text>
-                    </View>
-                    <View style={{flexDirection:'row',alignItems:'center',gap:5}}>
-                        <IconGraph name="graph" color={'#008001'} size={22}/>
-                        <Text style={{color:'#28A745',fontSize:13,fontWeight:'600'}}>Öngörülen Kira Getirisi: {addDotEveryThreeDigits(data['ong_kira[]'])}TL</Text>
-                    </View>
-                </View>
-                <View style={[styles.headerGrey,{padding:2}]}>
+          <ScrollView  contentContainerStyle={{ gap:10,paddingLeft:10,paddingRight:10,paddingBottom:10}}>
+            <View style={{alignItems:'center',paddingTop:10}}>
+            <View style={{width:166,height:32}}>
+            <Image source={require('../components/emlaksepettelogo.png')} style={{width:'100%',height:'100%'}} resizeMode='contain' />
+            </View>
+            </View>
 
+                {
+                 data['projected_earnings[]'] &&
+                  <View style={styles.ongorulenView}>
+                  <Text style={styles.text}>Yıllık Değer Artışı</Text>
+                  <View>
+                  <Text style={styles.text}>%{addDotEveryThreeDigits(data['projected_earnings[]'])}</Text>
+                  </View>
+                 
                 </View>
-                <View>
-                       <SettingsItem info={'Peşin:'} 
-                       fontWeight={700}
+                }
+                {
+                 data['projected_earnings[]'] &&
+                  <View style={styles.ongorulenView}>
+                  <Text style={styles.text}>Aylık Kira Getirisi</Text>
+                  <View>
+                  <Text style={styles.text}>{addDotEveryThreeDigits(data['ong_kira[]'])}₺</Text>
+                  </View>
+                 
+                </View>
+                }
+              <View style={{gap:10}}>
+              <SettingsItem info={'Peşin Fiyat'} 
+                        
                        numbers={
                             data["share_sale[]"] != "[]" &&
                             data["number_of_shares[]"] ?
@@ -158,7 +174,7 @@ export default function PaymentPlanModal({
                             ):
                             (
                                 addDotEveryThreeDigits(
-                                data["price[]"] ) + ''  
+                                data["price[]"] ) + ' ₺'  
                             )
                        }/> 
                        { data &&  RoomOrder !==null &&  data['payment-plan[]'] &&   
@@ -170,7 +186,7 @@ export default function PaymentPlanModal({
                               ).includes("taksitli") &&(
                                 <>
                                 <SettingsItem
-                                  fontWeight={700}
+                                 border={'0'}
                                 info={
                                   data["installments[]"] +
                                   " " +
@@ -189,11 +205,11 @@ export default function PaymentPlanModal({
                                         Math.round(
                                           data["installments-price[]"]
                                         )
-                                      ) + "₺"
+                                      ) + " ₺"
                                 }
                               />
                                <SettingsItem
-                                 fontWeight={700}
+                                
                                     info="Peşinat"
                                     numbers={
                                       data["share_sale[]"] != "[]" &&
@@ -208,11 +224,11 @@ export default function PaymentPlanModal({
                                             Math.round(
                                               data["advance[]"]
                                             )
-                                          ) + "₺"
+                                          ) + " ₺"
                                     }
                                   />
                                    <SettingsItem 
-                                   fontWeight={700}
+                                  border={'0'}
                                     info="Aylık Ödenecek Tutar"
                                     numbers={
                                       data["share_sale[]"] != "[]" &&
@@ -230,7 +246,7 @@ export default function PaymentPlanModal({
                                               parseInt(
                                                 data["installments[]"]
                                               )
-                                          ) + "₺"
+                                          ) + " ₺"
                                         : addDotEveryThreeDigits(
                                             (
                                               (parseInt(
@@ -244,28 +260,61 @@ export default function PaymentPlanModal({
                                                 data["installments[]"]
                                               )
                                             ).toFixed(0)
-                                          ) + "₺"
+                                          ) + " ₺"
                                     }
                                   />
+                                  <SettingsItem info={'Taksit Başlangıç Tarihi'} numbers={'30 Ekim 2024'}/>
                                   <View style={styles.headerGrey}>
                                         <Text style={{ color: "#212529", fontSize: 13, fontWeight: "700",textAlign:'center'}}>Ara Ödemeler</Text>
                                   </View>
-                                  <View style={{height:200}}>
-                                    <ScrollView bounces={false}>
+                                  
+                                    
                                     {paymentItems && paymentItems}
-                                    </ScrollView>
-                                 
-                                  </View>
+                            
                                  
                                   </>  
                               )
                                 
                               
                        }
-                </View>
 
-
-          </View>
+              </View>
+                       <View style={{gap:10,alignItems:'center'}}>
+                        <View>
+                          <Text style={{fontSize:12,fontWeight:'500',textAlign:'center'}}>Bu ilan satış noktalarımızda %4 indirimli en yakın satış noktası için tıklayın.</Text>
+                        </View>
+                        <View style={{width:'60%'}}>
+                         <WhiteOrRedButtons text={'Satış Noktası'}/>
+                        </View>
+                       </View>
+                       <View style={{padding:15,backgroundColor:'#FFEAEB',borderRadius:10,gap:10}}>
+                          <View style={{}}>
+                            <Text style={{color:'#EA2B2E',fontSize:14,fontWeight:'600',textAlign:'center'}}>Şu anda Ödenecek Kapora Tutarı</Text>
+                            </View>
+                            <View>
+                            <Text style={{color:'#EA2B2E',fontSize:14,fontWeight:'600',textAlign:'center'}}> {addDotEveryThreeDigits((data['price[]'] * deposit_rate) / 100 ) }₺</Text>
+                            </View>
+                          
+                         
+                          <View style={{alignItems:'center'}}>
+                            <TouchableOpacity style={{backgroundColor:'#EA2B2E',padding:10,borderRadius:10,width:'70%'}} onPress={()=>{
+                              onClose()
+                              setTimeout(() => {
+                                addToCard()
+                              }, 800);
+                           
+                            }}>
+                            <Text style={{color:'white',fontWeight:'600',textAlign:'center'}}>Sepete Ekle</Text>
+                            </TouchableOpacity>
+                          </View>
+                       </View>
+                       <View>
+                        <Text style={{color:'#EA2B2E',fontSize:14,fontWeight:'600',textAlign:'center'}}>
+                        ‘‘ Şimdi Alın veya Kiralayın, kaporanız emlaksepette.com’da güvence altında!’’
+                        </Text>
+                       </View>
+          </ScrollView>
+        
         </View>
       </View>
     </Modal>
@@ -280,10 +329,11 @@ const styles = StyleSheet.create({
   },
   modalContainer: {
     width: "95%",
-
     backgroundColor: "white",
     borderRadius: 10,
     elevation: 5,
+   maxHeight:'90%',
+    paddingBottom:10
   },
   modalTitle: {
     fontSize: 18,
@@ -316,13 +366,20 @@ justifyContent:'center'
   headerGrey:{
     width:'100%',
     backgroundColor:'#EEEEEE',
-    padding:8
+    padding:10,
+    borderRadius:10
   },
   ongorulenView:{
-   paddingTop:10,
-    gap:5,
-    paddingLeft:15,
-    paddingRight:15
+    backgroundColor:'#E7F6EE',
+    padding:10,
+    borderRadius:10,
+    flexDirection:'row',
+    justifyContent:'space-between'
+  },
+  text:{
+    color:'#0E713D',
+    fontSize:14,
+    fontWeight:'semibold'
   }
 
 });
