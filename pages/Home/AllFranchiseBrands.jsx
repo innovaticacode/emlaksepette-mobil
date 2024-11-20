@@ -102,17 +102,17 @@ const styles = StyleSheet.create({
     borderColor: "#BBBBBB",
     borderRadius: 10,
     padding: 10,
-    flexDirection: "column", // Dikey düzen
-    justifyContent: "space-between", // İçeriği üst ve alt arasında yay
-    alignItems: "stretch", // Yatayda esnet
+    flexDirection: "column",
+    justifyContent: "space-between",
+    alignItems: "stretch",
     flex: 1,
   },
   image: {
-    width: 80, // Genişlik
-    height: 80, // Yükseklik (eşit olmalı)
+    width: 80,
+    height: 80,
     backgroundColor: "#FFF",
-    borderRadius: 50, // width ve height'in yarısı
-    overflow: "hidden", // Taşmaları engellemek için
+    borderRadius: 50,
+    overflow: "hidden",
   },
   seperator: {
     width: "100%",
