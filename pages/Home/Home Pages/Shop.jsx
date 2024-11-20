@@ -194,7 +194,7 @@ const Shop = ({ index }) => {
             ) : (
               <FlatList
                 data={data}
-                keyExtractor={(item, index) => index.toString()}  // İndeks ile key
+                keyExtractor={(item, index) => index.toString()}
                 onEndReached={() => { loadMore() }}
                 initialNumToRender={10}
                 maxToRenderPerBatch={10}
