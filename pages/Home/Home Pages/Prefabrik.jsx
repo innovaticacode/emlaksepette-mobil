@@ -23,12 +23,12 @@ const Prefabrik = ({ index }) => {
   const [loading, setLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
 
-  const apiData = [{ key: "step1_slug", value: "konut" }];
+  const apiData = [{ key: "step1_slug", value: "prefabrik-yapilar" }];
   const { data, hooksLoading, error, loadMore, setSkip } = UsePaginatedData("real-estates", 10, apiData);
 
   useFocusEffect(
     useCallback(() => {
-      if (index == 4) {
+      if (index == 5) {
         setLoading(true);
         loadMore();
         setLoading(false);
@@ -36,9 +36,9 @@ const Prefabrik = ({ index }) => {
     }, [index])
   );
 
-  const onRefresh = () => {
+  const onRefresh = async () => {
     setRefreshing(true);
-    setSkip(0);
+    await setSkip(0);
     setRefreshing(false);
   };
 

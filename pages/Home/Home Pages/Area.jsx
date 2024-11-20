@@ -37,9 +37,9 @@ const Area = ({ index }) => {
     }, [index])
   );
 
-  const onRefresh = () => {
+  const onRefresh = async () => {
     setRefreshing(true);
-    setSkip(0);
+    await setSkip(0);
     setRefreshing(false);
   };
 
@@ -53,50 +53,52 @@ const Area = ({ index }) => {
   };
 
   const renderHeader = () => {
-    <>
-      <View style={{ paddingHorizontal: 0 }}>
-        <Image
-          source={Land}
-          style={{
-            width: "auto",
-            height: 120,
-            resizeMode: "cover",
-          }}
-        />
-      </View>
-      <View style={styles.header}>
-        <Text style={{ fontSize: 14, fontWeight: 700 }}>
-          ÖNE ÇIKAN ARSALAR
-        </Text>
-
-        <TouchableOpacity style={styles.allBtn}>
-          <Text
+    return (
+      <>
+        <View style={{ paddingHorizontal: 0 }}>
+          <Image
+            source={Land}
             style={{
-              color: "white",
-              fontSize: 12,
-              fontWeight: "bold",
+              width: "auto",
+              height: 120,
+              resizeMode: "cover",
             }}
-            onPress={() =>
-              navigation.navigate("AllRealtorAdverts", {
-                name: "Emlak İlanları",
-                slug: "emlak-ilanlari",
-                data: data,
-                count: data.length,
-                type: "arsa",
-                optional: null,
-                title: null,
-                check: null,
-                city: null,
-                county: null,
-                hood: null,
-              })
-            }
-          >
-            Tüm İlanları Gör
+          />
+        </View>
+        <View style={styles.header}>
+          <Text style={{ fontSize: 14, fontWeight: 700 }}>
+            ÖNE ÇIKAN ARSALAR
           </Text>
-        </TouchableOpacity>
-      </View>
-    </>;
+
+          <TouchableOpacity style={styles.allBtn}>
+            <Text
+              style={{
+                color: "white",
+                fontSize: 12,
+                fontWeight: "bold",
+              }}
+              onPress={() =>
+                navigation.navigate("AllRealtorAdverts", {
+                  name: "Emlak İlanları",
+                  slug: "emlak-ilanlari",
+                  data: data,
+                  count: data.length,
+                  type: "arsa",
+                  optional: null,
+                  title: null,
+                  check: null,
+                  city: null,
+                  county: null,
+                  hood: null,
+                })
+              }
+            >
+              Tüm İlanları Gör
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </>
+    )
   };
 
   const renderItem = useMemo(() => ({ item }) => {

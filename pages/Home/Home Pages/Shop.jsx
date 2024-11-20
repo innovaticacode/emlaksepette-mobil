@@ -29,7 +29,7 @@ const Shop = ({ index }) => {
 
   useFocusEffect(
     useCallback(() => {
-      if (index == 2) {
+      if (index == 3) {
         setLoading(true);
         loadMore();
         setLoading(false);
@@ -55,60 +55,62 @@ const Shop = ({ index }) => {
   };
 
   const renderHeader = () => {
-    <>
-      <View style={{ marginBottom: 20 }}>
-        <Image
-          source={bannerSRC}
-          style={{
-            width: "auto",
-            height: 120,
-            resizeMode: "cover",
-          }}
-        />
-      </View>
-      <View
-        style={{
-          paddingBottom: 3,
-          flexDirection: "row",
-          justifyContent: "space-between",
-          paddingLeft: 10,
-          paddingRight: 10,
-          alignItems: "center",
-          backgroundColor: "white",
-        }}
-      >
-        <Text style={{ fontSize: 14, fontWeight: 700 }}>
-          ÖNE ÇIKAN İŞ YERLERİ
-        </Text>
-
-        <TouchableOpacity style={styles.allBtn}>
-          <Text
+    return (
+      <>
+        <View style={{ marginBottom: 20 }}>
+          <Image
+            source={bannerSRC}
             style={{
-              color: "white",
-              fontSize: 11,
-              fontWeight: "bold",
+              width: "auto",
+              height: 120,
+              resizeMode: "cover",
             }}
-            onPress={() =>
-              navigation.navigate("AllRealtorAdverts", {
-                name: "Emlak İlanları",
-                slug: "emlak-ilanlari",
-                data: data,
-                count: data.length,
-                type: "is-yeri",
-                optional: null,
-                title: null,
-                check: null,
-                city: null,
-                county: null,
-                hood: null,
-              })
-            }
-          >
-            Tüm İlanları Gör
+          />
+        </View>
+        <View
+          style={{
+            paddingBottom: 3,
+            flexDirection: "row",
+            justifyContent: "space-between",
+            paddingLeft: 10,
+            paddingRight: 10,
+            alignItems: "center",
+            backgroundColor: "white",
+          }}
+        >
+          <Text style={{ fontSize: 14, fontWeight: 700 }}>
+            ÖNE ÇIKAN İŞ YERLERİ
           </Text>
-        </TouchableOpacity>
-      </View>
-    </>
+
+          <TouchableOpacity style={styles.allBtn}>
+            <Text
+              style={{
+                color: "white",
+                fontSize: 11,
+                fontWeight: "bold",
+              }}
+              onPress={() =>
+                navigation.navigate("AllRealtorAdverts", {
+                  name: "Emlak İlanları",
+                  slug: "emlak-ilanlari",
+                  data: data,
+                  count: data.length,
+                  type: "is-yeri",
+                  optional: null,
+                  title: null,
+                  check: null,
+                  city: null,
+                  county: null,
+                  hood: null,
+                })
+              }
+            >
+              Tüm İlanları Gör
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </>
+    )
   };
   const renderItem = useMemo(() => ({ item }) => {
     // Parse the housing_type_data only once
