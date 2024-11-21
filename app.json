@@ -16,18 +16,13 @@
       ],
       "expo-secure-store"
     ],
-<<<<<<< HEAD
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
+
     "assetBundlePatterns": ["**/*"],
-=======
-    "assetBundlePatterns": [
-      "**/*"
-    ],
->>>>>>> test
     "ios": {
       "supportsTablet": true,
       "infoPlist": {
