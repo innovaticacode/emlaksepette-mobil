@@ -1,21 +1,20 @@
 import { StyleSheet } from "react-native";
 
-export const style = StyleSheet.create({
-  btnBody: {
+export const styles = StyleSheet.create({
+  container: {
+    height: 40,
     borderWidth: 1,
-    borderColor: "#EA2B2E",
-    borderRadius: 6,
+    borderRadius: 5,
+    borderColor: "#404040",
     justifyContent: "center",
     alignItems: "center",
     flexDirection: "row",
-    padding: 8,
-    gap: 8,
+    gap: 10,
     width: "100%",
-    flex: 1,
-    height: 40,
   },
   text: {
-    fontSize: 14,
+    fontSize: 12,
+    lineHeight: 14,
     fontWeight: "600",
   },
 });

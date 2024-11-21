@@ -16,18 +16,26 @@
       ],
       "expo-secure-store"
     ],
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
       "infoPlist": {
         "NSLocationWhenInUseUsageDescription": "Konumunuza erişmek istiyoruz.",
         "NSLocationAlwaysUsageDescription": "Konumunuza erişmek istiyoruz.",
-        "NSCameraUsageDescription": "Fotoğraf çekebilmeniz için kameranıza erişim izni gerekiyor.",
-        "NSPhotoLibraryUsageDescription": "Fotoğraf seçebilmeniz için fotoğraf galerisine erişim izni gerekiyor."
+        "NSCameraUsageDescription": "This app uses the camera to take photos.",
+        "NSPhotoLibraryUsageDescription": "This app needs access to the photo library to select photos."
       },
-      "bundleIdentifier": "com.anonymous.frontend"
+      "bundleIdentifier": "com.anonymous.frontend",
+      "associatedDomains": ["applinks:example.com"],
+      "config": {
+        "usesNonExemptEncryption": false
+      }
     },
     "android": {
       "permissions": [
@@ -41,7 +49,20 @@
         "foregroundImage": "./assets/app-logo.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.anonymous.frontend"
+      "package": "com.anonymous.frontend",
+      "intentFilters": [
+        {
+          "action": "VIEW",
+          "data": [
+            {
+              "scheme": "https",
+              "host": "example.com",
+              "pathPrefix": "/FranchisePersonDetail"
+            }
+          ],
+          "category": ["BROWSABLE", "DEFAULT"]
+        }
+      ]
     },
     "web": {
       "favicon": "./assets/app-logo.png"

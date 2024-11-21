@@ -90,11 +90,11 @@ export default function RealtorPost({
   const formattedDiscountedPrice = discountedPrice
     ? discountedPrice !== price
       ? parseFloat(discountedPrice)
-          .toLocaleString("tr-TR", {
-            style: "currency",
-            currency: "TRY",
-          })
-          .replace(/,00$/, "")
+        .toLocaleString("tr-TR", {
+          style: "currency",
+          currency: "TRY",
+        })
+        .replace(/,00$/, "")
       : null
     : 0;
 
@@ -189,14 +189,12 @@ export default function RealtorPost({
       if (user?.access_token) {
         const response = await axios.post(
           `${apiUrl}institutional/add_to_cart`,
-          formData,
-          {
-            headers: {
-              Authorization: `Bearer ${user.access_token}`,
-              "Content-Type": "multipart/form-data",
-            },
-          }
-        );
+          formData, {
+          headers: {
+            Authorization: `Bearer ${user.access_token}`,
+            "Content-Type": "multipart/form-data",
+          },
+        });
         updateUserData();
         setAddCartShow(false);
         navigation.navigate("Sepetim");
@@ -216,6 +214,7 @@ export default function RealtorPost({
         onPress={() =>
           navigation.navigate("Realtor details", { houseId: HouseId })
         }
+        style={{ minHeight: chekView ? 300 : 150 }}
       >
         <AwesomeAlert
           show={cartIsNull}
@@ -354,7 +353,7 @@ export default function RealtorPost({
                   navigation.navigate("Realtor details", { houseId: HouseId })
                 }
               >
-                {(!sold || sold >1) && (
+                {(!sold || sold > 1) && (
                   <TouchableOpacity
                     style={styles.heartBtn}
                     activeOpacity={0.8}
@@ -370,8 +369,8 @@ export default function RealtorPost({
                           heart == "hearto"
                             ? "#EA2C2E"
                             : "red" || isFavorite === 1
-                            ? "red"
-                            : "black"
+                              ? "red"
+                              : "black"
                         }
                       />
                     </View>
@@ -397,7 +396,10 @@ export default function RealtorPost({
 
                 <ImageBackground
                   source={{ uri: image }}
-                  style={{ width: "100%", height: "100%" }}
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                  }}
                   resizeMode="cover"
                 />
               </View>
@@ -473,31 +475,31 @@ export default function RealtorPost({
                     style={{ alignItems: "center", justifyContent: "center" }}
                   >
                     {
-                      (!sold || sold >1) ?
-                      formattedDiscountedPrice ? (
-                        <>
-                          <Text style={styles.discountedPriceText}>
-                            {formattedPrice}
-                          </Text>
+                      (!sold || sold > 1) ?
+                        formattedDiscountedPrice ? (
+                          <>
+                            <Text style={styles.discountedPriceText}>
+                              {formattedPrice}
+                            </Text>
+                            <Text style={styles.priceText}>
+                              {formattedDiscountedPrice}₺
+                            </Text>
+                          </>
+                        ) : housing.step2_slug == "gunluk-kiralik" ? (
                           <Text style={styles.priceText}>
-                            {formattedDiscountedPrice}₺
+                            {formattedPrice} ₺{" "}
+                            <Text style={{ fontSize: 11, color: "#D32729" }}>
+                              / Gecelik
+                            </Text>{" "}
                           </Text>
-                        </>
-                      ) : housing.step2_slug == "gunluk-kiralik" ? (
-                        <Text style={styles.priceText}>
-                          {formattedPrice} ₺{" "}
-                          <Text style={{ fontSize: 11, color: "#D32729" }}>
-                            / Gecelik
-                          </Text>{" "}
-                        </Text>
-                      ) : (
-                        <Text style={styles.priceText}>{formattedPrice} </Text>
-                      ):null
+                        ) : (
+                          <Text style={styles.priceText}>{formattedPrice} </Text>
+                        ) : null
                     }
-                   
+
                   </View>
-            
-                 {(!sold || sold >1) ?(
+
+                  {(!sold || sold > 1) ? (
                     housing?.user?.id == user.id && user.access_token ? (
                       <TouchableOpacity
                         style={[
@@ -535,7 +537,7 @@ export default function RealtorPost({
                       >
                         {(housing?.step2_slug &&
                           housing?.step2_slug == "gunluk-kiralik") ||
-                        housing?.step1_slug == "mustakil-tatil" ? (
+                          housing?.step1_slug == "mustakil-tatil" ? (
                           <Text
                             style={{
                               color: "white",
@@ -586,7 +588,7 @@ export default function RealtorPost({
                         Rezerve Edildi
                       </Text>
                     </View>
-                  )} 
+                  )}
                 </View>
               </View>
             </View>
@@ -602,7 +604,7 @@ export default function RealtorPost({
           >
             <View style={{ gap: 7 }}>
               <View style={{ width: "100%", height: 180 }}>
-                {(!sold || sold >1) && (
+                {(!sold || sold > 1) && (
                   <TouchableOpacity
                     style={styles.heartBtn}
                     activeOpacity={0.8}
@@ -618,8 +620,8 @@ export default function RealtorPost({
                           heart == "hearto"
                             ? "#EA2C2E"
                             : "red" || isFavorite === 1
-                            ? "red"
-                            : "black"
+                              ? "red"
+                              : "black"
                         }
                       />
                     </View>
@@ -627,9 +629,13 @@ export default function RealtorPost({
                 )}
                 <ImageBackground
                   source={{ uri: image }}
-                  style={{ width: "100%", height: "100%" }}
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    backgroundColor: "#D9D9D9",
+                    borderRadius: 4,
+                  }}
                   resizeMode="cover"
-                  borderRadius={10}
                 />
               </View>
               <View>
@@ -682,8 +688,9 @@ export default function RealtorPost({
               </View>
             </View>
             <View style={{ gap: 7 }}>
-              <View style={{ justifyContent: "center", alignItems: "center" }}>
-                {(!sold || sold >1)?(
+
+              <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+                {!sold ? (
                   housing?.user?.id == user.id && user.access_token ? (
                     <TouchableOpacity
                       style={[
@@ -691,8 +698,8 @@ export default function RealtorPost({
                         {
                           backgroundColor: "#008001",
                           padding: 9,
-                          width: "100%",
-                          borderRadius: 5,
+                          width: '100%',
+                          borderRadius: 5
                         },
                       ]}
                     >
@@ -700,6 +707,7 @@ export default function RealtorPost({
                         style={{
                           color: "white",
                           fontWeight: "600",
+
                         }}
                       >
                         İlanı Düzenle
@@ -707,15 +715,7 @@ export default function RealtorPost({
                     </TouchableOpacity>
                   ) : (
                     <TouchableOpacity
-                      style={[
-                        styles.addBasket,
-                        {
-                          padding: 9,
-                          width: "100%",
-                          backgroundColor: "#EA2C2E",
-                          borderRadius: 5,
-                        },
-                      ]}
+                      style={[styles.addBasket, { padding: 9, width: '100%', backgroundColor: '#EA2C2E', borderRadius: 5 }]}
                       onPress={() => {
                         // Metin kontrolü yapılıyor
                         if (
@@ -733,11 +733,12 @@ export default function RealtorPost({
                     >
                       {(housing?.step2_slug &&
                         housing?.step2_slug == "gunluk-kiralik") ||
-                      housing?.step1_slug == "mustakil-tatil" ? (
+                        housing?.step1_slug == "mustakil-tatil" ? (
                         <Text
                           style={{
                             color: "white",
                             fontWeight: "600",
+
                           }}
                         >
                           Rezervasyon Yap
@@ -747,6 +748,7 @@ export default function RealtorPost({
                           style={{
                             color: "white",
                             fontWeight: "600",
+
                           }}
                         >
                           Sepete Ekle
@@ -756,20 +758,13 @@ export default function RealtorPost({
                   )
                 ) : sold == 1 ? (
                   <View
-                    style={[
-                      styles.addBasket,
-                      {
-                        backgroundColor: "#000000",
-                        padding: 9,
-                        width: "100%",
-                        borderRadius: 5,
-                      },
-                    ]}
+                    style={[styles.addBasket, { backgroundColor: "#000000", padding: 9, width: '100%', borderRadius: 5 }]}
                   >
                     <Text
                       style={{
                         color: "white",
                         fontWeight: "600",
+
                       }}
                     >
                       Satıldı
@@ -777,20 +772,13 @@ export default function RealtorPost({
                   </View>
                 ) : (
                   <View
-                    style={[
-                      styles.addBasket,
-                      {
-                        backgroundColor: "#373737" ,
-                        padding: 9,
-                        width: "100%",
-                        borderRadius: 5,
-                      },
-                    ]}
+                    style={[styles.addBasket, { backgroundColor: "#FFA500", padding: 9, width: '100%', borderRadius: 5 }]}
                   >
                     <Text
                       style={{
                         color: "white",
                         fontWeight: "600",
+
                       }}
                     >
                       Rezerve Edildi
