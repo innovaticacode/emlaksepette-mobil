@@ -27,7 +27,7 @@ export default function Search({ onpres, setIsDrawerOpen }) {
   const fetchmenuItems = async () => {
     try {
       const response = await axios.get(
-        apiUrl+"menu-list"
+        apiUrl + "menu-list"
       );
 
       const filteredMenuItems = response.data;
@@ -59,57 +59,55 @@ export default function Search({ onpres, setIsDrawerOpen }) {
 
           {menuItems.map((item, index) => {
             const text = item.text || "";
-
             const slug =
               text == "Prefabrik Yapılar"
                 ? text
                 : slugify(
-                    text == "Al Sat Acil" || text == "Paylaşımlı İlanlar"
-                      ? text
-                      : "emlak-ilanlari"
-                  );
-
+                  text == "Al Sat Acil" || text == "Paylaşımlı İlanlar"
+                    ? text
+                    : "emlak-ilanlari"
+                );
             const name =
               text == "Prefabrik Yapılar"
                 ? null
                 : slugify(
-                    text == "Al Sat Acil" || text == "Paylaşımlı İlanlar"
-                      ? text
-                      : "Emlak İlanları"
-                  );
-
+                  text == "Al Sat Acil" || text == "Paylaşımlı İlanlar"
+                    ? text
+                    : "Emlak İlanları"
+                );
             return (
               <TouchableOpacity
                 onPress={() => {
                   navigation.dispatch(DrawerActions.closeDrawer());
+                  if (item.text === "Gayrimenkul Ligi") {
+                    return navigation.navigate("RealEstateLeague");
+                  }
                   if (item.submenus && item.submenus?.length > 0) {
                     navigation.navigate("Public", {
                       title: item.text,
                       data: item.submenus,
                     });
                   } else {
-                    navigation.navigate( item.text === "Projeler"
+                    navigation.navigate(item.text === "Projeler"
                       ? "AllProjects"
-                      : "AllRealtorAdverts" ,{
-                    
-                    
-                        name: name,
-                        slug: slug,
-                        data: null,
-                        count: 0,
-                        type: null,
-                        optional: null,
-                        title:
-                          item.text === "Al Sat Acil" ||
+                      : "AllRealtorAdverts", {
+                      name: name,
+                      slug: slug,
+                      data: null,
+                      count: 0,
+                      type: null,
+                      optional: null,
+                      title:
+                        item.text === "Al Sat Acil" ||
                           item.text === "Paylaşımlı İlanlar"
-                            ? item.text
-                            : null,
-                        check: null,
-                        city: null,
-                        county: null,
-                        hood: null,
-                        href: item.href,
-                    
+                          ? item.text
+                          : null,
+                      check: null,
+                      city: null,
+                      county: null,
+                      hood: null,
+                      href: item.href,
+
                     });
                   }
                 }}

@@ -29,7 +29,7 @@ export const apiRequestGetWithBearer = async (url) => {
     throw new Error("Kullanıcı access token'ı bulunamadı.");
   }
 };
-export const apiRequestPostWithBearer = async (url,params) => {
+export const apiRequestPostWithBearer = async (url, params) => {
   await getValueFor("user", (res) => {
     user = res; // access_token değerini alıyoruz
   });
@@ -37,9 +37,9 @@ export const apiRequestPostWithBearer = async (url,params) => {
   if (user && user.access_token) {
     console.log(user.access_token)
     console.log("qqq")
-    return axios.post(apiUrl + url, params ,{
+    return axios.post(apiUrl + url, params, {
       headers: {
-         Authorization: "Bearer " + user.access_token ,
+        Authorization: "Bearer " + user.access_token,
         "Content-Type": "multipart/form-data",
       },
     });
@@ -50,13 +50,13 @@ export const apiRequestPostWithBearer = async (url,params) => {
 }
 
 
-export const apiRequestDeleteWithBearer = async (url,params) => {
+export const apiRequestDeleteWithBearer = async (url, params) => {
   await getValueFor("user", (res) => {
     user = res; // access_token değerini alıyoruz
   });
   // Eğer token alınmışsa isteği yapıyoruz
   if (user && user.access_token) {
-    return axios.delete(apiUrl + url, params ,{
+    return axios.delete(apiUrl + url, params, {
       headers: { Authorization: "Bearer " + user.access_token },
     });
   } else {

@@ -7,20 +7,14 @@ import {
   StyleSheet,
   TouchableOpacity,
   ScrollView,
-  ImageBackground,
   TextInput,
   Dimensions,
-  Platform,
 } from "react-native";
-import { TabView, SceneMap } from "react-native-tab-view";
+import { TabView } from "react-native-tab-view";
 import HomePage from "./HomePage";
-import Navbar from "../../components/Navbar";
-import SliderMenu from "../../components/SliderMenu";
 import axios from "axios";
 import { useState } from "react";
 import { DrawerMenu } from "../../components";
-import Search from "./Search";
-import Header from "../../components/Header";
 import Estates from "./Home Pages/Estates";
 import Shop from "./Home Pages/Shop";
 import Area from "./Home Pages/Area";
@@ -29,8 +23,6 @@ import BookHouse from "./Home Pages/BookHouse";
 import SellAcil from "./Home Pages/SellAcil";
 import Shared from "./Home Pages/Shared";
 import Modal from "react-native-modal";
-import Categories from "../../components/Categories";
-import { StatusBar } from "expo-status-bar";
 import { useNavigation } from "@react-navigation/native";
 import FirstHome from "./FirstHome";
 import { apiUrl } from "../../components/methods/apiRequest";
@@ -85,7 +77,7 @@ const CustomTabBar = ({
     const fetchMenuItems = async () => {
       try {
         const response = await axios.get(
-          apiUrl+"menu-list"
+          apiUrl + "menu-list"
         );
         setMenuItems(response.data);
         setMenuItems([{ text: "Anasayfa" }, ...response.data.slice(0, -1)]);
@@ -208,13 +200,13 @@ export default function HomePage2() {
         animationOut="bounceOutLeft"
         style={styles.modal}
         swipeDirection={["left"]}
-        // onSwipeComplete={() => setIsDrawerOpen(false)}
+      // onSwipeComplete={() => setIsDrawerOpen(false)}
       >
         {/* <View style={styles.modalContent}>
           <DrawerMenu setIsDrawerOpen={setIsDrawerOpen} />
         </View> */}
       </Modal>
-      <View style={{ paddingLeft: 10, paddingRight: 10 ,paddingTop:10}}>
+      <View style={{ paddingLeft: 10, paddingRight: 10, paddingTop: 10 }}>
         <TextInput
           style={{ padding: 8, backgroundColor: "#ebebeb", borderRadius: 5 }}
           placeholder="Kelime veya İlan no ile ara..."
@@ -230,6 +222,8 @@ export default function HomePage2() {
         }
         onIndexChange={indexChange}
         initialLayout={{ width: layout.width }}
+        lazy={true}
+        lazyPreloadDistance={0}
         renderTabBar={(props) => (
           <CustomTabBar {...props} indexChange={indexChange} tab={tab} />
         )}
@@ -267,7 +261,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     padding: 6,
-    borderRadius: 15,
+    borderRadius: 10,
     borderWidth: 1,
     borderColor: "#ebebeb",
   },

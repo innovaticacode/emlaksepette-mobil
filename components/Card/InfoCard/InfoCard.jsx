@@ -18,6 +18,8 @@ const InfoCard = ({
     await onPress();
   };
 
+  console.debug("----",date,description,name,surname,phone,eposta)
+
   return (
     <React.Fragment>
       <TouchableOpacity

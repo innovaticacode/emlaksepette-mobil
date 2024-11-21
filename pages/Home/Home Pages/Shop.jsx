@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useMemo } from "react";
 import {
   View,
   Text,
@@ -6,103 +6,153 @@ import {
   StyleSheet,
   TouchableOpacity,
   RefreshControl,
-  ScrollView,
   Image,
 } from "react-native";
 
-import axios from "axios";
 import { ActivityIndicator } from "react-native-paper";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
-import { getValueFor } from "../../../components/methods/user";
 import { AlertNotificationRoot } from "react-native-alert-notification";
 import bannerSRC from "../../../src/assets/images/is_yeri.png";
-import { apiUrl, frontEndUriBase } from "../../../components/methods/apiRequest";
+import { frontEndUriBase } from "../../../components/methods/apiRequest";
 import RealtorPost from "../../../components/Card/RealtorCard/RealtorPost";
+import { UsePaginatedData } from "../../../hooks";
 
-const PAGE_SIZE = 10;
 
 const Shop = ({ index }) => {
   const navigation = useNavigation();
-
-  const [featuredEstates, setFeaturedEstates] = useState([]);
-  const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
-  const [hasMore, setHasMore] = useState(true);
-  const [refreshing, setRefreshing] = useState(false);
-  const [user, setuser] = useState({});
+  const apiData = [{ key: "step1_slug", value: "is-yeri" }];
+  const { data, hooksLoading, error, loadMore, setSkip } = UsePaginatedData("real-estates", 10, apiData);
 
-  useEffect(() => {
-    getValueFor("user", setuser);
-  }, []);
-  const fetchFeaturedEstates = async (reset = false) => {
-    if (loading || (!hasMore && !reset)) return;
-    setLoading(true);
-    const config = {
-      headers: { Authorization: `Bearer ${user?.access_token}` },
-    };
-    try {
-      const response = await axios.get(
-        `${apiUrl}real-estates?page=${
-          reset ? 1 : page
-        }&limit=${PAGE_SIZE}`,
-        config
-      );
-      const newEstates = response.data;
-
-      if (reset) {
-        setFeaturedEstates(newEstates);
-        setPage(2);
-        setHasMore(true);
-      } else {
-        if (newEstates.length > 0) {
-          setFeaturedEstates((prevEstates) => {
-            const newUniqueEstates = newEstates.filter(
-              (estate) =>
-                !prevEstates.some((prevEstate) => prevEstate.id === estate.id)
-            );
-            return [...prevEstates, ...newUniqueEstates];
-          });
-          setPage((prevPage) => prevPage + 1);
-        } else {
-          setHasMore(false);
-        }
-      }
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setLoading(false);
-      setRefreshing(false);
-    }
-  };
 
   useFocusEffect(
     useCallback(() => {
       if (index == 3) {
-        fetchFeaturedEstates(true);
-      } else {
-        setFeaturedEstates([]);
+        setLoading(true);
+        loadMore();
+        setLoading(false);
       }
-    }, [index, user])
+    }, [index])
   );
 
-  const filteredHomes = featuredEstates.filter(
-    (estate) => estate.step1_slug === "is-yeri"
-  );
 
-  const onRefresh = () => {
-    setRefreshing(true);
-    fetchFeaturedEstates(true);
+
+  const onRefresh = async () => {
+    setLoading(true);
+    await setSkip(0);
+    setLoading(false);
   };
 
   const renderFooter = () => {
-    if (!loading) return null;
+    if (!hooksLoading) return null;
     return (
-      <ActivityIndicator style={{ margin: 20 }} size="small" color="#333" />
+      <View style={{ height: 100 }}>
+        <ActivityIndicator style={{ marginVertical: 16 }} size="small" color="#333" />
+      </View>
     );
   };
 
+  const renderHeader = () => {
+    return (
+      <>
+        <View style={{ marginBottom: 20 }}>
+          <Image
+            source={bannerSRC}
+            style={{
+              width: "auto",
+              height: 120,
+              resizeMode: "cover",
+            }}
+          />
+        </View>
+        <View
+          style={{
+            paddingBottom: 3,
+            flexDirection: "row",
+            justifyContent: "space-between",
+            paddingLeft: 10,
+            paddingRight: 10,
+            alignItems: "center",
+            backgroundColor: "white",
+          }}
+        >
+          <Text style={{ fontSize: 14, fontWeight: 700 }}>
+            ÖNE ÇIKAN İŞ YERLERİ
+          </Text>
+
+          <TouchableOpacity style={styles.allBtn}>
+            <Text
+              style={{
+                color: "white",
+                fontSize: 11,
+                fontWeight: "bold",
+              }}
+              onPress={() =>
+                navigation.navigate("AllRealtorAdverts", {
+                  name: "Emlak İlanları",
+                  slug: "emlak-ilanlari",
+                  data: data,
+                  count: data.length,
+                  type: "is-yeri",
+                  optional: null,
+                  title: null,
+                  check: null,
+                  city: null,
+                  county: null,
+                  hood: null,
+                })
+              }
+            >
+              Tüm İlanları Gör
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </>
+    )
+  };
+  const renderItem = useMemo(() => ({ item }) => {
+    // Parse the housing_type_data only once
+    const housingTypeData = JSON.parse(item.housing_type_data);
+
+    // Get the column name safely
+    const getColumnName = (columnNameKey) => {
+      return housingTypeData[columnNameKey] || "";
+    };
+
+    return (
+      <RealtorPost
+        openSharing={housingTypeData["open_sharing1"]}
+        HouseId={item.id}
+        price={`${housingTypeData["price"]} `}
+        housing={item}
+        title={item.housing_title}
+        loading={loading}
+        location={`${item.city_title} / ${item.county_title}`}
+        image={`${frontEndUriBase}housing_images/${housingTypeData?.image}`}
+        column1_additional={item.column1_additional}
+        column1_name={getColumnName(item.column1_name)}
+        column2_name={getColumnName(item.column2_name)}
+        column2_additional={item.column2_additional}
+        column3_name={getColumnName(item.column3_name)}
+        column3_additional={item.column3_additional}
+        column4_name={getColumnName(item.column4_name)}
+        column4_additional={item.column4_additional}
+        bookmarkStatus={true}
+        dailyRent={false}
+        isFavorite={item.is_favorite}
+        sold={item.sold}
+      />
+    );
+  }, [hooksLoading, loadMore]);
+
   return (
     <>
+      {error && (
+        <>
+          <Text style={styles.errorText}>Bir şeyler ters gitti: {error}</Text>
+        </>
+      )}
+
       {loading ? (
         <View
           style={{ alignItems: "center", justifyContent: "center", flex: 1 }}
@@ -110,25 +160,9 @@ const Shop = ({ index }) => {
           <ActivityIndicator size={"large"} color="#333" />
         </View>
       ) : (
-        <>
-          {refreshing && (
-            <View
-              style={{
-                padding: 12,
-                backgroundColor: "white",
-                fontWeight: "bold",
-                alignItems: "center",
-              }}
-            >
-              <ActivityIndicator
-                animating={true}
-                size="small"
-                color="#000000"
-              />
-            </View>
-          )}
+        <View style={styles.container}>
           <AlertNotificationRoot>
-            {filteredHomes.length == 0 ? (
+            {loading && data && data.length === 0 ? (
               <View style={{ width: "100%", paddingTop: 10 }}>
                 <Text
                   style={{
@@ -137,127 +171,28 @@ const Shop = ({ index }) => {
                     fontWeight: "700",
                   }}
                 >
-                  Konut İlanı Bulunamadı
+                  İş Yeri İlanı Bulunamadı
                 </Text>
               </View>
             ) : (
               <FlatList
-                data={filteredHomes}
-                renderItem={({ item }) => (
-                  <RealtorPost
-                    openSharing={
-                      JSON.parse(item.housing_type_data)["open_sharing1"]
-                    }
-                    HouseId={item.id}
-                    price={`${JSON.parse(item.housing_type_data)["price"]} `}
-                    housing={item}
-                    title={item.housing_title}
-                    loading={loading}
-                    location={item.city_title + " / " + item.county_title}
-                    image={`${frontEndUriBase}housing_images/${
-                      JSON.parse(item.housing_type_data).image
-                    }`}
-                    column1_additional={item.column1_additional}
-                    column1_name={
-                      JSON.parse(item.housing_type_data)[item.column1_name]
-                        ? JSON.parse(item.housing_type_data)[item.column1_name]
-                        : ""
-                    }
-                    column2_name={
-                      JSON.parse(item.housing_type_data)[item.column2_name]
-                        ? JSON.parse(item.housing_type_data)[item.column2_name]
-                        : ""
-                    }
-                    column2_additional={item.column2_additional}
-                    column3_name={
-                      JSON.parse(item.housing_type_data)[item.column3_name]
-                        ? JSON.parse(item.housing_type_data)[item.column3_name]
-                        : ""
-                    }
-                    column3_additional={item.column3_additional}
-                    column4_name={
-                      JSON.parse(item.housing_type_data)[item.column4_name]
-                        ? JSON.parse(item.housing_type_data)[item.column4_name]
-                        : ""
-                    }
-                    column4_additional={item.column4_additional}
-                    bookmarkStatus={true}
-                    dailyRent={false}
-                    isFavorite={item.is_favorite}
-                    sold={item.sold}
-                  />
-                )}
-                keyExtractor={(item, index) =>
-                  item.id ? item.id.toString() : index.toString()
-                }
-                onEndReachedThreshold={0.1}
+                data={data}
+                keyExtractor={(item, index) => index.toString()}
+                onEndReached={() => loadMore()}
+                initialNumToRender={10}
+                maxToRenderPerBatch={10}
+                windowSize={24}
+                onEndReachedThreshold={0.3}
                 refreshControl={
-                  <RefreshControl
-                    refreshing={refreshing}
-                    onRefresh={onRefresh}
-                  />
+                  <RefreshControl refreshing={loading} onRefresh={onRefresh} />
                 }
-                ListHeaderComponent={
-                  <>
-                    <View style={{ marginBottom: 20 }}>
-                      <Image
-                        source={bannerSRC}
-                        style={{
-                          width: "auto",
-                          height: 120,
-                          resizeMode: "cover",
-                        }}
-                      />
-                    </View>
-                    <View
-                      style={{
-                        paddingBottom: 3,
-                        flexDirection: "row",
-                        justifyContent: "space-between",
-                        paddingLeft: 10,
-                        paddingRight: 10,
-                        alignItems: "center",
-                        backgroundColor: "white",
-                      }}
-                    >
-                      <Text style={{ fontSize: 14, fontWeight: 700 }}>
-                        ÖNE ÇIKAN İŞ YERLERİ
-                      </Text>
-
-                      <TouchableOpacity style={styles.allBtn}>
-                        <Text
-                          style={{
-                            color: "white",
-                            fontSize: 11,
-                            fontWeight: "bold",
-                          }}
-                          onPress={() =>
-                            navigation.navigate("AllRealtorAdverts", {
-                              name: "Emlak İlanları",
-                              slug: "emlak-ilanlari",
-                              data: filteredHomes,
-                              count: filteredHomes.length,
-                              type: "is-yeri",
-                              optional: null,
-                              title: null,
-                              check: null,
-                              city: null,
-                              county: null,
-                              hood: null,
-                            })
-                          }
-                        >
-                          Tüm İlanları Gör
-                        </Text>
-                      </TouchableOpacity>
-                    </View>
-                  </>
-                }
+                renderItem={renderItem}
+                ListHeaderComponent={renderHeader}
                 ListFooterComponent={renderFooter}
               />
             )}
           </AlertNotificationRoot>
-        </>
+        </View>
       )}
     </>
   );

@@ -103,7 +103,9 @@
     "react-slugify": "^4.0.1",
     "rn-fetch-blob": "^0.12.0",
     "slugify": "^1.6.6",
-    "expo-device": "~6.0.2"
+    "expo-device": "~6.0.2",
+    "expo-print": "~13.0.1",
+    "react-native-view-shot": "3.8.0"
   },
   "devDependencies": {
     "@babel/core": "^7.24.0",
