@@ -177,7 +177,7 @@ export default function RealtorPostFavorited({
     try {
       if (user?.access_token) {
         const response = await axios.post(
-          "https://private.emlaksepette.com/api/institutional/add_to_cart",
+          apiUrl + "institutional/add_to_cart",
           formData,
           {
             headers: {
@@ -215,7 +215,7 @@ export default function RealtorPostFavorited({
     try {
       if (user?.access_token) {
         const response = await axios.post(
-          "https://private.emlaksepette.com/api/institutional/add_to_cart",
+          apiUrl + "institutional/add_to_cart",
           formData,
           {
             headers: {
