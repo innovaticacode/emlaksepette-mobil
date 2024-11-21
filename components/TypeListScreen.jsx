@@ -9,6 +9,7 @@ import {
   StyleSheet,
   Button,
 } from "react-native";
+import { frontEndUriBase } from "./methods/apiRequest";
 
 function TypeListScreen({
   step,
@@ -19,14 +20,13 @@ function TypeListScreen({
   selectedTypes,
   nextStep,
 }) {
-  const baseUrl = "https://private.emlaksepette.com/react/";
 
   const [loadingOrder, setLoadingOrder] = useState(null);
   const [loadingOrderStatusId, setLoadingOrderStatusId] = useState(null);
 
   useEffect(() => {
     if (step === 1) {
-      axios.get(baseUrl + "housing_types").then((res) => {
+      axios.get(frontEndUriBase + "react/housing_types").then((res) => {
         console.log("Fetched housing types for step 1:", res.data.data);
         setHousingTypes([res.data.data]);
       });
@@ -50,9 +50,9 @@ function TypeListScreen({
     axios
       .get(
         baseUrl +
-          (order === 1 ? "housing_types_end" : "housing_types") +
-          "?parent_id=" +
-          housingTypeId
+        (order === 1 ? "housing_types_end" : "housing_types") +
+        "?parent_id=" +
+        housingTypeId
       )
       .then((res) => {
         const tempHousingTypes = [];

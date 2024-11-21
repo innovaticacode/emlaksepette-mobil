@@ -29,6 +29,7 @@ import Icon3 from "react-native-vector-icons/AntDesign";
 import enler from "../../../components/images/enler.png";
 import cerceve from "../../../components/images/cerceve.png";
 import { addDotEveryThreeDigits } from "../../../components/methods/merhod";
+import { apiUrl, frontEndUriBase } from "../../../components/methods/apiRequest";
 
 const ItemContainer = ({ text, style, dataText, TextHeader }) => {
   return (
@@ -79,7 +80,7 @@ export default function Panel({ options, onSelect }) {
       try {
         if (user.access_token) {
           const response = await axios.get(
-            `https://private.emlaksepette.com/api/profile/info/mobile/dashboard`,
+            apiUrl + "profile/info/mobile/dashboard",
             {
               headers: {
                 Authorization: `Bearer ${user?.access_token}`,
@@ -96,7 +97,6 @@ export default function Panel({ options, onSelect }) {
     fetchData();
   }, [user]);
 
-  const PhotoUrl = "https://private.emlaksepette.com/storage/profile_images/";
 
   const [isLoading, setIsLoading] = useState(true);
 
@@ -119,7 +119,7 @@ export default function Panel({ options, onSelect }) {
         }
 
         const response = await axios.get(
-          "https://private.emlaksepette.com/api/user/notification",
+          apiUrl + "user/notification",
           {
             headers: {
               Authorization: `Bearer ${user.access_token}`,
@@ -287,7 +287,7 @@ export default function Panel({ options, onSelect }) {
                     <View style={{ width: 65, height: 65, borderRadius: 50, backgroundColor: 'yellow', borderWidth: 2, borderColor: 'white' }}>
                       <ImageBackground
                         source={{
-                          uri: `https://private.emlaksepette.com/storage/profile_images/${panelInfo?.user?.profile_image}`,
+                          uri: frontEndUriBase + `storage/profile_images/${panelInfo?.user?.profile_image}`,
                         }}
                         style={{ width: '100%', height: '100%' }}
                         borderRadius={50}
