@@ -1101,7 +1101,7 @@ navigation.navigate('PostDetails',{HomeId:roomOrder,projectId : data.project.id}
           </View>
         </View>
       )}
-      <PaymentPlanModal visible={paymentModalVisible} title={data?.project?.project_title} onClose={onClose} data={roomData} RoomOrder={roomOrder} />
+      <PaymentPlanModal visible={paymentModalVisible} title={data?.project?.project_title} onClose={onClose} data={roomData} RoomOrder={roomOrder} deposit_rate={data?.project?.deposit_rate} addToCard={AddCartModal} />
     </View>
   );
 }
