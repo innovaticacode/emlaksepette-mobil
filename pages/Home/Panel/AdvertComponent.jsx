@@ -28,7 +28,7 @@ export default function AdvertComponent({title,ımage,ID,price,item}) {
                       
                   
                     <View>
-                        <Text style={{fontWeight:'600'}}>{addDotEveryThreeDigits(price)} ₺</Text>
+                        <Text style={{fontWeight:'600',textAlign:'right'}}>{addDotEveryThreeDigits(price)} ₺</Text>
                     </View>
                     </View>
                    

@@ -96,7 +96,7 @@ export default function Panel({ options, onSelect }) {
     fetchData();
   }, [user]);
 
-  const PhotoUrl = "https://private.emlaksepette.com/storage/profile_images/";
+
 
   const [isLoading, setIsLoading] = useState(true);
 
