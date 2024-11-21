@@ -19,9 +19,7 @@ import { UsePaginatedData } from "../../../hooks";
 
 const Prefabrik = ({ index }) => {
   const navigation = useNavigation();
-
   const [loading, setLoading] = useState(false);
-  const [refreshing, setRefreshing] = useState(false);
 
   const apiData = [{ key: "step1_slug", value: "prefabrik-yapilar" }];
   const { data, hooksLoading, error, loadMore, setSkip } = UsePaginatedData("real-estates", 10, apiData);
@@ -37,9 +35,9 @@ const Prefabrik = ({ index }) => {
   );
 
   const onRefresh = async () => {
-    setRefreshing(true);
+    setLoading(true);
     await setSkip(0);
-    setRefreshing(false);
+    setLoading(false);
   };
 
   const renderFooter = () => {
@@ -129,13 +127,12 @@ const Prefabrik = ({ index }) => {
   };
   return (
     <>
-      {
-        error && (
-          <>
-            <Text style={styles.errorText}>Bir şeyler ters gitti:{error}</Text>
-          </>
-        )
-      }
+      {error && (
+        <>
+          <Text style={styles.errorText}>Bir şeyler ters gitti: {error}</Text>
+        </>
+      )}
+
       {loading ? (
         <View
           style={{ alignItems: "center", justifyContent: "center", flex: 1 }}
@@ -143,21 +140,9 @@ const Prefabrik = ({ index }) => {
           <ActivityIndicator size={"large"} color="#333" />
         </View>
       ) : (
-        <>
-          {refreshing && (
-            <View
-              style={{
-                padding: 10,
-                backgroundColor: "white",
-                alignItems: "center",
-              }}
-            >
-              <ActivityIndicator animating={true} size="small" color="#333" />
-            </View>
-          )}
-
+        <View style={styles.container}>
           <AlertNotificationRoot>
-            {data.length == 0 ? (
+            {loading && data && data.length === 0 ? (
               <View style={{ width: "100%", paddingTop: 10 }}>
                 <Text
                   style={{
@@ -166,26 +151,28 @@ const Prefabrik = ({ index }) => {
                     fontWeight: "700",
                   }}
                 >
-                  Konut İlanı Bulunamadı
+                  Prefabrik İlanı Bulunamadı
                 </Text>
               </View>
             ) : (
               <FlatList
                 data={data}
                 keyExtractor={(item, index) => index.toString()}
-                onEndReached={() => { loadMore() }}
+                onEndReached={() => loadMore()}
                 initialNumToRender={10}
                 maxToRenderPerBatch={10}
                 windowSize={24}
                 onEndReachedThreshold={0.3}
-                refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+                refreshControl={
+                  <RefreshControl refreshing={loading} onRefresh={onRefresh} />
+                }
                 renderItem={renderItem}
                 ListHeaderComponent={renderHeader}
                 ListFooterComponent={renderFooter}
               />
             )}
           </AlertNotificationRoot>
-        </>
+        </View>
       )}
     </>
   );

@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useMemo } from "react";
+import React, { useState, useCallback, useMemo, useEffect } from "react";
 import {
   View,
   Text,
@@ -18,7 +18,6 @@ import { UsePaginatedData } from "../../../hooks";
 
 const Estates = ({ index }) => {
   const navigation = useNavigation();
-  const [refreshing, setRefreshing] = useState(false);
   const [loading, setLoading] = useState(false);
   const apiData = [{ key: "step1_slug", value: "konut" }];
 
@@ -35,13 +34,10 @@ const Estates = ({ index }) => {
     }, [index])
   );
 
-
-
-
   const onRefresh = async () => {
-    setRefreshing(true);
+    setLoading(true);
     await setSkip(0);
-    setRefreshing(false);
+    setLoading(false);
   };
 
   const renderFooter = () => {
@@ -136,13 +132,12 @@ const Estates = ({ index }) => {
 
   return (
     <>
-      {
-        error && (
-          <>
-            <Text style={styles.errorText}>Bir şeyler ters gitti:{error}</Text>
-          </>
-        )
-      }
+      {error && (
+        <>
+          <Text style={styles.errorText}>Bir şeyler ters gitti: {error}</Text>
+        </>
+      )}
+
       {loading ? (
         <View
           style={{ alignItems: "center", justifyContent: "center", flex: 1 }}
@@ -151,24 +146,8 @@ const Estates = ({ index }) => {
         </View>
       ) : (
         <View style={styles.container}>
-          {refreshing && (
-            <View
-              style={{
-                padding: 10,
-                backgroundColor: "white",
-                alignItems: "center",
-              }}
-            >
-              <ActivityIndicator
-                animating={true}
-                size="small"
-                color="#000000"
-              />
-            </View>
-          )}
-
           <AlertNotificationRoot>
-            {data.length == 0 ? (
+            {loading && data && data.length === 0 ? (
               <View style={{ width: "100%", paddingTop: 10 }}>
                 <Text
                   style={{
@@ -183,23 +162,25 @@ const Estates = ({ index }) => {
             ) : (
               <FlatList
                 data={data}
-                keyExtractor={(item, index) => index.toString()}  // İndeks ile key
-                onEndReached={() => { loadMore() }}
+                keyExtractor={(item, index) => index.toString()}
+                onEndReached={() => loadMore()}
                 initialNumToRender={10}
                 maxToRenderPerBatch={10}
                 windowSize={24}
                 onEndReachedThreshold={0.3}
-                refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+                refreshControl={
+                  <RefreshControl refreshing={loading} onRefresh={onRefresh} />
+                }
                 renderItem={renderItem}
                 ListHeaderComponent={renderHeader}
                 ListFooterComponent={renderFooter}
-
               />
             )}
           </AlertNotificationRoot>
         </View>
       )}
     </>
+
   );
 };
 
