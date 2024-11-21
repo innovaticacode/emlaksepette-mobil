@@ -126,6 +126,7 @@ import EditPending from "./pages/Home/EditProject/EditPending";
 import ShareScreen from "./pages/Home/ShareScreen";
 import PointOfSaleTracking from "./pages/Home/PointOfSale/PointOfSaleTracking/PointOfSaleTracking";
 import MapFilterProject from "./components/Filter/MapViewFilter/MapFilterProject";
+import RealEstateLeague from "./pages/RealEstateLeague/RealEstateLeague";
 
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator(); // Drawer navigator
@@ -1443,7 +1444,7 @@ const StackScreenNavigator = () => {
                   component={PointOfSaleTracking}
                   options={({ route }) => ({
                     title: "Satış Noktası Takibi",
-                    headerBackTitleVisible:false,
+                    headerBackTitleVisible: false,
                     headerStyle: {
                       backgroundColor: "#ffffff",
                     },
@@ -1455,6 +1456,17 @@ const StackScreenNavigator = () => {
                   component={MapFilterProject}
                   options={({ route }) => ({
                     title: "Harita Görünümü (Projeler)",
+                    headerBackTitleVisible: false,
+                    headerStyle: {
+                      backgroundColor: "#ffffff",
+                    },
+                  })}
+                />
+                <Stack.Screen
+                  name="RealEstateLeague"
+                  component={RealEstateLeague}
+                  options={({ route }) => ({
+                    title: "Gayrimenkul Ligi",
                     headerBackTitleVisible: false,
                     headerStyle: {
                       backgroundColor: "#ffffff",

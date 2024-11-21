@@ -42,7 +42,7 @@ export default function SliderBarForFeature() {
       text: "Gayrimenkul Ligi",
       image: `${frontEndUriBase}privilege/privilege3.png`,
       color: "white",
-      url: "SellAndRent",
+      url: "RealEstateLeague",
       isShow: "All",
       navigationStatus: true,
 
@@ -64,8 +64,8 @@ export default function SliderBarForFeature() {
       isShow: "All",
       navigationStatus: true,
     },
-   
-  
+
+
   ];
   const [user, setuser] = useState({});
   useEffect(() => {
