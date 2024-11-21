@@ -47,7 +47,7 @@ export default function SettingsItem({
             fontWeight: 500,
           }}
         >
-          {icon && icon} {numbers}
+          {icon && icon} {numbers ??numbers }
         </Text>
       </View>
     </View>

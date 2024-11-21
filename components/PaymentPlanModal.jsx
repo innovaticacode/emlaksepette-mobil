@@ -183,9 +183,12 @@ export default function PaymentPlanModal({
                               ) &&
                               JSON.parse(
                                 data["payment-plan[]"]
-                              ).includes("taksitli") &&(
+                              ).includes("taksitli") && (
                                 <>
-                                <SettingsItem
+                               
+                                {
+                                   data["installments-price[]"] &&
+                                       <SettingsItem
                                  border={'0'}
                                 info={
                                   data["installments[]"] +
@@ -208,6 +211,9 @@ export default function PaymentPlanModal({
                                       ) + " ₺"
                                 }
                               />
+                                }
+                            
+
                                <SettingsItem
                                 
                                     info="Peşinat"
@@ -227,42 +233,46 @@ export default function PaymentPlanModal({
                                           ) + " ₺"
                                     }
                                   />
-                                   <SettingsItem 
-                                  border={'0'}
-                                    info="Aylık Ödenecek Tutar"
-                                    numbers={
-                                      data["share_sale[]"] != "[]" &&
-                                      data["number_of_shares[]"]
-                                        ? addDotEveryThreeDigits(
-                                            (data["installments-price[]"] /
-                                              data["number_of_shares[]"] -
-                                              (parseInt(
-                                                data["advance[]"]
-                                              ) /
-                                                parseInt(
-                                                  data["number_of_shares[]"]
-                                                ) +
-                                                parseInt(totalPrice))) /
-                                              parseInt(
-                                                data["installments[]"]
-                                              )
-                                          ) + " ₺"
-                                        : addDotEveryThreeDigits(
-                                            (
-                                              (parseInt(
-                                                data["installments-price[]"]
-                                              ) -
-                                                (parseInt(
-                                                  data["advance[]"]
-                                                ) +
-                                                  parseInt(totalPrice))) /
-                                              parseInt(
-                                                data["installments[]"]
-                                              )
-                                            ).toFixed(0)
-                                          ) + " ₺"
-                                    }
-                                  />
+                                  {
+                                          data["installments-price[]"] && 
+                                          <SettingsItem 
+                                          border={'0'}
+                                            info="Aylık Ödenecek Tutar"
+                                            numbers={
+                                              data["share_sale[]"] != "[]" &&
+                                              data["number_of_shares[]"]
+                                                ? addDotEveryThreeDigits(
+                                                    (data["installments-price[]"] /
+                                                      data["number_of_shares[]"] -
+                                                      (parseInt(
+                                                        data["advance[]"]
+                                                      ) /
+                                                        parseInt(
+                                                          data["number_of_shares[]"]
+                                                        ) +
+                                                        parseInt(totalPrice))) /
+                                                      parseInt(
+                                                        data["installments[]"]
+                                                      )
+                                                  ) + " ₺"
+                                                : addDotEveryThreeDigits(
+                                                    (
+                                                      (parseInt(
+                                                        data["installments-price[]"]
+                                                      ) -
+                                                        (parseInt(
+                                                          data["advance[]"]
+                                                        ) +
+                                                          parseInt(totalPrice))) /
+                                                      parseInt(
+                                                        data["installments[]"]
+                                                      )
+                                                    ).toFixed(0)
+                                                  ) + " ₺"
+                                            }
+                                          />
+                                  }
+                              
                                   <SettingsItem info={'Taksit Başlangıç Tarihi'} numbers={'30 Ekim 2024'}/>
                                   <View style={styles.headerGrey}>
                                         <Text style={{ color: "#212529", fontSize: 13, fontWeight: "700",textAlign:'center'}}>Ara Ödemeler</Text>
@@ -310,7 +320,7 @@ export default function PaymentPlanModal({
                        </View>
                        <View>
                         <Text style={{color:'#EA2B2E',fontSize:14,fontWeight:'600',textAlign:'center'}}>
-                        ‘‘ Şimdi Alın veya Kiralayın, kaporanız emlaksepette.com’da güvence altında!’’
+                        ‘‘Şimdi Alın veya Kiralayın, kaporanız emlaksepette.com’da güvence altında!’’
                         </Text>
                        </View>
           </ScrollView>
