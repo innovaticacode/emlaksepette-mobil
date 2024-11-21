@@ -163,7 +163,7 @@ export default function UploadAdsPicture() {
 
             <View>
               {
-                StoreBanners.length !== 4 &&
+                StoreBanners.length <= 4 &&
                 <View style={{ gap: 10 }}>
                   <TouchableOpacity
 
@@ -204,9 +204,9 @@ export default function UploadAdsPicture() {
                           </View>
                         </View>
                       )
-                      : <View style={{ alignItems: 'center', justifyContent: 'center', flex: 1 }}>
+                      : <View style={{ alignItems: 'center', justifyContent: 'center', flex: 1 ,paddingLeft:10,paddingRight:10,gap:10}}>
                         <Text style={{ color: '#EA2B2E', fontWeight: '600', fontSize: 16 }}>Maximum Mağaza Görseli Sayısına Ulaştınız</Text>
-
+                        <Text style={{ color: '#EA2B2E', fontWeight: '600', fontSize: 13,textAlign:'center' }}>En fazla 4 adet banner ekleyebilirsiniz ekleyebilmek için görseli silnizi</Text>
                       </View>
                     }
                   </TouchableOpacity>
