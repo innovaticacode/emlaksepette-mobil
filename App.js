@@ -124,6 +124,7 @@ import EditPending from "./pages/Home/EditProject/EditPending";
 import ShareScreen from "./pages/Home/ShareScreen";
 import PointOfSaleTracking from "./pages/Home/PointOfSale/PointOfSaleTracking/PointOfSaleTracking";
 import MapFilterProject from "./components/Filter/MapViewFilter/MapFilterProject";
+import RealEstateLeague from "./pages/RealEstateLeague/RealEstateLeague";
 import TeamFilter from "./pages/Home/ProfilePageItem/TeamFilter/TeamFilter";
 import FranchisePersonDetail from "./pages/Home/FranchisePerson/FranchisePersonDetail/FranchisePersonDetail";
 import * as Linking from "expo-linking";
@@ -1465,6 +1466,17 @@ const StackScreenNavigator = () => {
                   component={MapFilterProject}
                   options={({ route }) => ({
                     title: "Harita Görünümü (Projeler)",
+                    headerBackTitleVisible: false,
+                    headerStyle: {
+                      backgroundColor: "#ffffff",
+                    },
+                  })}
+                />
+                <Stack.Screen
+                  name="RealEstateLeague"
+                  component={RealEstateLeague}
+                  options={({ route }) => ({
+                    title: "Gayrimenkul Ligi",
                     headerBackTitleVisible: false,
                     headerStyle: {
                       backgroundColor: "#ffffff",
