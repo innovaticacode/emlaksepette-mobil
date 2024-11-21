@@ -75,7 +75,7 @@ export default function UpdateProfile() {
             <SettingItem text={"Kişisel Bilgilerim"} tab={0} />
             <SettingItem text={'E-Posta Bilgileri'} tab={1}/>
             <SettingItem text={"Cep Telefonu"} tab={2} />
-            <SettingItem text={"Şifre Değişikliği"} tab={3} />
+            <SettingItem text={"Şifre Değişikliği"} tab={3} navigate={'ChangePas'}/>
           </View>
         </View>
  

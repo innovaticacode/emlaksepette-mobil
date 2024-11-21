@@ -40,7 +40,7 @@ import ImageView from "react-native-image-viewing";
 import { apiRequestPostWithBearer, apiUrl, frontEndUriBase } from "../../../components/methods/apiRequest";
 import { formatPhoneNumber, formatPhoneNumberNew } from "../../../utils/FormatPhoneNumber";
 import { areaData } from "../../helper";
-
+import ImageViewing from "react-native-image-viewing";
 export default function UpgradeProfile() {
   const route = useRoute();
   const { name, tab } = route.params;
@@ -300,7 +300,7 @@ export default function UpgradeProfile() {
       try {
         if (user.access_token) {
           const userInfo = await axios.get(
-            `https://private.emlaksepette.com/api/users/${user.id}`,
+            `${apiUrl}users/${user.id}`,
             {
               headers: {
                 Authorization: `Bearer ${user.access_token}`,
@@ -441,10 +441,10 @@ useEffect(() => {
   //     </View>
   //   );
   // }
-
+const [loadingUpdate, setloadingUpdate] = useState(false)
   const postData = async (param) => {
    
-  
+  setloadingUpdate(true)
     var data = new FormData()
     // Forms'u döngü ile dolaşıyoruz
     Forms.map((item) => {
@@ -511,14 +511,23 @@ if (tab==0) {
         }
       );
       console.log('Response:', response.data);
-      
-        GetUserInfo()
+
+      Dialog.show({
+        type: ALERT_TYPE.SUCCESS,
+        title: "Başarılı",
+        textBody: "Profiliniz başarıyla güncellendi.",
+        button: "Tamam",
+        onHide:()=>{
+          GetUserInfo()
+        }
+      });
+       
     
   
     }catch{
       alert('hata')
     }finally{
-     
+      setloadingUpdate(false)
     }
   
 
@@ -601,12 +610,7 @@ if (tab==0) {
     //     }
     //   );
 
-    //   Dialog.show({
-    //     type: ALERT_TYPE.SUCCESS,
-    //     title: "Başarılı",
-    //     textBody: "Profiliniz başarıyla güncellendi.",
-    //     button: "Tamam",
-    //   });
+     
 
     //   GetUserInfo();
     // } catch (error) {
@@ -624,6 +628,7 @@ if (tab==0) {
   };
 
 console.log(namFromGetUser?.profile_image)
+const [isVisible, setIsVisible] = useState(false);
   return (
     
     <KeyboardAvoidingView
@@ -644,6 +649,18 @@ console.log(namFromGetUser?.profile_image)
             showsVerticalScrollIndicator={false}
             contentContainerStyle={{ paddingBottom: 40, gap: 20 }}
           >
+             <ImageViewing
+             images={[
+              {
+              uri:  `${frontEndUriBase}storage/profile_images/${namFromGetUser.profile_image}`
+              }
+
+            ]}
+              
+              imageIndex={0}
+              visible={isVisible}
+              onRequestClose={() => setIsVisible(false)}
+            />
             <View
               style={{
                 width: "100%",
@@ -685,7 +702,10 @@ console.log(namFromGetUser?.profile_image)
                 <View style={{ width: 96, height: 96 }}>
                   <View style={{ borderRadius: 50 }}>
                     {user.access_token ? (
-                      <Image
+                      <TouchableOpacity onPress={()=>{
+                        setIsVisible(true)
+                      }}>
+                           <Image
                         source={
                         
                           image
@@ -695,6 +715,8 @@ console.log(namFromGetUser?.profile_image)
                         style={{ width: "100%", height: "100%" }}
                         borderRadius={50}
                       />
+                      </TouchableOpacity>
+                   
                     ) : (
                       <Icon2 name="user" size={65} color="#333" padding={10} />
                     )}
@@ -1150,9 +1172,14 @@ console.log(namFromGetUser?.profile_image)
                   width: "90%",
                   padding: 10,
                   borderRadius: 10,
+                  alignItems:'center',
+                  justifyContent:'center'
                 }}
               >
-                <Text
+                {
+                  loadingUpdate ?
+                  <ActivityIndicator color="white"/>:
+                  <Text
                   style={{
                     textAlign: "center",
                     color: "#fff",
@@ -1161,6 +1188,8 @@ console.log(namFromGetUser?.profile_image)
                 >
                   Güncelle
                 </Text>
+                }
+             
               </TouchableOpacity>
             </View>
             <Modal
