@@ -316,24 +316,16 @@ const FirstHome = (props) => {
 
             {/* Popular Construction Brands */}
 
-
-            {/* Featured Projects */}
-            <View style={styles.featuredProjectsContainer}>
-              <View style={styles.slide1}>
-                <View style={{ gap: 0, paddingTop: 0 }}>
-                  {loadingProjects == true ? (
-                    <View>
-                      <ActivityIndicator size="small" color="#333" />
-                    </View>
-                  ) : (
-                    <>
-                      <View style={styles.sliderBarContainer}>
+           
+              <View style={styles.sliderBarContainer}>
                         <Text style={styles.sliderBarTitle}>
                           Emlak Sepette Ayrıcalıkları
                         </Text>
                         <SliderBarForFeature loading={loadingProjects} />
                       </View>
-                      <ScrollView
+              
+            {/* Featured Projects */}
+            <ScrollView
                         horizontal={true}
                         contentContainerStyle={{ gap: 10 }}
                         showsHorizontalScrollIndicator={false}
@@ -371,14 +363,30 @@ const FirstHome = (props) => {
                         />
 
                       </ScrollView>
-
+                      <View style={styles.sliderBarContainer}>
+                              <Text style={styles.sliderBarTitle}>
+                                Öne Çıkan İnşaat Markaları
+                              </Text>
+                              <SliderBar loading={loadingProjects} />
+                            </View>
+            <View style={styles.featuredProjectsContainer}>
+              <View style={styles.slide1}>
+                <View style={{ gap: 0, paddingTop: 0 }}>
+                  {loadingProjects == true ? (
+                    <View>
+                      <ActivityIndicator size="small" color="#333" />
+                    </View>
+                  ) : (
+                    <>
+                     
+                    
 
                       <FlatList
                         data={featuredProjects}
                         renderItem={({ item, index }) => (
                           <View
                             style={{
-                              marginTop: 7,
+                         
                               width: "100%",
                             }}
                           >
@@ -404,12 +412,7 @@ const FirstHome = (props) => {
                         )}
                         ListHeaderComponent={
                           <View style={{ gap: 9 }}>
-                            <View style={styles.sliderBarContainer}>
-                              <Text style={styles.sliderBarTitle}>
-                                Öne Çıkan İnşaat Markaları
-                              </Text>
-                              <SliderBar loading={loadingProjects} />
-                            </View>
+                         
                             <View style={styles.featuredProjectsHeader}>
                               <Text style={styles.featuredProjectsTitle}>
                                 Öne Çıkan Projeler
@@ -438,6 +441,7 @@ const FirstHome = (props) => {
                 </View>
               </View>
             </View>
+
             <View
               style={{
                 width: "100%",
@@ -477,8 +481,8 @@ const FirstHome = (props) => {
               </View>
             </View>
             {/* bottom area */}
-            <View style={{ paddingTop: 9, paddingBottom: 9 }}>
-              <View style={styles.featuredProjectsHeader}>
+            <View>
+            <View style={styles.featuredProjectsHeader}>
                 <Text style={styles.featuredProjectsTitle}>
                   Öne Çıkan Gayrimenkul Ofisleri
                 </Text>
@@ -495,9 +499,9 @@ const FirstHome = (props) => {
 
                 <SliderTourismRent data={featuredStores} />
               </View>
+            </View>
 
-              <>
-                <ScrollView
+            <ScrollView
                   horizontal={true}
                   contentContainerStyle={{ gap: 10, paddingTop: 5, paddingBottom: 5 }}
                   showsHorizontalScrollIndicator={false}
@@ -519,10 +523,15 @@ const FirstHome = (props) => {
                   <ProjectButton color="#06065d" text="Emlak Ofisinden" onPress={() => navigateToRealtorAdverts(null, null, 'emlak-ilanlari', null, null)} />
 
                 </ScrollView>
-              </>
+          
+             
+
+          
+         
+         
+            <View style={styles.seperator} />
 
               <React.Fragment>
-                <View style={styles.seperator} />
                 <View>
                   <View style={styles.featuredProjectsHeader}>
                     <Text style={styles.featuredProjectsTitle}>
@@ -602,8 +611,9 @@ const FirstHome = (props) => {
 
                   />
                 </View>
-
               </React.Fragment>
+
+
               <React.Fragment>
                 <View style={styles.seperator} />
                 <View>
@@ -687,6 +697,7 @@ const FirstHome = (props) => {
                 </View>
 
               </React.Fragment>
+
               <React.Fragment>
                 <View style={styles.seperator} />
                 <View>
@@ -770,8 +781,8 @@ const FirstHome = (props) => {
                 </View>
 
               </React.Fragment>
-            </View>
-            <View style={{ paddingTop: 9, paddingBottom: 9 }}>
+           
+            <View>
               <View style={styles.featuredProjectsHeader}>
                 <Text style={styles.featuredProjectsTitle}>
                   Turizm Amaçlı Kiralama Markaları
@@ -788,6 +799,7 @@ const FirstHome = (props) => {
                 <SliderTourismRent data={tourismRent} />
               </>
             </View>
+
             <ScrollView
               horizontal={true}
               contentContainerStyle={{ gap: 10 }}
@@ -828,6 +840,7 @@ const FirstHome = (props) => {
 
 
             </ScrollView>
+
             <View
               style={{
                 width: "100%",
@@ -836,9 +849,8 @@ const FirstHome = (props) => {
                 marginVertical: 6,
               }}
             />
-            <View>
-              <React.Fragment>
-                <View style={styles.featuredProjectsHeader}>
+
+<View style={styles.featuredProjectsHeader}>
                   <Text style={styles.featuredProjectsTitle}>
                     Günlük Kiralık İlanlar
                   </Text>
@@ -864,6 +876,10 @@ const FirstHome = (props) => {
                   </TouchableOpacity>
                   <Arrow name="arrow-right" color={'#EA2C2E'} />
                 </View>
+
+            <View>
+              <React.Fragment>
+              
 
                 <FlatList
                   data={dailyRental}
@@ -928,21 +944,15 @@ const FirstHome = (props) => {
 
                 <View style={styles.seperator} />
               </React.Fragment>
-              {/* <View
-                style={{
-                  width: "100%",
-                  height: "auto",
-                  paddingBottom: 20,
-                }}
-              >
-                <WhatIsEmlakSepette />
-              </View> */}
+            
             </View>
+
             <View>
               <View style={{ width: '100%', height: 90 }}>
                 <ImageBackground source={{ uri: 'https://private.emlaksepette.com/bungalowhp.png' }} style={{ width: '100%', height: '100%' }} resizeMode='cover' />
               </View>
             </View>
+
             <View style={[styles.featuredProjectsHeader, { paddingTop: 9 }]}>
               <Text style={styles.featuredProjectsTitle}>
                 Öne Çıkan Üretici Markaları
@@ -960,6 +970,7 @@ const FirstHome = (props) => {
 
               <SliderTourismRent data={creatorBrands} />
             </View>
+
             <View>
               <View style={styles.featuredProjectsHeader}>
                 <Text style={styles.featuredProjectsTitle}>
@@ -1052,11 +1063,13 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "white",
+    
   },
   scrollViewContent: {
     paddingHorizontal: 10,
     paddingBottom: 10,
     flexGrow: 1,
+   gap:6
   },
   sliderContainer: {
     height: 150,
@@ -1093,7 +1106,7 @@ const styles = StyleSheet.create({
     marginBottom: 7,
   },
   featuredProjectsContainer: {
-    paddingBottom: 3,
+   
     backgroundColor: "white",
     marginTop: 7,
   },
