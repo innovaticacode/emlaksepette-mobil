@@ -37,8 +37,15 @@ import {
 } from "react-native-alert-notification";
 import { Forms } from "../../../components/ProfileUpgradeComponents/formshelper";
 import ImageView from "react-native-image-viewing";
-import { apiRequestPostWithBearer, apiUrl, frontEndUriBase } from "../../../components/methods/apiRequest";
-import { formatPhoneNumber, formatPhoneNumberNew } from "../../../utils/FormatPhoneNumber";
+import {
+  apiRequestPostWithBearer,
+  apiUrl,
+  frontEndUriBase,
+} from "../../../components/methods/apiRequest";
+import {
+  formatPhoneNumber,
+  formatPhoneNumberNew,
+} from "../../../utils/FormatPhoneNumber";
 import { areaData } from "../../helper";
 import ImageViewing from "react-native-image-viewing";
 export default function UpgradeProfile() {
@@ -162,8 +169,6 @@ export default function UpgradeProfile() {
     }
   };
 
-
-
   const uniqueCities = TaxOfficesCities.map((city) => ({
     label: city.il,
     value: city.plaka,
@@ -175,9 +180,7 @@ export default function UpgradeProfile() {
     );
   const fetchTaxOffice = async (value) => {
     try {
-      const response = await axios.get(
-        `${apiUrl}get-tax-office/${value}`
-      );
+      const response = await axios.get(`${apiUrl}get-tax-office/${value}`);
       setTaxOffice(response.data);
     } catch (error) {
       console.error("Hata:", error);
@@ -190,10 +193,8 @@ export default function UpgradeProfile() {
   };
   const fetchCity = async () => {
     try {
-      const response = await axios.get(
-        `${apiUrl}cities`
-      );
-      
+      const response = await axios.get(`${apiUrl}cities`);
+
       return response.data;
     } catch (error) {
       console.error("Hata:", error);
@@ -210,9 +211,7 @@ export default function UpgradeProfile() {
   }, []);
   const fetchCounties = async (value) => {
     try {
-      const response = await axios.get(
-        `${apiUrl}counties/${value}`
-      );
+      const response = await axios.get(`${apiUrl}counties/${value}`);
       setCounties(response.data.data);
       setSelectedCounty(null); // Seçili ilçe sıfırla
       setSelectedNeighborhood(null); // Seçili mahalleyi sıfırla
@@ -223,9 +222,7 @@ export default function UpgradeProfile() {
 
   const fetchNeighborhoods = async (value) => {
     try {
-      const response = await axios.get(
-        `${apiUrl}neighborhoods/${value}`
-      );
+      const response = await axios.get(`${apiUrl}neighborhoods/${value}`);
       setNeighborhoods(response.data.data); // Gelen mahalle verisini set et
 
       setSelectedNeighborhood(null); // Seçili mahalleyi sıfırla
@@ -258,8 +255,6 @@ export default function UpgradeProfile() {
     }, 800);
   };
 
- 
-
   const onColorChangeComplete = (color) => {
     // Renk değişimi tamamlandığında burada istediğiniz işlemleri yapabilirsiniz
   };
@@ -286,45 +281,37 @@ export default function UpgradeProfile() {
     taxOfficeCity: "",
     taxOffice: "",
     taxNumber: "",
-    email:"",
-    idNumber:""
-
+    email: "",
+    idNumber: "",
   };
   useEffect(() => {
     getValueFor("user", setUser);
   }, []);
   const [formData, setFormData] = useState(initialFormData);
- 
-    const GetUserInfo = async () => {
-      setLoading(true);
-      try {
-        if (user.access_token) {
-          const userInfo = await axios.get(
-            `${apiUrl}users/${user.id}`,
-            {
-              headers: {
-                Authorization: `Bearer ${user.access_token}`,
-              },
-            }
-          );
-   
-          setnamFromGetUser(userInfo?.data?.user);
-        }
-      } catch (error) {
-        console.error("Kullanıcı verileri güncellenirken hata oluştu:", error);
-      } finally {
-        setLoading(false);
+
+  const GetUserInfo = async () => {
+    setLoading(true);
+    try {
+      if (user.access_token) {
+        const userInfo = await axios.get(`${apiUrl}users/${user.id}`, {
+          headers: {
+            Authorization: `Bearer ${user.access_token}`,
+          },
+        });
+
+        setnamFromGetUser(userInfo?.data?.user);
       }
-    };
+    } catch (error) {
+      console.error("Kullanıcı verileri güncellenirken hata oluştu:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-  
- 
-useEffect(() => {
-
+  useEffect(() => {
     // Eğer user bilgileri geldiyse, GetUserInfo fonksiyonunu çalıştır
     GetUserInfo();
-
-}, [user])
+  }, [user]);
 
   useEffect(() => {
     if (Object.keys(namFromGetUser).length > 0) {
@@ -345,8 +332,8 @@ useEffect(() => {
         taxOfficeCity: namFromGetUser.taxOfficeCity || "",
         taxOffice: namFromGetUser.taxOffice || "",
         taxNumber: namFromGetUser.taxNumber || "",
-        email:namFromGetUser?.email || "",
-        idNumber:namFromGetUser.idNumber || ""
+        email: namFromGetUser?.email || "",
+        idNumber: namFromGetUser.idNumber || "",
       });
       setCurrentColor(namFromGetUser.banner_hex_code);
       setareaCode(namFromGetUser.area_code);
@@ -355,7 +342,7 @@ useEffect(() => {
         onChangeCounty(namFromGetUser.county_id);
         onChangeNeighborhood(namFromGetUser.neighborhood_id);
         onchangeTaxOffice(namFromGetUser.taxOfficeCity);
-        setRegion(initialRegion)
+        setRegion(initialRegion);
       }, 500);
     }
   }, [namFromGetUser]);
@@ -389,8 +376,6 @@ useEffect(() => {
     return finalIban.substring(0, 32);
   };
 
- 
-
   const handleInputChange = (key, value) => {
     setFormData({ ...formData, [key]: value });
     if (key == "city_id") {
@@ -406,7 +391,6 @@ useEffect(() => {
     label: item.daire,
     value: item.id.toString(), // id değerini string olarak çevirme
   }));
- 
 
   const getItemsForKey = (key) => {
     switch (key) {
@@ -424,7 +408,6 @@ useEffect(() => {
         return [];
     }
   };
- 
 
   const handleMapPress = (event) => {
     const { latitude, longitude } = event.nativeEvent.coordinate;
@@ -441,34 +424,33 @@ useEffect(() => {
   //     </View>
   //   );
   // }
-const [loadingUpdate, setloadingUpdate] = useState(false)
+  const [loadingUpdate, setloadingUpdate] = useState(false);
   const postData = async (param) => {
-   
-  setloadingUpdate(true)
-    var data = new FormData()
+    setloadingUpdate(true);
+    var data = new FormData();
     // Forms'u döngü ile dolaşıyoruz
     Forms.map((item) => {
-       if (Array.isArray(item.tab) && item.tab.includes(tab)) {
-        data.append(item.key,formData[item.key])
-       }
+      if (Array.isArray(item.tab) && item.tab.includes(tab)) {
+        data.append(item.key, formData[item.key]);
+      }
     });
-   data.append('_method','PUT')
-    data.append('banner_hex_code',currentColor)
+    data.append("_method", "PUT");
+    data.append("banner_hex_code", currentColor);
     // if (param) {
     //     data.append('delete_profile_image',param)
     // }
-    if (tab==2) {
+    if (tab == 2) {
       data.append(
         `verify_document`,
-     file
+        file
           ? {
               uri:
                 Platform.OS === "android"
                   ? file
-                  :file.uri.replace("file://", ""), // Android ve iOS için uygun URI
+                  : file.uri.replace("file://", ""), // Android ve iOS için uygun URI
               type: file.mimeType,
               name:
-               file == null
+                file == null
                   ? "İmage.jpeg"
                   : file.name?.slice(-3) == "pdf"
                   ? file?.name
@@ -477,28 +459,28 @@ const [loadingUpdate, setloadingUpdate] = useState(false)
           : null
       );
     }
-if (tab==0) {
-  data.append(
-    `profile_image`,
- image
-      ? {
-          uri:
-            Platform.OS === "android"
-              ? image
-              :image.uri.replace("file://", ""), // Android ve iOS için uygun URI
-          type: image.mimeType,
-          name:
-           file == null
-              ? "İmage.jpeg"
-              : image.name?.slice(-3) == "pdf"
-              ? image?.name
-              : image?.fileName, // Sunucuya gönderilecek dosya adı
-        }
-      : namFromGetUser.profile_image
-  );
-}
-  
-    console.log(data)
+    if (tab == 0) {
+      data.append(
+        `profile_image`,
+        image
+          ? {
+              uri:
+                Platform.OS === "android"
+                  ? image
+                  : image.uri.replace("file://", ""), // Android ve iOS için uygun URI
+              type: image.mimeType,
+              name:
+                file == null
+                  ? "İmage.jpeg"
+                  : image.name?.slice(-3) == "pdf"
+                  ? image?.name
+                  : image?.fileName, // Sunucuya gönderilecek dosya adı
+            }
+          : namFromGetUser.profile_image
+      );
+    }
+
+    console.log(data);
     try {
       const response = await axios.post(
         `${apiUrl}client/profile/update`, // API URL'nizi belirtin
@@ -510,39 +492,33 @@ if (tab==0) {
           },
         }
       );
-      console.log('Response:', response.data);
+      console.log("Response:", response.data);
 
       Dialog.show({
         type: ALERT_TYPE.SUCCESS,
         title: "Başarılı",
         textBody: "Profiliniz başarıyla güncellendi.",
         button: "Tamam",
-        onHide:()=>{
-          GetUserInfo()
-        }
+        onHide: () => {
+          GetUserInfo();
+        },
       });
-       
-    
-  
-    }catch{
-      alert('hata')
-    }finally{
-      setloadingUpdate(false)
+    } catch {
+      alert("hata");
+    } finally {
+      setloadingUpdate(false);
     }
-  
 
     // data.append("name", formData.name);
-    
 
-  
-        // Dialog.show({
-        //   type: ALERT_TYPE.SUCCESS,
-        //   title: "Başarılı",
-        //   textBody: "Profiliniz başarıyla güncellendi.",
-        //   button: "Tamam",
-        // });
-  
-        // GetUserInfo();
+    // Dialog.show({
+    //   type: ALERT_TYPE.SUCCESS,
+    //   title: "Başarılı",
+    //   textBody: "Profiliniz başarıyla güncellendi.",
+    //   button: "Tamam",
+    // });
+
+    // GetUserInfo();
     // try {
     //   let fullNumber = `${areaCode}${formData.phone}`;
     //   let FormData = new FormData();
@@ -610,8 +586,6 @@ if (tab==0) {
     //     }
     //   );
 
-     
-
     //   GetUserInfo();
     // } catch (error) {
     //   console.error(
@@ -627,10 +601,9 @@ if (tab==0) {
     // }
   };
 
-console.log(namFromGetUser?.profile_image)
-const [isVisible, setIsVisible] = useState(false);
+  console.log(namFromGetUser?.profile_image);
+  const [isVisible, setIsVisible] = useState(false);
   return (
-    
     <KeyboardAvoidingView
       style={{ flex: 1 }}
       behavior={Platform.OS === "ios" ? "padding" : "height"} // iOS ve Android için farklı davranışlar
@@ -649,14 +622,12 @@ const [isVisible, setIsVisible] = useState(false);
             showsVerticalScrollIndicator={false}
             contentContainerStyle={{ paddingBottom: 40, gap: 20 }}
           >
-             <ImageViewing
-             images={[
-              {
-              uri:  `${frontEndUriBase}storage/profile_images/${namFromGetUser.profile_image}`
-              }
-
-            ]}
-              
+            <ImageViewing
+              images={[
+                {
+                  uri: `${frontEndUriBase}storage/profile_images/${namFromGetUser.profile_image}`,
+                },
+              ]}
               imageIndex={0}
               visible={isVisible}
               onRequestClose={() => setIsVisible(false)}
@@ -702,28 +673,30 @@ const [isVisible, setIsVisible] = useState(false);
                 <View style={{ width: 96, height: 96 }}>
                   <View style={{ borderRadius: 50 }}>
                     {user.access_token ? (
-                      <TouchableOpacity onPress={()=>{
-                        setIsVisible(true)
-                      }}>
-                           <Image
-                        source={
-                        
-                          image
-                            ? { uri: image.uri }
-                            : { uri: `${frontEndUriBase}storage/profile_images/${namFromGetUser.profile_image}` }
-                        }
-                        style={{ width: "100%", height: "100%" }}
-                        borderRadius={50}
-                      />
+                      <TouchableOpacity
+                        onPress={() => {
+                          setIsVisible(true);
+                        }}
+                      >
+                        <Image
+                          source={
+                            image
+                              ? { uri: image.uri }
+                              : {
+                                  uri: `${frontEndUriBase}storage/profile_images/${namFromGetUser.profile_image}`,
+                                }
+                          }
+                          style={{ width: "100%", height: "100%" }}
+                          borderRadius={50}
+                        />
                       </TouchableOpacity>
-                   
                     ) : (
                       <Icon2 name="user" size={65} color="#333" padding={10} />
                     )}
                   </View>
                 </View>
 
-                {(tab == 0 || tab==4) && (
+                {(tab == 0 || tab == 4) && (
                   <TouchableOpacity
                     onPress={() => {
                       setchoose(true);
@@ -857,7 +830,6 @@ const [isVisible, setIsVisible] = useState(false);
                               style={{ width: item.showArea ? "55%" : "100%" }}
                             >
                               <TextInput
-                             
                                 editable={item.disabled ? false : true}
                                 maxLength={item.maxlength ? item.maxlength : 90}
                                 placeholder={
@@ -872,7 +844,7 @@ const [isVisible, setIsVisible] = useState(false);
                                   item.key === "iban" ||
                                   item.key === "phone" ||
                                   item.key === "taxNumber" ||
-                                  item.key ==="idNumber"
+                                  item.key === "idNumber"
                                     ? "number-pad"
                                     : "default"
                                 }
@@ -932,7 +904,6 @@ const [isVisible, setIsVisible] = useState(false);
                                   handleInputChange(item.key, value);
                                   if (item.key === "city_id") {
                                     onChangeCity(value);
-                                   
                                   } else if (item.key === "county_id") {
                                     onChangeCounty(value);
                                   } else if (item.key === "neighborhood_id") {
@@ -1172,24 +1143,23 @@ const [isVisible, setIsVisible] = useState(false);
                   width: "90%",
                   padding: 10,
                   borderRadius: 10,
-                  alignItems:'center',
-                  justifyContent:'center'
+                  alignItems: "center",
+                  justifyContent: "center",
                 }}
               >
-                {
-                  loadingUpdate ?
-                  <ActivityIndicator color="white"/>:
+                {loadingUpdate ? (
+                  <ActivityIndicator color="white" />
+                ) : (
                   <Text
-                  style={{
-                    textAlign: "center",
-                    color: "#fff",
-                    fontWeight: "600",
-                  }}
-                >
-                  Güncelle
-                </Text>
-                }
-             
+                    style={{
+                      textAlign: "center",
+                      color: "#fff",
+                      fontWeight: "600",
+                    }}
+                  >
+                    Güncelle
+                  </Text>
+                )}
               </TouchableOpacity>
             </View>
             <Modal
@@ -1249,9 +1219,9 @@ const [isVisible, setIsVisible] = useState(false);
                       alignItems: "center",
                       gap: 10,
                     }}
-                    onPress={()=>{
-                      removeProfileImage()
-                      postData(1)
+                    onPress={() => {
+                      removeProfileImage();
+                      postData(1);
                     }} // Yalnızca yerelde kaldırmak isterseniz bu işlevi kullanın
                     // onPress={removeProfileImageFromServer} // Sunucudan da kaldırmak isterseniz bu işlevi kullanın
                   >
