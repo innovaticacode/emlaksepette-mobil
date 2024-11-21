@@ -749,7 +749,7 @@ export default function UpgradeProfile() {
                 <Text
                   style={{ fontSize: 11, color: "#fff", fontWeight: "700" }}
                 >
-                  {user.email}
+                  {namFromGetUser.email}
                 </Text>
               </View>
             </View>
