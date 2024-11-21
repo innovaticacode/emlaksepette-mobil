@@ -36,7 +36,7 @@ export default function SelledRealtorAdverts() {
     setloading(true);
     try {
       const res = await axios.get(
-        apiUrl+"get_my_housings",
+        apiUrl + "get_my_housings",
         {
           headers: { Authorization: "Bearer " + user.access_token },
         }
@@ -307,7 +307,7 @@ export default function SelledRealtorAdverts() {
                     Resimler
                   </Text>
                 </TouchableOpacity>
-                <TouchableOpacity
+                {/* <TouchableOpacity
                   style={{
                     flexDirection: "row",
                     alignItems: "center",
@@ -320,7 +320,7 @@ export default function SelledRealtorAdverts() {
                   >
                     Pazarlık Teklifleri (0)
                   </Text>
-                </TouchableOpacity>
+                </TouchableOpacity> */}
               </View>
               {/* <View style={{ width: "100%" }}>
                   <ScrollView

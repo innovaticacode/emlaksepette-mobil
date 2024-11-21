@@ -1,5 +1,5 @@
 import { View, Text } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 export default function PaymentItem({
   header,
@@ -11,45 +11,53 @@ export default function PaymentItem({
   color,
   fontWeight,
   border,
-}) {
+  index
+}) 
+
+{
+const [indexKalan, setindexKalan] = useState(null)
+  useEffect(() => {
+    const indexKalan=(index%2)
+    setindexKalan(indexKalan)
+  }, [])
+
   return (
     <View
       style={{
         width: "100%",
-        backgroundColor: "transparent",
+        backgroundColor:indexKalan==0? "transparent":'#F2F2F2',
         display: "flex",
-        flexDirection: "row",
-        justifyContent: "space-between",
+   
         padding: 10,
-        borderBottomWidth: border === "0" ? 0 : 1,
-        borderColor: "#EBEBEB",
+        borderWidth:  1,
+        borderColor: "#D0D0D0",
+        borderRadius:10
       }}
     >
-        <View style={{ justifyContent: "center" }}>
+        <View style={{ justifyContent:'space-around' ,flexDirection:'row',}}>
           <Text
             style={{
               fontSize: 12,
               color: color ? color : "black",
-              fontWeight: fontWeight ? fontWeight : 400,
+              fontWeight: fontWeight ? fontWeight : 500,
             }}
           >
             {header}
           </Text>
-        </View>
-        <View style={{ justifyContent: "right" }}>
-          <Text
-            style={{
+          <Text  style={{
               fontSize: 12,
               color: color ? color : "black",
-              fontWeight: "700", // fontWeight 700 yerine "bold" da kullanılabilir
+              fontWeight: '500', // fontWeight 700 yerine "bold" da kullanılabilir
+            }}>  {price}</Text>
+            <Text
+             style={{
+              fontSize: 12,
+              color: color ? color : "black",
+              fontWeight: '500', // fontWeight 700 yerine "bold" da kullanılabilir
             }}
-          >
-            {price} ₺
-            {"\n"}
-            {date}
-
-          </Text>
+            > {date}</Text>
         </View>
+      
     </View>
   );
 }

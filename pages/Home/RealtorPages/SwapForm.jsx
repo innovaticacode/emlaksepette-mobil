@@ -19,7 +19,6 @@ import * as FileSystem from "expo-file-system";
 import * as IntentLauncher from "expo-intent-launcher";
 import * as DocumentPicker from "expo-document-picker";
 import * as ImagePicker from "expo-image-picker";
-import * as Permissions from "expo-permissions";
 import {
   ALERT_TYPE,
   Dialog,
@@ -279,7 +278,7 @@ export default function SwapForm({ openModal, color }) {
 
       // Axios POST isteği
       const response = await axios.post(
-        apiUrl+"swap",
+        apiUrl + "swap",
         formData,
         {
           headers: {
@@ -335,7 +334,7 @@ export default function SwapForm({ openModal, color }) {
   const fetchData = async () => {
     try {
       const response = await axios.get(
-        apiUrl+"cities"
+        apiUrl + "cities"
       );
       return response.data;
     } catch (error) {
@@ -627,7 +626,7 @@ export default function SwapForm({ openModal, color }) {
     if (status !== "granted") {
       Alert.alert(
         "İzin Gerekli",
-        "Fotoğraf çekmek için kamera iznine ihtiyacımız var."
+        "Fotoğraf çekebilmek için kameranıza erişim izni gerekiyor."
       );
       return;
     }
@@ -726,20 +725,20 @@ export default function SwapForm({ openModal, color }) {
               user={projectInfo?.project?.user?.name}
               price={
                 projectInfo &&
-                projectId &&
-                projectInfo?.projectHousingsList &&
-                roomData &&
-                projectInfo?.project &&
-                JSON.parse(roomData["payment-plan[]"]) &&
-                roomData["share_sale[]"] &&
-                JSON.parse(roomData["payment-plan[]"]).includes("taksitli")
+                  projectId &&
+                  projectInfo?.projectHousingsList &&
+                  roomData &&
+                  projectInfo?.project &&
+                  JSON.parse(roomData["payment-plan[]"]) &&
+                  roomData["share_sale[]"] &&
+                  JSON.parse(roomData["payment-plan[]"]).includes("taksitli")
                   ? roomData["share_sale[]"] !== "[]"
                     ? roomData["installments-price[]"] /
-                      roomData["number_of_shares[]"]
+                    roomData["number_of_shares[]"]
                     : roomData["installments-price[]"]
                   : roomData["share_sale[]"] !== "[]"
-                  ? roomData["price[]"] / roomData["number_of_shares[]"]
-                  : roomData["price[]"]
+                    ? roomData["price[]"] / roomData["number_of_shares[]"]
+                    : roomData["price[]"]
               }
             />
           ) : (
@@ -748,8 +747,7 @@ export default function SwapForm({ openModal, color }) {
                 data &&
                 data.housing &&
                 data.housing.housing_type_data &&
-                `${frontEndUriBase}housing_images/${
-                  JSON.parse(data?.housing?.housing_type_data)["image"]
+                `${frontEndUriBase}housing_images/${JSON.parse(data?.housing?.housing_type_data)["image"]
                 }`
               }
               title={data?.pageInfo?.meta_title}
@@ -1069,7 +1067,7 @@ export default function SwapForm({ openModal, color }) {
                   value={YourAreaPrice}
                   onChangeText={(value) => setYourAreaPrice(value)}
                 />
-                <Text>{}</Text>
+                <Text>{ }</Text>
               </View>
             </>
           ) : (

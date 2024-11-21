@@ -11,7 +11,7 @@ import { getValueFor } from "./methods/user";
 import { apiUrl, frontEndUriBase } from "./methods/apiRequest";
 
 export default function SliderBarForFeature() {
-  
+
   const [loading, setloading] = useState(false);
   const [featuredStores, setFeaturedStores] = useState([]);
 
@@ -22,31 +22,57 @@ export default function SliderBarForFeature() {
 
   const firstBrands = [
     {
-      text: "Al Sat Acil",
-      image: `${frontEndUriBase}images/al-sat-acil-image.png`,
-      color: "#FF0000",
-      url: "",
-      isShow: "All",
-    },
-    {
       text: "Emlak Kulüp",
-      image: `${frontEndUriBase}images/emlak-kulup.png`,
-      color: "#F4A226",
+      image: `${frontEndUriBase}privilege/privilege1.png`,
+      color: "white",
       url: "RealtorClubExplore",
       isShow: "Emlak Ofisi",
+      navigationStatus: true,
     },
     {
       text: "Sat Kirala",
-      image:`${frontEndUriBase}images/sat-kirala.png`,
-      color: "#0000FF",
+      image: `${frontEndUriBase}privilege/privilege2.png`,
+      color: "white",
       url: "SellAndRent",
       isShow: "All",
+      navigationStatus: true,
+
     },
+    {
+      text: "Gayrimenkul Ligi",
+      image: `${frontEndUriBase}privilege/privilege3.png`,
+      color: "white",
+      url: "SellAndRent",
+      isShow: "All",
+      navigationStatus: true,
+
+    },
+    {
+      text: "Al Sat Acil",
+      image: `${frontEndUriBase}privilege/privilege4.png`,
+      color: "white",
+      url: "",
+      isShow: "All",
+      urgent: true,
+      navigationStatus: false,
+    },
+    {
+      text: "Komşumu Gör",
+      image: `${frontEndUriBase}privilege/privilege5.png`,
+      color: "white",
+      url: "SeeMyNeighbor",
+      isShow: "All",
+      navigationStatus: true,
+    },
+   
+  
   ];
   const [user, setuser] = useState({});
   useEffect(() => {
     getValueFor("user", setuser);
   }, []);
+
+
   return (
     <GestureHandlerRootView>
       <ScrollView
@@ -56,7 +82,7 @@ export default function SliderBarForFeature() {
           top: 0,
         }}
       >
-         {firstBrands.map((item, i) => (
+        {firstBrands.map((item, i) => (
           <View
             style={{
               width: 80,
@@ -69,13 +95,14 @@ export default function SliderBarForFeature() {
                     (!user.access_token ||
                       user.type == 1 ||
                       item.isShow == user.corporate_type)
-                  ? "flex"
-                  : "none",
+                    ? "flex"
+                    : "none",
             }}
             key={i}
           >
             <SliderItem
-              navigationStatus={true}
+              urgent={item.urgent}
+              navigationStatus={item.navigationStatus}
               borderColor={item.color}
               image={item.image}
               url={item.url}
@@ -87,9 +114,9 @@ export default function SliderBarForFeature() {
               {capitalizeFirstLetter(item.text)}
             </Text>
           </View>
-        ))} 
+        ))}
 
-      
+
       </ScrollView>
     </GestureHandlerRootView>
   );

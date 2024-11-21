@@ -177,10 +177,13 @@ export default function ShoppingProfile() {
         notificationsCount: 0,
       })
     );
-    await SecureStore.setItemAsync("user", "");
+    await SecureStore.deleteItemAsync("user");
     setTimeout(() => {
       dispatch(setShoppingProfile({ isShoppingProfile: false }));
-      navigation.push("Drawer", { screen: "Home" }, { status: "logout" });
+      navigation.replace("Drawer", {
+        screen: "Home",
+        params: { status: "logout" },
+      });
     }, 150);
   };
 
@@ -881,10 +884,12 @@ export default function ShoppingProfile() {
                       (user.type == 2 &&
                         user.corporate_type == "Emlak Ofisi" &&
                         group.label == "Satış Noktalarımız") ||
-                      (user.corporate_type !== "Emlak Ofisi" &&
-                        user.type == 2 &&
-                        group.label == "Emlak Kulüp") ||
-                      (user.type == 1 && group.label == "Satış Noktalarımız")
+                        (user.corporate_type !== "Emlak Ofisi" &&
+                          user.type == 2 &&
+                          group.label == "Emlak Kulüp") ||
+                        (user.type == 1 && group.label == "Satış Noktalarımız") ||
+                        (user.type == 1 &&
+                          group.text == "Satış Noktası Talepleri")
                         ? "none"
                         : "flex",
                   }}
@@ -939,6 +944,13 @@ export default function ShoppingProfile() {
                       ) : (
                         <View>
                           <TouchableOpacity
+                            style={{
+                              display: item?.isActive
+                                ? item.isActive.includes(user.corporate_type)
+                                  ? "flex"
+                                  : "none"
+                                : "flex",
+                            }}
                             onPress={() => navigation.navigate(item.url)}
                           >
                             <ProfileSettingsItem

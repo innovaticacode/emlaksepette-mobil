@@ -122,6 +122,8 @@ import ViewAll from "./pages/Home/ViewAll/ViewAll";
 import RealEstateWallet from "./src/pages/RealEstateWallet";
 import EditPending from "./pages/Home/EditProject/EditPending";
 import ShareScreen from "./pages/Home/ShareScreen";
+import PointOfSaleTracking from "./pages/Home/PointOfSale/PointOfSaleTracking/PointOfSaleTracking";
+import MapFilterProject from "./components/Filter/MapViewFilter/MapFilterProject";
 import TeamFilter from "./pages/Home/ProfilePageItem/TeamFilter/TeamFilter";
 import FranchisePersonDetail from "./pages/Home/FranchisePerson/FranchisePersonDetail/FranchisePersonDetail";
 import * as Linking from "expo-linking";
@@ -501,7 +503,7 @@ const StackScreenNavigator = () => {
                     component={Rent}
                     options={({ route }) => ({
                       animationTypeForReplace: "pop",
-                      title: "Kiraladıklarım",
+                      title: "Kiraya Verdiklerim",
                       headerBackTitle: "",
                       headerBackTitleVisible: false,
                       headerTintColor: "black",
@@ -531,7 +533,7 @@ const StackScreenNavigator = () => {
                     }}
                   />
                   <Stack.Screen
-                    name="RealtorClub"
+                    name="RealtorClubRegister"
                     options={{
                       title: "Emlak Kulüp Üyesi Ol",
                       headerBackTitle: "",
@@ -1440,6 +1442,29 @@ const StackScreenNavigator = () => {
                   component={ShareScreen}
                   options={({ route }) => ({
                     title: "İlan Ver",
+                    headerBackTitleVisible: false,
+                    headerStyle: {
+                      backgroundColor: "#ffffff",
+                    },
+                  })}
+                />
+                <Stack.Screen
+                  name="PointOfSaleTracking"
+                  component={PointOfSaleTracking}
+                  options={({ route }) => ({
+                    title: "Satış Noktası Takibi",
+                    headerBackTitleVisible: false,
+                    headerStyle: {
+                      backgroundColor: "#ffffff",
+                    },
+                  })}
+                />
+
+                <Stack.Screen
+                  name="MapFilterForProject"
+                  component={MapFilterProject}
+                  options={({ route }) => ({
+                    title: "Harita Görünümü (Projeler)",
                     headerBackTitleVisible: false,
                     headerStyle: {
                       backgroundColor: "#ffffff",

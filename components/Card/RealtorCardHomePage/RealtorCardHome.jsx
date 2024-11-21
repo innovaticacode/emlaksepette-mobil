@@ -140,7 +140,7 @@ export default function RealtorCardHome({
   
                 <ImageBackground source={{uri:image}} style={styles.ımage} borderRadius={6}/>
                 {
-                  !sold &&
+                  (!sold || sold >1) &&
                   <TouchableOpacity
                   style={styles.ıconContainer}
                   activeOpacity={0.8}
@@ -176,10 +176,15 @@ export default function RealtorCardHome({
      
         </View>
             <View style={{gap:4}}>
+            {
+              housing.step2_slug == "gunluk-kiralik" ? 
+              <Text  style={{fontSize:15,color:'#EA2C2E',fontWeight:'700'}}>{price}₺ / <Text style={{ fontSize: 13, color: "#D32729" }}>Gecelik</Text></Text>:
+              <Text style={{fontSize:15,color:'#EA2C2E',fontWeight:'700'}}>{addDotEveryThreeDigits(price)}₺</Text>
+            }
             <View>
-            <Text style={{fontSize:15,color:'#EA2C2E',fontWeight:'700'}}>{addDotEveryThreeDigits(price)}₺</Text>
+          
         </View>
-        {!sold ? (
+        {(!sold || sold >1)? (
                   housing?.user?.id == user.id && user.access_token ? (
                     <TouchableOpacity
                       style={[styles.addCardBtn, { backgroundColor: "#008001" }]}
@@ -226,13 +231,15 @@ export default function RealtorCardHome({
                     </TouchableOpacity>
                   )
                 ):sold==1 ?
-                <View style={[styles.addCardBtn, {backgroundColor:'#EA2C2E'}]}>
+
+                <View style={[styles.addCardBtn, {backgroundColor:'#000000'}]}>
+
                     <Text style={styles.butonText}>Satıldı</Text>
                 </View> :
-              <View style={[styles.addCardBtn, {backgroundColor:'#FFA500'}]}>
+              <View style={[styles.addCardBtn, {backgroundColor:'#373737'}]}>
               <Text style={styles.butonText}>Rezerve Edildi</Text>
           </View>
-          
+            
           }
             </View>
             <AwesomeAlert

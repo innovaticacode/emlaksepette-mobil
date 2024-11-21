@@ -1,6 +1,8 @@
 import { View, Text, Image, TouchableOpacity, StyleSheet } from "react-native";
 import React, { useEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
+import axios from "axios";
+import { apiUrl } from "./methods/apiRequest";
 export default function SliderItem({
   image,
   StoreID,
@@ -8,6 +10,7 @@ export default function SliderItem({
   navigationStatus,
   url,
   userName,
+  urgent,
 }) {
   const [checkImage, setCheckImage] = useState(null);
 
@@ -34,19 +37,61 @@ export default function SliderItem({
     }
   }, [image, userName]);
 
+  const [urgentAdverts, setUrgentAdverts] = useState([]);
+
+  const handleUrgentAdverts = async () => {
+    try {
+      const response = await axios.get(`${apiUrl}real-estates`);
+      const urgentFilter = response?.data?.filter((item) => {
+        try {
+          const data = JSON.parse(item.housing_type_data);
+          return data?.buysellurgent?.[0] === 'Evet';
+        } catch (error) {
+          console.error("JSON parse error:", error);
+          return false;
+        }
+      });
+      return setUrgentAdverts(urgentFilter);
+    } catch (error) {
+      console.error("Error fetching urgent adverts:", error);
+    }
+  };
+
+  useEffect(() => {
+    if (urgent) {
+      handleUrgentAdverts();
+    }
+  }, [urgent]);
+
+
+  const handlePress = () => {
+    if (urgent) {
+      navigation.navigate("AllRealtorAdverts", {
+        name: "Al Sat Acil",
+        slug: "al-sat-acil",
+        data: urgentAdverts,
+        count: urgentAdverts.length,
+        type: null,
+        optional: null,
+        title: null,
+        check: null,
+        city: null,
+        county: null,
+        hood: null,
+      });
+    } else if (navigationStatus) {
+      navigation.navigate(url);
+    } else {
+      navigation.navigate("Profile", {
+        name: "Master Realtor",
+        id: StoreID,
+      });
+    }
+  }
+
   return (
     <TouchableOpacity
-      onPress={() => {
-        if (navigationStatus == true) {
-          navigation.push(url);
-        } else {
-          navigation.navigate("Profile", {
-            name: "Master Realtor",
-            id: StoreID,
-          });
-        }
-      }}
-    >
+      onPress={() => handlePress()}>
       <View
         style={[
           styles.container,
@@ -75,8 +120,8 @@ export default function SliderItem({
 const styles = StyleSheet.create({
   container: {
     backgroundColor: "transparent",
-    width: 50,
-    height: 50,
+    width: 60,
+    height: 60,
     flexWrap: "wrap",
     borderRadius: 50,
     margin: 6,
@@ -88,6 +133,7 @@ const styles = StyleSheet.create({
   textArea: {
     justifyContent: "center",
     alignItems: "center",
+    width: "100%",
   },
   image: {
     width: "100%",

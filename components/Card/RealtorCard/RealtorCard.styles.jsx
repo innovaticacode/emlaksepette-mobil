@@ -8,7 +8,7 @@ export const styles = StyleSheet.create({
     flexDirection: "column",
     borderBottomWidth: 2,
     borderBlockColor: "#E8E8E8",
-    // padding:5
+    padding: 5,
   },
   İlan: {
     padding: 3,
@@ -60,7 +60,7 @@ export const styles = StyleSheet.create({
     padding: 5,
     width: "50%",
     alignItems: "center",
-    backgroundColor: "#EA2C2E",
+    backgroundColor: "#EA2B2E",
     borderRadius: 5,
   },
   heartBtn: {

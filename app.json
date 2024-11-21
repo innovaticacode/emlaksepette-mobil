@@ -4,24 +4,30 @@
     "slug": "frontend",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/app-logo.png",
     "userInterfaceStyle": "light",
     "plugins": [
       [
         "expo-image-picker",
         {
-          "photosPermission": "The app accesses your photos to let you share them with your friends.",
-          "NSCameraUsageDescription": "This app uses the camera to take photos."
+          "photosPermission": "Profil bilgilerinizi güncellemek için fotoğraflarınıza erişmek istiyoruz.",
+          "NSCameraUsageDescription": "Bu uygulama fotoğraf çekmek için kamerayı kullanır."
         }
       ],
       "expo-secure-store"
     ],
+<<<<<<< HEAD
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
     "assetBundlePatterns": ["**/*"],
+=======
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+>>>>>>> test
     "ios": {
       "supportsTablet": true,
       "infoPlist": {
@@ -42,11 +48,10 @@
         "android.permission.ACCESS_COARSE_LOCATION",
         "android.permission.CAMERA",
         "android.permission.READ_EXTERNAL_STORAGE",
-        "android.permission.WRITE_EXTERNAL_STORAGE",
-        "android.permission.RECORD_AUDIO"
+        "android.permission.WRITE_EXTERNAL_STORAGE"
       ],
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/app-logo.png",
         "backgroundColor": "#ffffff"
       },
       "package": "com.anonymous.frontend",
@@ -65,8 +70,7 @@
       ]
     },
     "web": {
-      "favicon": "./assets/favicon.png"
-    },
-    "scheme": "https"
+      "favicon": "./assets/app-logo.png"
+    }
   }
 }
