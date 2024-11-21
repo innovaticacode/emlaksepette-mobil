@@ -55,11 +55,11 @@ const AllFranchiseBrands = () => {
                   <Text style={styles.title}>{item.title}</Text>
                   <View style={styles.infoArea}>
                     <Ionicons name="person" size={12} color="#000" />
-                    <Text style={styles.info}>{'20 Danışman'}</Text>
+                    <Text style={styles.info}>{`${item?.consultants_count} Danışman`}</Text>
                   </View>
                   <View style={styles.infoArea}>
                     <MaterialIcons name="home" size={12} color="#000" />
-                    <Text style={styles.info}>{'150 Ofis'}</Text>
+                    <Text style={styles.info}>{`${item?.offices_count} Ofis`}</Text>
                   </View>
                   <WhiteOrRedButtons
                     text={'Hemen İncele'}
