@@ -4,17 +4,14 @@ const { width, height } = Dimensions.get("window");
 export const styles = StyleSheet.create({
   container: {
     width: "100%",
-    display: "flex",
-    flexDirection: "column",
     borderBottomWidth: 2,
     borderBlockColor: "#E8E8E8",
-    padding: 5,
+    padding: 4,
   },
-  İlan: {
-    padding: 3,
-    display: "flex",
+  ilan: {
     flexDirection: "row",
     justifyContent: "space-between",
+    alignItems: "center",
   },
   container2: {
     flex: 1,
@@ -32,11 +29,11 @@ export const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   PriceAndButtons: {
-    marginTop: "auto", // Push to the bottom
-    display: "flex",
     flexDirection: "row-reverse",
-    justifyContent: "space-between",
-    alignItems: "center",
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    overflow: 'hidden',
+    width: '100%',
   },
   caption: {
     width: "80%",
@@ -62,6 +59,7 @@ export const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: "#EA2B2E",
     borderRadius: 5,
+    position: "relative",
   },
   heartBtn: {
     position: "absolute",

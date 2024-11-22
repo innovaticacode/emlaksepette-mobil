@@ -80,21 +80,29 @@ export default function RealtorPost({
     ? price - (price * discountRate) / 100
     : price - discount_amount;
 
-  const formattedPrice = parseFloat(price)
-    .toLocaleString("tr-TR", {
-      style: "currency",
-      currency: "TRY",
-    })
-    .replace(/,00$/, "");
+  const formatPriceWithLimit = (formattedValue) => {
+    return formattedValue.length > 10 ? formattedValue.slice(0, 10) : formattedValue;
+  };
+
+  const formattedPrice = formatPriceWithLimit(
+    parseFloat(price)
+      .toLocaleString("tr-TR", {
+        style: "currency",
+        currency: "TRY",
+      })
+      .replace(/,00$/, "")
+  );
 
   const formattedDiscountedPrice = discountedPrice
     ? discountedPrice !== price
-      ? parseFloat(discountedPrice)
-        .toLocaleString("tr-TR", {
-          style: "currency",
-          currency: "TRY",
-        })
-        .replace(/,00$/, "")
+      ? formatPriceWithLimit(
+        parseFloat(discountedPrice)
+          .toLocaleString("tr-TR", {
+            style: "currency",
+            currency: "TRY",
+          })
+          .replace(/,00$/, "")
+      )
       : null
     : 0;
 
@@ -109,6 +117,7 @@ export default function RealtorPost({
       setalertForSign(true);
     }
   };
+
 
   const housingData = housing && JSON.parse(housing.housing_type_data);
 
@@ -214,7 +223,7 @@ export default function RealtorPost({
         onPress={() =>
           navigation.navigate("Realtor details", { houseId: HouseId })
         }
-        style={{ minHeight: chekView ? 300 : 150 }}
+        style={{ minHeight: chekView ? 300 : 100 }}
       >
         <AwesomeAlert
           show={cartIsNull}
@@ -346,7 +355,7 @@ export default function RealtorPost({
         />
         {!chekView ? (
           <View style={styles.container}>
-            <View style={styles.İlan}>
+            <View style={styles.ilan}>
               <View
                 style={{ width: "30%", height: 95 }}
                 onPress={() =>
@@ -394,7 +403,7 @@ export default function RealtorPost({
                   </View>
                 )}
 
-                <ImageBackground
+                <Image
                   source={{ uri: image }}
                   style={{
                     width: "100%",
@@ -471,9 +480,7 @@ export default function RealtorPost({
                   <Text style={{ fontSize: 10 }}>{location}</Text>
                 </View>
                 <View style={styles.PriceAndButtons}>
-                  <View
-                    style={{ alignItems: "center", justifyContent: "center" }}
-                  >
+                  <View>
                     {
                       (!sold || sold > 1) ?
                         formattedDiscountedPrice ? (
@@ -496,9 +503,7 @@ export default function RealtorPost({
                           <Text style={styles.priceText}>{formattedPrice} </Text>
                         ) : null
                     }
-
                   </View>
-
                   {(!sold || sold > 1) ? (
                     housing?.user?.id == user.id && user.access_token ? (
                       <TouchableOpacity
