@@ -9,7 +9,7 @@ import {
   KeyboardAvoidingView,
 } from "react-native";
 import React, { useState, useEffect } from "react";
-import { useRoute } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import Icon2 from "react-native-vector-icons/EvilIcons";
 import Icon3 from "react-native-vector-icons/MaterialIcons";
@@ -52,6 +52,7 @@ export default function UpgradeProfile() {
   const route = useRoute();
   const { name, tab } = route.params;
   const [choose, setchoose] = useState(false);
+  const navigation = useNavigation();
 
   const [image, setImage] = useState(null);
   const [isImageVisible, setIsImageVisible] = useState(false);
@@ -420,9 +421,8 @@ export default function UpgradeProfile() {
     });
   };
 
-
   useEffect(() => {
-    console.debug("------->>", tab)
+    console.debug("------->>", tab);
   }, [tab]);
 
   const postData = async (param) => {
@@ -439,52 +439,51 @@ export default function UpgradeProfile() {
         `profile_image`,
         image
           ? {
-            uri:
-              Platform.OS === "android"
-                ? image
-                : image.uri.replace("file://", ""), // Android ve iOS için uygun URI
-            type: image.mimeType,
-            name:
-              file == null
-                ? "İmage.jpeg"
-                : image.name?.slice(-3) == "pdf"
+              uri:
+                Platform.OS === "android"
+                  ? image
+                  : image.uri.replace("file://", ""), // Android ve iOS için uygun URI
+              type: image.mimeType,
+              name:
+                file == null
+                  ? "İmage.jpeg"
+                  : image.name?.slice(-3) == "pdf"
                   ? image?.name
                   : image?.fileName, // Sunucuya gönderilecek dosya adı
-          }
+            }
           : namFromGetUser.profile_image
       );
     }
     if (tab == 1) {
       // Eposta: api/e-posta-adresimi-degistir -> new_email gönderilecek.
-      console.debug("tab 1")
+      console.debug("tab 1");
     }
     if (tab == 2) {
       try {
-
         if (file) {
           data.append(
             `verify_document`,
             file
               ? {
-                uri:
-                  Platform.OS === "android"
-                    ? file
-                    : file.uri.replace("file://", ""), // Android ve iOS için uygun URI
-                type: file.mimeType,
-                name:
-                  file == null
-                    ? "İmage.jpeg"
-                    : file.name?.slice(-3) == "pdf"
+                  uri:
+                    Platform.OS === "android"
+                      ? file
+                      : file.uri.replace("file://", ""), // Android ve iOS için uygun URI
+                  type: file.mimeType,
+                  name:
+                    file == null
+                      ? "İmage.jpeg"
+                      : file.name?.slice(-3) == "pdf"
                       ? file?.name
                       : file?.fileName, // Sunucuya gönderilecek dosya adı
-              }
+                }
               : null
           );
         }
 
         // telefon-numarasi-sms-gonderimi
 
-        console.debug("-*data----------", data)
+        console.debug("-*data----------", data);
         const response = await axios.post(
           `${apiUrl}telefon-numarasi-sms-gonderimi`, // API URL'nizi belirtin
           data, // JSON formatında veri gönderiyoruz
@@ -496,10 +495,9 @@ export default function UpgradeProfile() {
           }
         );
         if (response.data) {
-          alert("Başarılı")
+          alert("Başarılı");
         }
-      }
-      catch (error) {
+      } catch (error) {
         // Eğer error.response varsa, sunucudan gelen yanıtı logla
         if (error.response) {
           console.error("Sunucu Hata Yanıtı:", error.response.data);
@@ -515,9 +513,7 @@ export default function UpgradeProfile() {
           console.error("Hata Detayı:", error.message);
         }
       }
-
-    }
-    else {
+    } else {
       try {
         data.append("_method", "PUT");
         data.append("banner_hex_code", currentColor);
@@ -532,7 +528,7 @@ export default function UpgradeProfile() {
             },
           }
         );
-        console.debug("response", response.data)
+        console.debug("response", response.data);
         Dialog.show({
           type: ALERT_TYPE.SUCCESS,
           title: "Başarılı",
@@ -630,8 +626,8 @@ export default function UpgradeProfile() {
                             image
                               ? { uri: image.uri }
                               : {
-                                uri: `${frontEndUriBase}storage/profile_images/${namFromGetUser.profile_image}`,
-                              }
+                                  uri: `${frontEndUriBase}storage/profile_images/${namFromGetUser.profile_image}`,
+                                }
                           }
                           style={{ width: "100%", height: "100%" }}
                           borderRadius={50}
@@ -789,9 +785,9 @@ export default function UpgradeProfile() {
                                 value={formData[item.key]}
                                 keyboardType={
                                   item.key === "iban" ||
-                                    item.key === "phone" ||
-                                    item.key === "taxNumber" ||
-                                    item.key === "idNumber"
+                                  item.key === "phone" ||
+                                  item.key === "taxNumber" ||
+                                  item.key === "idNumber"
                                     ? "number-pad"
                                     : "default"
                                 }
@@ -1083,7 +1079,7 @@ export default function UpgradeProfile() {
 
             <View style={{ alignItems: "center" }}>
               <TouchableOpacity
-                onPress={postData}
+                onPress={() => postData()}
                 style={{
                   width: "100%",
                   backgroundColor: "#EA2B2E",
@@ -1170,7 +1166,7 @@ export default function UpgradeProfile() {
                       removeProfileImage();
                       postData(1);
                     }} // Yalnızca yerelde kaldırmak isterseniz bu işlevi kullanın
-                  // onPress={removeProfileImageFromServer} // Sunucudan da kaldırmak isterseniz bu işlevi kullanın
+                    // onPress={removeProfileImageFromServer} // Sunucudan da kaldırmak isterseniz bu işlevi kullanın
                   >
                     <Icon3
                       name="restore-from-trash"
