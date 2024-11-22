@@ -1,5 +1,5 @@
 export const Forms = [
-   { key: "name", label: "Mağaza Adı", tab: [4], type: "input" },
+  { key: "name", label: "Mağaza Adı", tab: [4], type: "input" },
   {
     key: "mobile_phone",
     label: "Mevcut Telefon Numarası",
@@ -26,9 +26,9 @@ export const Forms = [
   { key: "username", label: "Ad Soyad", tab: [0], type: "input" },
   { key: "store_name", label: "Ticari Unvan", tab: [5], type: "input" },
   // { key: "username", label: "Yetkili İsim Soyisim", tab: [2], type: "input" },
-  
+
   { key: "iban", label: "Iban Numarası", tab: [0], type: "input" },
-  { key: "idNumber", label: "TC Kimlik Numarası", tab: [0], type: "input",maxlength:11 },
+  { key: "idNumber", label: "TC Kimlik Numarası", tab: [0], type: "input", maxlength: 11 },
   // { key: "bday", label: "Doğum Tarihi", tab: [0], type: "input" },
   {
     key: "email",
@@ -37,24 +37,24 @@ export const Forms = [
     type: "input",
     disabled: true,
   },
-  { key: "new_email", label: "Yeni E-Posta", tab:[1], type: "input" },
+  { key: "new_email", label: "Yeni E-Posta", tab: [1], type: "input" },
   // { key: "about", label: "Hakkında", tab:[4], type: "input", multinine:true },
   { key: "website", label: "Web Sitesi", tab: [4], type: "input" },
-  { key: "password", label: "Mevcut Şifre", tab:[3], type: "input" },
-  { key: "new_password", label: "Yeni Şifre", tab:[3], type: "input" },
-  { key: "new_password_again", label: "Yeni Şifre Tekrar", tab:[3], type: "input" },
+  { key: "password", label: "Mevcut Şifre", tab: [3], type: "input" },
+  { key: "new_password", label: "Yeni Şifre", tab: [3], type: "input" },
+  { key: "new_password_again", label: "Yeni Şifre Tekrar", tab: [3], type: "input" },
 
   { key: "year", label: "Kaç Yıldır Sektördesiniz", tab: 2, type: "input" },
 
 
- 
+
   {
     key: "taxNumber",
     label: "Vergi Kimlik Numarası",
     tab: [5],
     type: "input",
     maxlength: 10,
-    disabled:true
+    disabled: true
   },
   {
     key: "authority_licence",
@@ -72,14 +72,14 @@ export const Forms = [
     maxlength: 9,
     showArea: true,
   },
-  { key: "city_id", label: "İl", tab: [5], type: "select", data: "cities",header:'Mağaza Adresi' },
+  { key: "city_id", label: "İl", tab: [5], type: "select", data: "cities", header: 'Mağaza Adresi' },
   {
     key: "county_id",
     label: "İlçe",
     tab: [5],
     type: "select",
     data: "counties",
-    header:'Mağaza Adresi'
+    header: 'Mağaza Adresi'
   },
   {
     key: "neighborhood_id",
@@ -87,7 +87,7 @@ export const Forms = [
     tab: [5],
     type: "select",
     data: "neighborhoods",
-    header:'Mağaza Adresi'
+    header: 'Mağaza Adresi'
   },
   {
     key: "neighborhood_id",
@@ -95,6 +95,6 @@ export const Forms = [
     tab: [5],
     type: "input",
     multinine: true,
-    header:'Mağaza Adresi'
+    header: 'Mağaza Adresi'
   },
 ];
