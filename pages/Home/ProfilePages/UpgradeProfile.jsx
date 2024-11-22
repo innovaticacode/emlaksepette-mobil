@@ -496,7 +496,7 @@ export default function UpgradeProfile() {
         );
         if (response.data) {
           alert("Başarılı");
-          navigation.navigate("VerifyPhoneChange", {
+          navigation.replace("VerifyPhoneChange", {
             phone: formData.new_phone_number,
           });
         }
