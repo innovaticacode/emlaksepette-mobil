@@ -434,28 +434,6 @@ export default function UpgradeProfile() {
         data.append(item.key, formData[item.key]);
       }
     });
-    data.append("_method", "PUT");
-    data.append("banner_hex_code", currentColor);
-    // if (tab == 2) {
-    //   data.append(
-    //     `verify_document`,
-    //     file
-    //       ? {
-    //         uri:
-    //           Platform.OS === "android"
-    //             ? file
-    //             : file.uri.replace("file://", ""), // Android ve iOS için uygun URI
-    //         type: file.mimeType,
-    //         name:
-    //           file == null
-    //             ? "İmage.jpeg"
-    //             : file.name?.slice(-3) == "pdf"
-    //               ? file?.name
-    //               : file?.fileName, // Sunucuya gönderilecek dosya adı
-    //       }
-    //       : null
-    //   );
-    // }
     if (tab == 0) {
       data.append(
         `profile_image`,
@@ -476,57 +454,99 @@ export default function UpgradeProfile() {
           : namFromGetUser.profile_image
       );
     }
-
     if (tab == 1) {
       // Eposta: api/e-posta-adresimi-degistir -> new_email gönderilecek.
       console.debug("tab 1")
     }
-
     if (tab == 2) {
-      // telefon-numarasi-sms-gonderimi
-      const response = await axios.post(
-        `${apiUrl}telefon-numarasi-sms-gonderimi`, // API URL'nizi belirtin
-        data, // JSON formatında veri gönderiyoruz
-        {
-          headers: {
-            Authorization: `Bearer ${user?.access_token}`,
-            "Content-Type": "multipart/form-data",
-          },
+      try {
+
+        if (file) {
+          data.append(
+            `verify_document`,
+            file
+              ? {
+                uri:
+                  Platform.OS === "android"
+                    ? file
+                    : file.uri.replace("file://", ""), // Android ve iOS için uygun URI
+                type: file.mimeType,
+                name:
+                  file == null
+                    ? "İmage.jpeg"
+                    : file.name?.slice(-3) == "pdf"
+                      ? file?.name
+                      : file?.fileName, // Sunucuya gönderilecek dosya adı
+              }
+              : null
+          );
         }
-      );
-      if (response.data) {
-        alert("Başarılı")
+
+        // telefon-numarasi-sms-gonderimi
+
+        console.debug("-*data----------", data)
+        const response = await axios.post(
+          `${apiUrl}telefon-numarasi-sms-gonderimi`, // API URL'nizi belirtin
+          data, // JSON formatında veri gönderiyoruz
+          {
+            headers: {
+              Authorization: `Bearer ${user?.access_token}`,
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
+        if (response.data) {
+          alert("Başarılı")
+        }
       }
-    }
-
-
-    try {
-      const response = await axios.post(
-        `${apiUrl}client/profile/update`, // API URL'nizi belirtin
-        data, // JSON formatında veri gönderiyoruz
-        {
-          headers: {
-            Authorization: `Bearer ${user?.access_token}`,
-            "Content-Type": "multipart/form-data",
-          },
+      catch (error) {
+        // Eğer error.response varsa, sunucudan gelen yanıtı logla
+        if (error.response) {
+          console.error("Sunucu Hata Yanıtı:", error.response.data);
+          console.error("Sunucu Durum Kodu:", error.response.status);
+          console.error("Sunucu Başlıklar:", error.response.headers);
         }
-      );
+        // Eğer error.request varsa, istek yapıldı ancak yanıt alınamadı
+        else if (error.request) {
+          console.error("Istek Yapıldı, Ancak Yanıt Alınamadı:", error.request);
+        }
+        // Eğer bir ağ hatası veya başka bir sorun varsa
+        else {
+          console.error("Hata Detayı:", error.message);
+        }
+      }
 
-      console.debug("response", response.data)
+    }
+    else {
+      try {
+        data.append("_method", "PUT");
+        data.append("banner_hex_code", currentColor);
 
-      Dialog.show({
-        type: ALERT_TYPE.SUCCESS,
-        title: "Başarılı",
-        textBody: "Profiliniz başarıyla güncellendi.",
-        button: "Tamam",
-        onHide: () => {
-          GetUserInfo();
-        },
-      });
-    } catch {
-      alert("hata");
-    } finally {
-      setloadingUpdate(false);
+        const response = await axios.post(
+          `${apiUrl}client/profile/update`, // API URL'nizi belirtin
+          data, // JSON formatında veri gönderiyoruz
+          {
+            headers: {
+              Authorization: `Bearer ${user?.access_token}`,
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
+        console.debug("response", response.data)
+        Dialog.show({
+          type: ALERT_TYPE.SUCCESS,
+          title: "Başarılı",
+          textBody: "Profiliniz başarıyla güncellendi.",
+          button: "Tamam",
+          onHide: () => {
+            GetUserInfo();
+          },
+        });
+      } catch {
+        alert("hata");
+      } finally {
+        setloadingUpdate(false);
+      }
     }
   };
 
