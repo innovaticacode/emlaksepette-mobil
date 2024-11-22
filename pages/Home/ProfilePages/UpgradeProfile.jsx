@@ -83,6 +83,29 @@ export default function UpgradeProfile() {
   const [region, setRegion] = useState(null);
   const [selectedLocation, setSelectedLocation] = useState(null);
   const [areaCode, setareaCode] = useState(null);
+  const [isVisible, setIsVisible] = useState(false);
+  const [loadingUpdate, setloadingUpdate] = useState(false);
+  const initialFormData = {
+    name: "",
+    mobile_phone: "",
+    new_phone_number: "",
+    store_name: "",
+    username: "",
+    authority_licence: "",
+    iban: "",
+    website: "",
+    phone: "",
+    year: "",
+    city_id: "",
+    county_id: "",
+    neighborhood_id: "",
+    taxOfficeCity: "",
+    taxOffice: "",
+    taxNumber: "",
+    email: "",
+    idNumber: "",
+  };
+  const [formData, setFormData] = useState(initialFormData);
 
   useEffect(() => {
     (async () => {
@@ -264,30 +287,10 @@ export default function UpgradeProfile() {
     latitudeDelta: 0.05,
     longitudeDelta: 0.05,
   };
-  const initialFormData = {
-    name: "",
-    mobile_phone: "",
-    new_phone_number: "",
-    store_name: "",
-    username: "",
-    authority_licence: "",
-    iban: "",
-    website: "",
-    phone: "",
-    year: "",
-    city_id: "",
-    county_id: "",
-    neighborhood_id: "",
-    taxOfficeCity: "",
-    taxOffice: "",
-    taxNumber: "",
-    email: "",
-    idNumber: "",
-  };
+
   useEffect(() => {
     getValueFor("user", setUser);
   }, []);
-  const [formData, setFormData] = useState(initialFormData);
 
   const GetUserInfo = async () => {
     setLoading(true);
@@ -417,14 +420,7 @@ export default function UpgradeProfile() {
     });
   };
 
-  // if (!region) {
-  //   return (
-  //     <View style={styles.loadingContainer}>
-  //       <ActivityIndicator size="large" color="red" />
-  //     </View>
-  //   );
-  // }
-  const [loadingUpdate, setloadingUpdate] = useState(false);
+
   const postData = async (param) => {
     setloadingUpdate(true);
     var data = new FormData();
@@ -444,18 +440,18 @@ export default function UpgradeProfile() {
         `verify_document`,
         file
           ? {
-              uri:
-                Platform.OS === "android"
-                  ? file
-                  : file.uri.replace("file://", ""), // Android ve iOS için uygun URI
-              type: file.mimeType,
-              name:
-                file == null
-                  ? "İmage.jpeg"
-                  : file.name?.slice(-3) == "pdf"
+            uri:
+              Platform.OS === "android"
+                ? file
+                : file.uri.replace("file://", ""), // Android ve iOS için uygun URI
+            type: file.mimeType,
+            name:
+              file == null
+                ? "İmage.jpeg"
+                : file.name?.slice(-3) == "pdf"
                   ? file?.name
                   : file?.fileName, // Sunucuya gönderilecek dosya adı
-            }
+          }
           : null
       );
     }
@@ -464,18 +460,18 @@ export default function UpgradeProfile() {
         `profile_image`,
         image
           ? {
-              uri:
-                Platform.OS === "android"
-                  ? image
-                  : image.uri.replace("file://", ""), // Android ve iOS için uygun URI
-              type: image.mimeType,
-              name:
-                file == null
-                  ? "İmage.jpeg"
-                  : image.name?.slice(-3) == "pdf"
+            uri:
+              Platform.OS === "android"
+                ? image
+                : image.uri.replace("file://", ""), // Android ve iOS için uygun URI
+            type: image.mimeType,
+            name:
+              file == null
+                ? "İmage.jpeg"
+                : image.name?.slice(-3) == "pdf"
                   ? image?.name
                   : image?.fileName, // Sunucuya gönderilecek dosya adı
-            }
+          }
           : namFromGetUser.profile_image
       );
     }
@@ -508,101 +504,8 @@ export default function UpgradeProfile() {
     } finally {
       setloadingUpdate(false);
     }
-
-    // data.append("name", formData.name);
-
-    // Dialog.show({
-    //   type: ALERT_TYPE.SUCCESS,
-    //   title: "Başarılı",
-    //   textBody: "Profiliniz başarıyla güncellendi.",
-    //   button: "Tamam",
-    // });
-
-    // GetUserInfo();
-    // try {
-    //   let fullNumber = `${areaCode}${formData.phone}`;
-    //   let FormData = new FormData();
-    //   if (user.role === "Bireysel Hesap") {
-    //     formData.append("name", formData.name);
-    //     formData.append("iban", formData.iban);
-    //     formData.append(
-    //       "profile_image",
-    //       image
-    //         ? {
-    //             uri: image.uri,
-    //             name: image.fileName,
-    //             type: image.type,
-    //           }
-    //         : null
-    //     );
-    //     formData.append(
-    //       "mobile_phone",
-    //       formData.new_phone_number
-    //         ? formData.new_phone_number
-    //         : formData.mobile_phone
-    //     );
-    //     formData.append("banner_hex_code", currentColor);
-    //     formData.append("_method", "PUT");
-    //   } else {
-    //     formData.append(
-    //       "profile_image",
-    //       image
-    //         ? {
-    //             uri: image.uri,
-    //             name: image.fileName,
-    //             type: image.type,
-    //           }
-    //         : null
-    //     );
-    //     formData.append("city_id", formData.city_id);
-    //     formData.append("county_id", formData.county_id);
-    //     formData.append("neighborhood_id", formData.neighborhood_id);
-    //     formData.append("name", formData.name);
-    //     formData.append("username", formData.username);
-    //     formData.append("banner_hex_code", currentColor);
-    //     formData.append("iban", formData.iban);
-    //     formData.append("website", formData.website);
-    //     formData.append("phone", fullNumber);
-    //     formData.append("year", formData.year);
-    //     formData.append(
-    //       "mobile_phone",
-    //       formData.new_phone_number
-    //         ? formData.new_phone_number
-    //         : formData.mobile_phone
-    //     );
-    //     formData.append("latitude", selectedLocation.latitude);
-    //     formData.append("longitude", selectedLocation.longitude);
-    //     formData.append("_method", "PUT");
-    //   }
-
-    //   const response = await axios.post(
-    //     apiUrl+"client/profile/update",
-    //     formData,
-    //     {
-    //       headers: {
-    //         Authorization: `Bearer ${user?.access_token}`,
-    //         "Content-Type": "multipart/form-data",
-    //       },
-    //     }
-    //   );
-
-    //   GetUserInfo();
-    // } catch (error) {
-    //   console.error(
-    //     "Error:",
-    //     error?.response ? error?.response?.data : error?.message
-    //   );
-    //   Dialog.show({
-    //     type: ALERT_TYPE.DANGER,
-    //     title: "Hata",
-    //     textBody: "Profil güncelleme sırasında bir hata oluştu.",
-    //     button: "Tamam",
-    //   });
-    // }
   };
 
-  console.log(namFromGetUser?.profile_image);
-  const [isVisible, setIsVisible] = useState(false);
   return (
     <KeyboardAvoidingView
       style={{ flex: 1 }}
@@ -683,8 +586,8 @@ export default function UpgradeProfile() {
                             image
                               ? { uri: image.uri }
                               : {
-                                  uri: `${frontEndUriBase}storage/profile_images/${namFromGetUser.profile_image}`,
-                                }
+                                uri: `${frontEndUriBase}storage/profile_images/${namFromGetUser.profile_image}`,
+                              }
                           }
                           style={{ width: "100%", height: "100%" }}
                           borderRadius={50}
@@ -842,9 +745,9 @@ export default function UpgradeProfile() {
                                 value={formData[item.key]}
                                 keyboardType={
                                   item.key === "iban" ||
-                                  item.key === "phone" ||
-                                  item.key === "taxNumber" ||
-                                  item.key === "idNumber"
+                                    item.key === "phone" ||
+                                    item.key === "taxNumber" ||
+                                    item.key === "idNumber"
                                     ? "number-pad"
                                     : "default"
                                 }
@@ -1223,7 +1126,7 @@ export default function UpgradeProfile() {
                       removeProfileImage();
                       postData(1);
                     }} // Yalnızca yerelde kaldırmak isterseniz bu işlevi kullanın
-                    // onPress={removeProfileImageFromServer} // Sunucudan da kaldırmak isterseniz bu işlevi kullanın
+                  // onPress={removeProfileImageFromServer} // Sunucudan da kaldırmak isterseniz bu işlevi kullanın
                   >
                     <Icon3
                       name="restore-from-trash"
