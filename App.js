@@ -514,7 +514,7 @@ const StackScreenNavigator = () => {
                     name="UpdateProfile"
                     component={UpdateProfile}
                     options={{
-                      title: "Profili Güncelle",
+                      title: "Hesabımı Yönet",
                       headerStyle: {
                         backgroundColor: "white",
                       },

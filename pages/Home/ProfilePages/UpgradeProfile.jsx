@@ -421,6 +421,10 @@ export default function UpgradeProfile() {
   };
 
 
+  useEffect(() => {
+    console.debug("------->>", tab)
+  }, [tab]);
+
   const postData = async (param) => {
     setloadingUpdate(true);
     var data = new FormData();
@@ -432,29 +436,26 @@ export default function UpgradeProfile() {
     });
     data.append("_method", "PUT");
     data.append("banner_hex_code", currentColor);
-    // if (param) {
-    //     data.append('delete_profile_image',param)
+    // if (tab == 2) {
+    //   data.append(
+    //     `verify_document`,
+    //     file
+    //       ? {
+    //         uri:
+    //           Platform.OS === "android"
+    //             ? file
+    //             : file.uri.replace("file://", ""), // Android ve iOS için uygun URI
+    //         type: file.mimeType,
+    //         name:
+    //           file == null
+    //             ? "İmage.jpeg"
+    //             : file.name?.slice(-3) == "pdf"
+    //               ? file?.name
+    //               : file?.fileName, // Sunucuya gönderilecek dosya adı
+    //       }
+    //       : null
+    //   );
     // }
-    if (tab == 2) {
-      data.append(
-        `verify_document`,
-        file
-          ? {
-            uri:
-              Platform.OS === "android"
-                ? file
-                : file.uri.replace("file://", ""), // Android ve iOS için uygun URI
-            type: file.mimeType,
-            name:
-              file == null
-                ? "İmage.jpeg"
-                : file.name?.slice(-3) == "pdf"
-                  ? file?.name
-                  : file?.fileName, // Sunucuya gönderilecek dosya adı
-          }
-          : null
-      );
-    }
     if (tab == 0) {
       data.append(
         `profile_image`,
@@ -476,7 +477,29 @@ export default function UpgradeProfile() {
       );
     }
 
-    console.log(data);
+    if (tab == 1) {
+      // Eposta: api/e-posta-adresimi-degistir -> new_email gönderilecek.
+      console.debug("tab 1")
+    }
+
+    if (tab == 2) {
+      // telefon-numarasi-sms-gonderimi
+      const response = await axios.post(
+        `${apiUrl}telefon-numarasi-sms-gonderimi`, // API URL'nizi belirtin
+        data, // JSON formatında veri gönderiyoruz
+        {
+          headers: {
+            Authorization: `Bearer ${user?.access_token}`,
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      if (response.data) {
+        alert("Başarılı")
+      }
+    }
+
+
     try {
       const response = await axios.post(
         `${apiUrl}client/profile/update`, // API URL'nizi belirtin
@@ -488,7 +511,8 @@ export default function UpgradeProfile() {
           },
         }
       );
-      console.log("Response:", response.data);
+
+      console.debug("response", response.data)
 
       Dialog.show({
         type: ALERT_TYPE.SUCCESS,
