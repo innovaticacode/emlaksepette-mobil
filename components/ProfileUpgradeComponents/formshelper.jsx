@@ -8,7 +8,7 @@ export const Forms = [
     disabled: true,
   },
   {
-    key: "new_phone_number",
+    key: "new_mobile_phone",
     label: "Yeni Telefon Numarası",
     tab: [2],
     type: "input",
