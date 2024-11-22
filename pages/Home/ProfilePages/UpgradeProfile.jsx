@@ -496,6 +496,9 @@ export default function UpgradeProfile() {
         );
         if (response.data) {
           alert("Başarılı");
+          navigation.navigate("VerifyPhoneChange", {
+            phone: formData.new_phone_number,
+          });
         }
       } catch (error) {
         // Eğer error.response varsa, sunucudan gelen yanıtı logla
@@ -1079,11 +1082,7 @@ export default function UpgradeProfile() {
 
             <View style={{ alignItems: "center" }}>
               <TouchableOpacity
-                onPress={() =>
-                  navigation.navigate("VerifyPhoneChange", {
-                    phone: formData.new_phone_number,
-                  })
-                }
+                onPress={() => postData()}
                 style={{
                   width: "100%",
                   backgroundColor: "#EA2B2E",
