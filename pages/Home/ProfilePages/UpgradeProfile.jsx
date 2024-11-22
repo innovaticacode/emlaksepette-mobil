@@ -1079,7 +1079,11 @@ export default function UpgradeProfile() {
 
             <View style={{ alignItems: "center" }}>
               <TouchableOpacity
-                onPress={() => postData()}
+                onPress={() =>
+                  navigation.navigate("VerifyPhoneChange", {
+                    phone: formData.new_phone_number,
+                  })
+                }
                 style={{
                   width: "100%",
                   backgroundColor: "#EA2B2E",

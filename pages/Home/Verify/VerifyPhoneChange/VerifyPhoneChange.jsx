@@ -9,6 +9,10 @@ import {
   ActivityIndicator,
 } from "react-native";
 import { styles } from "./VerifyPhoneChange.styles";
+import axios from "axios";
+import { apiUrl } from "../../../../components/methods/apiRequest";
+import { getValueFor } from "../../../../components/methods/user";
+import { useNavigation } from "@react-navigation/native";
 
 const VerifyPhoneChange = ({ route }) => {
   const { phone } = route.params;
@@ -16,7 +20,13 @@ const VerifyPhoneChange = ({ route }) => {
   const [isActive, setIsActive] = useState(true);
   const [codes, setCodes] = useState(Array(6).fill(""));
   const [loading, setLoading] = useState(false);
+  const [user, setUser] = useState({});
   const inputs = useRef([]);
+  const navigation = useNavigation();
+
+  useEffect(() => {
+    getValueFor("user", setUser);
+  }, []);
 
   useEffect(() => {
     let interval = null;
@@ -39,11 +49,6 @@ const VerifyPhoneChange = ({ route }) => {
     return `${minutes}:${seconds < 10 ? "0" + seconds : seconds}`;
   };
 
-  const resetTimer = () => {
-    setSeconds(180);
-    setIsActive(true);
-  };
-
   const handleInputChange = (index, text) => {
     const newCodes = [...codes];
     newCodes[index] = text;
@@ -62,21 +67,29 @@ const VerifyPhoneChange = ({ route }) => {
     }
   };
 
-  const handleSubmit = () => {
-    const enteredCode = codes.join("");
-    if (enteredCode === "123456") {
-      setLoading(true);
-      setTimeout(() => {
-        setLoading(false);
-        alert("Telefon doğrulandı!");
-      }, 2000);
-    } else {
-      alert("Geçersiz kod, lütfen tekrar deneyin.");
+  const sendPostRequest = async () => {
+    const data = { code: codes.join("") };
+    try {
+      const response = await axios.post(
+        apiUrl + "telefon-numarasi-sms-dogrulamasi",
+        data,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${user.access_token}`,
+          },
+        }
+      );
+      if (response.data.success) {
+        navigation.navigate("Home");
+      } else {
+        alert("Doğrulama başarısız!");
+      }
+    } catch (error) {
+      console.error("error", error);
+      alert("Bir hata oluştu, lütfen tekrar deneyin.");
+      navigation.navigate("UpdateProfile");
     }
-  };
-
-  const sendPostRequest = () => {
-    alert("Kod gönderildi!");
   };
 
   return (
@@ -119,16 +132,11 @@ const VerifyPhoneChange = ({ route }) => {
           ))}
         </View>
         <View style={styles.actionButtons}>
-          {isActive ? (
+          {isActive && seconds > 0 ? (
             <TouchableOpacity
               disabled={codes.length !== 6 || codes.includes("")}
-              onPress={handleSubmit}
-              style={[
-                styles.submitButton,
-                codes.length === 6 && !codes.includes("")
-                  ? {}
-                  : styles.disabledButton,
-              ]}
+              onPress={() => sendPostRequest()}
+              style={[styles.submitButton]}
             >
               {loading ? (
                 <ActivityIndicator color="white" />
@@ -139,12 +147,11 @@ const VerifyPhoneChange = ({ route }) => {
           ) : (
             <TouchableOpacity
               onPress={() => {
-                resetTimer();
-                sendPostRequest();
+                navigation.navigate("UpdateProfile");
               }}
-              style={styles.sendButton}
+              style={[styles.submitButton]}
             >
-              <Text style={styles.buttonText}>Onayla</Text>
+              <Text style={styles.buttonText}>Tekrar Deneyin</Text>
             </TouchableOpacity>
           )}
         </View>
