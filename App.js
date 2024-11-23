@@ -91,7 +91,6 @@ import SwapScreenNav from "./components/SwapScreenNav";
 import MapWiew from "./pages/Home/MapWiew";
 import CollectionsTab from "./pages/Home/Panel/CollectionsTab";
 import SwapForm from "./pages/Home/RealtorPages/SwapForm";
-import { Button } from "react-native";
 import VerifyScreen from "./pages/Home/VerifyScreen";
 import TypeListScreen from "./components/TypeListScreen";
 import Onboard from "./pages/Home/Onboarding/Onboard";
@@ -106,7 +105,6 @@ import { SheetProvider } from "react-native-actions-sheet";
 import AllFranchiseBrands from "./pages/Home/AllFranchiseBrands";
 import AllFeaturedRealEstate from "./pages/Home/AllFeaturedRealEstate";
 import SeeMyNeighbor from "./pages/Home/SeeMyNeighbor/SeeMyNeighbor";
-
 import { Provider, useSelector } from "react-redux";
 import { store } from "./store/store";
 import SalePageMain from "./pages/Home/PointOfSale/SalePageMain";
@@ -123,10 +121,25 @@ import AllTourismRent from "./pages/Home/AllTourismRent";
 import ViewAll from "./pages/Home/ViewAll/ViewAll";
 import RealEstateWallet from "./src/pages/RealEstateWallet";
 import EditPending from "./pages/Home/EditProject/EditPending";
-import ShareScreen from "./pages/Home/ShareScreen"
+import ShareScreen from "./pages/Home/ShareScreen";
+import PointOfSaleTracking from "./pages/Home/PointOfSale/PointOfSaleTracking/PointOfSaleTracking";
+import MapFilterProject from "./components/Filter/MapViewFilter/MapFilterProject";
+import RealEstateLeague from "./pages/RealEstateLeague/RealEstateLeague";
+import TeamFilter from "./pages/Home/ProfilePageItem/TeamFilter/TeamFilter";
+import FranchisePersonDetail from "./pages/Home/FranchisePerson/FranchisePersonDetail/FranchisePersonDetail";
+import * as Linking from "expo-linking";
 
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator(); // Drawer navigator
+
+const linking = {
+  prefixes: [Linking.createURL("/")], // Expo URL schema kullanarak bağlantı oluşturma
+  config: {
+    screens: {
+      PersonPortfolio: "FranchisePersonDetail/",
+    },
+  },
+};
 
 export default function App({ route }) {
   return (
@@ -242,7 +255,7 @@ const StackScreenNavigator = () => {
       <AlertNotificationRoot>
         <GestureHandlerRootView style={{ flex: 1 }}>
           <SheetProvider>
-            <NavigationContainer>
+            <NavigationContainer linking={linking}>
               <Stack.Navigator
                 screenOptions={{
                   gestureEnabled: true,
@@ -491,7 +504,7 @@ const StackScreenNavigator = () => {
                     component={Rent}
                     options={({ route }) => ({
                       animationTypeForReplace: "pop",
-                      title: "Kiraladıklarım",
+                      title: "Kiraya Verdiklerim",
                       headerBackTitle: "",
                       headerBackTitleVisible: false,
                       headerTintColor: "black",
@@ -521,7 +534,7 @@ const StackScreenNavigator = () => {
                     }}
                   />
                   <Stack.Screen
-                    name="RealtorClub"
+                    name="RealtorClubRegister"
                     options={{
                       title: "Emlak Kulüp Üyesi Ol",
                       headerBackTitle: "",
@@ -1434,6 +1447,58 @@ const StackScreenNavigator = () => {
                     headerStyle: {
                       backgroundColor: "#ffffff",
                     },
+                  })}
+                />
+                <Stack.Screen
+                  name="PointOfSaleTracking"
+                  component={PointOfSaleTracking}
+                  options={({ route }) => ({
+                    title: "Satış Noktası Takibi",
+                    headerBackTitleVisible: false,
+                    headerStyle: {
+                      backgroundColor: "#ffffff",
+                    },
+                  })}
+                />
+
+                <Stack.Screen
+                  name="MapFilterForProject"
+                  component={MapFilterProject}
+                  options={({ route }) => ({
+                    title: "Harita Görünümü (Projeler)",
+                    headerBackTitleVisible: false,
+                    headerStyle: {
+                      backgroundColor: "#ffffff",
+                    },
+                  })}
+                />
+                <Stack.Screen
+                  name="RealEstateLeague"
+                  component={RealEstateLeague}
+                  options={({ route }) => ({
+                    title: "Gayrimenkul Ligi",
+                    headerBackTitleVisible: false,
+                    headerStyle: {
+                      backgroundColor: "#ffffff",
+                    },
+                  })}
+                />
+                <Stack.Screen
+                  name="TeamFilter"
+                  component={TeamFilter}
+                  options={({ route }) => ({
+                    title: "Filtrele",
+                    headerBackTitleVisible: false,
+                    headerStyle: {
+                      backgroundColor: "#ffffff",
+                    },
+                  })}
+                />
+                <Stack.Screen
+                  name="FranchisePersonDetail"
+                  component={FranchisePersonDetail}
+                  options={() => ({
+                    headerShown: false,
                   })}
                 />
               </Stack.Navigator>

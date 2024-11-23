@@ -16,7 +16,7 @@ const FranchiseBanner = (props) => {
       <TouchableOpacity
         style={styles.apply}
         activeOpacity={0.8}
-        onPress={() => onPress}
+        onPress={() => onPress()}
       >
         <Text style={styles.btnText}>Hemen Başvur</Text>
       </TouchableOpacity>
@@ -29,13 +29,13 @@ export default FranchiseBanner;
 const styles = StyleSheet.create({
   container: {
     // backgroundColor: "rgb(228, 228, 228)",
-    paddingLeft:20,
-    paddingRight:20,
+    paddingLeft: 20,
+    paddingRight: 20,
     backgroundColor: "#ffffff",
-    
+
     borderColor: "#E4E4E4",
     borderRadius: 10,
-    padding:8,
+    padding: 8,
     paddingHorizontal: 10,
     height: "auto",
     borderRadius: 10,
@@ -66,9 +66,9 @@ const styles = StyleSheet.create({
     fontSize: 10,
   },
   apply: {
-    backgroundColor: "red",
-    padding: 8,
-    borderRadius: 5,
+    backgroundColor: "#EA2C2E",
+    padding: 9,
+    borderRadius: 10,
     width: "100%",
     alignItems: "center",
   },

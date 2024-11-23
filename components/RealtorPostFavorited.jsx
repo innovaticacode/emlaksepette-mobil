@@ -45,8 +45,7 @@ export default function RealtorPostFavorited({
   selectFavorite,
   isChoosed,
   SelectFavoriteProject,
-  favorites
-  
+  favorites,
 }) {
   const [user, setUser] = useState({});
   const navigation = useNavigation();
@@ -146,12 +145,9 @@ export default function RealtorPostFavorited({
       selectFavorite(housingId);
       setIsHighlighted(!isHighlighted);
     } else {
-      navigation.navigate('PostDetails', {
-      
-      
-          HomeId: housingId,
-          projectId: projectId,
-        
+      navigation.navigate("PostDetails", {
+        HomeId: housingId,
+        projectId: projectId,
       });
     }
   };
@@ -181,7 +177,7 @@ export default function RealtorPostFavorited({
     try {
       if (user?.access_token) {
         const response = await axios.post(
-          "https://private.emlaksepette.com/api/institutional/add_to_cart",
+          apiUrl + "institutional/add_to_cart",
           formData,
           {
             headers: {
@@ -210,9 +206,7 @@ export default function RealtorPostFavorited({
     );
     formData.append(
       "numbershare",
-      favorites?.project?.listHousing[housingId]
-        ? ["number_of_shares[]"]
-        : "[]"
+      favorites?.project?.listHousing[housingId] ? ["number_of_shares[]"] : "[]"
     );
     formData.append("qt", 1);
     formData.append("type", "project");
@@ -221,7 +215,7 @@ export default function RealtorPostFavorited({
     try {
       if (user?.access_token) {
         const response = await axios.post(
-          "https://private.emlaksepette.com/api/institutional/add_to_cart",
+          apiUrl + "institutional/add_to_cart",
           formData,
           {
             headers: {
@@ -238,7 +232,6 @@ export default function RealtorPostFavorited({
   };
   return (
     <AlertNotificationRoot>
-        
       <Swipeable renderRightActions={LeftAction}>
         <TouchableOpacity
           style={{ borderWidth: isHighlighted ? 1 : 0, borderColor: "red" }}
@@ -251,43 +244,44 @@ export default function RealtorPostFavorited({
           }}
         >
           <View style={styles.container}>
-          <AwesomeAlert
-                    show={ModalForAddToCart}
-                    showProgress={false}
-                    title={title}
-                    titleStyle={{
-                      color: "#333",
-                      fontSize: 13,
-                      fontWeight: "700",
-                      textAlign: "center",
-                      margin: 5,
-                    }}
-                    messageStyle={{ textAlign: "center" }}
-                    message={
-                      type==1 ? `1000${projectId} No' lu Projenin ${housingId}. konutunu sepete eklemek istediğinize emin misiniz?`: `2000${HouseId} No' lu konutu sepete eklemek istediğinize emin misiniz?`}
-                    // title={
-                    //   type === 1
-                    //     ? `#1000${selectedCartItem} No'lu Projenin ${selectedRoomID} Numaralı Konutunu Sepete Eklemek İsteğinize Emin misiniz?`
-                    //     : `#2000${selectedCartItem} No'lu konutu sepete eklemek istediğinize emin misiniz?`
-                    // }
-                    closeOnTouchOutside={false}
-                    closeOnHardwareBackPress={false}
-                    showCancelButton={true}
-                    showConfirmButton={true}
-                    cancelText="Vazgeç"
-                    confirmText="Sepete Ekle"
-                    cancelButtonColor="#ce4d63"
-                    confirmButtonColor="#1d8027"
-                    onCancelPressed={() => {
-                      setModalForAddToCart(false);
-                    }}
-                    onConfirmPressed={() => {
-                      type === 2
-                        ? addToCardForHousing()
-                        : addToCardForProject();
-                      setModalForAddToCart(false); // Modalı kapat
-                    }}
-                  />
+            <AwesomeAlert
+              show={ModalForAddToCart}
+              showProgress={false}
+              title={title}
+              titleStyle={{
+                color: "#333",
+                fontSize: 13,
+                fontWeight: "700",
+                textAlign: "center",
+                margin: 5,
+              }}
+              messageStyle={{ textAlign: "center" }}
+              message={
+                type == 1
+                  ? `1000${projectId} No' lu Projenin ${housingId}. konutunu sepete eklemek istediğinize emin misiniz?`
+                  : `2000${HouseId} No' lu konutu sepete eklemek istediğinize emin misiniz?`
+              }
+              // title={
+              //   type === 1
+              //     ? `#1000${selectedCartItem} No'lu Projenin ${selectedRoomID} Numaralı Konutunu Sepete Eklemek İsteğinize Emin misiniz?`
+              //     : `#2000${selectedCartItem} No'lu konutu sepete eklemek istediğinize emin misiniz?`
+              // }
+              closeOnTouchOutside={false}
+              closeOnHardwareBackPress={false}
+              showCancelButton={true}
+              showConfirmButton={true}
+              cancelText="Vazgeç"
+              confirmText="Sepete Ekle"
+              cancelButtonColor="#ce4d63"
+              confirmButtonColor="#1d8027"
+              onCancelPressed={() => {
+                setModalForAddToCart(false);
+              }}
+              onConfirmPressed={() => {
+                type === 2 ? addToCardForHousing() : addToCardForProject();
+                setModalForAddToCart(false); // Modalı kapat
+              }}
+            />
             <AwesomeAlert
               show={showAlert}
               showProgress={false}
@@ -323,8 +317,10 @@ export default function RealtorPostFavorited({
                   <View style={styles.caption}>
                     <Text style={{ fontSize: 9, color: "black" }}>
                       {/* İlan No: {2000 + (projectId ? projectId : HouseId)} */}
-                    İlan No:{ type==1 ? `1000${projectId}-${housingId}`: `2000${HouseId}`}
-                     
+                      İlan No:
+                      {type == 1
+                        ? `1000${projectId}-${housingId}`
+                        : `2000${HouseId}`}
                     </Text>
                     <Text
                       style={{ fontSize: 10, fontWeight: 700 }}
@@ -344,7 +340,7 @@ export default function RealtorPostFavorited({
                   >
                     <Text
                       style={{
-                       color: "#EA2C2E",
+                        color: "#EA2C2E",
                         fontWeight: "700",
                         fontSize: 14,
                         left: 20,
@@ -357,7 +353,7 @@ export default function RealtorPostFavorited({
                     <TouchableOpacity
                       style={styles.addBasket}
                       onPress={() => {
-                       setModalForAddToCart(true)
+                        setModalForAddToCart(true);
                       }}
                     >
                       <Text
@@ -404,7 +400,7 @@ const styles = StyleSheet.create({
     width: "100%",
 
     marginTop: 10,
-    paddingBottom:5,
+    paddingBottom: 5,
     display: "flex",
     flexDirection: "column",
     borderBottomWidth: 2,
@@ -415,7 +411,7 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "row",
     flex: 1,
-  
+
     gap: 8,
     justifyContent: "space-between",
   },
@@ -461,9 +457,9 @@ const styles = StyleSheet.create({
     paddingLeft: 20,
     paddingRight: 20,
     padding: 5,
-    borderRadius:5,
+    borderRadius: 5,
     alignItems: "center",
-    backgroundColor: "#EA2C2E",
+    backgroundColor: "#EA2B2E",
   },
 
   ıconContainer: {

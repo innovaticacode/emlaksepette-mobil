@@ -544,7 +544,7 @@ if (index==1) {
           </Text>
         </TouchableOpacity>
       </View>
-      <ViewFilter selectedView={selectedView} showViewModal={showViewModal} setshowViewModal={setshowViewModal} handleRadio={handleRadio}/>
+      <ViewFilter selectedView={selectedView} showViewModal={showViewModal} setshowViewModal={setshowViewModal} handleRadio={handleRadio} show={2}/>
       <SortModal
         isVisible={state.sortModalVisible}
         onClose={() =>

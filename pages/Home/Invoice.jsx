@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { View, Text, Image, ScrollView, ImageBackground } from "react-native";
 import { StyleSheet } from "react-native";
 import axios from "axios";
@@ -89,54 +89,6 @@ export default function Invoice() {
     }
   }, [data, user.access_token]);
 
-  const createPDF = async () => {
-    try {
-      // Yeni PDF dokümanı oluştur
-      const pdfPath = `${RNFS.DocumentDirectoryPath}/invoice.pdf`;
-      const page1 = PDFDocument.Page.create()
-        .setMediaBox(200, 200)
-        .drawText("Invoice", {
-          x: 5,
-          y: 170,
-          fontSize: 20,
-          color: "#007386",
-        })
-        .drawText("Date: 2023-05-22", {
-          x: 5,
-          y: 150,
-          fontSize: 12,
-          color: "#000",
-        });
-
-      const pdfDoc = PDFDocument.create(pdfPath).addPages(page1);
-
-      await pdfDoc.write(); // PDF dosyasını kaydet
-
-      return pdfPath;
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  const downloadPDF = async () => {
-    const pdfPath = await createPDF();
-
-    if (pdfPath) {
-      const shareOptions = {
-        title: "Download Invoice",
-        url: `file://${pdfPath}`,
-        type: "application/pdf",
-      };
-
-      Share.open(shareOptions)
-        .then((res) => {})
-        .catch((err) => {
-          err && console.log(err);
-        });
-    } else {
-      Alert.alert("Error", "Failed to create PDF.");
-    }
-  };
 
   return (
     <>
@@ -148,10 +100,11 @@ export default function Invoice() {
         </View>
       ) : (
         <ScrollView
+
           contentContainerStyle={{ flexGrow: 1 }}
           showsVerticalScrollIndicator={false}
         >
-          <View style={styles.body}>
+          <View style={styles.body} >
             <View style={styles.cardContainer}>
               <View style={{ paddingHorizontal: 20 }}>
                 <View style={{ width: "100%" }}>
@@ -215,8 +168,8 @@ export default function Invoice() {
                     {data?.project
                       ? `1000${data.project.id}`
                       : data?.housing
-                      ? `2000${data.housing.id}`
-                      : "Değer bulunamadı"}
+                        ? `2000${data.housing.id}`
+                        : "Değer bulunamadı"}
                   </Text>
                 </Text>
                 <View style={{ flexDirection: "row", marginTop: 10 }}>
@@ -316,8 +269,8 @@ export default function Invoice() {
                 </>
               </View>
             </View>
-            <View style={{ marginTop: 10 }}>
-              <TouchableOpacity style={styles.downloadBtn} onPress={() => null}>
+            {/* <View style={{ marginTop: 10 }}>
+              <TouchableOpacity style={styles.downloadBtn} onPress={() => generatePDF()}>
                 <AntDesign
                   name="download"
                   size={18}
@@ -328,7 +281,7 @@ export default function Invoice() {
                   PDF Olarak İndir
                 </Text>
               </TouchableOpacity>
-            </View>
+            </View> */}
           </View>
         </ScrollView>
       )}

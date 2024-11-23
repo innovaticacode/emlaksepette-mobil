@@ -42,8 +42,8 @@ export default function RejectRealtorAdverts() {
     setloading(true);
     try {
       const res = await axios.get(
-        apiUrl+"get_my_housings?orderByHousings=" +
-          sort,
+        apiUrl + "get_my_housings?orderByHousings=" +
+        sort,
         {
           headers: { Authorization: "Bearer " + user.access_token },
         }
@@ -75,8 +75,8 @@ export default function RejectRealtorAdverts() {
     setsearchValue(value);
     const filteredData = value
       ? housings.filter((item) =>
-          item?.housing_title.toLowerCase().includes(value.toLowerCase())
-        )
+        item?.housing_title.toLowerCase().includes(value.toLowerCase())
+      )
       : housings;
     sethousingRecords(filteredData);
   };
@@ -322,7 +322,7 @@ export default function RejectRealtorAdverts() {
                     Resimler
                   </Text>
                 </TouchableOpacity>
-                <TouchableOpacity
+                {/* <TouchableOpacity
                   style={{
                     flexDirection: "row",
                     alignItems: "center",
@@ -335,7 +335,7 @@ export default function RejectRealtorAdverts() {
                   >
                     Pazarlık Teklifleri (0)
                   </Text>
-                </TouchableOpacity>
+                </TouchableOpacity> */}
               </View>
             </View>
           </Modal>

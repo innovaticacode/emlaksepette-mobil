@@ -6,11 +6,11 @@ import axios from "axios";
 import { Box } from "@react-native-material/core";
 import { LinearProgress } from "react-native-elements";
 import TypeListScreen from "../../../components/TypeListScreen";
+import { frontEndUriBase } from "../../../components/methods/apiRequest";
 
 export default function Emlak() {
   const navigation = useNavigation();
   const route = useRoute();
-  const baseUrl = "https://private.emlaksepette.com/react/";
   const { name } = route.params;
   const [step, setStep] = useState(1);
   const [loadingModal, setLoadingModal] = useState(false);
@@ -47,7 +47,7 @@ export default function Emlak() {
   };
 
   useEffect(() => {
-    axios.get(baseUrl + "get_current_user").then((res) => {
+    axios.get(frontEndUriBase + "react/get_current_user").then((res) => {
       setUser(res.data.user);
     });
   }, []);
@@ -139,7 +139,7 @@ export default function Emlak() {
                     } else {
                       if (
                         !blocks[selectedBlock].rooms[selectedRoom][
-                          formDataHousing.name
+                        formDataHousing.name
                         ]
                       ) {
                         if (!boolCheck) {
@@ -174,9 +174,9 @@ export default function Emlak() {
                   if (haveBlocks) {
                     anotherBlockErrorsTemp.push(
                       blocks[blockIndex].name +
-                        " bloğunun " +
-                        (i + 1) +
-                        " nolu konutunun verilerini doldurunuz"
+                      " bloğunun " +
+                      (i + 1) +
+                      " nolu konutunun verilerini doldurunuz"
                     );
                   } else {
                     anotherBlockErrorsTemp.push(
@@ -361,7 +361,7 @@ export default function Emlak() {
                 } else {
                   if (
                     !blocks[selectedBlock].rooms[selectedRoom][
-                      formDataHousing.name
+                    formDataHousing.name
                     ]
                   ) {
                     tempErrors.push(formDataHousing.name.replace("[]", ""));
@@ -481,7 +481,7 @@ export default function Emlak() {
       });
       let requestPromises = [];
       axios
-        .post(baseUrl + "create_housing", formData, {
+        .post(frontEndUriBase + "react/create_housing", formData, {
           headers: {
             accept: "application/json",
             "Accept-Language": "en-US,en;q=0.8",

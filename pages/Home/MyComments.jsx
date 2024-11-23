@@ -5,7 +5,7 @@ import {
   ScrollView,
   TouchableOpacity,
   ImageBackground,
-  ActivityIndicator,
+
   RefreshControl,
 } from "react-native";
 import React, { useState, useEffect, useCallback } from "react";
@@ -20,6 +20,7 @@ import { useNavigation } from "@react-navigation/native";
 import NoDataScreen from "../../components/NoDataScreen";
 import AwesomeAlert from "react-native-awesome-alerts";
 import { apiUrl, frontEndUriBase } from "../../components/methods/apiRequest";
+import { ActivityIndicator } from "react-native-paper";
 
 export default function MyComments() {
   const [user, setuser] = useState({});
@@ -265,7 +266,7 @@ export default function MyComments() {
                 alignItems: "center",
               }}
             >
-              <ActivityIndicator size="large" color="#0000ff" />
+              <ActivityIndicator size="large" color="#333" />
             </View>
           ) : comments?.length > 0 ? (
             comments.map((item, index) => (
@@ -288,15 +289,15 @@ export default function MyComments() {
 
           <Modal
             isVisible={choose}
-            style={styles.modal}
+            style={[styles.modal,{margin:0}]}
             animationIn={"fadeInDown"}
             animationOut={"fadeOutDown"}
             onBackdropPress={() => setchoose(false)}
             swipeDirection={["down"]}
             onSwipeComplete={() => setchoose(false)}
           >
-            <View style={styles.modalContent}>
-              <View style={styles.modalOptions}>
+            <View style={[styles.modalContent]}>
+              <View style={[styles.modalOptions]}>
                 {(selectedCommentStatus === 1 ||
                   selectedCommentStatus === 2) && (
                   <TouchableOpacity
@@ -374,7 +375,7 @@ export default function MyComments() {
               setModalVisible(false)
               setTimeout(() => {
                 DeleteComment();
-              }, 400);
+              }, 600);
 
             }}
             confirmButtonTextStyle={{ marginLeft: 20, marginRight: 20 }}
@@ -540,6 +541,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     padding: 20,
     borderRadius: 10,
+    paddingBottom:30
   },
   modalHeader: {
     flexDirection: "row",

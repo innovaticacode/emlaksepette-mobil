@@ -14,7 +14,7 @@ import {
   Share,
 } from "react-native";
 import ImageViewing from "react-native-image-viewing";
-import { React, useRef, useState, useEffect } from "react";
+import { React, useRef, useState, useEffect, useCallback } from "react";
 import Icon2 from "react-native-vector-icons/AntDesign";
 import * as Clipboard from "expo-clipboard";
 import { Platform } from "react-native";
@@ -29,7 +29,11 @@ import LinkIcon from "react-native-vector-icons/Entypo";
 import Arrow from "react-native-vector-icons/MaterialIcons";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import SliderMenuPostDetails from "../../../components/PostDetailsSettings/SliderMenuPostDetails";
-import { apiRequestGet, apiUrl, frontEndUriBase } from "../../../components/methods/apiRequest";
+import {
+  apiRequestGet,
+  apiUrl,
+  frontEndUriBase,
+} from "../../../components/methods/apiRequest";
 import Header from "../../../components/Header";
 import Search from "../Search";
 import SliderMenuRealtorDetails from "../../../components/SliderMenuRealtorDetail";
@@ -56,7 +60,6 @@ import TextAlertModal from "../../../components/TextAlertModal";
 import { DrawerMenu } from "../../../components";
 import AwesomeAlertComp from "../../../components/AwesomeAlertComp";
 export default function PostDetail() {
-
   const [modalVisible, setModalVisible] = useState(false);
   const [tabs, setTabs] = useState(0);
   const [images, setImages] = useState([]);
@@ -81,7 +84,7 @@ export default function PostDetail() {
   //   );
   //   alert("Metin kopyalandı!");
   // };
-  
+
   const changeBookmark = () => {
     setbookmark(bookmark === "bookmark-o" ? "bookmark" : "bookmark-o");
   };
@@ -150,14 +153,11 @@ export default function PostDetail() {
     setloadingcollection(true);
     try {
       if (user?.access_token && user) {
-        const userInfo = await axios.get(
-          apiUrl+"users/" + user?.id,
-          {
-            headers: {
-              Authorization: `Bearer ${user.access_token}`,
-            },
-          }
-        );
+        const userInfo = await axios.get(apiUrl + "users/" + user?.id, {
+          headers: {
+            Authorization: `Bearer ${user.access_token}`,
+          },
+        });
         const userData = userInfo?.data?.user;
         setnamFromGetUser(userData);
       }
@@ -175,10 +175,7 @@ export default function PostDetail() {
     };
     try {
       setloading(true);
-      const response = await axios.get(
-        `${apiUrl}housing/${houseId}`,
-        config
-      );
+      const response = await axios.get(`${apiUrl}housing/${houseId}`, config);
       setloading(false);
       GetUserInfo();
       setData(response.data);
@@ -204,7 +201,6 @@ export default function PostDetail() {
     }
   };
 
-  console.log(houseId);
   useEffect(() => {
     fetchDetails();
   }, [user]);
@@ -259,14 +255,11 @@ export default function PostDetail() {
   const fetchData = async () => {
     try {
       if (user.access_token) {
-        const response = await axios.get(
-          apiUrl+"client/collections",
-          {
-            headers: {
-              Authorization: `Bearer ${user.access_token}`,
-            },
-          }
-        );
+        const response = await axios.get(apiUrl + "client/collections", {
+          headers: {
+            Authorization: `Bearer ${user.access_token}`,
+          },
+        });
         setcollections(response?.data.collections);
       }
     } catch (error) {
@@ -301,16 +294,12 @@ export default function PostDetail() {
     };
 
     axios
-      .post(
-        apiUrl+"add/collection",
-        collectionData,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${user.access_token}`,
-          },
-        }
-      )
+      .post(apiUrl + "add/collection", collectionData, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${user.access_token}`,
+        },
+      })
       .then((response) => {
         setaddCollection(false);
         setnewCollectionNameCreate("");
@@ -352,7 +341,7 @@ export default function PostDetail() {
     };
 
     axios
-      .post(apiUrl+"addLink", collectionData, {
+      .post(apiUrl + "addLink", collectionData, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${user.access_token}`,
@@ -417,11 +406,12 @@ export default function PostDetail() {
     try {
       if (user?.access_token) {
         const response = await axios.post(
-          apiUrl+"institutional/add_to_cart",
+          apiUrl + "institutional/add_to_cart",
           formData,
           {
             headers: {
               Authorization: `Bearer ${user?.access_token}`,
+              "Content-Type": "multipart/form-data",
             },
           }
         );
@@ -458,16 +448,12 @@ export default function PostDetail() {
     };
 
     axios
-      .post(
-        apiUrl+"remove_item_on_collection",
-        collectionData,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${user.access_token}`,
-          },
-        }
-      )
+      .post(apiUrl + "remove_item_on_collection", collectionData, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${user.access_token}`,
+        },
+      })
       .then((response) => {
         setColectionSheet(false);
         Toast.show({
@@ -632,6 +618,22 @@ export default function PostDetail() {
   // Handle page change in PagerView
   const [SeeAlertModal, setSeeAlertModal] = useState(false);
   const [show, setShow] = useState(false);
+
+  const tempIndexRef = useRef(currentIndex); // To temporarily store the index
+  const handleImageIndexChange = (index) => {
+    tempIndexRef.current = index; //Update temporary index
+  };
+  const goToSwapScreen = () => {
+    if (user.access_token) {
+      navigation.navigate("SwapForm", {
+        houseid: data?.housing?.id,
+        type: 2,
+        projectId: null,
+      });
+    } else {
+      setShow(true);
+    }
+  }
   return (
     <>
       <AlertNotificationRoot>
@@ -660,7 +662,143 @@ export default function PostDetail() {
                   paddingBottom: width > 400 ? 15 : 7,
                 }}
               >
-                {data?.housing?.user?.id == user?.id || data?.housing?.sold ? (
+                {
+                  (!data?.housing?.sold || data?.housing?.sold > 1)
+                    ?
+                    <>
+                      {
+                        data?.housing?.user?.id == user?.id ?
+                          <TouchableOpacity
+                            style={{
+                              backgroundColor: "#008001",
+                              width: "100%",
+                              padding: 12,
+                              borderRadius: 5,
+                            }}
+                          >
+                            <Text
+                              style={{
+                                textAlign: "center",
+                                color: "#ffffff",
+                                fontWeight: "700",
+                              }}
+                            >
+                              İlanı Düzenle
+                            </Text>
+                          </TouchableOpacity> :
+                          <>
+                            <TouchableOpacity
+                              style={{
+                                width: "45%",
+                                backgroundColor: "#EA2B2E",
+                                padding: 12,
+                                borderRadius: 8,
+                              }}
+                              onPress={handleOpenPhone}
+                            >
+                              <Text
+                                style={{
+                                  fontSize: 14,
+                                  color: "white",
+                                  fontWeight: "600",
+                                  textAlign: "center",
+                                }}
+                              >
+                                Ara
+                              </Text>
+                            </TouchableOpacity>
+                            {
+                              data?.housing?.step1_slug == "mustakil-tatil" &&
+                                data?.housing?.step2_slug == "gunluk-kiralik" ? (
+                                <TouchableOpacity
+                                  onPress={() => {
+                                    navigation.navigate("CreateReservation", {
+                                      data: data,
+                                    });
+                                  }}
+                                  style={{
+                                    backgroundColor: "#EB2B2E",
+                                    width: "45%",
+                                    padding: 12,
+                                    borderRadius: 5,
+                                  }}
+                                >
+                                  <Text
+                                    style={{
+                                      textAlign: "center",
+                                      color: "#ffffff",
+                                      fontWeight: "700",
+                                    }}
+                                  >
+                                    Rezervasyon Yap
+                                  </Text>
+                                </TouchableOpacity>
+                              ) : (
+                                <TouchableOpacity
+                                  onPress={() => {
+                                    if (user.access_token) {
+                                      setModalForAddToCart(true);
+                                    } else {
+                                      setAlertForAddToCard(true);
+                                    }
+                                  }}
+                                  style={{
+                                    backgroundColor: "#EA2B2E",
+                                    width: "45%",
+                                    padding: 12,
+                                    borderRadius: 5,
+                                  }}
+                                >
+                                  <Text
+                                    style={{
+                                      textAlign: "center",
+                                      color: "#ffffff",
+                                      fontWeight: "700",
+                                    }}
+                                  >
+                                    Sepete Ekle
+                                  </Text>
+                                </TouchableOpacity>
+                              )
+                            }
+                          </>
+                      }
+
+                    </>
+                    :
+                    data?.housing?.sold == 1 ? (
+                      <View
+                        style={[{ backgroundColor: "#000000", width: '100%', padding: 15, borderRadius: 10 }]}
+                      >
+                        <Text
+                          style={{
+                            color: "white",
+                            fontWeight: "600",
+                            textAlign: 'center',
+                            fontSize: 14,
+                          }}
+                        >
+                          Satıldı
+                        </Text>
+                      </View>
+                    ) : (
+                      <View
+                        style={[{ backgroundColor: "#373737", width: '100%', padding: 15, borderRadius: 10 }]}
+                      >
+                        <Text
+                          style={{
+                            color: "white",
+                            fontWeight: "600",
+                            textAlign: 'center',
+                            fontSize: 14,
+                          }}
+                        >
+                          Rezerve Edildi
+                        </Text>
+                      </View>
+                    )
+                }
+                {/* {data?.housing?.user?.id == user?.id || data?.housing?.sold ? (
                   <></>
                 ) : (
                   <TouchableOpacity
@@ -739,7 +877,7 @@ export default function PostDetail() {
                         }
                       }}
                       style={{
-                        backgroundColor: "#EB2B2E",
+                        backgroundColor: "#EA2B2E",
                         width: "45%",
                         padding: 12,
                         borderRadius: 5,
@@ -759,7 +897,7 @@ export default function PostDetail() {
                 ) : data?.housing?.sold == "1" ? (
                   <View
                     style={{
-                      backgroundColor: "#EA2C2E",
+                      backgroundColor: "#000000",
                       width: "100%",
                       padding: 12,
                       borderRadius: 5,
@@ -778,7 +916,7 @@ export default function PostDetail() {
                 ) : (
                   <View
                     style={{
-                      backgroundColor: "#FFA500",
+                      backgroundColor: "#373737",
                       padding: 12,
                       borderRadius: 5,
                       width: "100%",
@@ -794,8 +932,9 @@ export default function PostDetail() {
                       Rezerve Edildi
                     </Text>
                   </View>
-                )}
+                )} */}
               </View>
+
             </View>
             <View
               style={{
@@ -956,7 +1095,9 @@ export default function PostDetail() {
                 )}
 
                 <PagerView
+                  key={currentIndex} // Yalnızca tam ekran kapatıldığında güncellenir
                   style={{ height: 250 }}
+                  initialPage={currentIndex} // Güncel indekse göre başlat
                   onPageSelected={(event) =>
                     handlePageChange(event.nativeEvent.position)
                   }
@@ -969,11 +1110,10 @@ export default function PostDetail() {
                         setCurrentIndex(index);
                       }}
                     >
-                      <ImageBackground
+                      <Image
                         source={{
-                          uri: `${frontEndUriBase}housing_images/${
-                            item.split("/")[item.split("/").length - 1]
-                          }`,
+                          uri: `${frontEndUriBase}housing_images/${item.split("/")[item.split("/").length - 1]
+                            }`,
                         }}
                         style={{ width: "100%", height: "100%" }}
                       />
@@ -981,12 +1121,26 @@ export default function PostDetail() {
                   ))}
                 </PagerView>
 
-                {/* Full-screen image viewing */}
                 <ImageViewing
+                  backgroundColor="#000"
                   images={imageURIs}
                   imageIndex={currentIndex}
                   visible={isVisible}
-                  onRequestClose={() => setIsVisible(false)}
+                  presentationStyle="overFullScreen"
+                  onRequestClose={() => {
+                    setIsVisible(false);
+                    setCurrentIndex(tempIndexRef.current);
+                  }}
+                  onImageIndexChange={handleImageIndexChange}
+                  FooterComponent={({ imageIndex }) => (
+                    <View style={{
+                      marginBottom: 50,
+                    }}>
+                      <Text style={styles.fulViewImgText}>
+                        {imageIndex + 1} / {images.length}
+                      </Text>
+                    </View>
+                  )}
                 />
               </View>
 
@@ -1060,51 +1214,35 @@ export default function PostDetail() {
                                   "price"
                                 ]
                                   ? JSON.parse(data.housing.housing_type_data)[
-                                      "price"
-                                    ]
+                                  "price"
+                                  ]
                                   : JSON.parse(data.housing.housing_type_data)[
-                                      "daily_rent"
-                                    ]
+                                  "daily_rent"
+                                  ]
                               )}{" "}
                               ₺{" "}
                               {JSON.parse(data.housing.housing_type_data)[
                                 "daily_rent"
                               ] && (
-                                <Text style={{ color: "#EA2A28" }}>
-                                  / Gecelik
-                                </Text>
-                              )}
+                                  <Text style={{ color: "#EA2A28" }}>
+                                    / Gecelik
+                                  </Text>
+                                )}
                             </Text>
                           )}
                       </View>
                     </View>
                   </View>
                 </View>
+
                 {data.housing &&
                   data.housing.housing_type_data &&
                   JSON.parse(data.housing.housing_type_data)["swap"] ==
-                    "Evet" && (
+                  "Evet" && (!data?.housing?.sold || data?.housing?.sold > 1) && (
                     <View>
                       <TouchableOpacity
-                        style={{
-                          backgroundColor: "#FEF4EB",
-                          flexDirection: "row",
-                          padding: 6,
-                          alignItems: "center",
-                          justifyContent: "space-between",
-                          borderRadius: 5,
-                        }}
-                        onPress={() => {
-                          if (user.access_token) {
-                            navigation.navigate("SwapForm", {
-                              houseid: data?.housing?.id,
-                              type: 2,
-                              projectId: null,
-                            });
-                          } else {
-                            setShow(true);
-                          }
-                        }}
+                        style={styles.swapContainer}
+                        onPress={goToSwapScreen}
                       >
                         <View
                           style={{
@@ -1144,6 +1282,7 @@ export default function PostDetail() {
                       </TouchableOpacity>
                     </View>
                   )}
+
                 <View
                   style={{ justifyContent: "center", alignItems: "center" }}
                 >
@@ -1229,7 +1368,7 @@ export default function PostDetail() {
                             }}
                           >
                             {user.type == 2 &&
-                            user.corporate_type == "Emlak Ofisi"
+                              user.corporate_type == "Emlak Ofisi"
                               ? "Portföye Ekle"
                               : "Koleksiyona Ekle"}
                           </Text>
@@ -1241,7 +1380,7 @@ export default function PostDetail() {
                             }}
                           >
                             {user.type == 2 &&
-                            user.corporate_type == "Emlak Ofisi"
+                              user.corporate_type == "Emlak Ofisi"
                               ? "Konutu portföylerinden birine ekleyebilir veya yeni bir portföy oluşturabilirsin"
                               : "Konutu koleksiyonlarından birine ekleyebilir veya yeni bir koleksiyon oluşturabilirsin"}
                           </Text>
@@ -1343,7 +1482,7 @@ export default function PostDetail() {
                                     }}
                                   >
                                     {user.type == 2 &&
-                                    user.corporate_type == "Emlak Ofisi"
+                                      user.corporate_type == "Emlak Ofisi"
                                       ? "Portföyünüze konut ekleyebilmeniz için giriş yapmanız gerekmektedir"
                                       : "Koleksiyonunuza konut ekleyebilmeniz için giriş yapmanız gerekmektedir"}
                                   </Text>
@@ -1397,7 +1536,7 @@ export default function PostDetail() {
                                     }}
                                   >
                                     {user.type == 2 &&
-                                    user.corporate_type == "Emlak Ofisi"
+                                      user.corporate_type == "Emlak Ofisi"
                                       ? "Portföyünüze konut ekleyebilmeniz için Emlak Kulüp üyesi olmanız gerekmektedir"
                                       : "Koleksiyonunuza konut ekleyebilmeniz için Emlak Kulüp üyesi olmanız gerekmektedir"}
                                   </Text>
@@ -1448,7 +1587,7 @@ export default function PostDetail() {
                                     }}
                                   >
                                     {user.type == 2 &&
-                                    user.corporate_type == "Emlak Ofisi"
+                                      user.corporate_type == "Emlak Ofisi"
                                       ? "Portföyünüze konut ekleyebilmeniz için Emlak Kulüp üyesi olmanız gerekmektedir"
                                       : "Koleksiyonunuza konut ekleyebilmeniz için Emlak Kulüp üyesi olmanız gerekmektedir"}
                                   </Text>
@@ -1479,7 +1618,7 @@ export default function PostDetail() {
                                     }}
                                   >
                                     {user.type == 2 &&
-                                    user.corporate_type == "Emlak Ofisi"
+                                      user.corporate_type == "Emlak Ofisi"
                                       ? "Portföyünüze konut ekleyebilmeniz için Emlak Kulüp üyesi olmanız gerekmektedir"
                                       : "Koleksiyonunuza konut ekleyebilmeniz için Emlak Kulüp üyesi olmanız gerekmektedir"}
                                   </Text>
@@ -1716,7 +1855,7 @@ export default function PostDetail() {
                             }}
                           >
                             {user.type == 2 &&
-                            user.corporate_type == "Emlak Ofisi"
+                              user.corporate_type == "Emlak Ofisi"
                               ? "Portföy Oluştur"
                               : "Koleksiyon Oluştur"}
                           </Text>
@@ -1737,7 +1876,7 @@ export default function PostDetail() {
                           }}
                         >
                           {user.type == 2 &&
-                          user.corporate_type == "Emlak Ofisi"
+                            user.corporate_type == "Emlak Ofisi"
                             ? "Portföy İsmi"
                             : "Koleksiyon İsmi"}
                         </Text>
@@ -1768,7 +1907,7 @@ export default function PostDetail() {
                             }}
                           >
                             {user.type == 2 &&
-                            user.corporate_type == "Emlak Ofisi"
+                              user.corporate_type == "Emlak Ofisi"
                               ? "Portföy Oluştur"
                               : "Koleksiyon Oluştur"}
                           </Text>
@@ -1856,29 +1995,31 @@ export default function PostDetail() {
                     }
                   >
                     {images.map((item, _index) => [
-                      <View key={_index} style={{}}>
+                      <View key={_index}>
                         <ImageBackground
-                          source={{ uri: `${frontEndUriBase}housing_images/${item}` }}
+                          source={{
+                            uri: `${frontEndUriBase}housing_images/${item}`,
+                          }}
                           style={{ width: "100%", height: "100%" }}
                         />
                       </View>,
                     ])}
                     {/* {
-                  data.housing.images.map((image,index) => {
-                    // console.log(`${apiUrl}${image.image.replace("public",'storage')}`)
-                    return(
-                      <Pressable key={index+1} onPress={()=>setCoverImageModal(true)}>
-                        <ImageBackground
-                          source={{uri:`${apiUrl}${image.image.replace("public",'storage')}`}}
-                          style={{ width: "100%", height: "100%", }}
-                         
-                          resizeMode='cover'
-                        
-                        />
-                      </Pressable>
-                    )
-                  })
-                } */}
+                      data.housing.images.map((image,index) => {
+                        // console.log(`${apiUrl}${image.image.replace("public",'storage')}`)
+                        return(
+                          <Pressable key={index+1} onPress={()=>setCoverImageModal(true)}>
+                            <ImageBackground
+                              source={{uri:`${apiUrl}${image.image.replace("public",'storage')}`}}
+                              style={{ width: "100%", height: "100%", }}
+                            
+                              resizeMode='cover'
+                            
+                            />
+                          </Pressable>
+                        )
+                      })
+                    } */}
                   </PagerView>
                 </View>
               </Modal>
@@ -2264,4 +2405,18 @@ const styles = StyleSheet.create({
       },
     }),
   },
+  fulViewImgText: {
+    color: "#FFF",
+    fontSize: 12,
+    textAlign: "center",
+    fontWeight: "500",
+  },
+  swapContainer: {
+    backgroundColor: "#FEF4EB",
+    flexDirection: "row",
+    padding: 6,
+    alignItems: "center",
+    justifyContent: "space-between",
+    borderRadius: 5,
+  }
 });

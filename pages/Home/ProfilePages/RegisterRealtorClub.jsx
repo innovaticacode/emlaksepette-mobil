@@ -5,7 +5,6 @@ import {
   TextInput,
   TouchableOpacity,
   Keyboard,
-  Alert,
   TouchableWithoutFeedback,
   SafeAreaView,
 } from "react-native";
@@ -14,7 +13,6 @@ import { useRoute } from "@react-navigation/native";
 import { useNavigation } from "@react-navigation/native";
 import axios from "axios";
 import Modal from "react-native-modal";
-import { getValueFor } from "../../../components/methods/user";
 import { Icon } from "react-native-elements";
 import { Platform } from "react-native";
 import HTML from "react-native-render-html";
@@ -145,7 +143,7 @@ export default function RegisterRealtorClub({ setİsLoggedIn }) {
 
     try {
       const response = await axios.put(
-        apiUrl+"institutional/club/update",
+        apiUrl + "institutional/club/update",
         data,
         {
           headers: {
@@ -213,7 +211,7 @@ export default function RegisterRealtorClub({ setİsLoggedIn }) {
     try {
       if (user?.access_token && user) {
         const userInfo = await axios.get(
-          apiUrl+"users/" + user?.id,
+          apiUrl + "users/" + user?.id,
           {
             headers: {
               Authorization: `Bearer ${user.access_token}`,
@@ -263,11 +261,39 @@ export default function RegisterRealtorClub({ setİsLoggedIn }) {
   };
   const [DealModal, setDealModal] = useState(false);
   const [showAlertForDeal, setshowAlertForDeal] = useState(false);
-  console.log(errorStatu);
+
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
       <View style={styles.container}>
         <View style={styles.header}>
+          {
+            namFromGetUser?.has_club == 1 && (
+              <View style={{ gap: 10 }}>
+                <Text style={styles.headerText}>
+                  Emlak Sepette | Emlak Kulüp Başvurunuz Onaylandı
+                </Text>
+                <View
+                  style={{
+                    borderTopWidth: 1,
+                    borderColor: "#ebebeb",
+                    paddingTop: 20,
+                  }}
+                >
+                  <Text
+                    style={{
+                      color: "green",
+                      fontSize: 16,
+                      fontWeight: "500",
+                      textAlign: "center",
+                    }}
+                  >
+                    Üyelik başvurunuz onaylandı. Bilgileriniz onaylandı ve
+                    hesabınız aktif edildi.
+                  </Text>
+                </View>
+              </View>
+            )
+          }
           {namFromGetUser?.has_club == 0 && (
             <>
               <Text style={styles.headerText}>
