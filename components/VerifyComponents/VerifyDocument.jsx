@@ -12,12 +12,12 @@ import * as DocumentPicker from "expo-document-picker";
 import AwesomeAlert from "react-native-awesome-alerts";
 import { useIsFocused, useNavigation } from "@react-navigation/native";
 import { Alert } from "react-native";
-import { documentView } from "../helper";
+import { documentView } from "../../pages/helper";
 import ImageViewing from "react-native-image-viewing";
-import { getValueFor } from "../../components/methods/user";
+import { getValueFor } from "../methods/user";
 import axios from "axios";
 import { ActivityIndicator } from "react-native-paper";
-import { apiUrl } from "../../components/methods/apiRequest";
+import { apiUrl } from "../methods/apiRequest";
 export default function VerifyDocument({ nextStep, prevStep }) {
   const [FormDatas, setFormDatas] = useState({
     sicil_belgesi: null,
