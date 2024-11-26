@@ -5,7 +5,13 @@ import Icon from 'react-native-vector-icons/AntDesign'
 import * as ImagePicker from "expo-image-picker";
 import Icon3 from "react-native-vector-icons/MaterialIcons";
 import  Modal from 'react-native-modal'
-const UpdateProfileImage = () => {
+import { getValueFor } from '../methods/user';
+import { apiUrl } from '../methods/apiRequest';
+
+import { ALERT_TYPE, AlertNotificationRoot,Dialog } from 'react-native-alert-notification';
+import axios from 'axios';
+import NextAndPrevButton from './NextAndPrevButton';
+const UpdateProfileImage = ({nextStep,prevStep}) => {
   const [currentColor, setCurrentColor] = useState(null);
   const [choose, setchoose] = useState(false);
   const [image, setImage] = useState(null);
@@ -30,6 +36,7 @@ const UpdateProfileImage = () => {
 
     if (!result.canceled) {
       setImage(result.assets[0]); // Seçilen fotoğrafı state'e kaydediyoruz
+      UploadProfile(result.assets[0])
       setchoose(false); // Modal'ı kapatıyoruz
     }
   };
@@ -43,11 +50,94 @@ const UpdateProfileImage = () => {
 
     if (!result.canceled) {
       setImage(result.assets[0]); // Çekilen fotoğrafı state'e kaydediyoruz
+      UploadProfile(result.assets[0])
       setchoose(false); // Modal'ı kapatıyoruz
     }
   };
+  const [user, setuser] = useState({});
+  useEffect(() => {
+    getValueFor("user", setuser);
+  }, []);
+  const UploadProfile= async (imageUpload) => {
+    const formData = new FormData();
+    formData.append(
+      `profile_image`,
+     imageUpload
+        ? {
+            uri:
+              Platform.OS === "android"
+                ? imageUpload.uri
+                : imageUpload.uri.replace("file://", ""), // Android ve iOS için uygun URI
+            type: imageUpload?.mimeType,
+            name:
+              imageUpload.name == null
+                ? "İmage.jpeg"
+                :imageUpload?.name?.slice(-3) == "pdf"
+                ? imageUpload?.name
+                : imageUpload?.fileName, // Sunucuya gönderilecek dosya adı
+          }
+        : null
+    );
+
+    try {
+      if (user?.access_token) {
+        const response = await axios.post(
+        
+          `${apiUrl}upload-profile-image`,
+          formData, {
+          headers: {
+            Authorization: `Bearer ${user.access_token}`,
+            "Content-Type": "multipart/form-data",
+          },
+        });
+        setTimeout(() => {
+          Dialog.show({
+            type: ALERT_TYPE.SUCCESS,
+            title: "Başarılı",
+            textBody: `Profil Fotoğrafınız Başarıyla Eklendi`,
+            button: "Tamam",
+          });
+        }, 500);
+      }
+    } catch (error) {
+      console.error("post isteği olmadı", error);
+    }
+  };
+  const UploadBannerHexCode = async () => {
+    try {
+      if (user?.access_token) {
+        // Gönderilecek JSON verisi
+        const payload = {
+        column_name:'banner_hex_code',
+        value:currentColor
+        };
+  
+        const response = await axios.post(
+          `https://private.emlaksepette.com/api/change-profile-value-by-column-name`,
+          payload, // JSON verisi doğrudan gönderiliyor
+          {
+            headers: {
+              Authorization: `Bearer ${user.access_token}`,
+              "Content-Type": "application/json", // Raw format için Content-Type
+            },
+          }
+        );
+  
+        setTimeout(() => {
+          Dialog.show({
+            type: ALERT_TYPE.SUCCESS,
+            title: "Başarılı",
+            textBody: `Mağaza Renginiz Olşturuldu`,
+            button: "Tamam",
+          });
+        }, 500);
+      }
+    } catch (error) {
+      console.error("Post isteği başarısız", error);
+    }
+  };
   return (
-    <View>
+    <AlertNotificationRoot>
      <View style={[styles.profileImageContainer,{backgroundColor:currentColor}]}>
           <TouchableOpacity style={{width:80,height:80,backgroundColor:'#E4E4E8',borderRadius:50,alignItems:'center',justifyContent:'center'}}
               onPress={()=>{
@@ -63,12 +153,16 @@ const UpdateProfileImage = () => {
             
           </TouchableOpacity>
      </View>
-     <View style={{paddingLeft:30,paddingRight:30,paddingTop:20}}>
+
+   
+
+
+     <View style={{paddingLeft:30,paddingRight:30,paddingTop:20,height:200}}>
      <ColorPicker
                 color={currentColor}
                 swatchesOnly={false}
                 onColorChange={(color)=>setCurrentColor(color)}
-              
+          
                 thumbSize={50}
                 sliderSize={20}
                 noSnap={true}
@@ -81,8 +175,17 @@ const UpdateProfileImage = () => {
                 useNativeDriver={true}
                 useNativeLayout={false}
               />
+            
      </View>
-     
+                <View style={{alignItems:'center',justifyContent:'center',padding:15,paddingTop:40}}>
+                <TouchableOpacity style={styles.butonChoose} onPress={()=>{
+                  UploadBannerHexCode()
+                }}>
+                <Text style={styles.butonChooseText}>Seç</Text>
+              </TouchableOpacity>   
+              </View>  
+  
+                  
      <Modal
               isVisible={choose}
               style={styles.modal2}
@@ -164,8 +267,11 @@ const UpdateProfileImage = () => {
                 </View>
               </View>
             </Modal>
-
-    </View>
+         
+            <NextAndPrevButton nextButtonPress={nextStep} prevButtonPress={prevStep} PrevButtonDisabled={true} NextButtonDisabled={(image && currentColor) ? true : false }/>
+           
+           
+    </AlertNotificationRoot>
   )
 }
 
@@ -202,4 +308,16 @@ const styles=StyleSheet.create({
       },
     }),
   },
+  butonChoose:{
+    backgroundColor:'#EA2C2E',
+    padding:10,
+    width:'70%',
+    borderRadius:10
+  },
+  butonChooseText:{
+    color:'white',
+    fontSize:13,
+    fontWeight:'600',
+    textAlign:'center'
+  }
 })

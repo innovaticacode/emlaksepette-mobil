@@ -477,16 +477,16 @@ useEffect(() => {
     //   if (user.role === "Bireysel Hesap") {
     //     formData.append("name", formData.name);
     //     formData.append("iban", formData.iban);
-    //     formData.append(
-    //       "profile_image",
-    //       image
-    //         ? {
-    //             uri: image.uri,
-    //             name: image.fileName,
-    //             type: image.type,
-    //           }
-    //         : null
-    //     );
+    // //     formData.append(
+    // //       "profile_image",
+    // //       image
+    // //         ? {
+    // //             uri: image.uri,
+    // //             name: image.fileName,
+    // //             type: image.type,
+    // //           }
+    // //         : null
+    // //     );
     //     formData.append(
     //       "mobile_phone",
     //       formData.new_phone_number

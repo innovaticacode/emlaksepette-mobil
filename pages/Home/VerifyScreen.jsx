@@ -104,7 +104,7 @@ const VerifyScreen = () => {
         case 0:
           return <Verification nextStep={nextStep} prevStep={prevStep} />;
         case 1:
-          return <UpdateProfileImage/>
+          return <UpdateProfileImage nextStep={nextStep} prevStep={prevStep}/>
         case 2:
           return <UpdateAdress/>
         default:
@@ -115,9 +115,9 @@ const VerifyScreen = () => {
         case 0:
           return <Verification nextStep={nextStep} prevStep={prevStep} />;
           case 1:
-            return <UpdateProfileImage/>
+            return <UpdateProfileImage nextStep={nextStep} prevStep={prevStep}/>
             case 2:
-              return <UpdateShopInfo/>
+              return <UpdateShopInfo nextStep={nextStep} prevStep={prevStep} />
               case 3 :
                 return <UpdateAdress/>
         case 4:
@@ -175,7 +175,7 @@ const VerifyScreen = () => {
                <Button title="Sonraki" onPress={nextStep} />
              )}
            </View>  */}
-          <View style={{ alignItems: "center", paddingBottom: 20,flexDirection:'row',justifyContent:'space-around'}}>
+          {/* <View style={{ alignItems: "center", paddingBottom: 20,flexDirection:'row',justifyContent:'space-around'}}>
             <TouchableOpacity
               style={{
                 backgroundColor: "transparent",
@@ -186,7 +186,7 @@ const VerifyScreen = () => {
                 borderColor:'#EC302E',
               }}
               onPress={() => {
-                prevStep()
+                 prevStep()
                 // SecureStore.setItemAsync("user", "");
                 // navigation.navigate("Drawer", {
                 //   screen: "Home",
@@ -264,7 +264,7 @@ const VerifyScreen = () => {
               </TouchableOpacity>
             }
          
-          </View>
+          </View> */}
         </SafeAreaView>
       )}
     </>
