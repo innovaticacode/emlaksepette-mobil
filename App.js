@@ -129,6 +129,8 @@ import TeamFilter from "./pages/Home/ProfilePageItem/TeamFilter/TeamFilter";
 import FranchisePersonDetail from "./pages/Home/FranchisePerson/FranchisePersonDetail/FranchisePersonDetail";
 import * as Linking from "expo-linking";
 import * as SplashScreen from "expo-splash-screen"; // Import SplashScreen
+import { enableScreens } from "react-native-screens";
+enableScreens();
 
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator(); // Drawer navigator
