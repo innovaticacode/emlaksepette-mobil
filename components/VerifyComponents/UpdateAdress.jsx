@@ -6,7 +6,8 @@ import RNPickerSelect from "react-native-picker-select";
 import MapView, { Marker } from 'react-native-maps';
 import { getValueFor } from '../methods/user';
 import { ActivityIndicator } from 'react-native-paper';
-export default function UpdateAdress() {
+import NextAndPrevButton from './NextAndPrevButton';
+export default function UpdateAdress({nextStep,prevStep}) {
   const [Neigbour, setNeigbour] = useState([]);
   const [citites, setCities] = useState([]);
   const [counties, setcounties] = useState([]);
@@ -17,7 +18,10 @@ export default function UpdateAdress() {
   const handleMapPress = (event) => {
     const { latitude, longitude } = event.nativeEvent.coordinate;
     setSelectedLocation({ latitude, longitude });
-    
+    SendShopAdress('latitude',latitude)
+    setTimeout(() => {
+      SendShopAdress('longitude',longitude)
+    }, 400);
   };
   const [user, setuser] = useState({});
   useEffect(() => {
@@ -54,6 +58,34 @@ export default function UpdateAdress() {
   useEffect(() => {
     GetUserInfo()
   }, [user])
+  const SendShopAdress = async (columnName,value) => {
+    try {
+      if (user?.access_token) {
+        // Gönderilecek JSON verisi
+        const payload = {
+          column_name: columnName??columnName,
+          value: value ?value:'',
+       
+          
+        }
+
+        const response = await axios.post(
+          `${apiUrl}change-profile-value-by-column-name`,
+          payload, // JSON verisi doğrudan gönderiliyor
+          {
+            headers: {
+              Authorization: `Bearer ${user.access_token}`,
+              "Content-Type": "application/json", // Raw format için Content-Type
+            },
+          }
+        );
+
+     
+      }
+    } catch (error) {
+      console.error("Post isteği başarısız", error);
+    }
+  };
   const fetchData = async () => {
     try {
       const response = await axios.get(apiUrl + "cities");
@@ -89,6 +121,7 @@ export default function UpdateAdress() {
 
   const onChangeCity = (value) => {
     setcity(value);
+  
     if (value) {
       fetchDataCounty(value)
         .then((county) => setcounties(county.data))
@@ -111,6 +144,7 @@ export default function UpdateAdress() {
 
   const onChangeCounty = (value) => {
     setcounty(value);
+ 
     if (value) {
       fetchDataNeigbour(value)
         .then((county) => setNeigbour(county.data))
@@ -122,15 +156,15 @@ export default function UpdateAdress() {
     }
   };
 
-  
+ 
   return (
-   <ScrollView contentContainerStyle={{padding:10,gap:20,paddingTop:20}}>
+   <ScrollView contentContainerStyle={{padding:10,gap:20,paddingTop:20,height:'100%'}}>
     {
       loadingForUserInfo ?
       <View style={{flex:1,alignItems:'center',justifyContent:'center'}}>
             <ActivityIndicator/>
       </View>:
-        <View style={{gap:20}}>
+        <View style={{gap:20,height:'100%'}}>
 <View style={{ gap: 6 }}>
               <Text style={styles.Label}>
                 İl
@@ -145,6 +179,10 @@ export default function UpdateAdress() {
                 style={pickerSelectStyles}
                 onValueChange={(value) => {
                   onChangeCity(value);
+               
+                }}
+                onClose={()=>{
+                  SendShopAdress('city_id',city)
                 }}
                 items={citites}
               />
@@ -170,8 +208,12 @@ export default function UpdateAdress() {
                 style={pickerSelectStyles}
                 onValueChange={(value) => {
                   onChangeCounty(value);
+                
                 }}
                 items={counties}
+                onClose={()=>{
+                  SendShopAdress('county_id',county)
+                }}
               />
               {/* {errorStatu == 9 ? (
                 <Text style={{ fontSize: 12, color: "red" }}>
@@ -193,7 +235,13 @@ export default function UpdateAdress() {
                   value: null,
                 }}
                 style={pickerSelectStyles}
-                onValueChange={(value) => setneigbourhood(value)}
+                onValueChange={(value) =>{
+                   setneigbourhood(value)
+                  
+                  }}
+                  onClose={()=>{
+                    SendShopAdress('neighborhood_id',neigbourhood)
+                  }}
                 items={Neigbour}
               />
               {/* {errorStatu == 10 ? (
@@ -205,7 +253,7 @@ export default function UpdateAdress() {
               )} */}
             </View>
 
-            <View style={{height:'65%'}}>
+            <View style={{height:'55%'}}>
             <MapView
             onPress={handleMapPress} 
   
@@ -227,9 +275,10 @@ export default function UpdateAdress() {
         )}
   </MapView>
             </View>
-        </View>
+            <NextAndPrevButton nextButtonPress={nextStep} prevButtonPress={prevStep} SendInfo={SendShopAdress} step={user.type==1 ?4:2} />
+            </View>
     }
-           
+             
    </ScrollView>
   )
 }

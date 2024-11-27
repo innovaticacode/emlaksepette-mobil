@@ -10,7 +10,7 @@ const NextAndPrevButton = ({
   NextButtonDisabled,
   PrevButtonDisabled,
   step,
-
+  SendInfo
 }) => {
  
   const [user, setuser] = useState({});
@@ -24,8 +24,6 @@ getValueFor('user',setuser)
       if (user?.access_token) {
         // Gönderilecek JSON verisi
           formData.append('step',step)
-      
-
         const response = await axios.post(
           `${apiUrl}set_first_register_step`,
           formData, // JSON verisi doğrudan gönderiliyor
@@ -40,12 +38,12 @@ getValueFor('user',setuser)
       
       }
     } catch (error) {
-      console.error("Post isteği başarısız", error);
+      console.error("Post isteği başarısız dsfdsf", error);
     }
   };
   return (
     <View style={styles.containerButtons}>
-      {step != 1 && (
+      
         <TouchableOpacity
           style={[styles.PrevButton]}
           onPress={() => {
@@ -54,7 +52,7 @@ getValueFor('user',setuser)
         >
           <Text style={styles.PrevButtonText}>Önceki Adım</Text>
         </TouchableOpacity>
-      )}
+     
 
       <TouchableOpacity
         disabled={NextButtonDisabled == false ? true : false}
@@ -63,9 +61,11 @@ getValueFor('user',setuser)
           { opacity: NextButtonDisabled == false ? 0.5 : 1 },
         ]}
         onPress={() => {
-          SetStep()
+         
+          SendInfo()
           setTimeout(() => {
             nextButtonPress();
+            SetStep()
           }, 500);
      
          

@@ -97,7 +97,7 @@ const VerifyScreen = () => {
   //   }
 
   // }, [currentPosition])
-  console.log(namFromGetUser.phone_verification_status + "telefodfdfn");
+ 
   const renderStepContent = () => {
     if (namFromGetUser.type == 1 ) {
       switch (currentPosition) {
@@ -106,7 +106,7 @@ const VerifyScreen = () => {
         case 1:
           return <UpdateProfileImage nextStep={nextStep} prevStep={prevStep}/>
         case 2:
-          return <UpdateAdress/>
+          return <UpdateAdress nextStep={nextStep} prevStep={prevStep}/>
         default:
           return null;
       }
@@ -119,7 +119,7 @@ const VerifyScreen = () => {
             case 2:
               return <UpdateShopInfo nextStep={nextStep} prevStep={prevStep} />
               case 3 :
-                return <UpdateAdress/>
+                return <UpdateAdress nextStep={nextStep} prevStep={prevStep} />
         case 4:
           return <VerifyDocument nextStep={nextStep} prevStep={prevStep} />;
           case 5:
@@ -135,9 +135,7 @@ const VerifyScreen = () => {
     if (currentPosition < labels.length - 1) {
       setCurrentPosition(currentPosition + 1);
     }
-    if (currentPosition + 1 >= visibleSteps && visibleSteps < labels.length) {
-      setVisibleSteps(visibleSteps + 1);
-    }
+  
   };
 
   const prevStep = () => {
@@ -161,8 +159,8 @@ const VerifyScreen = () => {
           <StepIndicator
             customStyles={customStyles}
             currentPosition={currentPosition}
-            labels={namFromGetUser.type == 1 ? labels2 : labels.slice(0,visibleSteps)}
-            stepCount={namFromGetUser.type == 1 ? labels2.length : labels.slice(0,visibleSteps).length}
+            labels={namFromGetUser.type == 1 ? labels2 : labels}
+            stepCount={namFromGetUser.type == 1 ? labels2.length : labels.length}
           />
           {/* <Text>{namFromGetUser.phone_verification_status} </Text> */}
           <View style={styles.content}>{renderStepContent()}</View>

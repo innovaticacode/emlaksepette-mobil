@@ -135,17 +135,10 @@ const UpdateProfileImage = ({ nextStep, prevStep }) => {
           }
         );
 
-        setTimeout(() => {
-          Dialog.show({
-            type: ALERT_TYPE.SUCCESS,
-            title: "Başarılı",
-            textBody: `Mağaza Renginiz Olşturuldu`,
-            button: "Tamam",
-          });
-        }, 500);
+     
       }
     } catch (error) {
-      console.error("Post isteği başarısız", error);
+    
     }
   };
   const [loading, setloading] = useState(false);
@@ -243,23 +236,7 @@ const UpdateProfileImage = ({ nextStep, prevStep }) => {
           useNativeLayout={false}
         />
       </View>
-      <View
-        style={{
-          alignItems: "center",
-          justifyContent: "center",
-          padding: 15,
-          paddingTop: 40,
-        }}
-      >
-        <TouchableOpacity
-          style={styles.butonChoose}
-          onPress={() => {
-            UploadBannerHexCode();
-          }}
-        >
-          <Text style={styles.butonChooseText}>Seç</Text>
-        </TouchableOpacity>
-      </View>
+ 
 
       <Modal
         isVisible={choose}
@@ -341,7 +318,7 @@ const UpdateProfileImage = ({ nextStep, prevStep }) => {
         PrevButtonDisabled={true}
         NextButtonDisabled={image && currentColor ? true : false}
         step={ user.type==1? 2:1}
-       
+        SendInfo={UploadBannerHexCode}
       />
     </AlertNotificationRoot>
   );

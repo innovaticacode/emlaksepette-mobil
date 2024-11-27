@@ -5,7 +5,7 @@ import {
   TextInput,
   TouchableWithoutFeedback,
 } from "react-native";
-import React, { useRef, useState } from "react";
+import React, { useRef, useState,useEffect } from "react";
 import {
   actions,
   RichEditor,
@@ -14,16 +14,53 @@ import {
 import { ScrollView } from "react-native";
 import WebView from "react-native-webview";
 import NextAndPrevButton from "./NextAndPrevButton";
+import { getValueFor } from "../methods/user";
+import { apiUrl } from "../methods/apiRequest";
+import { ALERT_TYPE, AlertNotificationRoot, Dialog } from "react-native-alert-notification";
+import axios from "axios";
 export default function UpdateShopInfo({nextStep,prevStep}) {
   const richText = useRef(null);
   const [prevBioText, setprevBioText] = useState("");
-
+  const [year, setyear] = useState('')
+  const [website, setwebsite] = useState('')
  
+const [user, setuser] = useState({})
+useEffect(() => {
+  getValueFor('user',setuser)
+}, [])
 
 
+  const SendShopInfo = async () => {
+    try {
+      if (user?.access_token) {
+        // Gönderilecek JSON verisi
+        const payload = {
+          column_name: "website",
+          value: website,
+          column_name:'year',
+          value:year
+        }
 
+        const response = await axios.post(
+          `${apiUrl}change-profile-value-by-column-name`,
+          payload, // JSON verisi doğrudan gönderiliyor
+          {
+            headers: {
+              Authorization: `Bearer ${user.access_token}`,
+              "Content-Type": "application/json", // Raw format için Content-Type
+            },
+          }
+        );
+
+     
+      }
+    } catch (error) {
+      console.error("Post isteği başarısız", error);
+    }
+  };
   return (
-    <ScrollView
+    <AlertNotificationRoot>
+        <ScrollView
       style={{ backgroundColor: "white" }}
       contentContainerStyle={{height:'100%' }}
     >
@@ -36,11 +73,11 @@ export default function UpdateShopInfo({nextStep,prevStep}) {
         <View style={{ padding: 15, gap: 20 }}>
           <View>
             <Text style={styles.Label}>Web Sitesi</Text>
-            <TextInput style={styles.Input} />
+            <TextInput style={styles.Input} value={website} onChangeText={(value)=>setwebsite(value)}/>
           </View>
           <View>
-            <Text style={styles.Label}>Sektöre Giriş Tarihi</Text>
-            <TextInput style={styles.Input} />
+            <Text style={styles.Label}>Kaç Yıldır Sektördesiniz?</Text>
+            <TextInput style={styles.Input} value={year} onChangeText={(value)=>setyear(value)} />
           </View>
           {/* <View>
             <Text style={styles.Label}>Hakkında</Text>
@@ -88,8 +125,10 @@ export default function UpdateShopInfo({nextStep,prevStep}) {
         </View>
 
       </TouchableWithoutFeedback>
-      <NextAndPrevButton nextButtonPress={nextStep} prevButtonPress={prevStep} />
+      <NextAndPrevButton nextButtonPress={nextStep} prevButtonPress={prevStep} SendInfo={SendShopInfo} step={user.type==1 ?4:2} />
     </ScrollView>
+    </AlertNotificationRoot>
+  
   );
 }
 const handleHead = ({ tintColor }) => (
