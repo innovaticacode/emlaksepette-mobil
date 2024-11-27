@@ -133,14 +133,14 @@ import * as SplashScreen from "expo-splash-screen"; // Import SplashScreen
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator(); // Drawer navigator
 
-const linking = {
-  prefixes: [Linking.createURL("/")], // Expo URL schema kullanarak bağlantı oluşturma
-  config: {
-    screens: {
-      PersonPortfolio: "FranchisePersonDetail/",
-    },
-  },
-};
+// const linking = {
+//   prefixes: [Linking.createURL("/")], // Expo URL schema kullanarak bağlantı oluşturma
+//   config: {
+//     screens: {
+//       PersonPortfolio: "FranchisePersonDetail/",
+//     },
+//   },
+// };
 
 SplashScreen.preventAutoHideAsync();
 
@@ -287,7 +287,7 @@ const StackScreenNavigator = () => {
       <AlertNotificationRoot>
         <GestureHandlerRootView style={{ flex: 1 }}>
           <SheetProvider>
-            <NavigationContainer linking={linking}>
+            <NavigationContainer>
               <Stack.Navigator
                 screenOptions={{
                   gestureEnabled: true,

@@ -8,7 +8,6 @@
     "orientation": "portrait",
     "icon": "./assets/app-logo.png",
     "userInterfaceStyle": "light",
-    "scheme": "emlaksepette",
     "plugins": [
       [
         "expo-image-picker",
@@ -45,20 +44,7 @@
         "foregroundImage": "./assets/app-logo.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.mastergirisim.emlaksepette",
-      "intentFilters": [
-        {
-          "action": "VIEW",
-          "data": [
-            {
-              "scheme": "emlaksepette",
-              "host": "emlaksepette.com",
-              "pathPrefix": "/FranchisePersonDetail"
-            }
-          ],
-          "category": ["BROWSABLE", "DEFAULT"]
-        }
-      ]
+      "package": "com.mastergirisim.emlaksepette"
     },
     "web": {
       "favicon": "./assets/app-logo.png"
