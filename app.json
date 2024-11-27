@@ -8,6 +8,7 @@
     "orientation": "portrait",
     "icon": "./assets/app-logo.png",
     "userInterfaceStyle": "light",
+    "scheme": "emlaksepette",
     "plugins": [
       [
         "expo-image-picker",
@@ -37,7 +38,8 @@
         "ACCESS_FINE_LOCATION",
         "ACCESS_COARSE_LOCATION",
         "CAMERA",
-        "READ_EXTERNAL_STORAGE"
+        "READ_EXTERNAL_STORAGE",
+        "WRITE_EXTERNAL_STORAGE"
       ],
       "adaptiveIcon": {
         "foregroundImage": "./assets/app-logo.png",
@@ -49,8 +51,8 @@
           "action": "VIEW",
           "data": [
             {
-              "scheme": "https",
-              "host": "example.com",
+              "scheme": "emlaksepette",
+              "host": "emlaksepette.com",
               "pathPrefix": "/FranchisePersonDetail"
             }
           ],
