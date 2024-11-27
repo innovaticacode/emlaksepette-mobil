@@ -95,7 +95,7 @@ import VerifyScreen from "./pages/Home/VerifyScreen";
 import TypeListScreen from "./components/TypeListScreen";
 import Onboard from "./pages/Home/Onboarding/Onboard";
 import { View } from "moti";
-import SplashScreen from "./pages/Home/Onboarding/SplashScreen";
+import SplashScreenComponent from "./pages/Home/Onboarding/SplashScreen";
 import Toast from "react-native-toast-message";
 import { AlertNotificationRoot } from "react-native-alert-notification";
 import SellPlaces from "./pages/Home/ProfilePages/SellPlaces";
@@ -128,6 +128,7 @@ import RealEstateLeague from "./pages/RealEstateLeague/RealEstateLeague";
 import TeamFilter from "./pages/Home/ProfilePageItem/TeamFilter/TeamFilter";
 import FranchisePersonDetail from "./pages/Home/FranchisePerson/FranchisePersonDetail/FranchisePersonDetail";
 import * as Linking from "expo-linking";
+import * as SplashScreen from "expo-splash-screen"; // Import SplashScreen
 
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator(); // Drawer navigator
@@ -140,6 +141,8 @@ const linking = {
     },
   },
 };
+
+SplashScreen.preventAutoHideAsync();
 
 export default function App({ route }) {
   return (
@@ -200,6 +203,35 @@ const StackScreenNavigator = () => {
   const [housingTypes, setHousingTypes] = useState([]);
   const [selectedTypes, setSelectedTypes] = useState([]);
 
+  global.ErrorUtils.setGlobalHandler((error, isFatal) => {
+    console.log("Global Hata:", error);
+    if (isFatal) {
+      console.error("Kritik Hata:", error);
+    }
+  });
+
+  useEffect(() => {
+    const loadApp = async () => {
+      // Artificial delay to keep splash screen visible
+      await new Promise((resolve) => setTimeout(resolve, 2000));
+
+      // Check if it's the first launch
+      const hasLaunched = await SecureStore.getItemAsync("hasLaunched");
+      if (hasLaunched === null) {
+        setIsFirstLaunch(true);
+        await SecureStore.setItemAsync("hasLaunched", "true");
+      } else {
+        setIsFirstLaunch(false);
+      }
+
+      // Hide splash screen after app is ready
+      setIsLoading(false);
+      SplashScreen.hideAsync(); // Hide splash screen when app is ready
+    };
+
+    loadApp();
+  }, []);
+
   function StepScreen({
     step,
     navigation,
@@ -248,7 +280,7 @@ const StackScreenNavigator = () => {
   }, []);
 
   if (isLoading) {
-    return <SplashScreen />;
+    return <SplashScreenComponent />;
   }
   return (
     <Provider store={store}>
