@@ -72,7 +72,6 @@ const RealEstateWallet = () => {
       });
       setWallet(response?.data || {});
     } catch (error) {
-      console.error("Error fetching wallet data: ", error);
       const errorMessage =
         error?.response?.data?.message ||
         error?.message ||
@@ -108,7 +107,6 @@ const RealEstateWallet = () => {
         { withdraw_amount: withdrawAmount },
         { headers: { Authorization: `Bearer ${user?.access_token}` } }
       );
-      console.log("Withdraw success:", response.data);
       fetchWallet();
       handleWithDrawsList();
       setCustomAmount("");
@@ -119,7 +117,6 @@ const RealEstateWallet = () => {
         button: "Tamam",
       });
     } catch (error) {
-      console.error("Error fetching withdraws:", error);
       alert("Bir hata oluştu. Lütfen tekrar deneyin.");
     } finally {
       setLoading(false);
@@ -141,7 +138,6 @@ const RealEstateWallet = () => {
 
       setWithDrawsList(sortedWithdraws || []);
     } catch (error) {
-      console.error("Error fetching withdraws:", error);
       Dialog.show({
         type: ALERT_TYPE.ERROR,
         title: "Hata",
