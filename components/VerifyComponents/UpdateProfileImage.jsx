@@ -172,6 +172,7 @@ const UpdateProfileImage = ({ nextStep, prevStep }) => {
   useEffect(() => {
     GetUserInfo();
   }, [user]);
+ console.log(user.access_token)
   return (
     <AlertNotificationRoot>
       <View
@@ -339,8 +340,8 @@ const UpdateProfileImage = ({ nextStep, prevStep }) => {
         prevButtonPress={prevStep}
         PrevButtonDisabled={true}
         NextButtonDisabled={image && currentColor ? true : false}
-        step={1}
-        userType={user?.type}
+        step={ user.type==1? 2:1}
+       
       />
     </AlertNotificationRoot>
   );

@@ -62,14 +62,14 @@ const VerifyScreen = () => {
     try {
       if (user?.access_token && user) {
         const userInfo = await axios.get(
-          apiUrl+"users/" + user?.id,
+          apiUrl+"user",
           {
             headers: {
               Authorization: `Bearer ${user.access_token}`,
             },
           }
         );
-        const userData = userInfo?.data?.user;
+        const userData = userInfo?.data;
         setnamFromGetUser(userData);
       }
     } catch (error) {
@@ -85,7 +85,7 @@ const VerifyScreen = () => {
 
   useEffect(() => {
     if (namFromGetUser.phone_verification_status == 1) {
-      setCurrentPosition(1);
+      setCurrentPosition(namFromGetUser?.first_register_step+1);
     } else {
       setCurrentPosition(0);
     }

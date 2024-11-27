@@ -1,6 +1,8 @@
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { apiUrl } from "../methods/apiRequest";
+import { getValueFor } from "../methods/user";
 
 const NextAndPrevButton = ({
   nextButtonPress,
@@ -8,38 +10,34 @@ const NextAndPrevButton = ({
   NextButtonDisabled,
   PrevButtonDisabled,
   step,
-  userType,
+
 }) => {
-  console.log(NextButtonDisabled + "fdf");
+ 
   const [user, setuser] = useState({});
+  useEffect(() => {
+getValueFor('user',setuser)
+  }, [])
+  
   const SetStep = async () => {
+    const formData=new FormData()
     try {
       if (user?.access_token) {
         // Gönderilecek JSON verisi
-        const payload = {
-          column_name: "banner_hex_code",
-          value: currentColor,
-        };
+          formData.append('step',step)
+      
 
         const response = await axios.post(
-          `https://private.emlaksepette.com/api/change-profile-value-by-column-name`,
-          payload, // JSON verisi doğrudan gönderiliyor
+          `${apiUrl}set_first_register_step`,
+          formData, // JSON verisi doğrudan gönderiliyor
           {
             headers: {
               Authorization: `Bearer ${user.access_token}`,
-              "Content-Type": "application/json", // Raw format için Content-Type
+              "Content-Type": "multipart/form-data", // Raw format için Content-Type
             },
           }
         );
-
-        setTimeout(() => {
-          Dialog.show({
-            type: ALERT_TYPE.SUCCESS,
-            title: "Başarılı",
-            textBody: `Mağaza Renginiz Olşturuldu`,
-            button: "Tamam",
-          });
-        }, 500);
+         
+      
       }
     } catch (error) {
       console.error("Post isteği başarısız", error);
@@ -65,7 +63,12 @@ const NextAndPrevButton = ({
           { opacity: NextButtonDisabled == false ? 0.5 : 1 },
         ]}
         onPress={() => {
-          nextButtonPress();
+          SetStep()
+          setTimeout(() => {
+            nextButtonPress();
+          }, 500);
+     
+         
         }}
       >
         <Text style={styles.NextButtonText}>Sonraki Adım</Text>
