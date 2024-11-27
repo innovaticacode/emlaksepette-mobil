@@ -30,7 +30,7 @@
         "NSCameraUsageDescription": "Bu uygulama, fotoğraf çekmek için kamerayı kullanır.",
         "NSPhotoLibraryUsageDescription": "Bu uygulama, fotoğraf seçmek için fotoğraf kitaplığınıza erişim gerektirir."
       },
-      "bundleIdentifier": "com.anonymous.emlaksepette",
+      "bundleIdentifier": "com.mastergirisim.emlaksepette",
       "associatedDomains": ["applinks:example.com"],
       "config": {
         "usesNonExemptEncryption": false
@@ -42,13 +42,14 @@
         "android.permission.ACCESS_COARSE_LOCATION",
         "android.permission.CAMERA",
         "android.permission.READ_EXTERNAL_STORAGE",
-        "android.permission.WRITE_EXTERNAL_STORAGE"
+        "android.permission.WRITE_EXTERNAL_STORAGE",
+        "android.permission.MANAGE_EXTERNAL_STORAGE"
       ],
       "adaptiveIcon": {
         "foregroundImage": "./assets/app-logo.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.anonymous.emlaksepette",
+      "package": "com.mastergirisim.emlaksepette",
       "intentFilters": [
         {
           "action": "VIEW",
