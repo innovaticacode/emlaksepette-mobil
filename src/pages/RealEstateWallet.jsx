@@ -8,6 +8,7 @@ import {
   FlatList,
   ScrollView,
   ImageBackground,
+  ActivityIndicator,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons"; // Geri tuşu için ikon
 import { Image } from "react-native-elements";
@@ -19,13 +20,15 @@ import {
   Dialog,
   AlertNotificationRoot,
 } from "react-native-alert-notification";
-import { formatedPrice } from "../../utils";
+import { formatDate, formatedPrice } from "../../utils";
 
 const RealEstateWallet = () => {
   const [selectedAmount, setSelectedAmount] = useState(null);
   const [customAmount, setCustomAmount] = useState("");
   const [user, setUser] = useState({});
   const [wallet, setWallet] = useState({});
+  const [withDrawsList, setWithDrawsList] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     getValueFor("user", setUser);
@@ -36,6 +39,7 @@ const RealEstateWallet = () => {
   const renderAmountButton = (amount) => {
     return (
       <TouchableOpacity
+        activeOpacity={0.8}
         key={amount}
         style={[
           styles.amountButton,
@@ -45,7 +49,14 @@ const RealEstateWallet = () => {
           setSelectedAmount(selectedAmount === amount ? null : amount)
         }
       >
-        <Text style={styles.amountText}>{amount} ₺</Text>
+        <Text
+          style={[
+            styles.amountText,
+            selectedAmount === amount && { color: "#fff" },
+          ]}
+        >
+          {amount} ₺
+        </Text>
       </TouchableOpacity>
     );
   };
@@ -54,11 +65,10 @@ const RealEstateWallet = () => {
     if (!user?.access_token) {
       return;
     }
+    setLoading(true);
     try {
       const response = await axios.get(apiUrl + "wallet", {
-        headers: {
-          Authorization: `Bearer ${user?.access_token}`,
-        },
+        headers: { Authorization: `Bearer ${user?.access_token}` },
       });
       setWallet(response?.data || {});
     } catch (error) {
@@ -75,126 +85,215 @@ const RealEstateWallet = () => {
           button: "Tamam",
         });
       }, 250);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleWithdrawsRequest = async () => {
+    const withdrawAmount = customAmount || selectedAmount;
+    if (!withdrawAmount || isNaN(withdrawAmount) || withdrawAmount <= 0) {
+      Dialog.show({
+        type: ALERT_TYPE.WARNING,
+        title: "Uyarı",
+        textBody: "Geçerli bir tutar giriniz.",
+        button: "Tamam",
+      });
+      return;
+    }
+    setLoading(true);
+    try {
+      const response = await axios.post(
+        apiUrl + "withdraws",
+        { withdraw_amount: withdrawAmount },
+        { headers: { Authorization: `Bearer ${user?.access_token}` } }
+      );
+      console.log("Withdraw success:", response.data);
+      fetchWallet();
+      handleWithDrawsList();
+      setCustomAmount("");
+      Dialog.show({
+        type: ALERT_TYPE.SUCCESS,
+        title: "Başarılı",
+        textBody: "Para çekme işlemi başarılı.",
+        button: "Tamam",
+      });
+    } catch (error) {
+      console.error("Error fetching withdraws:", error);
+      alert("Bir hata oluştu. Lütfen tekrar deneyin.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleWithDrawsList = async () => {
+    setLoading(true);
+    try {
+      const response = await axios.get(apiUrl + "withdraws", {
+        headers: { Authorization: `Bearer ${user?.access_token}` },
+      });
+
+      const sortedWithdraws = response?.data?.withdraws?.sort((a, b) => {
+        const dateA = new Date(a?.created_at);
+        const dateB = new Date(b?.created_at);
+        return dateB - dateA;
+      });
+
+      setWithDrawsList(sortedWithdraws || []);
+    } catch (error) {
+      console.error("Error fetching withdraws:", error);
+      Dialog.show({
+        type: ALERT_TYPE.ERROR,
+        title: "Hata",
+        textBody: "Listeleme başarısız oldu.",
+      });
+    } finally {
+      setLoading(false);
     }
   };
 
   useEffect(() => {
     if (user?.access_token) {
       fetchWallet();
+      handleWithDrawsList();
     }
-  }, [user]); // user değiştiğinde çalışacak
-
-  useEffect(() => {
-    console.debug("wallet------->", wallet); // wallet her değiştiğinde çalışacak
-  }, [wallet]); // wallet değiştiğinde çalışacak
+  }, [user]);
 
   return (
     <AlertNotificationRoot>
-      <ScrollView>
-        <View style={styles.container}>
-          {/* Balance Card */}
-          <View style={styles.withdrawSection}>
-            <View style={[styles.balanceCard, { padding: 0 }]}>
-              <ImageBackground
-                source={require("../../src/assets/images/wallet_card.png")}
-                style={styles.imageBack}
-                borderRadius={20}
-              />
-              <View style={styles.balenceCardBottom}>
-                <View style={styles.balenceCardRight}>
-                  <View>
-                    <Text style={styles.balanceTitle}>Toplam Bakiye</Text>
-                    <Text style={styles.balanceAmount}>
-                      {formatedPrice(wallet?.wallet?.amount || 0)}
-                    </Text>
-                  </View>
-                  <View>
-                    <Text style={styles.balanceTitle}>Emlak</Text>
-                    <Text style={styles.balanceTitle}>Cüzdan</Text>
+      <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+        {loading ? (
+          <View
+            style={{
+              flex: 1,
+              justifyContent: "center",
+              alignItems: "center",
+              height: "100%",
+            }}
+          >
+            <ActivityIndicator size="large" color="#333" />
+          </View>
+        ) : (
+          <View style={styles.container}>
+            <>
+              {/* Balance Card */}
+              <View style={styles.withdrawSection}>
+                <View style={[styles.balanceCard, { padding: 0 }]}>
+                  <ImageBackground
+                    source={require("../../src/assets/images/wallet_card.png")}
+                    style={styles.imageBack}
+                    borderRadius={20}
+                  />
+                  <View style={styles.balenceCardBottom}>
+                    <View style={styles.balenceCardRight}>
+                      <View>
+                        <Text style={styles.balanceTitle}>Toplam Bakiye</Text>
+                        <Text style={styles.balanceAmount}>
+                          {formatedPrice(wallet?.wallet?.amount || 0)}
+                        </Text>
+                      </View>
+                      <View>
+                        <Text style={styles.balanceTitle}>Emlak</Text>
+                        <Text style={styles.balanceTitle}>Cüzdan</Text>
+                      </View>
+                    </View>
+                    <View style={styles.balenceCardRight}>
+                      <View>
+                        <Text style={styles.balanceTitle}>
+                          Kullanılabilir Bakiye
+                        </Text>
+                        <Text style={styles.balanceAmount}>
+                          {formatedPrice(wallet?.wallet?.amount_available || 0)}
+                        </Text>
+                      </View>
+                    </View>
                   </View>
                 </View>
-                <View style={styles.balenceCardRight}>
-                  <View>
-                    <Text style={styles.balanceTitle}>
-                      Kullanılabilir Bakiye
-                    </Text>
-                    <Text style={styles.balanceAmount}>
-                      {formatedPrice(wallet?.wallet?.amount_available || 0)}
-                    </Text>
-                  </View>
+                <View>
+                  <Text style={styles.Title}>Emlak Cüzdan</Text>
+                  <Text style={styles.balanceDesc}>
+                    Emlak Cüzdan ile hızlıca ödeme yap. Emlak cüzdanlı olmanın
+                    ayrıcalıklarını yakala!
+                  </Text>
                 </View>
               </View>
-            </View>
-            <View>
-              <Text style={styles.Title}>Emlak Cüzdan</Text>
-              <Text style={styles.balanceDesc}>
-                Emlak Cüzdan ile hızlıca ödeme yap. Emlak cüzdanlı olmanın
-                ayrıcalıklarını yakala!
-              </Text>
-            </View>
-          </View>
 
-          {/* Withdraw Section */}
-          <View style={styles.withdrawSection}>
-            <View style={styles.balenceCardRight}>
-              <Text style={styles.sectionTitle}>Para Çek</Text>
-              <TouchableOpacity>
-                <Text style={styles.removeCardText}>Kartı Sil</Text>
-              </TouchableOpacity>
-            </View>
-
-            {/* Card Display */}
-            <View style={styles.card}>
-              <View style={styles.balenceCardBottom}>
-                <View style={styles.balenceCardRight}>
-                  <Image
-                    source={require("../../src/assets/images/Ziraat.png")}
-                    style={styles.cardImage2}
-                  />
-                  <Ionicons name="checkmark-circle" size={24} color="green" />
-                </View>
-                <View style={styles.balenceCardRight}>
-                  <Text style={styles.cardText}>20576****7877</Text>
-                  <Image
-                    source={require("../../src/assets/images/logos_mastercard.png")}
-                    style={styles.cardImage}
+              {/* Withdraw Section */}
+              <View style={styles.withdrawSection}>
+                <View style={styles.amountContainer}>
+                  <FlatList
+                    data={amounts}
+                    horizontal
+                    renderItem={({ item }) => renderAmountButton(item)}
+                    keyExtractor={(item) => item}
+                    showsHorizontalScrollIndicator={false}
                   />
                 </View>
+
+                <TextInput
+                  style={styles.customInput}
+                  placeholder="Farklı Tutar giriniz..."
+                  keyboardType="numeric"
+                  value={customAmount}
+                  onChangeText={setCustomAmount}
+                />
+
+                <TouchableOpacity
+                  style={styles.withdrawButton}
+                  onPress={() => handleWithdrawsRequest()}
+                  disabled={loading}
+                >
+                  {loading ? (
+                    <ActivityIndicator size="small" color="#fff" />
+                  ) : (
+                    <Text style={styles.withdrawButtonText}>
+                      Hemen Para Çek
+                    </Text>
+                  )}
+                </TouchableOpacity>
               </View>
-            </View>
 
-            {/* Add Card Section */}
-            <TouchableOpacity style={styles.addCard}>
-              <Ionicons name="add-circle" size={24} color="red" />
-              <Text style={styles.addCardText}>Kart Ekle</Text>
-            </TouchableOpacity>
+              {/* Withdraw List */}
+              {withDrawsList && withDrawsList.length > 0 && (
+                <View style={styles.listArea}>
+                  <FlatList
+                    data={withDrawsList}
+                    renderItem={({ item }) => (
+                      <View style={styles.listBody}>
+                        <Text style={styles.listText}>
+                          {formatDate(item?.created_at)}
+                        </Text>
+                        <Text style={styles.listText}>
+                          {item.status === "3"
+                            ? "Onay Bekliyor"
+                            : item.status === "2"
+                            ? "Reddedilen"
+                            : item.status === "1"
+                            ? "Onaylandı"
+                            : "Bilinmiyor"}
+                        </Text>
 
-            {/* Amount Selection */}
-            <View style={styles.amountContainer}>
-              <FlatList
-                data={amounts}
-                horizontal
-                renderItem={({ item }) => renderAmountButton(item)}
-                keyExtractor={(item) => item}
-                showsHorizontalScrollIndicator={false}
-              />
-            </View>
-
-            {/* Custom Amount Input */}
-            <TextInput
-              style={styles.customInput}
-              placeholder="Farklı Tutar giriniz..."
-              keyboardType="numeric"
-              value={customAmount}
-              onChangeText={setCustomAmount}
-            />
-
-            {/* Withdraw Button */}
-            <TouchableOpacity style={styles.withdrawButton}>
-              <Text style={styles.withdrawButtonText}>Hemen Para Çek</Text>
-            </TouchableOpacity>
+                        <Text
+                          style={[
+                            styles.listText,
+                            item?.status === "1"
+                              ? { color: "#28a745" }
+                              : item?.status === "3"
+                              ? { color: "#ffc107" }
+                              : { color: "#dc3545" },
+                          ]}
+                        >
+                          {formatedPrice(item?.amount)}
+                        </Text>
+                      </View>
+                    )}
+                    keyExtractor={(item) => item?.id}
+                  />
+                </View>
+              )}
+            </>
           </View>
-        </View>
+        )}
       </ScrollView>
     </AlertNotificationRoot>
   );
@@ -364,6 +463,26 @@ const styles = StyleSheet.create({
     color: "#ff4d4d",
     fontSize: 16,
     marginLeft: 8,
+  },
+  listArea: {
+    backgroundColor: "#fff",
+    borderRadius: 10,
+    padding: 14,
+    marginBottom: 20,
+  },
+  listBody: {
+    backgroundColor: "#F9F9F9",
+    borderRadius: 10,
+    padding: 14,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginVertical: 6,
+  },
+  listText: {
+    fontSize: 14,
+    color: "#333",
+    fontWeight: "500",
   },
 });
 
