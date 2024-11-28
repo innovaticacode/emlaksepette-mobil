@@ -2,7 +2,7 @@ import { View, Text, TouchableOpacity } from "react-native";
 import React from "react";
 import { useRoute, useNavigation } from "@react-navigation/native";
 import Categories from "../../../components/Categories";
-import CategoryAdverts from "../İlanYükleme/ProjectAdvertsAdd/CategoryAdverts";
+import CategoryAdverts from "../IlanYukleme/ProjectAdvertsAdd/CategoryAdverts";
 import slugify from "react-slugify";
 
 export default function PublicPage() {

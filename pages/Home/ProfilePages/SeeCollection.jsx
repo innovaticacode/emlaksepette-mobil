@@ -35,7 +35,11 @@ import RNPickerSelect from "react-native-picker-select";
 import CloseIcon from "react-native-vector-icons/AntDesign";
 import PagerView from "react-native-pager-view";
 import SliderMenuDetails from "../../../components/SliderMenuDetails";
-import { apiRequestGet, apiUrl, frontEndUriBase } from "../../../components/methods/apiRequest";
+import {
+  apiRequestGet,
+  apiUrl,
+  frontEndUriBase,
+} from "../../../components/methods/apiRequest";
 import { addDotEveryThreeDigits } from "../../../components/methods/merhod";
 import Categories from "../../../components/Categories";
 import { getValueFor } from "../../../components/methods/user";
@@ -146,16 +150,12 @@ export default function SeeCollection() {
     };
 
     axios
-      .post(
-        apiUrl+"remove_item_on_collection",
-        collectionData,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${user.access_token}`,
-          },
-        }
-      )
+      .post(apiUrl + "remove_item_on_collection", collectionData, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${user.access_token}`,
+        },
+      })
       .then((response) => {
         setTimeout(() => {
           setcollectionAddedSucces(true);
@@ -214,14 +214,11 @@ export default function SeeCollection() {
   const fetchData = async () => {
     try {
       if (user.access_token) {
-        const response = await axios.get(
-          apiUrl+"client/collections",
-          {
-            headers: {
-              Authorization: `Bearer ${user.access_token}`,
-            },
-          }
-        );
+        const response = await axios.get(apiUrl + "client/collections", {
+          headers: {
+            Authorization: `Bearer ${user.access_token}`,
+          },
+        });
 
         setcollections(response?.data.collections);
       }
@@ -267,16 +264,12 @@ export default function SeeCollection() {
     };
 
     axios
-      .post(
-        apiUrl+"add/collection",
-        collectionData,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${user.access_token}`,
-          },
-        }
-      )
+      .post(apiUrl + "add/collection", collectionData, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${user.access_token}`,
+        },
+      })
       .then((response) => {
         fetchData();
         setaddCollection(false);
@@ -315,7 +308,7 @@ export default function SeeCollection() {
     };
 
     axios
-      .post(apiUrl+"addLink", collectionData, {
+      .post(apiUrl + "addLink", collectionData, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${user.access_token}`,
@@ -384,7 +377,7 @@ export default function SeeCollection() {
     try {
       if (user?.access_token) {
         const response = await axios.post(
-          apiUrl+"institutional/add_to_cart",
+          apiUrl + "institutional/add_to_cart",
           formData,
           {
             headers: {
@@ -434,7 +427,7 @@ export default function SeeCollection() {
       formData.append("offer_description", offerid);
 
       const response = await axios.post(
-        apiUrl+"institutional/give_offer",
+        apiUrl + "institutional/give_offer",
         formData,
         {
           headers: {
@@ -475,9 +468,7 @@ export default function SeeCollection() {
   const [county, setcounty] = useState("");
   const fetchCity = async () => {
     try {
-      const response = await axios.get(
-        apiUrl+"cities"
-      );
+      const response = await axios.get(apiUrl + "cities");
       return response.data;
     } catch (error) {
       console.error("Hata:", error);
@@ -497,9 +488,7 @@ export default function SeeCollection() {
   const [counties, setcounties] = useState([]);
   const fetchDataCounty = async (value) => {
     try {
-      const response = await axios.get(
-        `${apiUrl}counties/${value}`
-      );
+      const response = await axios.get(`${apiUrl}counties/${value}`);
       return response.data;
     } catch (error) {
       console.error("Hata:", error);
@@ -612,7 +601,6 @@ export default function SeeCollection() {
     }
   };
 
-  
   return (
     <View style={{ flex: 1 }}>
       <View
@@ -722,7 +710,7 @@ export default function SeeCollection() {
           </View>
 
           <ImageBackground
-            source={require("../../../src/assets/images/profilePhoto.jpg")}
+            source={require("../../../src/assets/images/profilePhoto.png")}
             style={{ width: "100%", height: "100%" }}
             imageStyle={{
               borderBottomLeftRadius: 30,
