@@ -119,7 +119,7 @@ import AddBioText from "./pages/Home/ProfilePages/AddBioText";
 import SliderTourismRent from "./pages/Home/SliderTourismRent";
 import AllTourismRent from "./pages/Home/AllTourismRent";
 import ViewAll from "./pages/Home/ViewAll/ViewAll";
-import RealEstateWallet from "./src/pages/RealEstateWallet";
+import RealEstateWallet from "./pages/Home/RealEstateWallet";
 import EditPending from "./pages/Home/EditProject/EditPending";
 import ShareScreen from "./pages/Home/ShareScreen";
 import PointOfSaleTracking from "./pages/Home/PointOfSale/PointOfSaleTracking/PointOfSaleTracking";
