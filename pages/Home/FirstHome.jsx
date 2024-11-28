@@ -31,6 +31,7 @@ import Arrow from "react-native-vector-icons/SimpleLineIcons";
 import SliderBarForFeature from "../../components/SliderBarForFeature";
 import RealtorCardHome from "../../components/Card/RealtorCardHomePage/RealtorCardHome";
 import RealtorPost from "../../components/Card/RealtorCard/RealtorPost";
+import { UsePaginatedData } from "../../hooks";
 
 const FirstHome = (props) => {
   const { index } = props;
@@ -69,9 +70,10 @@ const FirstHome = (props) => {
   const fetchFeaturedProjects = async () => {
     setLoadingProjects(true);
     try {
-      const response = await axios.get(`${apiUrl}featured-projects`);
-      const projects = response.data.data.slice(0, 6); // Get first 5 projects
-      return setFeaturedProjects(projects);
+      const response = await axios.get(`${apiUrl}featured-projects`, {
+        params: { take: 6, skip: 0 },
+      });
+      return setFeaturedProjects(response.data);
     } catch (error) {
       console.log("Error fetching featured projects:", error);
     } finally {

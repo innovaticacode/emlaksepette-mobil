@@ -152,7 +152,7 @@ const navigationInstrumentation = new Sentry.ReactNavigationInstrumentation();
 
 Sentry.init({
   dsn: "https://3c29c24400c88714f9ba96a0d5a8bf47@o4508374629810176.ingest.de.sentry.io/4508374634790992",
-  debug: true, // If `true`, Sentry will try to print out useful debugging information if something goes wrong with sending the event. Set it to `false` in production
+  debug: false, // If `true`, Sentry will try to print out useful debugging information if something goes wrong with sending the event. Set it to `false` in production
   tracesSampleRate: 1.0, // Traccing performance
   integrations: [
     new Sentry.ReactNativeTracing({
