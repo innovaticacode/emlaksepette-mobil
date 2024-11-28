@@ -28,7 +28,7 @@ const RealEstateWallet = () => {
   const [user, setUser] = useState({});
   const [wallet, setWallet] = useState({});
   const [withDrawsList, setWithDrawsList] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     getValueFor("user", setUser);
