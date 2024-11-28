@@ -20,7 +20,7 @@ import RentByMe from "./pages/Home/ProfilePages/RentByMe";
 import UpdateProfile from "./pages/Home/ProfilePages/UpdateProfile";
 import ChangePassword from "./pages/Home/ProfilePages/ChangePassword";
 import RegisterRealtorClub from "./pages/Home/ProfilePages/RegisterRealtorClub";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import MyProjectAdverts from "./pages/Home/ProfilePages/MyProjectAdverts";
 import MyRealtorAdverts from "./pages/Home/ProfilePages/MyRealtorAdverts";
 import Offer from "./pages/Home/ProfilePages/Offer";
@@ -130,6 +130,8 @@ import FranchisePersonDetail from "./pages/Home/FranchisePerson/FranchisePersonD
 import * as Linking from "expo-linking";
 import * as SplashScreen from "expo-splash-screen"; // Import SplashScreen
 import { enableScreens } from "react-native-screens";
+import * as Sentry from "@sentry/react-native";
+
 enableScreens();
 
 const Stack = createNativeStackNavigator();
@@ -146,7 +148,20 @@ const Drawer = createDrawerNavigator(); // Drawer navigator
 
 SplashScreen.preventAutoHideAsync();
 
-export default function App({ route }) {
+const navigationInstrumentation = new Sentry.ReactNavigationInstrumentation();
+
+Sentry.init({
+  dsn: "https://3c29c24400c88714f9ba96a0d5a8bf47@o4508374629810176.ingest.de.sentry.io/4508374634790992",
+  debug: true, // If `true`, Sentry will try to print out useful debugging information if something goes wrong with sending the event. Set it to `false` in production
+  tracesSampleRate: 1.0, // Traccing performance
+  integrations: [
+    new Sentry.ReactNativeTracing({
+      routingInstrumentation: navigationInstrumentation,
+    }),
+  ],
+});
+
+function App({ route }) {
   return (
     <Provider store={store}>
       <AlertNotificationRoot>
@@ -159,6 +174,7 @@ export default function App({ route }) {
     </Provider>
   );
 }
+export default Sentry.wrap(App);
 
 const DrawerNavigator = () => {
   const isShoppingProfile = useSelector(
@@ -204,6 +220,7 @@ const StackScreenNavigator = () => {
 
   const [housingTypes, setHousingTypes] = useState([]);
   const [selectedTypes, setSelectedTypes] = useState([]);
+  const navigationRef = useRef();
 
   global.ErrorUtils.setGlobalHandler((error, isFatal) => {
     console.log("Global Hata:", error);
@@ -289,7 +306,14 @@ const StackScreenNavigator = () => {
       <AlertNotificationRoot>
         <GestureHandlerRootView style={{ flex: 1 }}>
           <SheetProvider>
-            <NavigationContainer>
+            <NavigationContainer
+              ref={navigationRef}
+              onReady={() => {
+                navigationInstrumentation.registerNavigationContainer(
+                  navigationRef
+                );
+              }}
+            >
               <Stack.Navigator
                 screenOptions={{
                   gestureEnabled: true,

@@ -1,19 +1,35 @@
 const { getDefaultConfig } = require("expo/metro-config");
+const { getSentryExpoConfig } = require("@sentry/react-native/metro");
 
 module.exports = (() => {
-  const config = getDefaultConfig(__dirname);
+  const defaultConfig = getDefaultConfig(__dirname);
 
-  const { transformer, resolver } = config;
+  // Sentry yapılandırmasını al
+  const sentryConfig = getSentryExpoConfig(__dirname);
 
-  config.transformer = {
-    ...transformer,
+  // SVG Transformer ayarlarını ekle
+  defaultConfig.transformer = {
+    ...defaultConfig.transformer,
     babelTransformerPath: require.resolve("react-native-svg-transformer/expo"),
   };
-  config.resolver = {
-    ...resolver,
-    assetExts: resolver.assetExts.filter((ext) => ext !== "svg"),
-    sourceExts: [...resolver.sourceExts, "svg"],
+
+  defaultConfig.resolver = {
+    ...defaultConfig.resolver,
+    assetExts: defaultConfig.resolver.assetExts.filter((ext) => ext !== "svg"),
+    sourceExts: [...defaultConfig.resolver.sourceExts, "svg"],
   };
 
-  return config;
+  // Yapılandırmaları birleştir
+  return {
+    ...defaultConfig,
+    ...sentryConfig,
+    transformer: {
+      ...defaultConfig.transformer,
+      ...sentryConfig.transformer,
+    },
+    resolver: {
+      ...defaultConfig.resolver,
+      ...sentryConfig.resolver,
+    },
+  };
 })();
