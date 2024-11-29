@@ -53,14 +53,11 @@ const Home = ({ route }) => {
   const GetUserInfo = async () => {
     try {
       if (user.access_token) {
-        const userInfo = await axios.get(
-          apiUrl+"users/" + user?.id,
-          {
-            headers: {
-              Authorization: `Bearer ${user.access_token}`,
-            },
-          }
-        );
+        const userInfo = await axios.get(apiUrl + "users/" + user?.id, {
+          headers: {
+            Authorization: `Bearer ${user.access_token}`,
+          },
+        });
 
         setuserdata(userInfo?.data?.user);
       }
@@ -197,13 +194,13 @@ const Home = ({ route }) => {
               <IconStore
                 name={focused ? "storefront" : "storefront-outline"}
                 size={28}
-                color={focused ? 'black': "grey"}
+                color={focused ? "black" : "grey"}
               />
             ) : (
               <FontAwesomeIcon
                 name={focused ? "user" : "user-o"}
                 size={focused ? 28 : 23}
-                color={focused ? 'black': "grey"}
+                color={focused ? "black" : "grey"}
               />
             ),
         }}

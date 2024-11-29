@@ -17,15 +17,18 @@ import ImageViewing from "react-native-image-viewing";
 import { getValueFor } from "../methods/user";
 import axios from "axios";
 import { ActivityIndicator } from "react-native-paper";
-import { apiUrl } from "../methods/apiRequest";
+import { apiUrl, frontEndUriBase } from "../methods/apiRequest";
+import {
+  ALERT_TYPE,
+  AlertNotificationRoot,
+  Dialog,
+} from "react-native-alert-notification";
 export default function VerifyDocument({ nextStep, prevStep }) {
   const [FormDatas, setFormDatas] = useState({
-    sicil_belgesi: null,
-    vergi_levhası: null,
-    kimlik_belgesi: null,
-    apporove_website: null,
-    insaat_belgesi: null,
-
+    approve_website: null,
+    identity_document: null,
+    tax_document: null,
+    record_document: null,
     // Diğer form alanları buraya eklenebilir
   });
 
@@ -60,6 +63,8 @@ export default function VerifyDocument({ nextStep, prevStep }) {
     if (!result.canceled) {
       // Seçilen resmin uri'si ile ilgili form verisini güncelleme
       setData(key, result.assets[0]);
+      console.log("seçilen Dosya", key);
+
       setchoose(false);
     }
   };
@@ -85,6 +90,7 @@ export default function VerifyDocument({ nextStep, prevStep }) {
     if (!result.canceled) {
       setData(key, result.assets[0]);
       setchoose(false);
+      console.log("seçilen Dosya", key);
     }
   };
 
@@ -97,13 +103,12 @@ export default function VerifyDocument({ nextStep, prevStep }) {
     setselectedPick(key);
     setchoose(true);
   };
-  const showDocument = (url, document,state) => {
-    setselectedPick(state)
+  const showDocument = (url, document, state) => {
     setselectedUrl(url);
     setselectedDocument(document);
     setIsVisible(true);
   };
-  
+
   const [selectedDocumentName, setSelectedDocumentName] = useState(null);
 
   const [pdfFile, setPdfFile] = useState(null);
@@ -121,8 +126,10 @@ export default function VerifyDocument({ nextStep, prevStep }) {
           setPdfFile(pdfAsset);
 
           setData(key, pdfAsset);
-
+          console.log("seçilen Dosya", key);
           setchoose(false);
+
+          alert("gönderildi");
         }
       })
       .catch((error) => {
@@ -134,123 +141,96 @@ export default function VerifyDocument({ nextStep, prevStep }) {
   const deleteDocument = (key) => {
     setData(key, null);
     setdeleteModal(false);
+    setselectedPick(null);
   };
 
   const navigation = useNavigation();
 
-
   const [loading, setloading] = useState(false);
-  const sendDocument = () => {
+  const SetStep = async () => {
+    const formData = new FormData();
+    try {
+      if (user?.access_token) {
+        // Gönderilecek JSON verisi
+        formData.append("step", 4);
+        const response = await axios.post(
+          `${apiUrl}set_first_register_step`,
+          formData, // JSON verisi doğrudan gönderiliyor
+          {
+            headers: {
+              Authorization: `Bearer ${user.access_token}`,
+              "Content-Type": "multipart/form-data", // Raw format için Content-Type
+            },
+          }
+        );
+      }
+    } catch (error) {
+      console.error("Post isteği başarısız dsfdsf", error);
+    }
+  };
+  const sendDocument = (documentName) => {
     setloading(true);
     const formData = new FormData();
 
+    formData.append("key", documentName);
     formData.append(
-      `sicil_belgesi`,
-      FormDatas.sicil_belgesi
+      `document`,
+      FormDatas[documentName]
         ? {
             uri:
               Platform.OS === "android"
-                ? FormDatas.sicil_belgesi
-                : FormDatas?.sicil_belgesi?.uri.replace("file://", ""), // Android ve iOS için uygun URI
-            type: FormDatas?.sicil_belgesi?.mimeType,
+                ? FormDatas[documentName]
+                : FormDatas[documentName]?.uri.replace("file://", ""), // Android ve iOS için uygun URI
+            type: FormDatas[documentName]?.mimeType,
             name:
-              FormDatas.sicil_belgesi.name == null
+              FormDatas[documentName]?.name == null
                 ? "İmage.jpeg"
-                : FormDatas.sicil_belgesi?.name?.slice(-3) == "pdf"
-                ? FormDatas.sicil_belgesi?.name
-                : FormDatas.sicil_belgesi?.fileName, // Sunucuya gönderilecek dosya adı
+                : FormDatas[documentName]?.name?.slice(-3) == "pdf"
+                ? FormDatas[documentName]?.name
+                : FormDatas[documentName]?.fileName, // Sunucuya gönderilecek dosya adı
           }
-        : null
+        : "safsdfd"
     );
-    formData.append(
-      `approve_website`,
-      FormDatas.apporove_website
-        ? {
-            uri:
-              Platform.OS === "android"
-                ? FormDatas.apporove_website.uri
-                : FormDatas?.apporove_website?.uri.replace("file://", ""), // Android ve iOS için uygun URI
-            type: FormDatas?.apporove_website?.mimeType,
-            name:
-              FormDatas.apporove_website.name == null
-                ? "İmage.jpeg"
-                : FormDatas.apporove_website?.name?.slice(-3) == "pdf"
-                ? FormDatas.apporove_website?.name
-                : FormDatas.apporove_website?.fileName, // Sunucuya gönderilecek dosya adı
-          }
-        : null
-    );
-    formData.append(
-      `vergi_levhasi`,
-      FormDatas.vergi_levhası
-        ? {
-            uri:
-              Platform.OS === "android"
-                ? FormDatas.vergi_levhası.uri
-                : FormDatas?.vergi_levhası?.uri.replace("file://", ""), // Android ve iOS için uygun URI
-            type: FormDatas?.vergi_levhası?.mimeType,
-            name:
-              FormDatas.vergi_levhası.name == null
-                ? "İmage.jpeg"
-                : FormDatas.vergi_levhası?.name?.slice(-3) == "pdf"
-                ? FormDatas.vergi_levhası?.name
-                : FormDatas.vergi_levhası?.fileName, // Sunucuya gönderilecek dosya adı
-          }
-        : null
-    );
-    formData.append(
-      `kimlik_belgesi`,
-      FormDatas.kimlik_belgesi
-        ? {
-            uri:
-              Platform.OS === "android"
-                ? FormDatas.kimlik_belgesi.uri
-                : FormDatas?.kimlik_belgesi?.uri.replace("file://", ""), // Android ve iOS için uygun URI
-            type: FormDatas?.kimlik_belgesi?.mimeType,
-            name:
-              FormDatas.kimlik_belgesi.name == null
-                ? "İmage.jpeg"
-                : FormDatas.kimlik_belgesi?.name?.slice(-3) == "pdf"
-                ? FormDatas.kimlik_belgesi?.name
-                : FormDatas.kimlik_belgesi?.fileName, // Sunucuya gönderilecek dosya adı
-          }
-        : null
-    );
-    formData.append(
-      `insaat_belgesi`,
-      FormDatas.insaat_belgesi
-        ? {
-            uri:
-              Platform.OS === "android"
-                ? FormDatas.insaat_belgesi.uri
-                : FormDatas?.insaat_belgesi?.uri.replace("file://", ""), // Android ve iOS için uygun URI
-            type: FormDatas?.insaat_belgesi?.mimeType,
-            name:
-              FormDatas.insaat_belgesi.name == null
-                ? "İmage.jpeg"
-                : FormDatas.insaat_belgesi?.name?.slice(-3) == "pdf"
-                ? FormDatas.insaat_belgesi?.name
-                : FormDatas.insaat_belgesi?.fileName, // Sunucuya gönderilecek dosya adı
-          }
-        : null
-    );
+
     axios
-      .post(apiUrl+"verify-account", formData, {
+      .post(apiUrl + "set_document_by_key", formData, {
         headers: {
           Authorization: `Bearer ${user?.access_token}`,
           "Content-Type": "multipart/form-data",
         },
       })
       .then((res) => {
-        alert("başarılı");
-        setFormDatas({
-          sicil_belgesi: null,
-          vergi_levhası: null,
-          kimlik_belgesi: null,
-          apporove_website: null,
-          insaat_belgesi: null,
-          // Diğer form alanları buraya eklenebilir
-        });
+        setTimeout(() => {
+          Dialog.show({
+            type: ALERT_TYPE.SUCCESS,
+            title: "Başarılı",
+            textBody: `Dosya Gönderimi Başarılı`,
+            button: "Tamam",
+            onHide: () => {
+              GetUserInfo();
+            },
+          });
+        }, 400);
+        setselectedPick(null);
+        if (
+          FormDatas.approve_website &&
+          FormDatas.identity_document &&
+          FormDatas.record_document &&
+          FormDatas.tax_document
+        ) {
+          setTimeout(() => {
+            Dialog.show({
+              type: ALERT_TYPE.SUCCESS,
+              title: "Tebrikler",
+              textBody: `Tüm Dosyalarınız Başarıyla Gönderildi`,
+              button: "Tamam",
+              onHide: () => {
+                nextStep();
+                SetStep();
+              },
+            });
+          }, 3000);
+        }
       })
       .catch((err) => {
         console.error(err);
@@ -266,14 +246,8 @@ export default function VerifyDocument({ nextStep, prevStep }) {
     getValueFor("PhoneVerify", setverifyStatus);
   }, []);
 
-  
-
-
   const [filteredDocuments, setfilteredDocuments] = useState([]);
   const isFocused = useIsFocused();
-
- 
-
 
   const [namFromGetUser, setnamFromGetUser] = useState({});
   const [loadingForUserInfo, setloadingForUserInfo] = useState(false);
@@ -281,19 +255,13 @@ export default function VerifyDocument({ nextStep, prevStep }) {
     setloadingForUserInfo(true);
     try {
       if (user?.access_token && user) {
-        const userInfo = await axios.get(
-          apiUrl+"users/" + user?.id,
-          {
-            headers: {
-              Authorization: `Bearer ${user.access_token}`,
-            },
-          }
-        );
-        const userData = userInfo?.data?.user;
+        const userInfo = await axios.get(apiUrl + "user", {
+          headers: {
+            Authorization: `Bearer ${user.access_token}`,
+          },
+        });
+        const userData = userInfo?.data;
         setnamFromGetUser(userData);
-        setData("vergi_levhası", namFromGetUser.tax_document);
-        setData("sicil_belgesi", namFromGetUser.record_document);
-        setData('')
       }
     } catch (error) {
       console.error("Kullanıcı verileri güncellenirken hata oluştu:", error);
@@ -307,318 +275,474 @@ export default function VerifyDocument({ nextStep, prevStep }) {
     GetUserInfo();
   }, [user]);
 
-
-const openPdf = async () => {
-  if (FormDatas[selectedPick]?.uri) {
-    try {
-      const contentUri = await FileSystem.getContentUriAsync(FormDatas[selectedPick]?.uri);
-      IntentLauncher.startActivityAsync("android.intent.action.VIEW", {
-        data: contentUri,
-        flags: 1,
-        type: "application/pdf",
-      });
-    } catch (error) {
-      console.error("PDF açılırken hata oluştu:", error);
+  const openPdf = async () => {
+    if (FormDatas[selectedPick]?.uri) {
+      try {
+        const contentUri = await FileSystem.getContentUriAsync(
+          FormDatas[selectedPick]?.uri
+        );
+        IntentLauncher.startActivityAsync("android.intent.action.VIEW", {
+          data: contentUri,
+          flags: 1,
+          type: "application/pdf",
+        });
+      } catch (error) {
+        console.error("PDF açılırken hata oluştu:", error);
+      }
+    } else {
+      Alert.alert("PDF dosyası bulunamadı");
     }
-  } else {
-    Alert.alert("PDF dosyası bulunamadı");
-  }
-};
-console.log(namFromGetUser)
+  };
 
+  useEffect(() => {
+    if (FormDatas[selectedPick]) {
+      const documentToSend = Object.keys(FormDatas).find(
+        (key) => FormDatas[key] !== null
+      );
+      if (documentToSend) {
+        sendDocument(documentToSend);
+      }
+    }
+  }, [FormDatas]);
+  const [alertForSkip, setalertForSkip] = useState(false);
   return (
-    <ScrollView
-      showsVerticalScrollIndicator={false}
-      contentContainerStyle={{ gap: 15 }}
-      style={{
-        flex: 1,
-        backgroundColor: "#FCFCFC",
-        margin: 10,
-      }}
-    >
-      {filteredDocuments.map((item, _i) => (
-        <TouchableOpacity
+    <AlertNotificationRoot>
+      {loadingForUserInfo ? (
+        <View
+          style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
+        >
+          <ActivityIndicator color="#333" size={"large"} />
+        </View>
+      ) : (
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{ gap: 15 }}
           style={{
-            gap: 7,
-            width: "100%",
-            display:
-              item.isShow == "All"
-                ? "flex"
-                : "none" && item.isShow == namFromGetUser.corporate_type
-                ? "flex"
-                : "none",
-          }}
-          onPress={() => {
-            if (FormDatas[item.state]) {
-              setselectedPick(item.state);
-              setdeleteModal(true);
-            } else {
-              openModalAndChooseDoc(item.state);
-            }
+            flex: 1,
+            backgroundColor: "#FCFCFC",
+            margin: 10,
           }}
         >
           <View
             style={{
-              paddingLeft: 10,
-              flexDirection: "row",
-              gap: 5,
               alignItems: "center",
-            }}
-          >
-            <Text style={{ fontSize: 14, color: "#333", fontWeight: "600" }}>
-              {item.text}
-            </Text>
-            {FormDatas[item.state] && namFromGetUser[item.approve] !== 1 && (
-              <Text style={{ color: "#008001", fontSize: 12 }}>Seçildi</Text>
-            )}
-            {namFromGetUser[item.approve] == 1 && !FormDatas[item.state] && (
-              <Text
-                style={{ color: "#008001", fontSize: 12, fontWeight: "600" }}
-              >
-                Onaylandı
-              </Text>
-            )}
-          </View>
-
-          <View
-            style={{
-              width: "100%",
-              height: 150,
-              borderWidth: 1.5,
-              borderStyle: "dashed",
-              borderRadius: 20,
-              borderColor: FormDatas[item.state] ? "#2080113d" : "#FDEAEA",
+              justifyContent: "center",
             }}
           >
             <View
               style={{
-                alignItems: "center",
-                backgroundColor: FormDatas[item.state]
-                  ? "#2080113d"
-                  : "#FDEAEA",
+                backgroundColor: "#F2DEA2",
+                padding: 15,
+
                 width: "100%",
-                height: "100%",
-                justifyContent: "center",
-                borderRadius: 20,
+                borderRadius: 10,
+                gap: 5,
               }}
             >
-              {FormDatas[item.state] ? (
-                <View
+              <View>
+                <Text
                   style={{
-                    width: "100%",
-                    height: "100%",
-                    backgroundColor: "#E0F2E3",
-                    borderRadius: 20,
-                    justifyContent: "center",
+                    color: "#FF6405",
+                    fontSize: 17,
+                    fontWeight: "800",
+                    textAlign: "center",
                   }}
                 >
+                  Bilgilendirme
+                </Text>
+              </View>
+              <Text
+                style={{
+                  color: "#FF6405",
+                  fontWeight: "600",
+                  textAlign: "center",
+                  letterSpacing: 0.3,
+                  lineHeight: 18,
+                }}
+              >
+                Eğer isterseniz bu adımı atlayabilirsiniz ancak panelinizde
+                işlem yapamaz ve herhangi bir satın alma işlemi
+                gerçekleştiremezsiniz!
+              </Text>
+            </View>
+          </View>
+          {filteredDocuments.map((item, _i) => (
+            <TouchableOpacity
+              style={{
+                gap: 7,
+                width: "100%",
+                display:
+                  item.isShow == "All"
+                    ? "flex"
+                    : "none" && item.isShow == namFromGetUser.corporate_type
+                    ? "flex"
+                    : "none",
+              }}
+              onPress={() => {
+                if (FormDatas[item.state]) {
+                  setselectedPick(item.state);
+                  setdeleteModal(true);
+                } else {
+                  openModalAndChooseDoc(item.state);
+                }
+              }}
+            >
+              <View
+                style={{
+                  paddingLeft: 10,
+                  flexDirection: "row",
+                  gap: 5,
+                  alignItems: "center",
+                }}
+              >
+                <Text
+                  style={{ fontSize: 14, color: "#333", fontWeight: "600" }}
+                >
+                  {item.text}
+                </Text>
+                {FormDatas[item.state] && (
+                  <Text
+                    style={{
+                      color: "#008001",
+                      fontSize: 12,
+                      fontWeight: "600",
+                    }}
+                  >
+                    Gönderildi
+                  </Text>
+                )}
+              </View>
+
+              <View
+                style={{
+                  width: "100%",
+                  height: 150,
+                  borderWidth: 1.5,
+                  borderStyle: "dashed",
+                  borderRadius: 20,
+                  borderColor: FormDatas[item.state] ? "#2080113d" : "#FDEAEA",
+                }}
+              >
+                {loading ? (
                   <View
                     style={{
-                      gap: 10,
+                      flex: 1,
                       alignItems: "center",
                       justifyContent: "center",
                     }}
                   >
-                    <TouchableOpacity
-                      onPress={() => {
-
-                        if (FormDatas[item.state].uri.slice(-3) == "pdf") {
-                          if (Platform.OS === "android") {
-                            openPdf();
-                          } else if (Platform.OS === "ios") {
-                            navigation.navigate("DecontPdf", {
-                              name: FormDatas[item.state]?.name,
-                              pdfUri: FormDatas[item.state].uri,
-                            });
-                          }
-                        }else{
-                          // setselectedPick(FormDatas[item.state])
-                          showDocument(item.url, item.document , item.state );
-                        }
-                     
-                      }}
-                      style={{
-                        backgroundColor: "#0FA958",
-                        padding: 9,
-                        borderRadius: 9,
-                        width: "60%",
-                      }}
-                    >
-                      <Text
-                        style={{
-                          fontSize: 13,
-                          color: "white",
-                          fontWeight: "700",
-                          textAlign: "center",
-                        }}
-                      >
-                        Belgeyi Gör
-                      </Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                      onPress={() => {
-                        setselectedPick(item.state);
-                        setdeleteModal(true);
-                      }}
-                      style={{
-                        backgroundColor: "#EA2A29",
-                        padding: 9,
-                        borderRadius: 9,
-                        width: "60%",
-                      }}
-                    >
-                      <Text
-                        style={{
-                          color: "white",
-                          fontSize: 13,
-                          fontWeight: "700",
-                          textAlign: "center",
-                        }}
-                      >
-                        Belgeyi Sil
-                      </Text>
-                    </TouchableOpacity>
+                    <ActivityIndicator />
                   </View>
-                </View>
-              ) : (
-                <>
-                  <Feather
-                    name="cloud-upload-outline"
-                    size={60}
-                    color={"#EA2B2E"}
-                  />
-                  <Text style={{ color: "#EA2B2E", fontSize: 13 }}>
-                    Dosyanızı buraya yükleyiniz
-                  </Text>
-                </>
-              )}
-             
-            </View>
-            <ImageViewing
-              images={[
-                {
-                  uri:`${FormDatas[selectedPick]?.uri}`,
-                },
-              ]}
-              imageIndex={0}
-              visible={isVisible}
-              onRequestClose={() => setIsVisible(false)}
-            />
-          </View>
-        </TouchableOpacity>
-      ))}
+                ) : (
+                  <View
+                    style={{
+                      alignItems: "center",
+                      backgroundColor: FormDatas[item.state]
+                        ? "#2080113d"
+                        : "#FDEAEA",
+                      width: "100%",
+                      height: "100%",
+                      justifyContent: "center",
+                      borderRadius: 20,
+                    }}
+                  >
+                    {FormDatas[item.state] ? (
+                      <View
+                        style={{
+                          width: "100%",
+                          height: "100%",
+                          backgroundColor: "#E0F2E3",
+                          borderRadius: 20,
+                          justifyContent: "center",
+                        }}
+                      >
+                        <View
+                          style={{
+                            gap: 10,
+                            alignItems: "center",
+                            justifyContent: "center",
+                          }}
+                        >
+                          <TouchableOpacity
+                            onPress={() => {
+                              if (namFromGetUser[item.state]) {
+                                if (
+                                  namFromGetUser[item.state].slice(-3) == "pdf"
+                                ) {
+                                  if (Platform.OS === "android") {
+                                    openPdf();
+                                  } else if (Platform.OS === "ios") {
+                                    navigation.navigate("DecontPdf", {
+                                      name: namFromGetUser[item.state],
+                                      pdfUri: namFromGetUser[item.state],
+                                    });
+                                  }
+                                } else {
+                                  // setselectedPick(FormDatas[item.state])
+                                  showDocument(
+                                    item.url,
+                                    namFromGetUser[item.document],
+                                    item.state
+                                  );
+                                }
+                              } else {
+                                if (
+                                  FormDatas[item.state].uri.slice(-3) == "pdf"
+                                ) {
+                                  if (Platform.OS === "android") {
+                                    openPdf();
+                                  } else if (Platform.OS === "ios") {
+                                    navigation.navigate("DecontPdf", {
+                                      name: FormDatas[item.state]?.name,
+                                      pdfUri: FormDatas[item.state].uri,
+                                    });
+                                  }
+                                } else {
+                                  // setselectedPick(FormDatas[item.state])
+                                  showDocument(
+                                    item.url,
+                                    namFromGetUser[item.document],
+                                    item.state
+                                  );
+                                }
+                              }
+                            }}
+                            style={{
+                              backgroundColor: "#0FA958",
+                              padding: 9,
+                              borderRadius: 9,
+                              width: "60%",
+                            }}
+                          >
+                            <Text
+                              style={{
+                                fontSize: 13,
+                                color: "white",
+                                fontWeight: "700",
+                                textAlign: "center",
+                              }}
+                            >
+                              Belgeyi Gör
+                            </Text>
+                          </TouchableOpacity>
+                          <TouchableOpacity
+                            onPress={() => {
+                              setselectedPick(item.state);
+                              setdeleteModal(true);
+                            }}
+                            style={{
+                              backgroundColor: "#EA2A29",
+                              padding: 9,
+                              borderRadius: 9,
+                              width: "60%",
+                            }}
+                          >
+                            <Text
+                              style={{
+                                color: "white",
+                                fontSize: 13,
+                                fontWeight: "700",
+                                textAlign: "center",
+                              }}
+                            >
+                              Belgeyi Sil
+                            </Text>
+                          </TouchableOpacity>
+                        </View>
+                      </View>
+                    ) : (
+                      <>
+                        <Feather
+                          name="cloud-upload-outline"
+                          size={60}
+                          color={"#EA2B2E"}
+                        />
+                        <Text style={{ color: "#EA2B2E", fontSize: 13 }}>
+                          Dosyanızı buraya yükleyiniz
+                        </Text>
+                      </>
+                    )}
+                  </View>
+                )}
 
-      <TouchableOpacity
-        style={{
-          backgroundColor: "#EA2A29",
-          padding: 8,
-          borderRadius: 8,
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-        onPress={() => {
-          sendDocument();
-        }}
-      >
-        {loading ? (
-          <ActivityIndicator color="white" />
-        ) : (
-          <Text
-            style={{
-              textAlign: "center",
-              fontSize: 13,
-              color: "white",
-              fontWeight: "600",
-            }}
+                <ImageViewing
+                  images={[
+                    {
+                      uri: `${frontEndUriBase}${selectedUrl}/${selectedDocument}`,
+                    },
+                  ]}
+                  imageIndex={0}
+                  visible={isVisible}
+                  onRequestClose={() => setIsVisible(false)}
+                />
+              </View>
+            </TouchableOpacity>
+          ))}
+
+          <View
+            style={{ flexDirection: "row", justifyContent: "space-around" }}
           >
-            Onaya Gönder
-          </Text>
-        )}
-      </TouchableOpacity>
-      <AwesomeAlert
-        show={deleteModal}
-        showProgress={false}
-        titleStyle={{
-          color: "#333",
-          fontSize: 13,
-          fontWeight: "700",
-          textAlign: "center",
-          margin: 5,
-        }}
-        title={"Dosyayı Sil"}
-        messageStyle={{ textAlign: "center" }}
-        message={`Seçili Dosyayı Kaldırmak İstediğinize Emin misiniz?`}
-        closeOnTouchOutside={false}
-        closeOnHardwareBackPress={false}
-        showCancelButton={true}
-        showConfirmButton={true}
-        cancelText="Vazgeç"
-        confirmText="Sil"
-        cancelButtonColor="#1d8027"
-        confirmButtonColor="#ce4d63"
-        onCancelPressed={() => {
-          setdeleteModal(false);
-        }}
-        onConfirmPressed={() => {
-          deleteDocument(selectedPick);
-        }}
-        confirmButtonTextStyle={{ marginLeft: 20, marginRight: 20 }}
-        cancelButtonTextStyle={{ marginLeft: 20, marginRight: 20 }}
-      />
-      <Modal
-        isVisible={choose}
-        style={styles.modal2}
-        animationIn={"slideInUp"}
-        animationOut={"slideOutDown"}
-        onBackdropPress={() => setchoose(false)}
-        swipeDirection={["down"]}
-        onSwipeComplete={() => setchoose(false)}
-      >
-        <View style={[styles.modalContent2, { paddingBottom: 10 }]}>
-          <View style={{ paddingTop: 10, alignItems: "center" }}>
             <TouchableOpacity
-              style={{
-                width: "15%",
-                backgroundColor: "#c2c4c6",
-                padding: 4,
-                borderRadius: 50,
-              }}
-            ></TouchableOpacity>
-          </View>
-          <View style={{ padding: 20, gap: 35, marginBottom: 10 }}>
-            <TouchableOpacity
-              style={{ flexDirection: "row", alignItems: "center", gap: 10 }}
-              onPress={() => pickImage(selectedPick)}
-            >
-              <Icon3 name="photo" size={23} color={"#333"} />
-              <Text style={{ fontSize: 14, color: "#333", fontWeight: "700" }}>
-                Kütüphaneden Seç
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={{ flexDirection: "row", alignItems: "center", gap: 10 }}
-              onPress={() => takePhoto(selectedPick)}
-            >
-              <Icon3 name="add-a-photo" size={21} color={"#333"} />
-              <Text style={{ fontSize: 14, color: "#333", fontWeight: "700" }}>
-                Fotoğraf Çek
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={{ flexDirection: "row", alignItems: "center", gap: 10 }}
+              disabled={
+                FormDatas.approve_website &&
+                FormDatas.identity_document &&
+                FormDatas.record_document &&
+                FormDatas.tax_document
+                  ? false
+                  : true
+              }
+              style={[styles.finishButton]}
+              activeOpacity={0.7}
               onPress={() => {
-                pickDocument(selectedPick);
+                prevStep();
               }}
             >
-              <Icon3 name="file-open" size={21} color={"#333"} />
-              <Text style={{ fontSize: 14, color: "#333", fontWeight: "700" }}>
-                Pdf Yükle
-              </Text>
+              <Text style={styles.finishButtonText}>Önceki Adım</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.skipButton}
+              activeOpacity={0.7}
+              onPress={() => {
+                setalertForSkip(true);
+              }}
+            >
+              <Text style={styles.skipButtonText}>Atla</Text>
             </TouchableOpacity>
           </View>
-        </View>
-      </Modal>
-    </ScrollView>
+          <AwesomeAlert
+            show={alertForSkip}
+            showProgress={false}
+            titleStyle={{
+              color: "#333",
+              fontSize: 13,
+              fontWeight: "700",
+              textAlign: "center",
+              margin: 5,
+            }}
+            title={"Atlamak istediğinize emin misiniz?"}
+            messageStyle={{ textAlign: "center" }}
+            message={`Bu adımı atlarsanız panelinizde işlem yapamaz ve herhangi bir satın alma işlemi gerçekleştiremezsiniz!`}
+            closeOnTouchOutside={false}
+            closeOnHardwareBackPress={false}
+            showCancelButton={true}
+            showConfirmButton={true}
+            cancelText="Devam Et"
+            confirmText="Atla"
+            cancelButtonColor="#1d8027"
+            confirmButtonColor="#ce4d63"
+            onCancelPressed={() => {
+              setalertForSkip(false);
+            }}
+            onConfirmPressed={() => {
+              nextStep();
+            }}
+            confirmButtonTextStyle={{ marginLeft: 20, marginRight: 20 }}
+            cancelButtonTextStyle={{ marginLeft: 20, marginRight: 20 }}
+          />
+          <AwesomeAlert
+            show={deleteModal}
+            showProgress={false}
+            titleStyle={{
+              color: "#333",
+              fontSize: 13,
+              fontWeight: "700",
+              textAlign: "center",
+              margin: 5,
+            }}
+            title={"Dosyayı Sil"}
+            messageStyle={{ textAlign: "center" }}
+            message={`Seçili Dosyayı Kaldırmak İstediğinize Emin misiniz?`}
+            closeOnTouchOutside={false}
+            closeOnHardwareBackPress={false}
+            showCancelButton={true}
+            showConfirmButton={true}
+            cancelText="Vazgeç"
+            confirmText="Sil"
+            cancelButtonColor="#1d8027"
+            confirmButtonColor="#ce4d63"
+            onCancelPressed={() => {
+              setdeleteModal(false);
+            }}
+            onConfirmPressed={() => {
+              deleteDocument(selectedPick);
+            }}
+            confirmButtonTextStyle={{ marginLeft: 20, marginRight: 20 }}
+            cancelButtonTextStyle={{ marginLeft: 20, marginRight: 20 }}
+          />
+          <Modal
+            isVisible={choose}
+            style={styles.modal2}
+            animationIn={"slideInUp"}
+            animationOut={"slideOutDown"}
+            onBackdropPress={() => setchoose(false)}
+            swipeDirection={["down"]}
+            onSwipeComplete={() => setchoose(false)}
+          >
+            <View style={[styles.modalContent2, { paddingBottom: 10 }]}>
+              <View style={{ paddingTop: 10, alignItems: "center" }}>
+                <TouchableOpacity
+                  style={{
+                    width: "15%",
+                    backgroundColor: "#c2c4c6",
+                    padding: 4,
+                    borderRadius: 50,
+                  }}
+                ></TouchableOpacity>
+              </View>
+              <View style={{ padding: 20, gap: 35, marginBottom: 10 }}>
+                <TouchableOpacity
+                  style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                    gap: 10,
+                  }}
+                  onPress={() => pickImage(selectedPick)}
+                >
+                  <Icon3 name="photo" size={23} color={"#333"} />
+                  <Text
+                    style={{ fontSize: 14, color: "#333", fontWeight: "700" }}
+                  >
+                    Kütüphaneden Seç
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                    gap: 10,
+                  }}
+                  onPress={() => takePhoto(selectedPick)}
+                >
+                  <Icon3 name="add-a-photo" size={21} color={"#333"} />
+                  <Text
+                    style={{ fontSize: 14, color: "#333", fontWeight: "700" }}
+                  >
+                    Fotoğraf Çek
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                    gap: 10,
+                  }}
+                  onPress={() => {
+                    pickDocument(selectedPick);
+                  }}
+                >
+                  <Icon3 name="file-open" size={21} color={"#333"} />
+                  <Text
+                    style={{ fontSize: 14, color: "#333", fontWeight: "700" }}
+                  >
+                    Pdf Yükle
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </Modal>
+        </ScrollView>
+      )}
+    </AlertNotificationRoot>
   );
 }
 
@@ -649,5 +773,30 @@ const styles = StyleSheet.create({
   },
   approveTrue: {
     backgroundColor: "green",
+  },
+  finishButton: {
+    backgroundColor: "#EA2B2E",
+    width: "45%",
+    padding: 10,
+    borderRadius: 10,
+  },
+  finishButtonText: {
+    color: "white",
+    fontSize: 13,
+    fontWeight: "600",
+    textAlign: "center",
+  },
+  skipButtonText: {
+    color: "#EA2B2E",
+    fontSize: 13,
+    fontWeight: "600",
+    textAlign: "center",
+  },
+  skipButton: {
+    borderWidth: 1,
+    borderColor: "#EA2B2E",
+    width: "45%",
+    padding: 10,
+    borderRadius: 10,
   },
 });

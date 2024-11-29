@@ -61,14 +61,13 @@ getValueFor('user',setuser)
           { opacity: NextButtonDisabled == false ? 0.5 : 1 },
         ]}
         onPress={() => {
+        
+            SendInfo()
          
-          SendInfo()
-          setTimeout(() => {
-            nextButtonPress();
-            SetStep()
-          }, 500);
-     
          
+       
+          
+
         }}
       >
         <Text style={styles.NextButtonText}>Sonraki Adım</Text>
