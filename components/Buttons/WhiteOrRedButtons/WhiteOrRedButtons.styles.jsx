@@ -12,6 +12,7 @@ export const style = StyleSheet.create({
     gap: 8,
     width: "100%",
     flex: 1,
+    height: 40,
   },
   text: {
     fontSize: 14,

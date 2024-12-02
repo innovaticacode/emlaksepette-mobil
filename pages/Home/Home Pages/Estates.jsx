@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useCallback, useMemo, useEffect } from "react";
 import {
   View,
   Text,
@@ -8,104 +8,136 @@ import {
   RefreshControl,
   Image,
 } from "react-native";
-
-import axios from "axios";
 import { ActivityIndicator } from "react-native-paper";
-import Modal from "react-native-modal";
-import { getValueFor } from "../../../components/methods/user";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
-import Icon from "react-native-vector-icons/AntDesign";
-import SliderEstateBar from "../../../components/SliderEstateBar";
 import { AlertNotificationRoot } from "react-native-alert-notification";
 import Housing from "../../../src/assets/images/Konut.png";
-import { apiUrl, frontEndUriBase } from "../../../components/methods/apiRequest";
+import { frontEndUriBase } from "../../../components/methods/apiRequest";
 import RealtorPost from "../../../components/Card/RealtorCard/RealtorPost";
-const PAGE_SIZE = 10;
+import { UsePaginatedData } from "../../../hooks";
 
 const Estates = ({ index }) => {
   const navigation = useNavigation();
-  
-  const [featuredEstates, setFeaturedEstates] = useState([]);
-  const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
-  const [hasMore, setHasMore] = useState(true);
-  const [refreshing, setRefreshing] = useState(false);
-  const [user, setuser] = useState({});
+  const apiData = [{ key: "step1_slug", value: "konut" }];
 
-  const fetchFeaturedEstates = async (reset = false) => {
-    if (loading || (!hasMore && !reset)) return;
-    setLoading(true);
-    const config = {
-      headers: {
-        Authorization: `Bearer ${user?.access_token}`,
-      },
-    };
+  const { data, hooksLoading, error, loadMore, setSkip } = UsePaginatedData("real-estates", 10, apiData);// take 10
 
-    try {
-      const response = await axios.get(
-        `${apiUrl}real-estates?page=${reset ? 1 : page}&limit=${PAGE_SIZE}`,
-        config
-      );
-      const newEstates = Object.values(response.data);
-
-      if (reset) {
-        setFeaturedEstates(newEstates);
-        setPage(2);
-        setHasMore(true);
-      } else {
-        if (newEstates.length > 0) {
-          setFeaturedEstates((prevEstates) => {
-            const newUniqueEstates = newEstates.filter(
-              (estate) =>
-                !prevEstates.some((prevEstate) => prevEstate.id === estate.id)
-            );
-            return [...prevEstates, ...newUniqueEstates];
-          });
-          setPage((prevPage) => prevPage + 1);
-        } else {
-          setHasMore(false);
-        }
-      }
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setLoading(false);
-      setRefreshing(false);
-    }
-  };
 
   useFocusEffect(
     useCallback(() => {
       if (index == 2) {
-        fetchFeaturedEstates(true);
-      } else {
-        setFeaturedEstates([]);
+        setLoading(true);
+        loadMore();
+        setLoading(false);
       }
-    }, [index, user])
+    }, [index])
   );
 
-  useEffect(() => {
-    getValueFor("user", setuser);
-  }, []);
-
-  const filteredHomes = featuredEstates.filter(
-    (estate) => estate.step1_slug === "konut"
-  );
-
-  const onRefresh = () => {
-    setRefreshing(true);
-    fetchFeaturedEstates(true);
+  const onRefresh = async () => {
+    setLoading(true);
+    await setSkip(0);
+    setLoading(false);
   };
 
   const renderFooter = () => {
-    if (!loading) return null;
+    if (!hooksLoading) return null;
     return (
-      <ActivityIndicator style={{ margin: 0 }} size="small" color="#333" />
+      <View style={{ height: 100 }}>
+        <ActivityIndicator style={{ marginVertical: 16 }} size="small" color="#333" />
+      </View>
     );
   };
 
+  const renderHeader = () => {
+    return (
+      <>
+        <View style={{ paddingHorizontal: 0 }}>
+          <Image
+            source={Housing}
+            style={{ width: "100%", height: 120 }}
+          />
+        </View>
+
+        <View style={styles.header}>
+          <Text style={{ fontSize: 14, fontWeight: 700 }}>
+            ÖNE ÇIKAN EMLAK İLANLARI
+          </Text>
+
+          <TouchableOpacity
+            style={styles.allBtn}
+            onPress={() =>
+              navigation.navigate("AllRealtorAdverts", {
+                name: "Emlak İlanları",
+                slug: "emlak-ilanlari",
+                data: data,
+                count: data.length,
+                type: "konut",
+                optional: null,
+                title: null,
+                check: null,
+                city: null,
+                county: null,
+                hood: null,
+              })
+            }
+          >
+            <Text
+              style={{
+                color: "white",
+                fontSize: 12,
+                fontWeight: "bold",
+              }}
+            >
+              Tüm İlanları Gör
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </>
+    )
+  };
+
+  const renderItem = useMemo(() => ({ item }) => {
+    const housingTypeData = JSON.parse(item.housing_type_data);
+
+    const getColumnName = (columnNameKey) => {
+      return housingTypeData[columnNameKey] || "";
+    };
+
+    return (
+      <RealtorPost
+        sold={item?.sold}
+        HouseId={item?.id}
+        price={`${housingTypeData["price"]} `}
+        housing={item}
+        title={item?.housing_title}
+        loading={loading}
+        location={`${item?.city_title} / ${item?.county_title}`}
+        image={`${frontEndUriBase}housing_images/${housingTypeData?.image}`}
+        openSharing={housingTypeData["open_sharing1"]}
+        column1_additional={item?.column1_additional}
+        column1_name={getColumnName(item?.column1_name)}
+        column2_name={getColumnName(item?.column2_name)}
+        column2_additional={item?.column2_additional}
+        column3_name={getColumnName(item?.column3_name)}
+        column3_additional={item?.column3_additional}
+        column4_name={getColumnName(item?.column4_name)}
+        column4_additional={item?.column4_additional}
+        bookmarkStatus={true}
+        dailyRent={false}
+        isFavorite={item?.is_favorite}
+      />
+    );
+  }, [hooksLoading, loadMore]);
+
   return (
     <>
+      {error && (
+        <>
+          <Text style={styles.errorText}>Bir şeyler ters gitti: {error}</Text>
+        </>
+      )}
+
       {loading ? (
         <View
           style={{ alignItems: "center", justifyContent: "center", flex: 1 }}
@@ -114,24 +146,8 @@ const Estates = ({ index }) => {
         </View>
       ) : (
         <View style={styles.container}>
-          {refreshing && (
-            <View
-              style={{
-                padding: 10,
-                backgroundColor: "white",
-                alignItems: "center",
-              }}
-            >
-              <ActivityIndicator
-                animating={true}
-                size="small"
-                color="#000000"
-              />
-            </View>
-          )}
-
           <AlertNotificationRoot>
-            {filteredHomes.length == 0 ? (
+            {loading && data && data.length === 0 ? (
               <View style={{ width: "100%", paddingTop: 10 }}>
                 <Text
                   style={{
@@ -145,106 +161,18 @@ const Estates = ({ index }) => {
               </View>
             ) : (
               <FlatList
-                data={filteredHomes}
-                renderItem={({ item }) => (
-                  <RealtorPost
-                    sold={item.sold}
-                    HouseId={item.id}
-                    price={`${JSON.parse(item.housing_type_data)["price"]} `}
-                    housing={item}
-                    title={item.housing_title}
-                    loading={loading}
-                    location={item.city_title + " / " + item.county_title}
-                    image={`${frontEndUriBase}housing_images/${
-                      JSON.parse(item.housing_type_data).image
-                    }`}
-                    openSharing={
-                      JSON.parse(item.housing_type_data)["open_sharing1"]
-                    }
-                    column1_additional={item.column1_additional}
-                    column1_name={
-                      JSON.parse(item.housing_type_data)[item.column1_name]
-                        ? JSON.parse(item.housing_type_data)[item.column1_name]
-                        : ""
-                    }
-                    column2_name={
-                      JSON.parse(item.housing_type_data)[item.column2_name]
-                        ? JSON.parse(item.housing_type_data)[item.column2_name]
-                        : ""
-                    }
-                    column2_additional={item.column2_additional}
-                    column3_name={
-                      JSON.parse(item.housing_type_data)[item.column3_name]
-                        ? JSON.parse(item.housing_type_data)[item.column3_name]
-                        : ""
-                    }
-                    column3_additional={item.column3_additional}
-                    column4_name={
-                      JSON.parse(item.housing_type_data)[item.column4_name]
-                        ? JSON.parse(item.housing_type_data)[item.column4_name]
-                        : ""
-                    }
-                    column4_additional={item.column4_additional}
-                    bookmarkStatus={true}
-                    dailyRent={false}
-                    isFavorite={item.is_favorite}
-                  />
-                )}
-                keyExtractor={(item, index) =>
-                  item.id ? item.id.toString() : index.toString()
-                }
-                onEndReachedThreshold={0.1}
+                data={data}
+                keyExtractor={(item, index) => index.toString()}
+                onEndReached={() => loadMore()}
+                initialNumToRender={10}
+                maxToRenderPerBatch={10}
+                windowSize={24}
+                onEndReachedThreshold={0.3}
                 refreshControl={
-                  <RefreshControl
-                    refreshing={refreshing}
-                    onRefresh={onRefresh}
-                  />
+                  <RefreshControl refreshing={loading} onRefresh={onRefresh} />
                 }
-                ListHeaderComponent={
-                  <>
-                    <View style={{ paddingHorizontal: 0 }}>
-                      <Image
-                        source={Housing}
-                        style={{ width: "100%", height: 120 }}
-                      />
-                    </View>
-
-                    <View style={styles.header}>
-                      <Text style={{ fontSize: 14, fontWeight: 700 }}>
-                        ÖNE ÇIKAN EMLAK İLANLARI
-                      </Text>
-
-                      <TouchableOpacity
-                        style={styles.allBtn}
-                        onPress={() =>
-                          navigation.navigate("AllRealtorAdverts", {
-                            name: "Emlak İlanları",
-                            slug: "emlak-ilanlari",
-                            data: filteredHomes,
-                            count: filteredHomes.length,
-                            type: "konut",
-                            optional: null,
-                            title: null,
-                            check: null,
-                            city: null,
-                            county: null,
-                            hood: null,
-                          })
-                        }
-                      >
-                        <Text
-                          style={{
-                            color: "white",
-                            fontSize: 12,
-                            fontWeight: "bold",
-                          }}
-                        >
-                          Tüm İlanları Gör
-                        </Text>
-                      </TouchableOpacity>
-                    </View>
-                  </>
-                }
+                renderItem={renderItem}
+                ListHeaderComponent={renderHeader}
                 ListFooterComponent={renderFooter}
               />
             )}
@@ -252,13 +180,13 @@ const Estates = ({ index }) => {
         </View>
       )}
     </>
+
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    
   },
   item: {
     padding: 20,
@@ -293,6 +221,11 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     marginTop: 20,
   },
+  errorText: {
+    justifyContent: "center",
+    alignItems: "center",
+    textAlign: "center",
+  }
 });
 
 export default Estates;

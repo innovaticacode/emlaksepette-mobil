@@ -1,14 +1,15 @@
 import { Dimensions, Platform, StyleSheet } from "react-native";
 
 const { width, height } = Dimensions.get("window");
-export const styles = StyleSheet.create({
+ export const styles = StyleSheet.create({
   container: {
     width: "100%",
     display: "flex",
     flexDirection: "column",
     borderBottomWidth: 2,
     borderBlockColor: "#E8E8E8",
-    padding: 5,
+    padding:5
+   
   },
   İlan: {
     padding: 3,
@@ -23,6 +24,8 @@ export const styles = StyleSheet.create({
     paddingLeft: 5,
 
     paddingRight: 5,
+
+ 
   },
   captionAndIcons: {
     display: "flex",
@@ -40,7 +43,7 @@ export const styles = StyleSheet.create({
   },
   caption: {
     width: "80%",
-    gap: 3,
+    gap:3
   },
   ıcons: {
     display: "flex",
@@ -60,16 +63,17 @@ export const styles = StyleSheet.create({
     padding: 5,
     width: "50%",
     alignItems: "center",
-    backgroundColor: "#EA2B2E",
+    backgroundColor: "#EA2C2E",
     borderRadius: 5,
   },
-  heartBtn: {
-    position: "absolute",
-    zIndex: 1,
-    right: 4,
-    top: 4,
+  heartBtn:{
+    position:'absolute',
+    zIndex:1,
+    right:4,
+    top:4
   },
   ıconContainer: {
+
     width: 28,
     height: 28,
     alignItems: "center",
@@ -90,6 +94,7 @@ export const styles = StyleSheet.create({
     }),
   },
   ıconContainer2: {
+
     width: 32,
     height: 32,
     alignItems: "center",
@@ -132,10 +137,10 @@ export const styles = StyleSheet.create({
   text: {
     textAlign: "center",
   },
-  location: {
-    flexDirection: "row",
-    alignItems: "center",
-    paddingTop: 5,
-    gap: 4,
-  },
+  location:{
+    flexDirection:'row',
+    alignItems:'center',
+    paddingTop:5,
+    gap:4
+  }
 });

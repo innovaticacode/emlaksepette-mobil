@@ -11,6 +11,9 @@ import MySwapInfoBottom from "./BottomModals/MySwapInfoBottom/MySwapInfoBottom";
 import WhiteOrRedButtons from "./Buttons/WhiteOrRedButtons/WhiteOrRedButtons";
 import SalePointCard from "./Card/SalePointCard/SalePointCard";
 import TracingCard from "./Card/TracingCard/TracingCard";
+import FranchiseForm from "./BottomModals/FranchiseForm/FranchiseForm";
+import BasicButtons from "./Buttons/BasicButtons/BasicButtons";
+import CommentsBottomModal from "./BottomModals/CommentsBottomModal/CommentsBottomModal";
 
 export {
   CommentCard,
@@ -25,5 +28,4 @@ export {
   MySwapInfoBottom,
   WhiteOrRedButtons,
   SalePointCard,
-  TracingCard,
 };

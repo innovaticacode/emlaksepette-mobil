@@ -40,6 +40,8 @@ import Introduction from "./ProfilePageItem/Introduction/Introduction";
 import Filter from "../../assets/filter.png";
 import ProjectBottomSheetFilter from "../../components/ProjectBottomSheetFilter";
 import EstateBottomSheetFilter from "../../components/EstateBottomSheetFilter";
+import BecomingFranchise from "./ProfilePageItem/BecomingFranchise/BecomingFranchise";
+import BecomeConsultant from "./ProfilePageItem/BecomeConsultant/BecomeConsultant";
 
 export default function Profile() {
   const route = useRoute();
@@ -72,49 +74,52 @@ export default function Profile() {
   const [tabWidth, setTabWidth] = useState(0);
   const [projectData, setProjectData] = useState([]);
   const [checkImage, setCheckImage] = useState(null);
-  const [items, setItems] = useState(() => {
-    const initialItems = [
-      {
-        text: "Tanıtım",
-        isShow: "All",
-      },
-      {
-        text: "Emlak İlanları",
-        isShow: "All",
-      },
-      {
-        text: "Proje İlanları",
-        isShow: "All",
-      },
-      {
-        text: "Mağaza Profili",
-        isShow: "All",
-      },
-      {
-        text: "Satış Noktalarımız", // Koleksiyonlar yerine bu eklendi
-        isShow: "All",
-      },
-      {
-        text: "Değerlendirmeler",
-        isShow: "All",
-      },
-      {
-        text: "Ekip",
-      },
-    ];
-
-    // Değerleri kontrol et ve 'Satış Noktalarımız' öğesini kaldır
-    if (
-      storeData?.data?.corporate_type === "Emlak Ofisi" ||
-      storeData?.data?.type === 1
-    ) {
-      return initialItems.filter((item) => item.text !== "Satış Noktalarımız");
-    }
-
-    return initialItems;
-  });
-
   const [color, setColor] = useState("#000000");
+  const [corporateType, setCorporateType] = useState(null);
+
+  const items = [
+    {
+      text: "Tanıtım",
+      isShow: "All",
+    },
+    {
+      text: "Emlak İlanları",
+      isShow: "All",
+    },
+    {
+      text: "Proje İlanları",
+      isShow: "İnşaat Ofisi",
+    },
+    {
+      text: "Mağaza Profili",
+      isShow: "All",
+    },
+    {
+      text: "Satış Noktalarımız", // Koleksiyonlar yerine bu eklendi
+      isShow: "İnşaat Ofisi",
+    },
+    {
+      text: "Değerlendirmeler",
+      isShow: "All",
+    },
+    {
+      text:
+        // storeData?.data?.is_brand == 0 &&
+        //     storeData?.data?.brand_id !== null
+        storeData?.data?.is_brand == 1 || corporateType == "Emlak Ofisi"
+          ? "Danışmanlar"
+          : "Yönetim Ekibi",
+      isShow: "All",
+    },
+    {
+      text: "Franchise Ol",
+      isShow: "Franchise Markası",
+    },
+    {
+      text: "Danışman Ol",
+      isShow: "Franchise Markası",
+    },
+  ];
 
   useEffect(() => {
     getValueFor("user", setUser);
@@ -199,28 +204,31 @@ export default function Profile() {
   };
 
   useEffect(() => {
-    // Örnek API isteği
-    setloadingShopping(true);
-    apiRequestGet("brand/" + id)
-      .then((res) => {
+    const fetchData = async () => {
+      try {
+        setloadingShopping(true);
+        const res = await apiRequestGet("brand/" + id);
         const housingsWithPrefixedID = res.data.data.housings.map(
           (housing) => ({
             ...housing,
             prefixedID: `20000${housing.id}`,
           })
         );
+
         setstoreData(res.data);
         setProjectData(res.data.data.projects);
         setHousings(housingsWithPrefixedID);
         setTeamm(res.data.data.child);
         sethousingRecords(housingsWithPrefixedID); // Housings dizisini başlangıçta kopyala
-      })
-      .catch((error) => {
+        setCorporateType(res.data.data.corporate_type);
+      } catch (error) {
         console.error("Error fetching data:", error);
-      })
-      .finally(() => {
+      } finally {
         setloadingShopping(false);
-      });
+      }
+    };
+
+    fetchData();
   }, [id]);
 
   const handleSearch = (text) => {
@@ -495,34 +503,44 @@ export default function Profile() {
                     paddingRight: 15,
                   }}
                 >
-                  {items.map((item, index) => (
-                    <TouchableOpacity
-                      key={index}
-                      style={[
-                        styles.TabBarBtn,
-                        {
-                          borderBottomWidth: tab === index ? 3 : 0,
-                          borderBottomColor:
-                            tab === index ? "#EA2C2E" : "transparent",
-                          top: 2,
-                        },
-                      ]}
-                      onPress={() => settab(index)}
-                    >
-                      <Text
-                        style={{
-                          color: tab === index ? "#EA2C2E" : "grey",
-                          fontWeight: tab === index ? "500" : "normal",
-                        }}
+                  {items.map((item, index) => {
+                    // 'item.isShow' değerini kontrol ediyoruz
+                    if (
+                      item.isShow !== "All" &&
+                      item.isShow !== corporateType
+                    ) {
+                      return null; // 'isShow' değeri eşleşmezse, bu item'ı render etmiyoruz
+                    }
+
+                    return (
+                      <TouchableOpacity
+                        key={index}
+                        style={[
+                          styles.TabBarBtn,
+                          {
+                            borderBottomWidth: tab === index ? 3 : 0,
+                            borderBottomColor:
+                              tab === index ? "#EA2C2E" : "transparent",
+                            top: 2,
+                          },
+                        ]}
+                        onPress={() => settab(index)}
                       >
-                        {item.text === "Satış Noktalarımız" &&
-                        (storeData?.data?.corporate_type === "Emlak Ofisi" ||
-                          storeData?.data?.type === 1)
-                          ? null
-                          : item.text}
-                      </Text>
-                    </TouchableOpacity>
-                  ))}
+                        <Text
+                          style={{
+                            color: tab === index ? "#EA2C2E" : "grey",
+                            fontWeight: tab === index ? "500" : "normal",
+                          }}
+                        >
+                          {item.text === "Satış Noktalarımız" &&
+                          (storeData?.data?.corporate_type === "Emlak Ofisi" ||
+                            storeData?.data?.type === 1)
+                            ? null
+                            : item.text}
+                        </Text>
+                      </TouchableOpacity>
+                    );
+                  })}
                 </View>
               </ScrollView>
             </View>
@@ -538,14 +556,12 @@ export default function Profile() {
                 />
               )}
               {tab === 3 && <ShopInfo data={storeData} loading={loading} />}
-              {tab === 4 &&
-                (storeData?.data?.type !== 1 &&
-                storeData?.data?.corporate_type !== "Emlak Ofisi" ? (
-                  <SellPlacesForBrands data={storeData} />
-                ) : null)}
+              {tab === 4 && <SellPlacesForBrands data={storeData} />}
 
               {tab === 5 && <CommentsOfBrands id={id} />}
-              {tab === 6 && <Team teamm={teamm} />}
+              {tab === 6 && <Team team={teamm} type={corporateType} />}
+              {tab === 7 && <BecomingFranchise />}
+              {tab === 8 && <BecomeConsultant />}
             </View>
           </View>
 
@@ -559,7 +575,6 @@ export default function Profile() {
                 bottom: 0,
                 paddingBottom: Platform.OS === "ios" ? 40 : 12,
                 width: "100%",
-                backgroundColor: "#F2F2F2",
                 height: "auto",
               }}
             >
@@ -795,7 +810,7 @@ const styles = StyleSheet.create({
   },
   headerBg: {
     width: "100%",
-    height: width > 400 ? 220 : 170,
+    height: width > 350 ? 170 : 120,
     borderBottomLeftRadius: 50,
     borderBottomRightRadius: 50,
   },

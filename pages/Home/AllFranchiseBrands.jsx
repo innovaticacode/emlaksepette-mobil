@@ -6,19 +6,20 @@ import {
   Text,
   FlatList,
   StyleSheet,
-  TouchableOpacity,
 } from "react-native";
 import { apiUrl, frontEndUriBase } from "../../components/methods/apiRequest";
+import { useNavigation } from "@react-navigation/native";
+import Ionicons from '@expo/vector-icons/Ionicons';
+import MaterialIcons from '@expo/vector-icons/MaterialIcons';
+import { WhiteOrRedButtons } from "../../components";
 
-
-const AllFranchiseBrands = (props) => {
-  const { navigation } = props;
+const AllFranchiseBrands = () => {
+  const navigation = useNavigation();
   const [brands, setBrands] = useState([]);
 
   const fetchBrands = async () => {
     try {
       const response = await axios.get(`${apiUrl}franchise-markalari`);
-      console.debug("Brands response:>>>>>>>>>>>>>>", response.data);
       return setBrands(response.data.data);
     } catch (error) {
       return console.error("Error fetching brands:", error);
@@ -29,6 +30,8 @@ const AllFranchiseBrands = (props) => {
     fetchBrands();
   }, []);
 
+
+
   return (
     <View style={styles.container}>
       <FlatList
@@ -37,28 +40,41 @@ const AllFranchiseBrands = (props) => {
         numColumns={2}
         showsVerticalScrollIndicator={false}
         renderItem={({ item }) => (
-          <View style={styles.area}>
-            <TouchableOpacity
-              style={styles.imageArea}
-              onPress={() => {
-                navigation.navigate("Profile", {
-                  id: item?.user_id,
-                });
-              }}
-            >
-              <Image
-                source={{
-                  uri: `${frontEndUriBase}/logos/${item.logo}`,
-                }}
-                alt="brands"
-                resizeMode="contain"
-                style={styles.image}
-              />
-              <Text style={styles.info}>Toplam Danışman Sayısı:</Text>
-              <View style={styles.seperator} />
-              <Text style={styles.title}>{item.title}</Text>
-            </TouchableOpacity>
-          </View>
+          <>
+            <View style={styles.area}>
+              <View style={styles.body}>
+                <View style={{ alignItems: 'center' }}>
+                  <Image source={{ uri: `${frontEndUriBase}/logos/${item.logo}` }}
+                    alt="brands"
+                    resizeMode="contain"
+                    style={styles.image}
+                  />
+                </View>
+                <View style={styles.seperator} />
+                <View style={{ gap: 6 }}>
+                  <Text style={styles.title}>{item.title}</Text>
+                  <View style={styles.infoArea}>
+                    <Ionicons name="person" size={12} color="#000" />
+                    <Text style={styles.info}>{`${item?.consultants_count} Danışman`}</Text>
+                  </View>
+                  <View style={styles.infoArea}>
+                    <MaterialIcons name="home" size={12} color="#000" />
+                    <Text style={styles.info}>{`${item?.offices_count} Ofis`}</Text>
+                  </View>
+                  <WhiteOrRedButtons
+                    text={'Hemen İncele'}
+                    bgColor={'#EA2B2E'}
+                    onPress={() => {
+                      navigation.navigate("Profile", {
+                        id: item?.user_id,
+                      });
+                    }}
+                  />
+                </View>
+
+              </View>
+            </View>
+          </>
         )}
       />
     </View>
@@ -69,7 +85,7 @@ export default AllFranchiseBrands;
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "#F3F3F3",
+    backgroundColor: "#FFF",
     flex: 1,
     paddingHorizontal: 10,
   },
@@ -79,35 +95,45 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingVertical: 6,
   },
-  imageArea: {
+  body: {
     width: "90%",
     backgroundColor: "#FFF",
     borderWidth: 1,
-    borderColor: "#FFF",
+    borderColor: "#BBBBBB",
     borderRadius: 10,
     padding: 10,
-    alignItems: "center",
+    flexDirection: "column",
+    justifyContent: "space-between",
+    alignItems: "stretch",
+    flex: 1,
   },
   image: {
-    width: "100%",
-    height: 100,
+    width: 80,
+    height: 80,
     backgroundColor: "#FFF",
-    borderRadius: 10,
-  },
-  info: {
-    fontSize: 11,
-    fontWeight: "500",
-    color: "#0056b3",
+    borderRadius: 50,
+    overflow: "hidden",
   },
   seperator: {
     width: "100%",
     height: 1,
-    backgroundColor: "#e4e4e4",
+    backgroundColor: "#BBBBBB",
     marginVertical: 10,
   },
   title: {
     fontSize: 12,
     fontWeight: "bold",
-    color: "#0056b3",
+    color: "#0C0C0C",
   },
+  info: {
+    color: '#0C0C0C',
+    fontSize: 10,
+    fontWeight: '400',
+    lineHeight: 12
+  },
+  infoArea: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6
+  }
 });
