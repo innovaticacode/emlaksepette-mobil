@@ -42,8 +42,7 @@ export default function RejectRealtorAdverts() {
     setloading(true);
     try {
       const res = await axios.get(
-        apiUrl + "get_my_housings?orderByHousings=" +
-        sort,
+        apiUrl + "get_my_housings?orderByHousings=" + sort,
         {
           headers: { Authorization: "Bearer " + user.access_token },
         }
@@ -75,8 +74,8 @@ export default function RejectRealtorAdverts() {
     setsearchValue(value);
     const filteredData = value
       ? housings.filter((item) =>
-        item?.housing_title.toLowerCase().includes(value.toLowerCase())
-      )
+          item?.housing_title.toLowerCase().includes(value.toLowerCase())
+        )
       : housings;
     sethousingRecords(filteredData);
   };
@@ -142,18 +141,27 @@ export default function RejectRealtorAdverts() {
             </TouchableOpacity>
           </View>
           <View style={{ paddingTop: 10, gap: 10 }}>
-            {
-              !searchValue  && housingRecords.length==0 ?
-              <Text>Rededilen İlanınız Bulunmamaktadır</Text>:
-              (searchValue && housingRecords.length==0) ?
-              <Text style={{textAlign:'center',color:'#333',fontWeight:'700'}}>Sonuç Bulunamadı</Text>:
-            housingRecords.map((item, index) => (
-              <RealtorAdvertPost
-                key={index}
-                housing={item}
-                Onpress={openSheet}
-              />
-            ))}
+            {!searchValue && housingRecords.length == 0 ? (
+              <Text>Rededilen İlanınız Bulunmamaktadır</Text>
+            ) : searchValue && housingRecords.length == 0 ? (
+              <Text
+                style={{
+                  textAlign: "center",
+                  color: "#333",
+                  fontWeight: "700",
+                }}
+              >
+                Sonuç Bulunamadı
+              </Text>
+            ) : (
+              housingRecords.map((item, index) => (
+                <RealtorAdvertPost
+                  key={index}
+                  housing={item}
+                  Onpress={openSheet}
+                />
+              ))
+            )}
           </View>
           <Modal
             isVisible={SortLıstModal}
