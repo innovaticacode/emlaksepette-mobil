@@ -32,6 +32,8 @@ export default function SelledRealtorAdverts() {
   const [take, setTake] = useState(10);
   const [loading, setloading] = useState(true);
   const [housingRecords, sethousingRecords] = useState([]);
+  const [parsePrice, setParsePrice] = useState(null);
+
   const fetchHousings = async () => {
     setloading(true);
     try {
@@ -40,19 +42,33 @@ export default function SelledRealtorAdverts() {
           Authorization: `Bearer ${user.access_token}`,
         },
         params: {
-          take: 1,
-          skip: 0,
           is_sold: 1,
         },
       });
-      console.log(response.data);
-      sethousings(response.data);
+      // Housing data response
+      const housings = response.data;
+      // Parse the prices and attach to housing objects
+      const updatedHousings = housings.map((housing) => {
+        try {
+          const housingTypeData = JSON.parse(housing.housing_type_data);
+          const price = housingTypeData.price
+            ? housingTypeData.price[0]
+            : "N/A";
+          return { ...housing, price: price }; // Add parsed price to housing
+        } catch (error) {
+          return { ...housing, price: "N/A" }; // Fallback if parsing fails
+        }
+      });
+      // Update state with modified housing data
+      sethousings(updatedHousings);
+      console.debug("Housings:", housings.price);
     } catch (e) {
       console.log(e + " hata");
     } finally {
       setloading(false);
     }
   };
+
   useEffect(() => {
     fetchHousings();
   }, [user]);
