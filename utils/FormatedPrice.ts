@@ -1,3 +1,3 @@
-export const formatCurrency = (amount: unknown | any) => {
+export const formatedPrice = (amount: any) => {
   return parseInt(amount).toLocaleString("tr-TR") + " ₺";
 };

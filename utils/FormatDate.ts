@@ -9,5 +9,5 @@ export function formatDate(timestamp: string): string {
   const minutes = date.getMinutes().toString().padStart(2, "0");
 
   // Return formatted date string without seconds
-  return `${day}.${month}.${year} ${hours}:${minutes}`;
+  return `${day}-${month}-${year} ${hours}:${minutes}`;
 }
