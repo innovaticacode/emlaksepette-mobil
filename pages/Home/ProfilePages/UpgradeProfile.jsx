@@ -502,8 +502,6 @@ export default function UpgradeProfile() {
     data.append("new_mobile_phone", formData.new_mobile_phone);
     data.append("change_reason", formData.change_reason);
 
-    console.debug("----->", formData);
-
     if (file) {
       data.append("verify_document", {
         uri: Platform.OS === "android" ? file : file.uri.replace("file://", ""),
@@ -525,9 +523,8 @@ export default function UpgradeProfile() {
       );
 
       if (response.data) {
-        alert("Başarılı");
         navigation.replace("VerifyPhoneChange", {
-          phone: formData.new_phone_number,
+          phone: formData.new_mobile_phone,
         });
       }
     } catch (error) {
@@ -568,7 +565,7 @@ export default function UpgradeProfile() {
       console.error("Status:", error.response.status);
       Dialog.show({
         type: ALERT_TYPE.ERROR,
-        title: "Başarılı",
+        title: "Hata",
         textBody: error.response.data.message,
         button: "Tamam",
       });
@@ -576,7 +573,7 @@ export default function UpgradeProfile() {
       console.error("İstek Gönderildi Ama Yanıt Alınamadı:", error.request);
       Dialog.show({
         type: ALERT_TYPE.ERROR,
-        title: "Başarılı",
+        title: "Hata",
         textBody: error.response.data.message,
         button: "Tamam",
       });
@@ -584,16 +581,12 @@ export default function UpgradeProfile() {
       console.error("Hata Mesajı:", error.message);
       Dialog.show({
         type: ALERT_TYPE.ERROR,
-        title: "Başarılı",
+        title: "Hata",
         textBody: error.response.data.message,
         button: "Tamam",
       });
     }
   };
-
-  useEffect(() => {
-    console.debug("User----------->>:", user);
-  }, [user]);
 
   const postData = async (param) => {
     setloadingUpdate(true);

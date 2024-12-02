@@ -87,7 +87,16 @@ const VerifyPhoneChange = ({ route }) => {
       }
     } catch (error) {
       console.error("error", error);
+      if (error.response) {
+        console.error("Sunucu Yanıt Hatası:", error.response.data);
+        console.error("Status:", error.response.status);
+      } else if (error.request) {
+        console.error("İstek Gönderildi Ama Yanıt Alınamadı:", error.request);
+      } else {
+        console.error("Hata Mesajı:", error.message);
+      }
       alert("Bir hata oluştu, lütfen tekrar deneyin.");
+
       navigation.navigate("UpdateProfile");
     }
   };
