@@ -140,7 +140,13 @@ export default function RejectRealtorAdverts() {
               <MaterialIcon name="swap-vertical" size={23} color={"#333"} />
             </TouchableOpacity>
           </View>
-          <View style={{ paddingTop: 10, gap: 10 }}>
+          <View
+            style={{
+              paddingTop: 10,
+              gap: 10,
+              alignItems: "center",
+            }}
+          >
             {!searchValue && housingRecords.length == 0 ? (
               <Text>Rededilen İlanınız Bulunmamaktadır</Text>
             ) : searchValue && housingRecords.length == 0 ? (

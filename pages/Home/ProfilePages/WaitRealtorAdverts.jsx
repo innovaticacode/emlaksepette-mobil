@@ -142,7 +142,7 @@ export default function WaitRealtorAdverts({ index }) {
               <MaterialIcon name="swap-vertical" size={23} color={"#333"} />
             </TouchableOpacity>
           </View>
-          <View style={{ gap: 10, paddingTop: 10 }}>
+          <View style={{ gap: 10, paddingTop: 10, alignItems: "center" }}>
             {!searchValue && housingRecords.length == 0 ? (
               <Text>Onay Bekleyen İlanınız Bulunmamaktadır</Text>
             ) : searchValue && housingRecords.length == 0 ? (

@@ -38,7 +38,7 @@ export default function SelledRealtorAdverts() {
       const res = await axios.get(apiUrl + "get_my_housings", {
         headers: { Authorization: "Bearer " + user.access_token },
       });
-      sethousings(res?.data?.activeHousingTypes);
+      sethousings([]);
       setloading(true);
     } catch (e) {
       console.log(e + " hata");
@@ -58,6 +58,7 @@ export default function SelledRealtorAdverts() {
   const [selectedProject, setSelectedProject] = useState(null);
   const isfocused = useIsFocused();
   const [selectedIndex, setIndex] = React.useState(0);
+  const [searchValue, setsearchValue] = useState("");
 
   const [SortLıstModal, setSortLıstModal] = useState(false);
   const handleRadio = (index) => {
@@ -67,6 +68,17 @@ export default function SelledRealtorAdverts() {
       fetchHousings();
     }, 600);
   };
+
+  const handleSearch = (value) => {
+    setsearchValue(value);
+    const filteredData = value
+      ? housings.filter((item) =>
+          item?.housing_title.toLowerCase().includes(value.toLowerCase())
+        )
+      : housings;
+    sethousingRecords(filteredData);
+  };
+
   return (
     <>
       {loading ? (
@@ -112,6 +124,8 @@ export default function SelledRealtorAdverts() {
             <TextInput
               style={styles.Input}
               placeholder="Kelime veya İlan No ile ara"
+              value={searchValue}
+              onChangeText={handleSearch}
             />
             <TouchableOpacity
               style={{
@@ -136,6 +150,31 @@ export default function SelledRealtorAdverts() {
               />
             ))}
           </View>
+
+          <View style={{ paddingTop: 10, gap: 10, alignItems: "center" }}>
+            {!searchValue && housings.length === 0 ? (
+              <Text>Satılan İlanınız Bulunmamaktadır</Text>
+            ) : searchValue && housingRecords.length == 0 ? (
+              <Text
+                style={{
+                  textAlign: "center",
+                  color: "#333",
+                  fontWeight: "700",
+                }}
+              >
+                Sonuç Bulunamadı
+              </Text>
+            ) : (
+              housingRecords?.map((item, index) => (
+                <RealtorAdvertPost
+                  key={index}
+                  housing={item}
+                  Onpress={openSheet}
+                />
+              ))
+            )}
+          </View>
+
           <Modal
             isVisible={SortLıstModal}
             onBackdropPress={() => setSortLıstModal(false)}
