@@ -30,16 +30,23 @@ export default function SelledRealtorAdverts() {
   }, []);
   const [start, setStart] = useState(0);
   const [take, setTake] = useState(10);
-  const [loading, setloading] = useState(false);
-
+  const [loading, setloading] = useState(true);
+  const [housingRecords, sethousingRecords] = useState([]);
   const fetchHousings = async () => {
     setloading(true);
     try {
-      const res = await axios.get(apiUrl + "get_my_housings", {
-        headers: { Authorization: "Bearer " + user.access_token },
+      const response = await axios.get(`${apiUrl}real-estates`, {
+        headers: {
+          Authorization: `Bearer ${user.access_token}`,
+        },
+        params: {
+          take: 1,
+          skip: 0,
+          is_sold: 1,
+        },
       });
-      sethousings([]);
-      setloading(true);
+      console.log(response.data);
+      sethousings(response.data);
     } catch (e) {
       console.log(e + " hata");
     } finally {
@@ -142,7 +149,7 @@ export default function SelledRealtorAdverts() {
             </TouchableOpacity>
           </View>
           <View style={{ paddingTop: 10 }}>
-            {housings.map((item, index) => (
+            {housings?.map((item, index) => (
               <RealtorAdvertPost
                 key={index}
                 housing={item}
@@ -152,7 +159,7 @@ export default function SelledRealtorAdverts() {
           </View>
 
           <View style={{ paddingTop: 10, gap: 10, alignItems: "center" }}>
-            {!searchValue && housings.length === 0 ? (
+            {!searchValue && housings?.length === 0 ? (
               <Text>Satılan İlanınız Bulunmamaktadır</Text>
             ) : searchValue && housingRecords.length == 0 ? (
               <Text
