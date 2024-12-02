@@ -105,6 +105,7 @@ export default function UpgradeProfile() {
     taxNumber: "",
     email: "",
     idNumber: "",
+    new_mobile_phone: "",
   };
   const [formData, setFormData] = useState(initialFormData);
 
@@ -421,9 +422,9 @@ export default function UpgradeProfile() {
     });
   };
 
-  useEffect(() => {
-    console.debug("------->>", tab);
-  }, [tab]);
+  // useEffect(() => {
+  //   console.debug("------->>", tab);
+  // }, [tab]);
 
   const handleProfileUpdate = async (data) => {
     data.append(
@@ -495,11 +496,18 @@ export default function UpgradeProfile() {
     }
   };
 
-  const handlePhoneUpdate = async (data) => {
+  const handlePhoneUpdate = async () => {
+    const data = new FormData();
+    data.append("mobile_phone", formData.mobile_phone);
+    data.append("new_mobile_phone", formData.new_mobile_phone);
+    data.append("change_reason", formData.change_reason);
+
+    console.debug("----->", formData);
+
     if (file) {
-      data.append(`verify_document`, {
+      data.append("verify_document", {
         uri: Platform.OS === "android" ? file : file.uri.replace("file://", ""),
-        type: file.mimeType,
+        type: file.mimeType || "application/octet-stream",
         name: file.name || "Document.jpeg",
       });
     }
@@ -515,6 +523,7 @@ export default function UpgradeProfile() {
           },
         }
       );
+
       if (response.data) {
         alert("Başarılı");
         navigation.replace("VerifyPhoneChange", {
@@ -555,13 +564,36 @@ export default function UpgradeProfile() {
 
   const handleApiError = (error) => {
     if (error.response) {
-      console.error("Sunucu Hata Yanıtı:", error.response.data);
+      console.error("Sunucu Yanıt Hatası:", error.response.data);
+      console.error("Status:", error.response.status);
+      Dialog.show({
+        type: ALERT_TYPE.ERROR,
+        title: "Başarılı",
+        textBody: error.response.data.message,
+        button: "Tamam",
+      });
     } else if (error.request) {
-      console.error("Istek Yapıldı, Ancak Yanıt Alınamadı:", error.request);
+      console.error("İstek Gönderildi Ama Yanıt Alınamadı:", error.request);
+      Dialog.show({
+        type: ALERT_TYPE.ERROR,
+        title: "Başarılı",
+        textBody: error.response.data.message,
+        button: "Tamam",
+      });
     } else {
-      console.error("Hata Detayı:", error.message);
+      console.error("Hata Mesajı:", error.message);
+      Dialog.show({
+        type: ALERT_TYPE.ERROR,
+        title: "Başarılı",
+        textBody: error.response.data.message,
+        button: "Tamam",
+      });
     }
   };
+
+  useEffect(() => {
+    console.debug("User----------->>:", user);
+  }, [user]);
 
   const postData = async (param) => {
     setloadingUpdate(true);
