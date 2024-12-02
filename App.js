@@ -88,7 +88,7 @@ import PaymentScreen2 from "./pages/Home/PaymentScreen2";
 import AdvertsPanelTab from "./pages/Home/Panel/AdvertsPanelTab";
 import ClubPanel from "./pages/Home/Panel/RealtorClubPanel/ClubPanel";
 import SwapScreenNav from "./components/SwapScreenNav";
-import MapWiew from "./pages/Home/MapWiew";
+import MapWiew from "./pages/Home/MapFilterRealtor";
 import CollectionsTab from "./pages/Home/Panel/CollectionsTab";
 import SwapForm from "./pages/Home/RealtorPages/SwapForm";
 import VerifyScreen from "./pages/Home/VerifyScreen";
@@ -130,6 +130,7 @@ import FranchisePersonDetail from "./pages/Home/FranchisePerson/FranchisePersonD
 import * as Linking from "expo-linking";
 import * as SplashScreen from "expo-splash-screen"; // Import SplashScreen
 import { enableScreens } from "react-native-screens";
+import MapFilterRealtor from "./pages/Home/MapFilterRealtor";
 enableScreens();
 
 const Stack = createNativeStackNavigator();
@@ -953,9 +954,10 @@ const StackScreenNavigator = () => {
                 />
                 <Stack.Screen
                   name="MapWiew"
-                  component={MapWiew}
+                  component={MapFilterRealtor}
                   options={({ route }) => ({
-                    title: "Mapde Görüntüle",
+                    title: "Tümü",
+                    headerBackTitleVisible: false,
                   })}
                 />
                 {/* <Stack.Screen
