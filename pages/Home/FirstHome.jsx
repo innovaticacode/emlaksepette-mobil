@@ -186,36 +186,45 @@ const FirstHome = (props) => {
 
   const advertsForSale = async () => {
     try {
-      const response = await axios.get(`${apiUrl}real-estates`);
-
-      const advertSellFilter = response?.data?.filter(
-        (item) => item.step2_slug === "satilik"
-      );
-      const advertRentFilter = response?.data?.filter(
-        (item) => item.step2_slug === "kiralik"
-      );
-      const advertDailyRentalFilter = response?.data?.filter(
-        (item) => item.step2_slug === "gunluk-kiralik"
-      );
-      const advertSellDevren = response?.data?.filter(
-        (item) => item.step2_slug === "devren-satilik"
-      );
-      const advertBungalov = response?.data?.filter(
-        (item) => item?.housing_type_title === "Bungalov"
-      );
-      setDailyRental(advertDailyRentalFilter?.slice(0, 6));
-      setSellAdvert(advertSellFilter?.slice(0, 6));
-      setrentAdvert(advertRentFilter?.slice(0, 6));
-      setsellDevren(advertSellDevren?.slice(0, 6));
-      setBungalov(advertBungalov?.slice(0, 6));
+      const response = await axios.get(`${apiUrl}real-estates`, {
+        params: {
+          housing_type_title: "Bungalov",
+          take: 6,
+          skip: 0,
+        },
+      });
+      setBungalov(response.data);
     } catch (error) {
       console.error("Error fetching real estate data:", error);
     }
   };
 
+  const apiSellData = [{ key: "step2_slug", value: "satilik" }];
+  const apiRentalData = [{ key: "step2_slug", value: "kiralik" }];
+  const apiDailyData = [{ key: "step2_slug", value: "gunluk-kiralik" }];
+  const apiOverturnData = [{ key: "step2_slug", value: "devren-satilik" }];
+
+  const { data: sellData } = UsePaginatedData("real-estates", 6, apiSellData);
+  const { data: rentalData } = UsePaginatedData(
+    "real-estates",
+    6,
+    apiRentalData
+  );
+  const { data: dailyData } = UsePaginatedData("real-estates", 6, apiDailyData);
+  const { data: overturnData } = UsePaginatedData(
+    "real-estates",
+    6,
+    apiOverturnData
+  );
+
   useEffect(() => {
     advertsForSale();
-  }, []);
+    if (sellData) setSellAdvert(sellData);
+    if (rentalData) setrentAdvert(rentalData);
+    if (dailyData) setDailyRental(dailyData);
+    if (overturnData) setsellDevren(overturnData);
+  }, [sellData, rentalData, dailyData, overturnData]);
+
   const [tourismRent, setTourismRent] = useState([]);
   const [featuredStores, setFeaturedStores] = useState([]);
   const fetchFeaturedStores = async () => {

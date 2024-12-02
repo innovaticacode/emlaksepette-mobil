@@ -16,7 +16,7 @@ const UsePaginatedData = (endpoint, take = 10, apiData = []) => {
   const [skip, setSkip] = useState(0);
   const [hooksLoading, setHooksLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [user, setUser] = useState({});
+  const [user, setUser] = useState(null);
   const [isLastPage, setIsLastPage] = useState(false);
 
   useEffect(() => {
@@ -79,7 +79,11 @@ const UsePaginatedData = (endpoint, take = 10, apiData = []) => {
 
   useEffect(() => {
     fetchData();
-  }, [user, skip]);
+  }, [skip]);
+
+  useEffect(() => {
+    user && fetchData();
+  }, [user]);
 
   const loadMore = () => {
     if (!isLastPage) {
