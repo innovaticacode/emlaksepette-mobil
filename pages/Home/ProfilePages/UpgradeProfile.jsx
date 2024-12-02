@@ -425,128 +425,170 @@ export default function UpgradeProfile() {
     console.debug("------->>", tab);
   }, [tab]);
 
-  const postData = async (param) => {
-    setloadingUpdate(true);
-    var data = new FormData();
-    // Forms'u döngü ile dolaşıyoruz
-    Forms.map((item) => {
-      if (Array.isArray(item.tab) && item.tab.includes(tab)) {
-        data.append(item.key, formData[item.key]);
-      }
-    });
-    if (tab == 0) {
-      data.append(
-        `profile_image`,
-        image
-          ? {
-              uri:
-                Platform.OS === "android"
-                  ? image
-                  : image.uri.replace("file://", ""), // Android ve iOS için uygun URI
-              type: image.mimeType,
-              name:
-                file == null
-                  ? "İmage.jpeg"
-                  : image.name?.slice(-3) == "pdf"
-                  ? image?.name
-                  : image?.fileName, // Sunucuya gönderilecek dosya adı
-            }
-          : namFromGetUser.profile_image
+  const handleProfileUpdate = async (data) => {
+    data.append(
+      `profile_image`,
+      image
+        ? {
+            uri:
+              Platform.OS === "android"
+                ? image
+                : image.uri.replace("file://", ""),
+            type: image.mimeType,
+            name:
+              file == null
+                ? "Image.jpeg"
+                : image.name?.slice(-3) == "pdf"
+                ? image?.name
+                : image?.fileName,
+          }
+        : namFromGetUser.profile_image
+    );
+
+    try {
+      const response = await axios.post(
+        `${apiUrl}client/profile/update`,
+        data,
+        {
+          headers: {
+            Authorization: `Bearer ${user?.access_token}`,
+            "Content-Type": "multipart/form-data",
+          },
+        }
       );
+      console.debug("response", response.data);
+      Dialog.show({
+        type: ALERT_TYPE.SUCCESS,
+        title: "Başarılı",
+        textBody: "Profiliniz başarıyla güncellendi.",
+        button: "Tamam",
+        onHide: () => GetUserInfo(),
+      });
+    } catch (error) {
+      console.error("Profil güncelleme hatası:", error.message);
     }
-    if (tab == 1) {
-      // Eposta: api/e-posta-adresimi-degistir -> new_email gönderilecek.
-      console.debug("tab 1");
-    }
-    if (tab == 2) {
-      try {
-        if (file) {
-          data.append(
-            `verify_document`,
-            file
-              ? {
-                  uri:
-                    Platform.OS === "android"
-                      ? file
-                      : file.uri.replace("file://", ""), // Android ve iOS için uygun URI
-                  type: file.mimeType,
-                  name:
-                    file == null
-                      ? "İmage.jpeg"
-                      : file.name?.slice(-3) == "pdf"
-                      ? file?.name
-                      : file?.fileName, // Sunucuya gönderilecek dosya adı
-                }
-              : null
-          );
-        }
+  };
 
-        // telefon-numarasi-sms-gonderimi
+  const handleEmailUpdate = async (data) => {
+    console.debug("E-posta güncelleme işlemi başlatıldı.");
 
-        console.debug("-*data----------", data);
-        const response = await axios.post(
-          `${apiUrl}telefon-numarasi-sms-gonderimi`, // API URL'nizi belirtin
-          data, // JSON formatında veri gönderiyoruz
-          {
-            headers: {
-              Authorization: `Bearer ${user?.access_token}`,
-              "Content-Type": "multipart/form-data",
-            },
-          }
-        );
-        if (response.data) {
-          alert("Başarılı");
-          navigation.replace("VerifyPhoneChange", {
-            phone: formData.new_phone_number,
-          });
+    try {
+      const response = await axios.post(
+        `${apiUrl}e-posta-adresimi-degistir`,
+        { new_email: formData.new_email },
+        {
+          headers: {
+            Authorization: `Bearer ${user?.access_token}`,
+          },
         }
-      } catch (error) {
-        // Eğer error.response varsa, sunucudan gelen yanıtı logla
-        if (error.response) {
-          console.error("Sunucu Hata Yanıtı:", error.response.data);
-          console.error("Sunucu Durum Kodu:", error.response.status);
-          console.error("Sunucu Başlıklar:", error.response.headers);
-        }
-        // Eğer error.request varsa, istek yapıldı ancak yanıt alınamadı
-        else if (error.request) {
-          console.error("Istek Yapıldı, Ancak Yanıt Alınamadı:", error.request);
-        }
-        // Eğer bir ağ hatası veya başka bir sorun varsa
-        else {
-          console.error("Hata Detayı:", error.message);
-        }
-      }
-    } else {
-      try {
-        data.append("_method", "PUT");
-        data.append("banner_hex_code", currentColor);
-
-        const response = await axios.post(
-          `${apiUrl}client/profile/update`, // API URL'nizi belirtin
-          data, // JSON formatında veri gönderiyoruz
-          {
-            headers: {
-              Authorization: `Bearer ${user?.access_token}`,
-              "Content-Type": "multipart/form-data",
-            },
-          }
-        );
-        console.debug("response", response.data);
+      );
+      if (response.data) {
         Dialog.show({
           type: ALERT_TYPE.SUCCESS,
           title: "Başarılı",
-          textBody: "Profiliniz başarıyla güncellendi.",
+          textBody: "E-posta adresiniz başarıyla güncellendi.",
           button: "Tamam",
-          onHide: () => {
-            GetUserInfo();
-          },
         });
-      } catch {
-        alert("hata");
-      } finally {
-        setloadingUpdate(false);
       }
+    } catch (error) {
+      console.error("E-posta güncelleme hatası:", error.message);
     }
+  };
+
+  const handlePhoneUpdate = async (data) => {
+    if (file) {
+      data.append(`verify_document`, {
+        uri: Platform.OS === "android" ? file : file.uri.replace("file://", ""),
+        type: file.mimeType,
+        name: file.name || "Document.jpeg",
+      });
+    }
+
+    try {
+      const response = await axios.post(
+        `${apiUrl}telefon-numarasi-sms-gonderimi`,
+        data,
+        {
+          headers: {
+            Authorization: `Bearer ${user?.access_token}`,
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      if (response.data) {
+        alert("Başarılı");
+        navigation.replace("VerifyPhoneChange", {
+          phone: formData.new_phone_number,
+        });
+      }
+    } catch (error) {
+      handleApiError(error);
+    }
+  };
+
+  const handleGeneralUpdate = async (data) => {
+    data.append("_method", "PUT");
+    data.append("banner_hex_code", currentColor);
+
+    try {
+      const response = await axios.post(
+        `${apiUrl}client/profile/update`,
+        data,
+        {
+          headers: {
+            Authorization: `Bearer ${user?.access_token}`,
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      console.debug("response", response.data);
+      Dialog.show({
+        type: ALERT_TYPE.SUCCESS,
+        title: "Başarılı",
+        textBody: "Güncelleme işlemi başarıyla tamamlandı.",
+        button: "Tamam",
+      });
+    } catch (error) {
+      console.error("Güncelleme hatası:", error.message);
+    }
+  };
+
+  const handleApiError = (error) => {
+    if (error.response) {
+      console.error("Sunucu Hata Yanıtı:", error.response.data);
+    } else if (error.request) {
+      console.error("Istek Yapıldı, Ancak Yanıt Alınamadı:", error.request);
+    } else {
+      console.error("Hata Detayı:", error.message);
+    }
+  };
+
+  const postData = async (param) => {
+    setloadingUpdate(true);
+    const data = new FormData();
+
+    // Form verilerini ekliyoruz
+    Forms.filter(
+      (item) => Array.isArray(item.tab) && item.tab.includes(tab)
+    ).forEach((item) => {
+      data.append(item.key, formData[item.key]);
+    });
+
+    // Tab'a göre işlem
+    switch (tab) {
+      case 0:
+        await handleProfileUpdate(data);
+        break;
+      case 1:
+        await handleEmailUpdate(data);
+        break;
+      case 2:
+        await handlePhoneUpdate(data);
+        break;
+      default:
+        await handleGeneralUpdate(data);
+    }
+    setloadingUpdate(false);
   };
 
   return (
