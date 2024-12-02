@@ -466,7 +466,7 @@ export default function UpgradeProfile() {
         onHide: () => GetUserInfo(),
       });
     } catch (error) {
-      console.error("Profil güncelleme hatası:", error.message);
+      handleApiError(error);
     }
   };
 
@@ -492,7 +492,7 @@ export default function UpgradeProfile() {
         });
       }
     } catch (error) {
-      console.error("E-posta güncelleme hatası:", error.message);
+      handleApiError(error);
     }
   };
 
@@ -555,7 +555,7 @@ export default function UpgradeProfile() {
         button: "Tamam",
       });
     } catch (error) {
-      console.error("Güncelleme hatası:", error.message);
+      handleApiError(error);
     }
   };
 
