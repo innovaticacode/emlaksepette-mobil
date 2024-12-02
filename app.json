@@ -16,6 +16,14 @@
           "NSCameraUsageDescription": "Bu uygulama fotoğraf çekmek için kamerayı kullanır."
         }
       ],
+      [
+        "@sentry/react-native/expo",
+        {
+          "organization": "emlak-sepette",
+          "project": "emlak-sepette",
+          "url": "https://sentry.io/"
+        }
+      ],
       "expo-secure-store"
     ],
     "assetBundlePatterns": ["**/*"],
