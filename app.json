@@ -1,7 +1,9 @@
 {
   "expo": {
-    "name": "frontend",
-    "slug": "frontend",
+    "sdkVersion": "51.0.0",
+    "platforms": ["android", "ios"],
+    "name": "Emlak Sepette",
+    "slug": "emlak-sepette",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/app-logo.png",
@@ -16,22 +18,15 @@
       ],
       "expo-secure-store"
     ],
-    "splash": {
-      "image": "./assets/splash.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
-    },
-
     "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
       "infoPlist": {
         "NSLocationWhenInUseUsageDescription": "Konumunuza erişmek istiyoruz.",
-        "NSLocationAlwaysUsageDescription": "Konumunuza erişmek istiyoruz.",
-        "NSCameraUsageDescription": "This app uses the camera to take photos.",
-        "NSPhotoLibraryUsageDescription": "This app needs access to the photo library to select photos."
+        "NSCameraUsageDescription": "Bu uygulama, fotoğraf çekmek için kamerayı kullanır.",
+        "NSPhotoLibraryUsageDescription": "Bu uygulama, fotoğraf seçmek için fotoğraf kitaplığınıza erişim gerektirir."
       },
-      "bundleIdentifier": "com.anonymous.frontend",
+      "bundleIdentifier": "com.mastergirisim.emlaksepette",
       "associatedDomains": ["applinks:example.com"],
       "config": {
         "usesNonExemptEncryption": false
@@ -39,33 +34,25 @@
     },
     "android": {
       "permissions": [
-        "android.permission.ACCESS_FINE_LOCATION",
-        "android.permission.ACCESS_COARSE_LOCATION",
-        "android.permission.CAMERA",
-        "android.permission.READ_EXTERNAL_STORAGE",
-        "android.permission.WRITE_EXTERNAL_STORAGE"
+        "ACCESS_FINE_LOCATION",
+        "ACCESS_COARSE_LOCATION",
+        "CAMERA",
+        "READ_EXTERNAL_STORAGE",
+        "WRITE_EXTERNAL_STORAGE"
       ],
       "adaptiveIcon": {
         "foregroundImage": "./assets/app-logo.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.anonymous.frontend",
-      "intentFilters": [
-        {
-          "action": "VIEW",
-          "data": [
-            {
-              "scheme": "https",
-              "host": "example.com",
-              "pathPrefix": "/FranchisePersonDetail"
-            }
-          ],
-          "category": ["BROWSABLE", "DEFAULT"]
-        }
-      ]
+      "package": "com.mastergirisim.emlaksepette"
     },
     "web": {
       "favicon": "./assets/app-logo.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "611f088f-e956-4ec9-9874-11b48455bb26"
+      }
     }
   }
 }

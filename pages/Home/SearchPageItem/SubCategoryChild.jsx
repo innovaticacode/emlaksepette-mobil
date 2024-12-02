@@ -1,7 +1,7 @@
 import { View, Text, TouchableOpacity, ScrollView } from "react-native";
 import React from "react";
 import { useRoute, useNavigation } from "@react-navigation/native";
-import CategoryAdverts from "../İlanYükleme/ProjectAdvertsAdd/CategoryAdverts";
+import CategoryAdverts from "../IlanYukleme/ProjectAdvertsAdd/CategoryAdverts";
 import PostDetail from "../../PostDetail";
 import HomeList from "./HomeList";
 import slugify from "react-slugify";

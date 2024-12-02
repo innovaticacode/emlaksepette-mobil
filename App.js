@@ -2,8 +2,8 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { NavigationContainer } from "@react-navigation/native";
 import { TransitionPresets } from "@react-navigation/stack";
 import Home from "./pages/Home/Home";
-import Emlakİlanı from "./pages/Home/İlanYükleme/Emlakİlanı";
-import Projeİlanı from "./pages/Home/İlanYükleme/Projeİlanı";
+import Emlakİlanı from "./pages/Home/IlanYukleme/EmlakIlani";
+import Projeİlanı from "./pages/Home/IlanYukleme/ProjeIlani";
 import Details from "./pages/Home/Details";
 import Login from "./pages/Home/Login&Register/Login";
 import Register from "./pages/Home/Login&Register/Register";
@@ -34,11 +34,11 @@ import OrderDetails from "./pages/Home/ProfilePages/OrderDetails";
 import RentOrderDetails from "./pages/Home/ProfilePages/RentOrderDetails";
 import Suggests from "./pages/Home/ProfilePages/Suggests";
 import OfferList from "./pages/Home/ProfilePages/OfferList";
-import CategoryChoose from "./pages/Home/İlanYükleme/ProjectAdvertsAdd/CategoryChoose";
-import CategorieStatus from "./pages/Home/İlanYükleme/ProjectAdvertsAdd/CategorieStatus";
-import AdvertsPlace from "./pages/Home/İlanYükleme/ProjectAdvertsAdd/AdvertsPlace";
-import ShareScreenProject from "./pages/Home/İlanYükleme/ProjectAdvertsAdd/ShareScreenProject";
-import AdvertForm from "./pages/Home/İlanYükleme/ProjectAdvertsAdd/AdvertForm";
+import CategoryChoose from "./pages/Home/IlanYukleme/ProjectAdvertsAdd/CategoryChoose";
+import CategorieStatus from "./pages/Home/IlanYukleme/ProjectAdvertsAdd/CategorieStatus";
+import AdvertsPlace from "./pages/Home/IlanYukleme/ProjectAdvertsAdd/AdvertsPlace";
+import ShareScreenProject from "./pages/Home/IlanYukleme/ProjectAdvertsAdd/ShareScreenProject";
+import AdvertForm from "./pages/Home/IlanYukleme/ProjectAdvertsAdd/AdvertForm";
 import Notifications from "./pages/Home/Notifications";
 import RealtorClub from "./pages/Home/RealtorClub";
 import PublicPage from "./pages/Home/SearchPageItem/PublicPage";
@@ -95,7 +95,7 @@ import VerifyScreen from "./pages/Home/VerifyScreen";
 import TypeListScreen from "./components/TypeListScreen";
 import Onboard from "./pages/Home/Onboarding/Onboard";
 import { View } from "moti";
-import SplashScreen from "./pages/Home/Onboarding/SplashScreen";
+import SplashScreenComponent from "./pages/Home/Onboarding/SplashScreen";
 import Toast from "react-native-toast-message";
 import { AlertNotificationRoot } from "react-native-alert-notification";
 import SellPlaces from "./pages/Home/ProfilePages/SellPlaces";
@@ -119,7 +119,7 @@ import AddBioText from "./pages/Home/ProfilePages/AddBioText";
 import SliderTourismRent from "./pages/Home/SliderTourismRent";
 import AllTourismRent from "./pages/Home/AllTourismRent";
 import ViewAll from "./pages/Home/ViewAll/ViewAll";
-import RealEstateWallet from "./src/pages/RealEstateWallet";
+import RealEstateWallet from "./pages/Home/RealEstateWallet";
 import EditPending from "./pages/Home/EditProject/EditPending";
 import ShareScreen from "./pages/Home/ShareScreen";
 import PointOfSaleTracking from "./pages/Home/PointOfSale/PointOfSaleTracking/PointOfSaleTracking";
@@ -129,18 +129,23 @@ import TeamFilter from "./pages/Home/ProfilePageItem/TeamFilter/TeamFilter";
 import FranchisePersonDetail from "./pages/Home/FranchisePerson/FranchisePersonDetail/FranchisePersonDetail";
 import * as Linking from "expo-linking";
 import VerifyPhoneChange from "./pages/Home/Verify/VerifyPhoneChange/VerifyPhoneChange";
+import * as SplashScreen from "expo-splash-screen"; // Import SplashScreen
+import { enableScreens } from "react-native-screens";
+enableScreens();
 
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator(); // Drawer navigator
 
-const linking = {
-  prefixes: [Linking.createURL("/")], // Expo URL schema kullanarak bağlantı oluşturma
-  config: {
-    screens: {
-      PersonPortfolio: "FranchisePersonDetail/",
-    },
-  },
-};
+// const linking = {
+//   prefixes: [Linking.createURL("/")], // Expo URL schema kullanarak bağlantı oluşturma
+//   config: {
+//     screens: {
+//       PersonPortfolio: "FranchisePersonDetail/",
+//     },
+//   },
+// };
+
+SplashScreen.preventAutoHideAsync();
 
 export default function App({ route }) {
   return (
@@ -201,6 +206,35 @@ const StackScreenNavigator = () => {
   const [housingTypes, setHousingTypes] = useState([]);
   const [selectedTypes, setSelectedTypes] = useState([]);
 
+  global.ErrorUtils.setGlobalHandler((error, isFatal) => {
+    console.log("Global Hata:", error);
+    if (isFatal) {
+      console.error("Kritik Hata:", error);
+    }
+  });
+
+  useEffect(() => {
+    const loadApp = async () => {
+      // Artificial delay to keep splash screen visible
+      await new Promise((resolve) => setTimeout(resolve, 2000));
+
+      // Check if it's the first launch
+      const hasLaunched = await SecureStore.getItemAsync("hasLaunched");
+      if (hasLaunched === null) {
+        setIsFirstLaunch(true);
+        await SecureStore.setItemAsync("hasLaunched", "true");
+      } else {
+        setIsFirstLaunch(false);
+      }
+
+      // Hide splash screen after app is ready
+      setIsLoading(false);
+      SplashScreen.hideAsync(); // Hide splash screen when app is ready
+    };
+
+    loadApp();
+  }, []);
+
   function StepScreen({
     step,
     navigation,
@@ -249,14 +283,14 @@ const StackScreenNavigator = () => {
   }, []);
 
   if (isLoading) {
-    return <SplashScreen />;
+    return <SplashScreenComponent />;
   }
   return (
     <Provider store={store}>
       <AlertNotificationRoot>
         <GestureHandlerRootView style={{ flex: 1 }}>
           <SheetProvider>
-            <NavigationContainer linking={linking}>
+            <NavigationContainer>
               <Stack.Navigator
                 screenOptions={{
                   gestureEnabled: true,
