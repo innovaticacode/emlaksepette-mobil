@@ -12,10 +12,11 @@ import IconMenu from "react-native-vector-icons/Entypo";
 import { useNavigation } from "@react-navigation/native";
 import axios from "axios";
 import { getValueFor } from "./methods/user";
-import { apiUrl } from "./methods/apiRequest";
+import { apiRequestPostWithBearer, apiUrl } from "./methods/apiRequest";
 import { useDispatch, useSelector } from "react-redux";
 import { setNotificationsRedux } from "../store/slices/Notifications/NotificationsSlice";
 import { setUser } from "../store/user/UserSlice";
+import { registerForPushNotificationsAsync } from "../services/registerForPushNotificationsAsync";
 
 export default function Header({ loading, onPress, index, tab }) {
   const dispatch = useDispatch();
@@ -28,6 +29,26 @@ export default function Header({ loading, onPress, index, tab }) {
   const user = useSelector(
     (state) => state.user
   );
+
+
+  const [token,setToken] = useState("");
+
+  useEffect(() => {
+    registerForPushNotificationsAsync().then(token => {
+      setToken(token);
+      if(!user?.push_token){
+        console.log("tokeni-yok")
+        apiRequestPostWithBearer('set_token',{
+          token : token
+        })
+      }else{
+        console.log(user?.token,"tokeni-var")
+      }
+      console.log("tok",token)
+    }).catch((err) => {
+      console.log(err,"qqq");
+    })
+  }, [token]);
 
   console.log(user);
 
@@ -86,7 +107,7 @@ export default function Header({ loading, onPress, index, tab }) {
       >
         <ImageBackground
           source={{
-            uri: "http://192.168.1.102:8000/images/emlaksepettelogo.png",
+            uri: "http://192.168.18.31:8000/images/emlaksepettelogo.png",
           }}
           resizeMode="contain"
           style={{

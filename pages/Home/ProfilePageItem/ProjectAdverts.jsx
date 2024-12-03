@@ -30,7 +30,7 @@ export default function ProjectAdverts({ data }) {
   }, []);
 
   const { width, height } = Dimensions.get("window");
-  const ApiUrl = "http://192.168.1.102:8000";
+  const ApiUrl = "http://192.168.18.31:8000";
   return (
     <View style={{ padding: 5 }}>
       {featuredProjects && featuredProjects.length > 0 ? (

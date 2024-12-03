@@ -18,7 +18,7 @@ const MapWiew = () => {
 
   useEffect(() => {
     axios
-      .get("http://192.168.1.102:8000/api/real-estates")
+      .get("http://192.168.18.31:8000/api/real-estates")
       .then((res) => {
         setMarkers(res.data);
       })

@@ -48,7 +48,7 @@ export default function CommentForProject({ projectId }) {
     try {
       if (user?.access_token) {
         const response = await axios.get(
-          `http://192.168.1.102:8000/api/project/${projectId}/comments`
+          `http://192.168.18.31:8000/api/project/${projectId}/comments`
         );
         setcomments(response.data);
       }

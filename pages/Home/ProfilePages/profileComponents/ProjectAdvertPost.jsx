@@ -14,7 +14,7 @@ import { Platform } from "react-native";
 
 export default function ProjectAdvertPost({ Onpress, project }) {
   const [status, setStatus] = useState(project.status);
-  const apiUrl = "http://192.168.1.102:8000/";
+  const apiUrl = "http://192.168.18.31:8000/";
   const { width, height } = Dimensions.get("window");
   return (
     <View style={[style.card, { gap: 5 }]}>

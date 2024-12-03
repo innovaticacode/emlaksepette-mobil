@@ -36,7 +36,7 @@ export default function CreateCollections() {
     try {
       if (user.access_token) {
         const response = await axios.get(
-          "http://192.168.1.102:8000/api/client/collections",
+          "http://192.168.18.31:8000/api/client/collections",
           {
             headers: {
               Authorization: `Bearer ${user.access_token}`,
@@ -61,7 +61,7 @@ export default function CreateCollections() {
     try {
       if (user?.access_token && user) {
         const userInfo = await axios.get(
-          "http://192.168.1.102:8000/api/users/" + user?.id,
+          "http://192.168.18.31:8000/api/users/" + user?.id,
           {
             headers: {
               Authorization: `Bearer ${user.access_token}`,
@@ -115,7 +115,7 @@ export default function CreateCollections() {
 
     axios
       .post(
-        "http://192.168.1.102:8000/api/add/collection",
+        "http://192.168.18.31:8000/api/add/collection",
         collectionData,
         {
           headers: {
@@ -162,7 +162,7 @@ export default function CreateCollections() {
     };
 
     axios
-      .post("http://192.168.1.102:8000/api/addLink", collectionData, {
+      .post("http://192.168.18.31:8000/api/addLink", collectionData, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${user.access_token}`,
@@ -236,7 +236,7 @@ export default function CreateCollections() {
 
     axios
       .post(
-        "http://192.168.1.102:8000/api/remove_item_on_collection",
+        "http://192.168.18.31:8000/api/remove_item_on_collection",
         collectionData,
         {
           headers: {

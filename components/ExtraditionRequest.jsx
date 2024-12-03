@@ -116,7 +116,7 @@ const ExtradionRequest = () => {
     formData.append("terms", terms ? "1" : "0");
 
     axios
-      .post("http://192.168.1.102:8000/api/return", formData, {
+      .post("http://192.168.18.31:8000/api/return", formData, {
         headers: {
           Authorization: `Bearer ${user?.access_token}`,
           "Content-Type": "multipart/form-data",

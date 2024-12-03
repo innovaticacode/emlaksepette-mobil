@@ -19,7 +19,7 @@ import Rent from "./pages/Home/ProfilePages/Rent";
 import UpdateProfile from "./pages/Home/ProfilePages/UpdateProfile";
 import ChangePassword from "./pages/Home/ProfilePages/ChangePassword";
 import RegisterRealtorClub from "./pages/Home/ProfilePages/RegisterRealtorClub";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import MyProjectAdverts from "./pages/Home/ProfilePages/MyProjectAdverts";
 import MyRealtorAdverts from "./pages/Home/ProfilePages/MyRealtorAdverts";
 import Offer from "./pages/Home/ProfilePages/Offer";
@@ -130,17 +130,42 @@ import { store } from "./store/store";
 import SalePageMain from "./pages/Home/PointOfSale/SalePageMain";
 import SalePage from "./pages/Home/PointOfSale/SalePage";
 import PaymentSuccessScreen from "./src/pages/PaymentSuccessScreen";
+import { registerForPushNotificationsAsync } from "./services/registerForPushNotificationsAsync";
 
-
+import * as NotificationsExpo from 'expo-notifications';
+import Constants from 'expo-constants';
+import { apiRequestPostWithBearer } from "./components/methods/apiRequest";
 
 
 const Stack = createNativeStackNavigator();
 
+
 export default function App({ route }) {
+  NotificationsExpo.setNotificationHandler({
+    handleNotification: async () => ({
+      shouldShowAlert: true, // Bildirimi göster
+      shouldPlaySound: true, // Ses çal
+      shouldSetBadge: false, // Badge (uygulama simgesi üzerinde sayac) ayarı
+    }),
+  });
+
+  const linking = {
+    prefixes: ['emlaksepette://'], // Deep link URL şemanız
+    config: {
+      screens: {
+        Home: 'home',
+      },
+    },
+  };
+
+
+  useEffect(() => {
+
+
+  }, []);
+
   const [İsLoggedIn, setİsLoggedIn] = useState(false);
-  const [ShowOnBoard, setShowOnBoard] = useState(true);
   const [showBackIcon, setshowBackIcon] = useState(false);
-  const [showWelcome, setShowWelcome] = useState(true);
 
   const [housingTypes, setHousingTypes] = useState([]);
   const [selectedTypes, setSelectedTypes] = useState([]);
@@ -200,7 +225,7 @@ export default function App({ route }) {
         <GestureHandlerRootView style={{ flex: 1 }}>
           <SheetProvider>
 
-            <NavigationContainer>
+            <NavigationContainer linking={linking}>
               <Stack.Navigator
                 screenOptions={{
                   gestureEnabled: true,

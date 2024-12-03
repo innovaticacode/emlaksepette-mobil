@@ -41,7 +41,7 @@ export default function WaitRealtorAdverts({ index }) {
     setloading(true);
     try {
       const res = await axios.get(
-        "http://192.168.1.102:8000/api/get_my_housings?orderByHousings=" +
+        "http://192.168.18.31:8000/api/get_my_housings?orderByHousings=" +
           sort,
         {
           headers: { Authorization: "Bearer " + user.access_token },

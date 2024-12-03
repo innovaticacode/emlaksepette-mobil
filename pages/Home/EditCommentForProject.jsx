@@ -63,7 +63,7 @@ export default function EditCommentForProject() {
   const [selectedIndex, setselectedIndex] = useState(null);
   const [removeImage, setremoveImage] = useState(false);
   const [comment, setcomment] = useState(commentInfo.comment || "");
-  const API_URL = "http://192.168.1.102:8000/";
+  const API_URL = "http://192.168.18.31:8000/";
 
   // const imageSource =
   //   type === "project"
@@ -274,7 +274,7 @@ export default function EditCommentForProject() {
       if (user?.access_token && rating > 0) {
         setloading2(true);
         const response = await axios.post(
-          `http://192.168.1.102:8000/api/user/${user.id}/${info.id}/comments/${commentID}/update`,
+          `http://192.168.18.31:8000/api/user/${user.id}/${info.id}/comments/${commentID}/update`,
           formData,
           {
             headers: {
@@ -347,7 +347,7 @@ export default function EditCommentForProject() {
   const toggleCheckboxForm = () => {
     setCheckedForm(!checkedForm);
   };
-  const apiUrl = "http://192.168.1.102:8000/";
+  const apiUrl = "http://192.168.18.31:8000/";
   const [user, setUser] = useState({});
 
   console.log(user?.id + " asd22222");
@@ -382,7 +382,7 @@ export default function EditCommentForProject() {
     fetchDataDeal();
   }, []);
   const fetchDataDeal = async () => {
-    const url = `http://192.168.1.102:8000/api/sayfa/emlaksepette-yorum-yazma-kurallari`;
+    const url = `http://192.168.18.31:8000/api/sayfa/emlaksepette-yorum-yazma-kurallari`;
     try {
       const response = await fetch(url);
       // const data = await fetchFromURL(url);

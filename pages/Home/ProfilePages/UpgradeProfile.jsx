@@ -50,7 +50,7 @@ export default function UpgradeProfile() {
   const route = useRoute();
   const { name, tab } = route.params;
   const [choose, setchoose] = useState(false);
-  const PhotoUrl = "http://192.168.1.102:8000/storage/profile_images/";
+  const PhotoUrl = "http://192.168.18.31:8000/storage/profile_images/";
   const [image, setImage] = useState(null);
 
   const [cities, setCities] = useState([]);
@@ -207,7 +207,7 @@ export default function UpgradeProfile() {
     const fetchTaxOfficeCity = async () => {
       try {
         const response = await axios.get(
-          "http://192.168.1.102:8000/api/get-tax-offices"
+          "http://192.168.18.31:8000/api/get-tax-offices"
         );
         setTaxOfficesCities(response.data);
       } catch (error) {
@@ -230,7 +230,7 @@ export default function UpgradeProfile() {
   const fetchTaxOffice = async (value) => {
     try {
       const response = await axios.get(
-        `http://192.168.1.102:8000/api/get-tax-office/${value}`
+        `http://192.168.18.31:8000/api/get-tax-office/${value}`
       );
       setTaxOffice(response.data);
     } catch (error) {
@@ -245,7 +245,7 @@ export default function UpgradeProfile() {
     const fetchCities = async () => {
       try {
         const response = await axios.get(
-          "http://192.168.1.102:8000/api/cities"
+          "http://192.168.18.31:8000/api/cities"
         );
         setCities(response.data.data);
       } catch (error) {
@@ -258,7 +258,7 @@ export default function UpgradeProfile() {
   const fetchCounties = async (value) => {
     try {
       const response = await axios.get(
-        `http://192.168.1.102:8000/api/counties/${value}`
+        `http://192.168.18.31:8000/api/counties/${value}`
       );
       setCounties(response.data.data);
       setSelectedCounty(null); // Seçili ilçe sıfırla
@@ -271,7 +271,7 @@ export default function UpgradeProfile() {
   const fetchNeighborhoods = async (value) => {
     try {
       const response = await axios.get(
-        `http://192.168.1.102:8000/api/neighborhoods/${value}`
+        `http://192.168.18.31:8000/api/neighborhoods/${value}`
       );
       // Yanıtı kontrol et
       setNeighborhoods(response.data.data);
@@ -513,7 +513,7 @@ export default function UpgradeProfile() {
       try {
         if (user.access_token) {
           const userInfo = await axios.get(
-            `http://192.168.1.102:8000/api/users/${user.id}`,
+            `http://192.168.18.31:8000/api/users/${user.id}`,
             {
               headers: {
                 Authorization: `Bearer ${user.access_token}`,
@@ -689,7 +689,7 @@ export default function UpgradeProfile() {
       }
 
       const response = await axios.post(
-        "http://192.168.1.102:8000/api/client/profile/update",
+        "http://192.168.18.31:8000/api/client/profile/update",
         formData,
         {
           headers: {
@@ -1192,7 +1192,7 @@ export default function UpgradeProfile() {
                           <View style={{ width: 250, height: 200 }}>
                             <Image
                               source={{
-                                uri: "http://192.168.1.102:8000/images/phone-update-image/phonefile.jpg",
+                                uri: "http://192.168.18.31:8000/images/phone-update-image/phonefile.jpg",
                               }}
                               style={{ width: "100%", height: "100%" }}
                             />

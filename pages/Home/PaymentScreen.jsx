@@ -95,6 +95,17 @@ export default function PaymentScreen() {
     }));
   };
 
+  const paymentFailedShow = () => {
+    setTimeout(() => {
+      Dialog.show({
+        type: ALERT_TYPE.Da,
+        title: "Hata",
+        textBody: "Ödeme esnasında bir hata oluştu",
+        button: "Tamam",
+      },1000);
+    })
+  }
+
   useEffect(() => {
     function onConnect() {
     }
@@ -104,16 +115,24 @@ export default function PaymentScreen() {
 
     function paymentCheck(value) {
       setPaymentModalShow(false);
-      alert(value.message)
-      nav.navigate('PaymentSuccess', {
-        title: "SİPARİŞ İÇİN TEŞEKKÜRLER!",
-        message: "Siparişiniz başarıyla oluşturuldu.",
-        primaryButtonText: "Siparişlerim",
-        secondaryButtonText: "Ana Sayfa",
-        icon: "check-circle", // İkonu belirt
-        onContinue: () => nav.navigate('Settings'), // Ayarlar ekranına git
-        onGoHome: () => nav.navigate('Home'), // Ana sayfaya git
-      });
+      if(value.status){
+        nav.navigate('PaymentSuccess', {
+          title: "SİPARİŞ İÇİN TEŞEKKÜRLER!",
+          message: "Siparişiniz başarıyla oluşturuldu.",
+          primaryButtonText: "Siparişlerim",
+          secondaryButtonText: "Ana Sayfa",
+          icon: "check-circle", // İkonu belirt
+          onContinue: () => nav.navigate('Settings'), // Ayarlar ekranına git
+          onGoHome: () => nav.navigate('Home'), // Ana sayfaya git
+        });
+      }else{
+        Toast.show({
+          type: ALERT_TYPE.DANGER,
+          title: 'Hata',
+          textBody: 'Ödeme işlemi esnasında bir hata oluştu',
+        })
+      }
+      
     }
 
     socket.on('connect', onConnect);
@@ -249,7 +268,7 @@ export default function PaymentScreen() {
     }
 
 
-    if(!creditCartData.card_number){
+    if(!creditCartData.credit_cart_number){
       tempErrors.push({
         key : "card_number",
         message : "Kart numaranızı giriniz"
@@ -259,7 +278,7 @@ export default function PaymentScreen() {
       scrollPositionsTemp.push(scrollPosition)
     }
 
-    if(!creditCartData.month){
+    if(!creditCartData.exp_month){
       tempErrors.push({
         key : "month",
         message : "Ay değerini giriniz"
@@ -267,13 +286,15 @@ export default function PaymentScreen() {
       scrollPosition = inputPositions['month']; 
     }
 
-    if(!creditCartData.year){
+    if(!creditCartData.exp_year){
       tempErrors.push({
         key : "year",
         message : "Yıl değerini giriniz"
       });
       scrollPosition = inputPositions['year']; 
     }
+
+    console.log(tempErrors)
     scrollViewRef.current?.scrollToPosition(0, scrollPositionsTemp[0], true);
     setErrors(tempErrors)
     if (
@@ -350,7 +371,7 @@ export default function PaymentScreen() {
   const [Deals, setDeals] = useState("");
 
   const fetchDataDeal = async () => {
-    const url = `http://192.168.1.102:8000/api/sayfa/mesafeli-guvenli-kapora-sozlesmesi`;
+    const url = `http://192.168.18.31:8000/api/sayfa/mesafeli-guvenli-kapora-sozlesmesi`;
     try {
       const response = await fetch(url);
       // const data = await fetchFromURL(url);
@@ -366,7 +387,7 @@ export default function PaymentScreen() {
   const formHtml = `
     <html>
       <body>
-        <form id="paymentForm" action="http://192.168.1.102:8000/api/pay-cart" method="POST">
+        <form id="paymentForm" action="http://192.168.18.31:8000/api/pay-cart" method="POST">
           <input type="hidden" name="name" value="${creditCartData.name}" />
           <input type="hidden" name="creditcard" value="${creditCartData.credit_cart_number}" />
           <input type="hidden" name="month" value="${creditCartData.exp_month}" />
@@ -536,12 +557,12 @@ export default function PaymentScreen() {
   return (
     <AlertNotificationRoot>
 
-    <ScrollView
-      keyboardDismissMode='on-drag' 
+    <KeyboardAwareScrollView
+      // keyboardDismissMode='on-drag' 
       style={styles.container}
       contentContainerStyle={{ gap: 20, paddingBottom: 50 }}
       showsVerticalScrollIndicator={false}
-      onScrollBeginDrag={() => {Keyboard.dismiss();console.log("asd")}}
+      // onScrollBeginDrag={() => {Keyboard.dismiss();console.log("asd")}}
       ref={scrollViewRef}
       scrollEventThrottle={16}
       onLayout={(e) => handleScrollViewLayout(e)} // Ana ScrollView için onLayout ekliyoruz
@@ -555,7 +576,7 @@ export default function PaymentScreen() {
             automaticallyAdjustContentInsets={false}
             source={{ html: formHtml }} // WebView'e HTML formu yüklüyoruz ve otomatik gönderiliyor
             onNavigationStateChange={(navState) => {
-              if (navState.url !== "http://192.168.1.102:8000/api/pay-cart") {
+              if (navState.url !== "http://192.168.18.31:8000/api/pay-cart") {
               }
             }}
           />
@@ -574,7 +595,7 @@ export default function PaymentScreen() {
           <View style={styles.image}>
             <ImageBackground
               source={{
-                uri: `http://192.168.1.102:8000/project_housing_images/${project["image[]"]}`,
+                uri: `http://192.168.18.31:8000/project_housing_images/${project["image[]"]}`,
               }}
               style={{ width: "100%", height: "100%" }}
             />
@@ -1647,7 +1668,7 @@ export default function PaymentScreen() {
           </SafeAreaView>
         </View>
       </Modal>
-    </ScrollView>
+    </KeyboardAwareScrollView>
     </AlertNotificationRoot>
   );
 }

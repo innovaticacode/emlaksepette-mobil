@@ -30,7 +30,7 @@ export default function SeeNeigbourhood() {
 
     if (user.access_token) {
       axios
-        .get("http://192.168.1.102:8000/api/neighbor-view", {
+        .get("http://192.168.18.31:8000/api/neighbor-view", {
           headers: {
             Authorization: `Bearer ${user.access_token}`,
           },

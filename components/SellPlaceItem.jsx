@@ -29,7 +29,7 @@ export default function SellPlaceItem({ item }) {
         <View style={{ width: 90, height: 90 }}>
           <Image
             source={{
-              uri: `http://192.168.1.102:8000/storage/profile_images/${item.profile_image}`,
+              uri: `http://192.168.18.31:8000/storage/profile_images/${item.profile_image}`,
             }}
             style={{ width: "100%", height: "100%", borderRadius: 8 }}
           />

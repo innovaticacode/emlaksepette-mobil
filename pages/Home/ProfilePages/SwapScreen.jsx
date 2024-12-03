@@ -30,7 +30,7 @@ export default function SwapScreen() {
     try {
       if (user.access_token) {
         const response = await axios.get(
-          "http://192.168.1.102:8000/api/institutional/swap_applications",
+          "http://192.168.18.31:8000/api/institutional/swap_applications",
           {
             headers: {
               Authorization: `Bearer ${user.access_token}`,
@@ -66,7 +66,7 @@ export default function SwapScreen() {
     try {
       if (user?.access_token) {
         const response = await axios.get(
-          `http://192.168.1.102:8000/api/institutional/swap_applications/${id}`,
+          `http://192.168.18.31:8000/api/institutional/swap_applications/${id}`,
           {
             headers: {
               Authorization: `Bearer ${user?.access_token}`,

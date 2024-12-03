@@ -143,7 +143,7 @@ export default function AddCommentForProject() {
   const toggleCheckboxForm = () => {
     setCheckedForm(!checkedForm);
   };
-  const apiUrl = "http://192.168.1.102:8000/";
+  const apiUrl = "http://192.168.18.31:8000/";
   const [user, setUser] = useState({});
 
   useEffect(() => {
@@ -239,7 +239,7 @@ export default function AddCommentForProject() {
         comment.length > 0
       ) {
         const response = await axios.post(
-          `http://192.168.1.102:8000/api/project/${projectId}/add-comment`,
+          `http://192.168.18.31:8000/api/project/${projectId}/add-comment`,
           formData,
           {
             headers: {
@@ -278,7 +278,7 @@ export default function AddCommentForProject() {
     fetchDataDeal();
   }, []);
   const fetchDataDeal = async () => {
-    const url = `http://192.168.1.102:8000/api/sayfa/emlaksepette-yorum-yazma-kurallari`;
+    const url = `http://192.168.18.31:8000/api/sayfa/emlaksepette-yorum-yazma-kurallari`;
     try {
       const response = await fetch(url);
       // const data = await fetchFromURL(url);

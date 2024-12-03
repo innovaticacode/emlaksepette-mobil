@@ -35,7 +35,7 @@ export default function SelledRealtorAdverts() {
     setloading(true);
     try {
       const res = await axios.get(
-        "http://192.168.1.102:8000/api/get_my_housings",
+        "http://192.168.18.31:8000/api/get_my_housings",
         {
           headers: { Authorization: "Bearer " + user.access_token },
         }

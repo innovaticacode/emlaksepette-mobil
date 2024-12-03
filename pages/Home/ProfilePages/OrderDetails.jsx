@@ -50,7 +50,7 @@ export default function OrderDetails() {
       try {
         if (user?.access_token) {
           const response = await axios.get(
-            `http://192.168.1.102:8000/api/institutional/order_detail/${OrderId}`,
+            `http://192.168.18.31:8000/api/institutional/order_detail/${OrderId}`,
             {
               headers: {
                 Authorization: `Bearer ${user?.access_token}`,

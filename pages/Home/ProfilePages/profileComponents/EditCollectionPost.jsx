@@ -18,7 +18,7 @@ import { getValueFor } from "../../../../components/methods/user";
 export default function EditCollectionPost({ item, collection, onRemove }) {
   const parseHousingData = (data) => JSON.parse(data);
   const navigation = useNavigation();
-  const apiUrl = "http://192.168.1.102:8000/api/";
+  const apiUrl = "http://192.168.18.31:8000/api/";
   const [user, setUser] = useState({});
 
   useEffect(() => {
@@ -155,8 +155,8 @@ export default function EditCollectionPost({ item, collection, onRemove }) {
             source={{
               uri:
                 item?.item_type === 2 && item?.housing?.housing_type_data
-                  ? `http://192.168.1.102:8000/housing_images/${itemData.image}`
-                  : `http://192.168.1.102:8000/project_housing_images/${itemData.image.replace(
+                  ? `http://192.168.18.31:8000/housing_images/${itemData.image}`
+                  : `http://192.168.18.31:8000/project_housing_images/${itemData.image.replace(
                       "public",
                       "storage"
                     )}`,

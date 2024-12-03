@@ -69,7 +69,7 @@ export default function RealtorPostFavorited({
       };
       axios
         .post(
-          "http://192.168.1.102:8000/api/add_project_to_favorites/" +
+          "http://192.168.18.31:8000/api/add_project_to_favorites/" +
             housingId,
           {
             project_id: projectId,
@@ -94,7 +94,7 @@ export default function RealtorPostFavorited({
       };
       axios
         .post(
-          "http://192.168.1.102:8000/api/add_housing_to_favorites/" +
+          "http://192.168.18.31:8000/api/add_housing_to_favorites/" +
             HouseId,
           {
             housing_id: HouseId,

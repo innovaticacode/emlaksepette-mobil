@@ -32,7 +32,7 @@ export default function EditAdvert() {
   useEffect(() => {
     axios
       .get(
-        `http://192.168.1.102:8000/api/project_housings/${Project_Id}?start=${start}&end=${end}` +
+        `http://192.168.18.31:8000/api/project_housings/${Project_Id}?start=${start}&end=${end}` +
           start +
           "&take=" +
           take,

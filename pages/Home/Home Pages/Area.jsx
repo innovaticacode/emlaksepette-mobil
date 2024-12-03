@@ -23,7 +23,7 @@ const PAGE_SIZE = 10;
 
 const Area = ({ index }) => {
   const navigation = useNavigation();
-  const apiUrl = "http://192.168.1.102:8000/";
+  const apiUrl = "http://192.168.18.31:8000/";
   const [featuredEstates, setFeaturedEstates] = useState([]);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
@@ -41,7 +41,7 @@ const Area = ({ index }) => {
     setLoading(true);
     try {
       const response = await axios.get(
-        `http://192.168.1.102:8000/api/real-estates?page=${reset ? 1 : page
+        `http://192.168.18.31:8000/api/real-estates?page=${reset ? 1 : page
         }&limit=${PAGE_SIZE}`,
         config
       );

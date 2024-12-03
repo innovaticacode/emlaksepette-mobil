@@ -63,7 +63,7 @@ export default function SeeCollection() {
   const [itemCount, setItemCount] = useState(10);
   const [paymentModalShowOrder, setPaymentModalShowOrder] = useState(null);
   const [FormVisible, setFormVisible] = useState(false);
-  const apiUrl = "http://192.168.1.102:8000/";
+  const apiUrl = "http://192.168.18.31:8000/";
   const [data, setData] = useState({
     project: {
       room_count: 0,
@@ -93,7 +93,7 @@ export default function SeeCollection() {
     const fetchData = async () => {
       try {
         const response = await axios.get(
-          `http://192.168.1.102:8000/api/emlak-kulup/${collectionUser?.id}/koleksiyonlar/${item?.id}`
+          `http://192.168.18.31:8000/api/emlak-kulup/${collectionUser?.id}/koleksiyonlar/${item?.id}`
         );
         setCollectionData(response?.data);
         setMergedItems(response?.data?.mergedItems);
@@ -146,7 +146,7 @@ export default function SeeCollection() {
 
     axios
       .post(
-        "http://192.168.1.102:8000/api/remove_item_on_collection",
+        "http://192.168.18.31:8000/api/remove_item_on_collection",
         collectionData,
         {
           headers: {
@@ -214,7 +214,7 @@ export default function SeeCollection() {
     try {
       if (user.access_token) {
         const response = await axios.get(
-          "http://192.168.1.102:8000/api/client/collections",
+          "http://192.168.18.31:8000/api/client/collections",
           {
             headers: {
               Authorization: `Bearer ${user.access_token}`,
@@ -267,7 +267,7 @@ export default function SeeCollection() {
 
     axios
       .post(
-        "http://192.168.1.102:8000/api/add/collection",
+        "http://192.168.18.31:8000/api/add/collection",
         collectionData,
         {
           headers: {
@@ -314,7 +314,7 @@ export default function SeeCollection() {
     };
 
     axios
-      .post("http://192.168.1.102:8000/api/addLink", collectionData, {
+      .post("http://192.168.18.31:8000/api/addLink", collectionData, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${user.access_token}`,
@@ -383,7 +383,7 @@ export default function SeeCollection() {
     try {
       if (user?.access_token) {
         const response = await axios.post(
-          "http://192.168.1.102:8000/api/institutional/add_to_cart",
+          "http://192.168.18.31:8000/api/institutional/add_to_cart",
           formData,
           {
             headers: {
@@ -433,7 +433,7 @@ export default function SeeCollection() {
       formData.append("offer_description", offerid);
 
       const response = await axios.post(
-        "http://192.168.1.102:8000/api/institutional/give_offer",
+        "http://192.168.18.31:8000/api/institutional/give_offer",
         formData,
         {
           headers: {
@@ -475,7 +475,7 @@ export default function SeeCollection() {
   const fetchCity = async () => {
     try {
       const response = await axios.get(
-        "http://192.168.1.102:8000/api/cities"
+        "http://192.168.18.31:8000/api/cities"
       );
       return response.data;
     } catch (error) {
@@ -497,7 +497,7 @@ export default function SeeCollection() {
   const fetchDataCounty = async (value) => {
     try {
       const response = await axios.get(
-        `http://192.168.1.102:8000/api/counties/${value}`
+        `http://192.168.18.31:8000/api/counties/${value}`
       );
       return response.data;
     } catch (error) {
@@ -594,7 +594,7 @@ export default function SeeCollection() {
   const onShare = async () => {
     try {
       const result = await Share.share({
-        message: `http://192.168.1.102:8000/`,
+        message: `http://192.168.18.31:8000/`,
       });
 
       if (result.action === Share.sharedAction) {
@@ -611,7 +611,7 @@ export default function SeeCollection() {
     }
   };
 
-  const ApiUrl = "http://192.168.1.102:8000/";
+  const ApiUrl = "http://192.168.18.31:8000/";
   return (
     <View style={{ flex: 1 }}>
       <View

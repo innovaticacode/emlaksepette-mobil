@@ -23,7 +23,7 @@ export default function SellPlaces({ data }) {
     try {
       if (user?.access_token && user) {
         const placeInfo = await axios.get(
-          `http://192.168.1.102:8000/api/magaza/${user.id}/satis-noktalari`
+          `http://192.168.18.31:8000/api/magaza/${user.id}/satis-noktalari`
         );
         setPlaces(placeInfo?.data?.usersFromCollections);
       }

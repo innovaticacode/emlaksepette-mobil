@@ -272,7 +272,7 @@ export default function PaymentScreenForReserve() {
                 {data && data.housing && data.housing.housing_type_data && (
                   <ImageBackground
                     source={{
-                      uri: `http://192.168.1.102:8000/housing_images/${
+                      uri: `http://192.168.18.31:8000/housing_images/${
                         JSON.parse(data?.housing?.housing_type_data).image
                       }`,
                     }}

@@ -25,7 +25,7 @@ export default function Invoice() {
     try {
       if (user?.access_token) {
         const response = await axios.get(
-          `http://192.168.1.102:8000/api/institutional/invoice/${OrderId}`,
+          `http://192.168.18.31:8000/api/institutional/invoice/${OrderId}`,
 
           {
             headers: {
