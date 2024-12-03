@@ -306,7 +306,8 @@ const MapFilterRealtor = () => {
                         }, 500);
                       }}
                     >
-                      {selectedMarker && selectedMarker.housing_type_data && (
+                      <View></View>
+                      {/* {selectedMarker && selectedMarker.housing_type_data && (
                         <Image
                           source={{
                             uri: `${frontEndUriBase}housing_images/${
@@ -352,9 +353,9 @@ const MapFilterRealtor = () => {
                             </Text>
                           )}
                         </View>
-                      </View>
+                      </View> */}
                     </TouchableOpacity>
-                    <View style={styles.buttonContainer}>
+                    {/* <View style={styles.buttonContainer}>
                       <TouchableOpacity
                         style={[
                           styles.button,
@@ -396,7 +397,7 @@ const MapFilterRealtor = () => {
                           İlana Git
                         </Text>
                       </TouchableOpacity>
-                    </View>
+                    </View> */}
                   </View>
                 </View>
               </TouchableWithoutFeedback>
@@ -461,7 +462,7 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     padding: 20,
-
+    width: "100%",
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
@@ -472,7 +473,6 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   modalContent: {
-    flexDirection: "row",
     height: 100,
     marginBottom: 25,
     width: "90%",
