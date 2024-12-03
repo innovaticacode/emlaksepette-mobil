@@ -16,12 +16,12 @@
       "android": {
         "buildType": "apk",
         "env": {
-          "SENTRY_AUTH_TOKEN": "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"
+          "SENTRY_AUTH_TOKEN": "$EXPO_PUBLIC_SENTRY_AUTH_TOKEN"
         }
       },
       "ios": {
         "env": {
-          "SENTRY_AUTH_TOKEN": "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"
+          "SENTRY_AUTH_TOKEN": "$EXPO_PUBLIC_SENTRY_AUTH_TOKEN"
         }
       }
     }
