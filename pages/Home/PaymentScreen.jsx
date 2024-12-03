@@ -26,14 +26,7 @@ import { Platform } from "react-native";
 import { apiRequestGet } from "../../components/methods/apiRequest";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { WebView } from "react-native-webview";
-import {
-  apiRequestGet,
-  apiUrl,
-  frontEndUriBase,
-} from "../../components/methods/apiRequest";
-import { useRoute } from "@react-navigation/native";
-import axios from "axios";
-import WebView from "react-native-webview";
+import { apiUrl, frontEndUriBase } from "../../components/methods/apiRequest";
 import HTMLView from "react-native-htmlview";
 import { io } from "socket.io-client";
 import { useSelector } from "react-redux";

@@ -21,9 +21,7 @@ import UpdateProfile from "./pages/Home/ProfilePages/UpdateProfile";
 import ChangePassword from "./pages/Home/ProfilePages/ChangePassword";
 import RegisterRealtorClub from "./pages/Home/ProfilePages/RegisterRealtorClub";
 import { useState, useEffect, useRef } from "react";
-import { useState, useEffect, useRef } from "react";
 import MyProjectAdverts from "./pages/Home/ProfilePages/MyProjectAdverts";
-import MyRealtorAdverts from "./pages/Home/ProfilePages/MyRealtorAdverts";
 import Offer from "./pages/Home/ProfilePages/Offer";
 import CreateUserType from "./pages/Home/ProfilePages/CreateUserType";
 import CreateUser from "./pages/Home/ProfilePages/CreateUser";
@@ -133,9 +131,10 @@ import * as SplashScreen from "expo-splash-screen"; // Import SplashScreen
 import { enableScreens } from "react-native-screens";
 import * as Sentry from "@sentry/react-native";
 import { registerForPushNotificationsAsync } from "./services/registerForPushNotificationsAsync";
-import * as NotificationsExpo from 'expo-notifications';
-import Constants from 'expo-constants';
-import { apiRequestPostWithBearer } from "./components/methods/apiRequest"
+import * as NotificationsExpo from "expo-notifications";
+import Constants from "expo-constants";
+import { apiRequestPostWithBearer } from "./components/methods/apiRequest";
+import MyRealtorAdverts from "./pages/Home/ProfilePages/MyRealtorAdverts";
 
 enableScreens();
 
@@ -176,7 +175,7 @@ function App({ route }) {
       shouldSetBadge: false, // Badge (uygulama simgesi üzerinde sayac) ayarı
     }),
   });
-  
+
   return (
     <Provider store={store}>
       <AlertNotificationRoot>
