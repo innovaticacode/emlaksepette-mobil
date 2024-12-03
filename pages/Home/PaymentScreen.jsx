@@ -23,7 +23,7 @@ import * as DocumentPicker from "expo-document-picker";
 import { addDotEveryThreeDigits } from "../../components/methods/merhod";
 
 import { Platform } from "react-native";
-import { apiRequestGet } from "../../components/methods/apiRequest";
+import { apiRequestGet, socketIO } from "../../components/methods/apiRequest";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { WebView } from "react-native-webview";
 import { apiUrl, frontEndUriBase } from "../../components/methods/apiRequest";
@@ -69,7 +69,7 @@ export default function PaymentScreen() {
   const [paymentModalShow, setPaymentModalShow] = useState(false);
   const [errors, setErrors] = useState([]);
   const scrollViewRef = useRef();
-  const socket = io("http://192.168.18.31:3000/");
+  const socket = io(socketIO);
   const [inputPositions, setInputPositions] = useState({}); // Her input'un pozisyonunu tutacak
   const [approximatelyTop, setApproximatelyTop] = useState(0);
   const [approximatelyInputHeight, setApproximatelyInputHeight] = useState(0);

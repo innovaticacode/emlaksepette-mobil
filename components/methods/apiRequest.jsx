@@ -3,6 +3,7 @@ import { getValueFor } from "./user";
 export const apiUrl = "https://private.emlaksepette.com/api/";
 export const frontEndUri = "https://private.emlaksepette.com/api/";
 export const frontEndUriBase = "https://private.emlaksepette.com/";
+export const socketIO = "https://ws.emlaksepette.com/";
 
 export const apiRequestGet = (url) => {
   return axios.get(apiUrl + url);
@@ -14,7 +15,7 @@ export const apiRequestPost = (url, params) => {
 
 export const apiRequestGetWithBearer = async (url) => {
   let user = {};
-  
+
   // getValueFor fonksiyonunu async/await ile bekliyoruz
   await getValueFor("user", (res) => {
     user = res; // access_token değerini alıyoruz
@@ -31,18 +32,18 @@ export const apiRequestGetWithBearer = async (url) => {
   }
 };
 
-export const apiRequestPostWithBearer = async (url,params) => {
+export const apiRequestPostWithBearer = async (url, params) => {
   await getValueFor("user", (res) => {
     user = res; // access_token değerini alıyoruz
   });
 
   // Eğer token alınmışsa isteği yapıyoruz
   if (user && user.access_token) {
-    return axios.post(apiUrl + url, params ,{
+    return axios.post(apiUrl + url, params, {
       headers: { Authorization: "Bearer " + user.access_token },
     });
   } else {
     console.error("Access token bulunamadı");
     throw new Error("Kullanıcı access token'ı bulunamadı.");
   }
-}
+};
