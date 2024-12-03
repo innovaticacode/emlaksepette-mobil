@@ -1,3 +1,7 @@
 import { removeHtmlTags } from "./HtmlToRegex";
 import { formatDate } from "./FormatDate";
-export { removeHtmlTags, formatDate };
+import { LogToSentry } from "./LogToSentry";
+import { formatedPrice } from "./FormatedPrice";
+
+export { removeHtmlTags, formatDate, formatedPrice, LogToSentry };
+

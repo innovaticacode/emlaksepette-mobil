@@ -1,7 +1,7 @@
 import { View, Text, TouchableOpacity } from "react-native";
 import React from "react";
 import { useRoute, useNavigation } from "@react-navigation/native";
-import CategoryAdverts from "../İlanYükleme/ProjectAdvertsAdd/CategoryAdverts";
+import CategoryAdverts from "../IlanYukleme/ProjectAdvertsAdd/CategoryAdverts";
 import slugify from "react-slugify";
 
 export default function SubCategoryPage({}) {
