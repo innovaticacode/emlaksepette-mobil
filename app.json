@@ -10,14 +10,20 @@
     "userInterfaceStyle": "light",
     "plugins": [
       [
-        "expo-image-picker",
+        "expo-location",
         {
-          "photosPermission": "Profil bilgilerinizi güncellemek için fotoğraflarınıza erişmek istiyoruz.",
-          "NSCameraUsageDescription": "Bu uygulama fotoğraf çekmek için kamerayı kullanır."
+          "locationAlwaysAndWhenInUsePermission": "$(Emlak Sepette)'nin konumunuzu kullanmasına izin verin."
         }
       ],
       [
-        "@sentry/react-native/expo",
+        "expo-image-picker",
+        {
+          "photosPermission": "Profil bilgilerinizi güncellemek için fotoğraflarınıza erişmek istiyoruz.",
+          "cameraPermission": "Bu uygulama fotoğraf çekmek için kamerayı kullanır."
+        }
+      ],
+      [
+        "@sentry/react-native",
         {
           "organization": "emlak-sepette",
           "project": "emlak-sepette",

@@ -9,20 +9,18 @@ import {
   TouchableOpacity,
   Alert,
   Linking,
+  Platform,
+  PermissionsAndroid,
 } from "react-native";
 import { React, useState, useEffect } from "react";
 import Icon from "react-native-vector-icons/AntDesign";
 import Star from "react-native-vector-icons/MaterialIcons";
 import Icon2 from "react-native-vector-icons/Entypo";
 import Icon3 from "react-native-vector-icons/MaterialCommunityIcons";
-import Map from "../../../components/Map";
-import ShopComment from "./ShopComment";
-import ProfileMap from "./ProfileMap";
-import { Skeleton } from "@rneui/themed";
-import CommentItem from "../RealtorPages/CommentItem";
-import { Platform } from "react-native";
 import MapView, { Marker } from "react-native-maps";
 import openMap from "react-native-open-maps";
+import * as Location from "expo-location";
+
 export default function ShopInfo({ data, loading }) {
   const { width, height } = Dimensions.get("window");
   const dateTimeString = data?.data?.created_at;
@@ -33,7 +31,7 @@ export default function ShopInfo({ data, loading }) {
 
   const formattedDate = `${day}/${month}/${year}`;
   console.log(data?.data.latitude);
-  const [selectedLocation, setSelectedLocation] = useState(null);
+
   const handleGetDirections = () => {
     // Harita uygulamasını açmak ve seçilen konuma yönlendirme yapmak için openMap fonksiyonunu kullanıyoruz
     if (data?.data?.latitude && data?.data?.longitude) {
@@ -185,16 +183,12 @@ export default function ShopInfo({ data, loading }) {
           >
             <Text style={{ fontSize: 13, fontWeight: "600" }}>Konum</Text>
             <Text style={{ fontSize: 13, fontWeight: "400" }}>
-              {data?.data?.town?.sehir_title +
-              "/" +
-              data?.data?.district?.ilce_title +
-              "/" +
+              {data?.data?.town?.sehir_title ||
+              data?.data?.district?.ilce_title ||
               data?.data?.neighborhood?.mahalle_title
-                ? data?.data?.town?.sehir_title +
-                  "/" +
-                  data?.data?.district?.ilce_title +
-                  "/" +
-                  data?.data?.neighborhood?.mahalle_title
+                ? `${data?.data?.town?.sehir_title || "Bulunamadı"}/${
+                    data?.data?.district?.ilce_title || "Bulunamadı"
+                  }/${data?.data?.neighborhood?.mahalle_title || "Bulunamadı"}`
                 : "Konum Bilgisi Bulunmuyor"}
             </Text>
           </View>
@@ -268,6 +262,7 @@ export default function ShopInfo({ data, loading }) {
         <View style={[{ width: "100%", height: 250, borderRadius: 10 }]}>
           {data?.data?.latitude != null || data?.data?.longitude != null ? (
             <MapView
+              showsUserLocation={false}
               liteMode={true}
               initialRegion={{
                 latitude:
