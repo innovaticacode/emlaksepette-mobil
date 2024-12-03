@@ -278,12 +278,37 @@ export default function MapFilter({
           )}
         </TouchableOpacity>
         <TouchableOpacity
-          style={styles.butonfilter}
+          disabled={location?.city ? false : true}
+          style={[
+            styles.butonfilter,
+            {
+              backgroundColor: location?.city ? "white" : "#ebebeb",
+            },
+          ]}
           onPress={() => {
             setisVisible2(true);
           }}
         >
-          {location?.county?.length > 1 ? (
+          {location.county ? (
+            location?.county?.length === 1 ? (
+              <Text>{findLabelByCounty(counties, location.county)}</Text>
+            ) : location?.county?.length == 0 ? (
+              <Text style={{ fontWeight: "600", fontSize: 13 }}>
+                İlçe
+                <Text style={{ color: "#606060", fontSize: 13 }}>
+                  (seçiniz)
+                </Text>
+              </Text>
+            ) : (
+              <Text>{location?.county?.length} İlçe</Text>
+            )
+          ) : (
+            <Text style={{ fontWeight: "600", fontSize: 13 }}>
+              İlçe
+              <Text style={{ color: "#606060", fontSize: 13 }}>(seçiniz)</Text>
+            </Text>
+          )}
+          {/* {location?.county?.length > 1 ? (
             <Text>{location?.county?.length} İlçe</Text>
           ) : county ? (
             <Text>{findLabelByCounty(counties, location.county)}</Text>
@@ -292,10 +317,17 @@ export default function MapFilter({
               İlçe{" "}
               <Text style={{ color: "#606060", fontSize: 13 }}>(seçiniz)</Text>
             </Text>
-          )}
+          )} */}
         </TouchableOpacity>
         <TouchableOpacity
-          style={styles.butonfilter}
+          disabled={location?.county?.length > 0 ? false : true}
+          style={[
+            styles.butonfilter,
+            {
+              backgroundColor:
+                location?.county?.length > 0 ? "white" : "#ebebeb",
+            },
+          ]}
           onPress={() => {
             setisVisible3(true);
           }}
@@ -331,6 +363,9 @@ export default function MapFilter({
         </TouchableOpacity>
       </View>
       <ActionSheet
+        onTouchBackdrop={() => {
+          GetProjectsInfo(city);
+        }}
         ref={actionSheetRef}
         onClose={() => setisVisible(false)} // Close ActionSheet when dismissed
         containerStyle={{
@@ -411,6 +446,9 @@ export default function MapFilter({
         </ScrollView>
       </ActionSheet>
       <ActionSheet
+        onTouchBackdrop={() => {
+          GetProjectsInfo(location.city, location.county, null);
+        }}
         ref={actionSheetRef2}
         onClose={() => setisVisible2(false)} // Close ActionSheet when dismissed
         containerStyle={{

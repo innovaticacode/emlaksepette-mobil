@@ -27,6 +27,7 @@ import { addDotEveryThreeDigits } from "../../components/methods/merhod";
 import { apiUrl, frontEndUriBase } from "../../components/methods/apiRequest";
 import MapFilter from "../../components/Filter/MapFilter/MapFilter";
 import ArrowIcon from "react-native-vector-icons/MaterialIcons";
+import AwesomeAlert from "react-native-awesome-alerts";
 const MapFilterRealtor = () => {
   const [selectedMarker, setSelectedMarker] = useState(null);
   const [markers, setMarkers] = useState([]);
@@ -38,6 +39,7 @@ const MapFilterRealtor = () => {
   const [filterLatiude, setfilterLatiude] = useState(null);
   const [filterLongitude, setfilterLongitude] = useState(null);
   const [loading, setloading] = useState(false);
+  const [emptyFilterMarkerAlert, setemptyFilterMarkerAlert] = useState(false);
   const GetProjectsInfo = (city, county, neighbourhood) => {
     setloading(true);
     axios
@@ -57,7 +59,7 @@ const MapFilterRealtor = () => {
           const matchNeighbourhood =
             Array.isArray(neighbourhood) && neighbourhood.length > 0
               ? Array.isArray(neighbourhood)
-                ? neighbourhood.includes(item.neighbourhood_id)
+                ? neighbourhood.includes(item.neighborhood_id)
                 : true
               : true;
 
@@ -66,6 +68,7 @@ const MapFilterRealtor = () => {
 
         setfilterMarker(advertFiter);
         setMarkers(data);
+
         console.log("Çalıştı");
         // console.log(data[0].city_id, "Apiden Gele şehir");
       })
@@ -75,6 +78,9 @@ const MapFilterRealtor = () => {
       })
       .finally(() => {
         setloading(false);
+        if (filterMarker?.length == 0) {
+          setemptyFilterMarkerAlert(true);
+        }
       });
   };
   useEffect(() => {
@@ -152,8 +158,8 @@ const MapFilterRealtor = () => {
                 initialRegion={{
                   latitude: filterLatiude,
                   longitude: filterLongitude,
-                  latitudeDelta: 1,
-                  longitudeDelta: 2,
+                  latitudeDelta: 5,
+                  longitudeDelta: 5,
                 }}
                 showsUserLocation={true}
                 showsMyLocationButton={true}
@@ -214,7 +220,55 @@ const MapFilterRealtor = () => {
                 ))}
               </MapView>
             ) : (
-              <ActivityIndicator />
+              <>
+                <AwesomeAlert
+                  show={emptyFilterMarkerAlert}
+                  showProgress={false}
+                  titleStyle={{
+                    color: "#333",
+                    fontSize: 13,
+                    fontWeight: "700",
+                    textAlign: "center",
+                    margin: 5,
+                  }}
+                  title={"Seçtiğiniz konumda ilan bulunmamaktadır"}
+                  messageStyle={{ textAlign: "center" }}
+                  message={`Tekrar filtrelemek istermisiniz?`}
+                  closeOnTouchOutside={false}
+                  closeOnHardwareBackPress={false}
+                  showCancelButton={true}
+                  showConfirmButton={true}
+                  cancelText="Sıfırla"
+                  confirmText="Tekrar Filtrele"
+                  cancelButtonColor="#EA2C2E"
+                  confirmButtonColor="#1d8027"
+                  onCancelPressed={() => {
+                    setemptyFilterMarkerAlert(false);
+                    setTimeout(() => {
+                      dispatch(clearLocation());
+                      GetProjectsInfo();
+                    }, 100);
+                  }}
+                  onConfirmPressed={() => {
+                    setemptyFilterMarkerAlert(false);
+                    setTimeout(() => {
+                      setisVisible(true);
+                    }, 100);
+                  }}
+                />
+                <MapView
+                  style={styles.map}
+                  provider={PROVIDER_DEFAULT}
+                  initialRegion={{
+                    latitude: 39.925533,
+                    longitude: 32.866287,
+                    latitudeDelta: 16,
+                    longitudeDelta: 16,
+                  }}
+                  showsUserLocation={true}
+                  showsMyLocationButton={true}
+                ></MapView>
+              </>
             )
           ) : (
             <MapView
@@ -339,7 +393,8 @@ const MapFilterRealtor = () => {
                             <View>
                               <Text style={styles.modalDescription}>
                                 {selectedMarker?.city_title} /{" "}
-                                {selectedMarker?.county_title}
+                                {selectedMarker?.county_title}/{" "}
+                                {selectedMarker?.neighborhood_title}
                               </Text>
                             </View>
                           </View>

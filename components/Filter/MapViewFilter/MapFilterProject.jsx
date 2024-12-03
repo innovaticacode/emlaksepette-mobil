@@ -10,7 +10,11 @@ import {
   Image,
   TouchableWithoutFeedback,
 } from "react-native";
-import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
+import MapView, {
+  Marker,
+  PROVIDER_DEFAULT,
+  PROVIDER_GOOGLE,
+} from "react-native-maps";
 import { apiUrl, frontEndUriBase } from "../../methods/apiRequest";
 import { useDispatch, useSelector } from "react-redux";
 import Basket from "../../../assets/basket.svg";
@@ -26,6 +30,7 @@ import {
 } from "../../../store/slices/FilterProject/FilterProjectSlice";
 import { addDotEveryThreeDigits } from "../../methods/merhod";
 import MapFilter from "../MapFilter/MapFilter";
+import AwesomeAlert from "react-native-awesome-alerts";
 
 const MapFilterProject = () => {
   const [selectedMarker, setSelectedMarker] = useState(null);
@@ -38,6 +43,7 @@ const MapFilterProject = () => {
   const [filterLatiude, setfilterLatiude] = useState(null);
   const [filterLongitude, setfilterLongitude] = useState(null);
   const [loading, setloading] = useState(false);
+  const [emptyFilterMarkerAlert, setemptyFilterMarkerAlert] = useState(false);
   const GetProjectsInfo = (city, county, neighbourhood) => {
     setloading(true);
     axios
@@ -66,6 +72,7 @@ const MapFilterProject = () => {
 
         setfilterMarker(advertFiter);
         setMarkers(data);
+
         console.log("Çalıştı");
       })
 
@@ -74,6 +81,11 @@ const MapFilterProject = () => {
       })
       .finally(() => {
         setloading(false);
+        setTimeout(() => {
+          if (filterMarker?.length == 0) {
+            setemptyFilterMarkerAlert(true);
+          }
+        }, 200);
       });
   };
   useEffect(() => {
@@ -104,6 +116,7 @@ const MapFilterProject = () => {
   const [isVisible, setisVisible] = useState(false);
   const [isVisible2, setisVisible2] = useState(false);
   const [isVisible3, setisVisible3] = useState(false);
+
   return (
     <View style={styles.container}>
       {loading ? (
@@ -198,7 +211,55 @@ const MapFilterProject = () => {
                 ))}
               </MapView>
             ) : (
-              <ActivityIndicator />
+              <>
+                <AwesomeAlert
+                  show={emptyFilterMarkerAlert}
+                  showProgress={false}
+                  titleStyle={{
+                    color: "#333",
+                    fontSize: 13,
+                    fontWeight: "700",
+                    textAlign: "center",
+                    margin: 5,
+                  }}
+                  title={"Seçtiğiniz konumda ilan bulunmamaktadır"}
+                  messageStyle={{ textAlign: "center" }}
+                  message={`Tekrar filtrelemek istermisiniz?`}
+                  closeOnTouchOutside={false}
+                  closeOnHardwareBackPress={false}
+                  showCancelButton={true}
+                  showConfirmButton={true}
+                  cancelText="Sıfırla"
+                  confirmText="Tekrar Filtrele"
+                  cancelButtonColor="#EA2C2E"
+                  confirmButtonColor="#1d8027"
+                  onCancelPressed={() => {
+                    setemptyFilterMarkerAlert(false);
+                    setTimeout(() => {
+                      dispatch(clearLocation());
+                      GetProjectsInfo();
+                    }, 100);
+                  }}
+                  onConfirmPressed={() => {
+                    setemptyFilterMarkerAlert(false);
+                    setTimeout(() => {
+                      setisVisible(true);
+                    }, 100);
+                  }}
+                />
+                <MapView
+                  style={styles.map}
+                  provider={PROVIDER_DEFAULT}
+                  initialRegion={{
+                    latitude: 39.925533,
+                    longitude: 32.866287,
+                    latitudeDelta: 16,
+                    longitudeDelta: 16,
+                  }}
+                  showsUserLocation={true}
+                  showsMyLocationButton={true}
+                ></MapView>
+              </>
             )
           ) : (
             <MapView
