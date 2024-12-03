@@ -73,33 +73,32 @@ export default function RealtorPostFavorited({
       let response;
 
       if (type === 1) {
-        response = await axios.post(
-          `${apiUrl}add_project_to_favorites/${housingId}`,
-          {
-            project_id: projectId,
-            housing_id: housingId,
-          },
-          config
-        )
-        .then((res) => {
-          Dialog.show({
-            type: ALERT_TYPE.SUCCESS,
-            title: "Başarılı",
-            textBody: `${res.data.message}`,
-            button: "Tamam",
+        response = await axios
+          .post(
+            `${apiUrl}add_project_to_favorites/${housingId}`,
+            {
+              project_id: projectId,
+              housing_id: housingId,
+            },
+            config
+          )
+          .then((res) => {
+            Dialog.show({
+              type: ALERT_TYPE.SUCCESS,
+              title: "Başarılı",
+              textBody: `${res.data.message}`,
+              button: "Tamam",
+            });
+            changeFavorites(1, housingId, projectId);
           });
-          changeFavorites(1, housingId, projectId);
-        });
-      setShowAlert(false);
-    } else {
-      fetchData();
-      const config = {
-        headers: { Authorization: `Bearer ${user.access_token}` },
-      };
-      axios
-        .post(
-          "http://192.168.18.31:8000/api/add_housing_to_favorites/" +
-            HouseId,
+        setShowAlert(false);
+      } else {
+        fetchData();
+        const config = {
+          headers: { Authorization: `Bearer ${user.access_token}` },
+        };
+        axios.post(
+          apiUrl + "add_housing_to_favorites/" + HouseId,
           {
             housing_id: HouseId,
           },

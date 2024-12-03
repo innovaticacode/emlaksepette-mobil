@@ -541,7 +541,7 @@ export default function Details({ navigation }) {
     try {
       if (user?.access_token) {
         const response = await axios.post(
-          "http://192.168.18.31:8000/api/institutional/add_to_cart",
+          apiUrl + "institutional/add_to_cart",
           formData,
           {
             headers: {
@@ -594,7 +594,7 @@ export default function Details({ navigation }) {
       formData.append("offer_description", offerid);
 
       const response = await axios.post(
-        "http://192.168.18.31:8000/api/institutional/give_offer",
+        apiUrl + "institutional/give_offer",
         formData,
         {
           headers: {
@@ -659,9 +659,7 @@ export default function Details({ navigation }) {
   const [counties, setcounties] = useState([]);
   const fetchDataCounty = async (value) => {
     try {
-      const response = await axios.get(
-        `http://192.168.18.31:8000/api/counties/${value}`
-      );
+      const response = await axios.get(apiUrl + `counties/${value}`);
       return response.data;
     } catch (error) {
       console.error("Hata:", error);

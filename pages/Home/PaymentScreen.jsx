@@ -396,7 +396,7 @@ export default function PaymentScreen() {
   const formHtml = `
     <html>
       <body>
-        <form id="paymentForm" action="http://192.168.18.31:8000/api/pay-cart" method="POST">
+        <form id="paymentForm" action="https://private.emlaksepette.com/api/pay-cart" method="POST">
           <input type="hidden" name="name" value="${creditCartData.name}" />
           <input type="hidden" name="creditcard" value="${creditCartData.credit_cart_number}" />
           <input type="hidden" name="month" value="${creditCartData.exp_month}" />
@@ -588,7 +588,7 @@ export default function PaymentScreen() {
               automaticallyAdjustContentInsets={false}
               source={{ html: formHtml }} // WebView'e HTML formu yüklüyoruz ve otomatik gönderiliyor
               onNavigationStateChange={(navState) => {
-                if (navState.url !== "http://192.168.18.31:8000/api/pay-cart") {
+                if (navState.url !== apiUrl + "pay-cart") {
                 }
               }}
             />
