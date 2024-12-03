@@ -55,12 +55,9 @@ export default function ShopInfo({ data, loading }) {
       console.error("Couldn't load page", err)
     );
   };
-  
+
   return (
-    <ScrollView
-      contentContainerStyle={{}}
-      showsVerticalScrollIndicator={false}
-    >
+    <ScrollView contentContainerStyle={{}} showsVerticalScrollIndicator={false}>
       <View style={styles.container}>
         <View
           style={{
@@ -269,43 +266,47 @@ export default function ShopInfo({ data, loading }) {
           </TouchableOpacity>
         </View>
         <View style={[{ width: "100%", height: 250, borderRadius: 10 }]}>
-          <MapView
-            initialRegion={{
-              latitude:
-                parseFloat(
-                  data?.data?.latitude == null ? 38.9637 : data?.data?.latitude
-                ) || 0,
-              longitude:
-                parseFloat(
-                  data?.data?.longitude == null
-                    ? 35.2433
-                    : data?.data?.longitude
-                ) || 0,
-              latitudeDelta: data?.data?.latitude == null ? 8.0 : 0.0922,
-              longitudeDelta: data?.data?.lingitude == null ? 8.0 : 0.0421,
-              altidute: 50.03281021118164,
-            }}
-            style={{ flex: 1, borderRadius: 12 }}
-          >
-            <Marker
-              coordinate={{
+          {data?.data?.latitude != null || data?.data?.longitude != null ? (
+            <MapView
+              liteMode={true}
+              initialRegion={{
                 latitude:
                   parseFloat(
-                    data?.data?.latitude == null || undefined
-                      ? ""
+                    data?.data?.latitude == null
+                      ? 38.9637
                       : data?.data?.latitude
                   ) || 0,
                 longitude:
                   parseFloat(
-                    data?.data?.longitude == null || undefined
-                      ? ""
+                    data?.data?.longitude == null
+                      ? 35.2433
                       : data?.data?.longitude
                   ) || 0,
+                latitudeDelta: data?.data?.latitude == null ? 8.0 : 0.0922,
+                longitudeDelta: data?.data?.lingitude == null ? 8.0 : 0.0421,
               }}
-              title={data?.name}
-              description="Proje Konumu"
-            />
-          </MapView>
+              style={{ flex: 1, borderRadius: 12 }}
+            >
+              <Marker
+                coordinate={{
+                  latitude:
+                    parseFloat(
+                      data?.data?.latitude == null || undefined
+                        ? ""
+                        : data?.data?.latitude
+                    ) || 0,
+                  longitude:
+                    parseFloat(
+                      data?.data?.longitude == null || undefined
+                        ? ""
+                        : data?.data?.longitude
+                    ) || 0,
+                }}
+                title={data?.name}
+                description="Proje Konumu"
+              />
+            </MapView>
+          ) : null}
         </View>
         {/* <View style={{flexDirection:'row',width:'100%'}}>
    <View style={{borderWidth:1,borderColor:'#D7D7D7',borderRadius:12,gap:7,flexDirection:'row'}}>
