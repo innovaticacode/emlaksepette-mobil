@@ -717,16 +717,16 @@ export default function PaymentScreen() {
               >
                 {tcWarningColor == "green" ? (
                   <WarningIcon
-                    style={{ fontSize: "9px", color: "#fff" }}
+                    style={{ fontSize: 9, color: "#fff" }}
                     name="check"
                   />
                 ) : (
                   <WarningIcon
-                    style={{ fontSize: "9px", color: "#fff" }}
+                    style={{ fontSize: 9, color: "#fff" }}
                     name="warning"
                   />
                 )}
-                <Text style={{ fontSize: "9px", color: "#fff", marginLeft: 3 }}>
+                <Text style={{ fontSize: 9, color: "#fff", marginLeft: 3 }}>
                   {IdNumberWarningText}
                 </Text>
               </View>
@@ -1797,7 +1797,7 @@ const styles = StyleSheet.create({
     borderColor: "#e6e6e6",
     ...Platform.select({
       ios: {
-        shadowColor: " #e6e6e6",
+        shadowColor: "#e6e6e6",
         shadowOffset: { width: 1, height: 1 },
         shadowOpacity: 0.0,
         shadowRadius: 1,
