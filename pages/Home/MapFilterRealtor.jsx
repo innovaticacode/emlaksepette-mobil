@@ -306,56 +306,68 @@ const MapFilterRealtor = () => {
                         }, 500);
                       }}
                     >
-                      <View></View>
-                      {/* {selectedMarker && selectedMarker.housing_type_data && (
-                        <Image
-                          source={{
-                            uri: `${frontEndUriBase}housing_images/${
-                              JSON.parse(selectedMarker.housing_type_data)
-                                ?.image
-                            }`,
+                      <View style={styles.advertContainer}>
+                        <View style={{ width: "30%" }}>
+                          {selectedMarker &&
+                            selectedMarker.housing_type_data && (
+                              <Image
+                                source={{
+                                  uri: `${frontEndUriBase}housing_images/${
+                                    JSON.parse(selectedMarker.housing_type_data)
+                                      ?.image
+                                  }`,
+                                }}
+                                style={styles.modalImage}
+                                borderRadius={10}
+                              />
+                            )}
+                        </View>
+                        <View
+                          style={{
+                            width: "70%",
+
+                            height: "100%",
+                            justifyContent: "space-between",
                           }}
-                          style={styles.modalImage}
-                          borderRadius={10}
-                        />
-                      )}
+                        >
+                          <View style={{ gap: 7 }}>
+                            <View>
+                              <Text style={styles.header} numberOfLines={2}>
+                                {selectedMarker.housing_title}
+                              </Text>
+                            </View>
+                            <View>
+                              <Text style={styles.modalDescription}>
+                                {selectedMarker?.city_title} /{" "}
+                                {selectedMarker?.county_title}
+                              </Text>
+                            </View>
+                          </View>
 
-                      <View
-                        style={{
-                          gap: 5,
-                          flexDirection: "column",
-                          justifyContent: "space-between",
-                        }}
-                      >
-                        <View style={{ gap: 5, width: "90%" }}>
-                          <Text style={styles.header} numberOfLines={2}>
-                            {selectedMarker.housing_title}
-                          </Text>
-                          <Text style={styles.modalDescription}>
-                            {selectedMarker?.city_title} /{" "}
-                            {selectedMarker?.county_title}
-                          </Text>
+                          <View style={{}}>
+                            {selectedMarker?.housing_type_data && (
+                              <Text
+                                style={[
+                                  styles.modalDescription,
+                                  {
+                                    color: "#EA2C2E",
+                                    fontSize: 16,
+                                    fontWeight: "600",
+                                  },
+                                ]}
+                              >
+                                {addDotEveryThreeDigits(
+                                  JSON.parse(selectedMarker.housing_type_data)
+                                    ?.price
+                                )}
+                                ₺
+                              </Text>
+                            )}
+                          </View>
                         </View>
-
-                        <View style={{}}>
-                          {selectedMarker?.housing_type_data && (
-                            <Text
-                              style={[
-                                styles.modalDescription,
-                                { color: "#EA2C2E", fontSize: 15 },
-                              ]}
-                            >
-                              {addDotEveryThreeDigits(
-                                JSON.parse(selectedMarker.housing_type_data)
-                                  ?.price
-                              )}
-                              ₺
-                            </Text>
-                          )}
-                        </View>
-                      </View> */}
+                      </View>
                     </TouchableOpacity>
-                    {/* <View style={styles.buttonContainer}>
+                    <View style={styles.buttonContainer}>
                       <TouchableOpacity
                         style={[
                           styles.button,
@@ -397,7 +409,7 @@ const MapFilterRealtor = () => {
                           İlana Git
                         </Text>
                       </TouchableOpacity>
-                    </View> */}
+                    </View>
                   </View>
                 </View>
               </TouchableWithoutFeedback>
@@ -475,11 +487,10 @@ const styles = StyleSheet.create({
   modalContent: {
     height: 100,
     marginBottom: 25,
-    width: "90%",
   },
   modalImage: {
-    width: 100,
-    height: 100,
+    width: 110,
+    height: 110,
     marginRight: 10,
   },
   textContainer: {},
@@ -494,7 +505,7 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     flexDirection: "row",
-    justifyContent: "center", // Butonlar arasına boşluk eklemek için
+    justifyContent: "space-between", // Butonlar arasına boşluk eklemek için
     width: "100%",
 
     marginBottom: 10,
@@ -577,6 +588,10 @@ const styles = StyleSheet.create({
     paddingBottom: 35,
     bottom: 0,
     width: "100%",
+  },
+  advertContainer: {
+    width: "100%",
+    flexDirection: "row",
   },
 });
 const pickerSelectStyles = StyleSheet.create({
