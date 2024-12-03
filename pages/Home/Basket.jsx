@@ -126,14 +126,11 @@ export default function Basket() {
     try {
       if (user?.access_token && isFocused) {
         setLoading(true);
-        const response = await axios.get(
-          `${apiUrl}institutional/my-cart`,
-          {
-            headers: {
-              Authorization: `Bearer ${user?.access_token}`,
-            },
-          }
-        );
+        const response = await axios.get(`${apiUrl}institutional/my-cart`, {
+          headers: {
+            Authorization: `Bearer ${user?.access_token}`,
+          },
+        });
         setCart(response?.data?.cart?.item);
         settype(response?.data?.cart);
         setsaleType(response?.data?.saleType);
@@ -209,15 +206,11 @@ export default function Basket() {
     formData.append("change", "artir");
     try {
       if (user.access_token) {
-        const response = await axios.post(
-          `${apiUrl}update-cart-qt`,
-          formData,
-          {
-            headers: {
-              Authorization: `Bearer ${user?.access_token}`,
-            },
-          }
-        );
+        const response = await axios.post(`${apiUrl}update-cart-qt`, formData, {
+          headers: {
+            Authorization: `Bearer ${user?.access_token}`,
+          },
+        });
         fetchData();
         setmessage(response.data);
         setcounter(response?.data?.quantity);
@@ -234,15 +227,11 @@ export default function Basket() {
     formData.append("change", "azalt");
     try {
       if (user.access_token) {
-        const response = await axios.post(
-          `${apiUrl}update-cart-qt`,
-          formData,
-          {
-            headers: {
-              Authorization: `Bearer ${user?.access_token}`,
-            },
-          }
-        );
+        const response = await axios.post(`${apiUrl}update-cart-qt`, formData, {
+          headers: {
+            Authorization: `Bearer ${user?.access_token}`,
+          },
+        });
         fetchData();
         setmessage(response.data);
         setcounter(response?.data?.quantity);
@@ -254,14 +243,11 @@ export default function Basket() {
 
   const updateUserData = async () => {
     try {
-      const updateResponse = await axios.get(
-        `${apiUrl}users/` + user?.id,
-        {
-          headers: {
-            Authorization: `Bearer ${user.access_token}`,
-          },
-        }
-      );
+      const updateResponse = await axios.get(`${apiUrl}users/` + user?.id, {
+        headers: {
+          Authorization: `Bearer ${user.access_token}`,
+        },
+      });
 
       // Mevcut kullanıcı verilerini güncellenmiş verilerle birleştirme
       const updatedUser = {
@@ -294,8 +280,6 @@ export default function Basket() {
         );
         updateUserData();
         fetchData();
-
-        //  console.log(updateResponse.data + 'User')
       }
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -323,15 +307,11 @@ export default function Basket() {
     formData.append("updatedPrice", updatedPrice);
     try {
       if (user.access_token) {
-        const response = await axios.post(
-          `${apiUrl}update-cart`,
-          formData,
-          {
-            headers: {
-              Authorization: `Bearer ${user?.access_token}`,
-            },
-          }
-        );
+        const response = await axios.post(`${apiUrl}update-cart`, formData, {
+          headers: {
+            Authorization: `Bearer ${user?.access_token}`,
+          },
+        });
         fetchData();
         setmessageUpdateCart(response.data);
       }

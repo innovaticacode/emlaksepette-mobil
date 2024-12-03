@@ -76,9 +76,7 @@ const CustomTabBar = ({
   React.useEffect(() => {
     const fetchMenuItems = async () => {
       try {
-        const response = await axios.get(
-          apiUrl + "menu-list"
-        );
+        const response = await axios.get(apiUrl + "menu-list");
         setMenuItems(response.data);
         setMenuItems([{ text: "Anasayfa" }, ...response.data.slice(0, -1)]);
       } catch (error) {
@@ -200,7 +198,7 @@ export default function HomePage2() {
         animationOut="bounceOutLeft"
         style={styles.modal}
         swipeDirection={["left"]}
-      // onSwipeComplete={() => setIsDrawerOpen(false)}
+        // onSwipeComplete={() => setIsDrawerOpen(false)}
       >
         {/* <View style={styles.modalContent}>
           <DrawerMenu setIsDrawerOpen={setIsDrawerOpen} />

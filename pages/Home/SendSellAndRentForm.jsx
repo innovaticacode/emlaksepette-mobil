@@ -181,9 +181,7 @@ export default function SendSellAndRentForm() {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get(
-        apiUrl+"cities"
-      );
+      const response = await axios.get(apiUrl + "cities");
       return response.data;
     } catch (error) {
       console.error("Hata:", error);
@@ -203,9 +201,7 @@ export default function SendSellAndRentForm() {
   const [counties, setcounties] = useState([]);
   const fetchDataCounty = async (value) => {
     try {
-      const response = await axios.get(
-        `${apiUrl}counties/${value}`
-      );
+      const response = await axios.get(`${apiUrl}counties/${value}`);
       return response.data;
     } catch (error) {
       console.error("Hata:", error);
@@ -233,9 +229,7 @@ export default function SendSellAndRentForm() {
   const [Neigbour, setNeigbour] = useState([]);
   const fetchDataNeigbour = async (value) => {
     try {
-      const response = await axios.get(
-        `${apiUrl}neighborhoods/${value}`
-      );
+      const response = await axios.get(`${apiUrl}neighborhoods/${value}`);
       return response.data;
     } catch (error) {
       console.error("Hata:", error);

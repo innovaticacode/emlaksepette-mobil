@@ -56,14 +56,11 @@ const VerifyScreen = () => {
     setloading(true);
     try {
       if (user?.access_token && user) {
-        const userInfo = await axios.get(
-          apiUrl+"users/" + user?.id,
-          {
-            headers: {
-              Authorization: `Bearer ${user.access_token}`,
-            },
-          }
-        );
+        const userInfo = await axios.get(apiUrl + "users/" + user?.id, {
+          headers: {
+            Authorization: `Bearer ${user.access_token}`,
+          },
+        });
         const userData = userInfo?.data?.user;
         setnamFromGetUser(userData);
       }
@@ -94,7 +91,7 @@ const VerifyScreen = () => {
   // }, [currentPosition])
   console.log(namFromGetUser.phone_verification_status + "telefodfdfn");
   const renderStepContent = () => {
-    if (namFromGetUser.type == 1 ) {
+    if (namFromGetUser.type == 1) {
       switch (currentPosition) {
         case 0:
           return <Verification nextStep={nextStep} prevStep={prevStep} />;
@@ -127,8 +124,7 @@ const VerifyScreen = () => {
     }
   };
   const navigation = useNavigation();
-  
-  
+
   return (
     <>
       {loading ? (
@@ -143,7 +139,9 @@ const VerifyScreen = () => {
             customStyles={customStyles}
             currentPosition={currentPosition}
             labels={namFromGetUser.type == 1 ? labels2 : labels}
-            stepCount={namFromGetUser.type == 1 ? labels2.length : labels.length}
+            stepCount={
+              namFromGetUser.type == 1 ? labels2.length : labels.length
+            }
           />
           {/* <Text>{namFromGetUser.phone_verification_status} </Text> */}
           <View style={styles.content}>{renderStepContent()}</View>
@@ -169,10 +167,9 @@ const VerifyScreen = () => {
                 navigation.navigate("Drawer", {
                   screen: "Home",
                   params: {
-                    status: "logout" 
+                    status: "logout",
                   },
                 });
-                
               }}
             >
               <Text

@@ -884,12 +884,12 @@ export default function ShoppingProfile() {
                       (user.type == 2 &&
                         user.corporate_type == "Emlak Ofisi" &&
                         group.label == "Satış Noktalarımız") ||
-                        (user.corporate_type !== "Emlak Ofisi" &&
-                          user.type == 2 &&
-                          group.label == "Emlak Kulüp") ||
-                        (user.type == 1 && group.label == "Satış Noktalarımız") ||
-                        (user.type == 1 &&
-                          group.text == "Satış Noktası Talepleri")
+                      (user.corporate_type !== "Emlak Ofisi" &&
+                        user.type == 2 &&
+                        group.label == "Emlak Kulüp") ||
+                      (user.type == 1 && group.label == "Satış Noktalarımız") ||
+                      (user.type == 1 &&
+                        group.text == "Satış Noktası Talepleri")
                         ? "none"
                         : "flex",
                   }}

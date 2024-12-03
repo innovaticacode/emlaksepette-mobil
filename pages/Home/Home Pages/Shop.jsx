@@ -17,13 +17,15 @@ import { frontEndUriBase } from "../../../components/methods/apiRequest";
 import RealtorPost from "../../../components/Card/RealtorCard/RealtorPost";
 import { UsePaginatedData } from "../../../hooks";
 
-
 const Shop = ({ index }) => {
   const navigation = useNavigation();
   const [loading, setLoading] = useState(false);
   const apiData = [{ key: "step1_slug", value: "is-yeri" }];
-  const { data, hooksLoading, error, loadMore, setSkip } = UsePaginatedData("real-estates", 10, apiData);
-
+  const { data, hooksLoading, error, loadMore, setSkip } = UsePaginatedData(
+    "real-estates",
+    10,
+    apiData
+  );
 
   useFocusEffect(
     useCallback(() => {
@@ -35,8 +37,6 @@ const Shop = ({ index }) => {
     }, [index])
   );
 
-
-
   const onRefresh = async () => {
     setLoading(true);
     await setSkip(0);
@@ -47,7 +47,11 @@ const Shop = ({ index }) => {
     if (!hooksLoading) return null;
     return (
       <View style={{ height: 100 }}>
-        <ActivityIndicator style={{ marginVertical: 16 }} size="small" color="#333" />
+        <ActivityIndicator
+          style={{ marginVertical: 16 }}
+          size="small"
+          color="#333"
+        />
       </View>
     );
   };
@@ -108,42 +112,46 @@ const Shop = ({ index }) => {
           </TouchableOpacity>
         </View>
       </>
-    )
-  };
-  const renderItem = useMemo(() => ({ item }) => {
-    // Parse the housing_type_data only once
-    const housingTypeData = JSON.parse(item.housing_type_data);
-
-    // Get the column name safely
-    const getColumnName = (columnNameKey) => {
-      return housingTypeData[columnNameKey] || "";
-    };
-
-    return (
-      <RealtorPost
-        openSharing={housingTypeData["open_sharing1"]}
-        HouseId={item.id}
-        price={`${housingTypeData["price"]} `}
-        housing={item}
-        title={item.housing_title}
-        loading={loading}
-        location={`${item.city_title} / ${item.county_title}`}
-        image={`${frontEndUriBase}housing_images/${housingTypeData?.image}`}
-        column1_additional={item.column1_additional}
-        column1_name={getColumnName(item.column1_name)}
-        column2_name={getColumnName(item.column2_name)}
-        column2_additional={item.column2_additional}
-        column3_name={getColumnName(item.column3_name)}
-        column3_additional={item.column3_additional}
-        column4_name={getColumnName(item.column4_name)}
-        column4_additional={item.column4_additional}
-        bookmarkStatus={true}
-        dailyRent={false}
-        isFavorite={item.is_favorite}
-        sold={item.sold}
-      />
     );
-  }, [hooksLoading, loadMore]);
+  };
+  const renderItem = useMemo(
+    () =>
+      ({ item }) => {
+        // Parse the housing_type_data only once
+        const housingTypeData = JSON.parse(item.housing_type_data);
+
+        // Get the column name safely
+        const getColumnName = (columnNameKey) => {
+          return housingTypeData[columnNameKey] || "";
+        };
+
+        return (
+          <RealtorPost
+            openSharing={housingTypeData["open_sharing1"]}
+            HouseId={item.id}
+            price={`${housingTypeData["price"]} `}
+            housing={item}
+            title={item.housing_title}
+            loading={loading}
+            location={`${item.city_title} / ${item.county_title}`}
+            image={`${frontEndUriBase}housing_images/${housingTypeData?.image}`}
+            column1_additional={item.column1_additional}
+            column1_name={getColumnName(item.column1_name)}
+            column2_name={getColumnName(item.column2_name)}
+            column2_additional={item.column2_additional}
+            column3_name={getColumnName(item.column3_name)}
+            column3_additional={item.column3_additional}
+            column4_name={getColumnName(item.column4_name)}
+            column4_additional={item.column4_additional}
+            bookmarkStatus={true}
+            dailyRent={false}
+            isFavorite={item.is_favorite}
+            sold={item.sold}
+          />
+        );
+      },
+    [hooksLoading, loadMore]
+  );
 
   return (
     <>

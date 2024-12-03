@@ -44,8 +44,7 @@ export default function ActiveRealtorAdverts({ index }) {
     };
     try {
       const res = await axios.get(
-        apiUrl + "get_my_housings?orderByHousings=" +
-        sort,
+        apiUrl + "get_my_housings?orderByHousings=" + sort,
         {
           headers: {
             Authorization: `Bearer ${user?.access_token}`,
@@ -88,8 +87,8 @@ export default function ActiveRealtorAdverts({ index }) {
     setsearchValue(value);
     const filteredData = value
       ? housings.filter((item) =>
-        item?.housing_title.toLowerCase().includes(value.toLowerCase())
-      )
+          item?.housing_title.toLowerCase().includes(value.toLowerCase())
+        )
       : housings;
     sethousingRecords(filteredData);
   };
@@ -342,8 +341,7 @@ export default function ActiveRealtorAdverts({ index }) {
                     Resimler
                   </Text>
                 </TouchableOpacity>
-                {
-                  /*
+                {/*
                   <TouchableOpacity
                   style={{
                     flexDirection: "row",
@@ -359,9 +357,7 @@ export default function ActiveRealtorAdverts({ index }) {
                   </Text>
                 </TouchableOpacity>
 
-                  */
-                }
-
+                  */}
               </View>
               {/* <View style={{ width: "100%" }}>
         <ScrollView

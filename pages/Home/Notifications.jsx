@@ -60,14 +60,11 @@ export default function Notifications() {
         return;
       }
       setloading(true);
-      const response = await axios.get(
-        apiUrl+"user/notification",
-        {
-          headers: {
-            Authorization: `Bearer ${user.access_token}`,
-          },
-        }
-      );
+      const response = await axios.get(apiUrl + "user/notification", {
+        headers: {
+          Authorization: `Bearer ${user.access_token}`,
+        },
+      });
 
       if (response.data) {
         // Bildirimleri tarihe göre sıralama (en yeni tarihler en üstte)
@@ -109,7 +106,7 @@ export default function Notifications() {
     setloading(true);
     try {
       const response = await axios.delete(
-        apiUrl+"institutional/notifications",
+        apiUrl + "institutional/notifications",
         {
           headers: {
             Authorization: `Bearer ${user?.access_token}`,
@@ -282,7 +279,9 @@ export default function Notifications() {
                     }}
                   >
                     <Text style={{ color: "grey" }}></Text>
-                    <View style={{ flexDirection: "row", gap: 16, marginRight: 5 }}>
+                    <View
+                      style={{ flexDirection: "row", gap: 16, marginRight: 5 }}
+                    >
                       {notifiCountRedux > 1 && (
                         <TouchableOpacity
                           style={{

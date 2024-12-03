@@ -97,13 +97,13 @@ export default function VerifyDocument({ nextStep, prevStep }) {
     setselectedPick(key);
     setchoose(true);
   };
-  const showDocument = (url, document,state) => {
-    setselectedPick(state)
+  const showDocument = (url, document, state) => {
+    setselectedPick(state);
     setselectedUrl(url);
     setselectedDocument(document);
     setIsVisible(true);
   };
-  
+
   const [selectedDocumentName, setSelectedDocumentName] = useState(null);
 
   const [pdfFile, setPdfFile] = useState(null);
@@ -137,7 +137,6 @@ export default function VerifyDocument({ nextStep, prevStep }) {
   };
 
   const navigation = useNavigation();
-
 
   const [loading, setloading] = useState(false);
   const sendDocument = () => {
@@ -235,7 +234,7 @@ export default function VerifyDocument({ nextStep, prevStep }) {
         : null
     );
     axios
-      .post(apiUrl+"verify-account", formData, {
+      .post(apiUrl + "verify-account", formData, {
         headers: {
           Authorization: `Bearer ${user?.access_token}`,
           "Content-Type": "multipart/form-data",
@@ -266,14 +265,8 @@ export default function VerifyDocument({ nextStep, prevStep }) {
     getValueFor("PhoneVerify", setverifyStatus);
   }, []);
 
-  
-
-
   const [filteredDocuments, setfilteredDocuments] = useState([]);
   const isFocused = useIsFocused();
-
- 
-
 
   const [namFromGetUser, setnamFromGetUser] = useState({});
   const [loadingForUserInfo, setloadingForUserInfo] = useState(false);
@@ -281,19 +274,16 @@ export default function VerifyDocument({ nextStep, prevStep }) {
     setloadingForUserInfo(true);
     try {
       if (user?.access_token && user) {
-        const userInfo = await axios.get(
-          apiUrl+"users/" + user?.id,
-          {
-            headers: {
-              Authorization: `Bearer ${user.access_token}`,
-            },
-          }
-        );
+        const userInfo = await axios.get(apiUrl + "users/" + user?.id, {
+          headers: {
+            Authorization: `Bearer ${user.access_token}`,
+          },
+        });
         const userData = userInfo?.data?.user;
         setnamFromGetUser(userData);
         setData("vergi_levhası", namFromGetUser.tax_document);
         setData("sicil_belgesi", namFromGetUser.record_document);
-        setData('')
+        setData("");
       }
     } catch (error) {
       console.error("Kullanıcı verileri güncellenirken hata oluştu:", error);
@@ -307,24 +297,25 @@ export default function VerifyDocument({ nextStep, prevStep }) {
     GetUserInfo();
   }, [user]);
 
-
-const openPdf = async () => {
-  if (FormDatas[selectedPick]?.uri) {
-    try {
-      const contentUri = await FileSystem.getContentUriAsync(FormDatas[selectedPick]?.uri);
-      IntentLauncher.startActivityAsync("android.intent.action.VIEW", {
-        data: contentUri,
-        flags: 1,
-        type: "application/pdf",
-      });
-    } catch (error) {
-      console.error("PDF açılırken hata oluştu:", error);
+  const openPdf = async () => {
+    if (FormDatas[selectedPick]?.uri) {
+      try {
+        const contentUri = await FileSystem.getContentUriAsync(
+          FormDatas[selectedPick]?.uri
+        );
+        IntentLauncher.startActivityAsync("android.intent.action.VIEW", {
+          data: contentUri,
+          flags: 1,
+          type: "application/pdf",
+        });
+      } catch (error) {
+        console.error("PDF açılırken hata oluştu:", error);
+      }
+    } else {
+      Alert.alert("PDF dosyası bulunamadı");
     }
-  } else {
-    Alert.alert("PDF dosyası bulunamadı");
-  }
-};
-console.log(namFromGetUser)
+  };
+  console.log(namFromGetUser);
 
   return (
     <ScrollView
@@ -421,7 +412,6 @@ console.log(namFromGetUser)
                   >
                     <TouchableOpacity
                       onPress={() => {
-
                         if (FormDatas[item.state].uri.slice(-3) == "pdf") {
                           if (Platform.OS === "android") {
                             openPdf();
@@ -431,11 +421,10 @@ console.log(namFromGetUser)
                               pdfUri: FormDatas[item.state].uri,
                             });
                           }
-                        }else{
+                        } else {
                           // setselectedPick(FormDatas[item.state])
-                          showDocument(item.url, item.document , item.state );
+                          showDocument(item.url, item.document, item.state);
                         }
-                     
                       }}
                       style={{
                         backgroundColor: "#0FA958",
@@ -492,12 +481,11 @@ console.log(namFromGetUser)
                   </Text>
                 </>
               )}
-             
             </View>
             <ImageViewing
               images={[
                 {
-                  uri:`${FormDatas[selectedPick]?.uri}`,
+                  uri: `${FormDatas[selectedPick]?.uri}`,
                 },
               ]}
               imageIndex={0}

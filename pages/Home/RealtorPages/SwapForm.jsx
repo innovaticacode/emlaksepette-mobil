@@ -28,7 +28,11 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 import { getValueFor } from "../../../components/methods/user";
 import { ActivityIndicator } from "react-native-paper";
 import { Platform } from "react-native";
-import { apiRequestGet, apiUrl, frontEndUriBase } from "../../../components/methods/apiRequest";
+import {
+  apiRequestGet,
+  apiUrl,
+  frontEndUriBase,
+} from "../../../components/methods/apiRequest";
 import mime from "mime";
 import { CheckBox } from "react-native-elements";
 
@@ -189,9 +193,7 @@ export default function SwapForm({ openModal, color }) {
   const fetchDetails = async () => {
     try {
       setloading(true);
-      const response = await axios.get(
-        `${apiUrl}housing/${houseid}`
-      );
+      const response = await axios.get(`${apiUrl}housing/${houseid}`);
       setloading(false);
       // GetUserInfo()
       setData(response.data);
@@ -277,17 +279,13 @@ export default function SwapForm({ openModal, color }) {
       }
 
       // Axios POST isteği
-      const response = await axios.post(
-        apiUrl + "swap",
-        formData,
-        {
-          headers: {
-            Authorization: `Bearer ${user.access_token}`,
-            "Content-Type": "multipart/form-data",
-          },
-          timeout: 60000,
-        }
-      );
+      const response = await axios.post(apiUrl + "swap", formData, {
+        headers: {
+          Authorization: `Bearer ${user.access_token}`,
+          "Content-Type": "multipart/form-data",
+        },
+        timeout: 60000,
+      });
 
       // Başarılı olma durumunda
       Dialog.show({
@@ -333,9 +331,7 @@ export default function SwapForm({ openModal, color }) {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get(
-        apiUrl + "cities"
-      );
+      const response = await axios.get(apiUrl + "cities");
       return response.data;
     } catch (error) {
       console.error("Hata:", error);
@@ -355,9 +351,7 @@ export default function SwapForm({ openModal, color }) {
   const [counties, setcounties] = useState([]);
   const fetchDataCounty = async (value) => {
     try {
-      const response = await axios.get(
-        `${apiUrl}counties/${value}`
-      );
+      const response = await axios.get(`${apiUrl}counties/${value}`);
       return response.data;
     } catch (error) {
       console.error("Hata:", error);
@@ -393,9 +387,7 @@ export default function SwapForm({ openModal, color }) {
   const [Neigbour, setNeigbour] = useState([]);
   const fetchDataNeigbour = async (value) => {
     try {
-      const response = await axios.get(
-        `${apiUrl}neighborhoods/${value}`
-      );
+      const response = await axios.get(`${apiUrl}neighborhoods/${value}`);
       return response.data;
     } catch (error) {
       console.error("Hata:", error);
@@ -725,20 +717,20 @@ export default function SwapForm({ openModal, color }) {
               user={projectInfo?.project?.user?.name}
               price={
                 projectInfo &&
-                  projectId &&
-                  projectInfo?.projectHousingsList &&
-                  roomData &&
-                  projectInfo?.project &&
-                  JSON.parse(roomData["payment-plan[]"]) &&
-                  roomData["share_sale[]"] &&
-                  JSON.parse(roomData["payment-plan[]"]).includes("taksitli")
+                projectId &&
+                projectInfo?.projectHousingsList &&
+                roomData &&
+                projectInfo?.project &&
+                JSON.parse(roomData["payment-plan[]"]) &&
+                roomData["share_sale[]"] &&
+                JSON.parse(roomData["payment-plan[]"]).includes("taksitli")
                   ? roomData["share_sale[]"] !== "[]"
                     ? roomData["installments-price[]"] /
-                    roomData["number_of_shares[]"]
+                      roomData["number_of_shares[]"]
                     : roomData["installments-price[]"]
                   : roomData["share_sale[]"] !== "[]"
-                    ? roomData["price[]"] / roomData["number_of_shares[]"]
-                    : roomData["price[]"]
+                  ? roomData["price[]"] / roomData["number_of_shares[]"]
+                  : roomData["price[]"]
               }
             />
           ) : (
@@ -747,7 +739,8 @@ export default function SwapForm({ openModal, color }) {
                 data &&
                 data.housing &&
                 data.housing.housing_type_data &&
-                `${frontEndUriBase}housing_images/${JSON.parse(data?.housing?.housing_type_data)["image"]
+                `${frontEndUriBase}housing_images/${
+                  JSON.parse(data?.housing?.housing_type_data)["image"]
                 }`
               }
               title={data?.pageInfo?.meta_title}
@@ -1067,7 +1060,7 @@ export default function SwapForm({ openModal, color }) {
                   value={YourAreaPrice}
                   onChangeText={(value) => setYourAreaPrice(value)}
                 />
-                <Text>{ }</Text>
+                <Text>{}</Text>
               </View>
             </>
           ) : (

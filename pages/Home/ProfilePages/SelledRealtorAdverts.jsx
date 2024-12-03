@@ -35,12 +35,9 @@ export default function SelledRealtorAdverts() {
   const fetchHousings = async () => {
     setloading(true);
     try {
-      const res = await axios.get(
-        apiUrl + "get_my_housings",
-        {
-          headers: { Authorization: "Bearer " + user.access_token },
-        }
-      );
+      const res = await axios.get(apiUrl + "get_my_housings", {
+        headers: { Authorization: "Bearer " + user.access_token },
+      });
       sethousings(res?.data?.activeHousingTypes);
       setloading(true);
     } catch (e) {

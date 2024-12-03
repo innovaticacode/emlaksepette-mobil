@@ -12,10 +12,7 @@ import axios from "axios";
 import Modal from "react-native-modal";
 import { ActivityIndicator } from "react-native-paper";
 import Icon from "react-native-vector-icons/AntDesign";
-import {
-  useIsFocused,
-  useNavigation,
-} from "@react-navigation/native";
+import { useIsFocused, useNavigation } from "@react-navigation/native";
 import * as SecureStore from "expo-secure-store";
 import { apiUrl } from "../../../components/methods/apiRequest";
 export default function Verification({ nextStep, prevStep }) {
@@ -101,7 +98,6 @@ export default function Verification({ nextStep, prevStep }) {
       console.debug("Doğrulama isteği başarılı:", response.data);
 
       if (response.data.success) {
-
         // Başarılı doğrulama sonrası işlemler
         updateUserData();
         setCodes("");
@@ -127,7 +123,6 @@ export default function Verification({ nextStep, prevStep }) {
       setloading(false);
     }
   };
-
 
   const [error, setError] = useState(null);
   const [verifyStatu, setverifyStatu] = useState(null);

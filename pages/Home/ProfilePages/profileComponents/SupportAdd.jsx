@@ -235,9 +235,9 @@ export default function SupportAdd() {
       !name ||
       !email ||
       !phone ||
-      !checked || 
-      !checked1 || 
-      !checked2 
+      !checked ||
+      !checked1 ||
+      !checked2
     ) {
       Dialog.show({
         type: ALERT_TYPE.DANGER,
@@ -279,19 +279,15 @@ export default function SupportAdd() {
         });
       }
 
-      const response = await axios.post(
-        apiUrl+"support",
-        formData,
-        {
-          headers: {
-            Authorization: `Bearer ${user?.access_token}`,
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
+      const response = await axios.post(apiUrl + "support", formData, {
+        headers: {
+          Authorization: `Bearer ${user?.access_token}`,
+          "Content-Type": "multipart/form-data",
+        },
+      });
 
       if (response.status == 200 || 201) {
-        if (user.access_token){
+        if (user.access_token) {
           Dialog.show({
             type: ALERT_TYPE.SUCCESS,
             title: "Başarılı",
@@ -304,13 +300,12 @@ export default function SupportAdd() {
           setImage([]);
           setPickerKey(Math.random());
           setName("");
-          setEmail(""); 
-          setPhone(""); 
-          setChecked(false); 
-          setChecked1(false); 
+          setEmail("");
+          setPhone("");
+          setChecked(false);
+          setChecked1(false);
           setChecked2(false);
-        }
-        else {
+        } else {
           Dialog.show({
             type: ALERT_TYPE.SUCCESS,
             title: "Başarılı",
@@ -323,16 +318,13 @@ export default function SupportAdd() {
           setImage([]);
           setPickerKey(Math.random());
           setName("");
-          setEmail(""); 
-          setPhone(""); 
-          setChecked(false); 
-          setChecked1(false); 
+          setEmail("");
+          setPhone("");
+          setChecked(false);
+          setChecked1(false);
           setChecked2(false);
         }
-
-         
-      } 
-      else {
+      } else {
         Dialog.show({
           type: ALERT_TYPE.DANGER,
           title: "Hata!",
@@ -418,23 +410,32 @@ export default function SupportAdd() {
 
   const formatPhoneNumberLive = (text) => {
     // Sadece rakamları al, baştaki sıfırı sil
-    let cleaned = ('' + text).replace(/\D/g, '').replace(/^0/, '');
-  
+    let cleaned = ("" + text).replace(/\D/g, "").replace(/^0/, "");
+
     // 10 rakamdan fazlasına izin verme
     if (cleaned.length > 10) {
       cleaned = cleaned.slice(0, 10);
     }
-  
+
     // Formatı oluşturmak için rakamları yerleştir
     if (cleaned.length > 6) {
-      return '(' + cleaned.slice(0, 3) + ') ' + cleaned.slice(3, 6) + ' ' + cleaned.slice(6, 8) + ' ' + cleaned.slice(8, 10);
+      return (
+        "(" +
+        cleaned.slice(0, 3) +
+        ") " +
+        cleaned.slice(3, 6) +
+        " " +
+        cleaned.slice(6, 8) +
+        " " +
+        cleaned.slice(8, 10)
+      );
     } else if (cleaned.length > 3) {
-      return '(' + cleaned.slice(0, 3) + ') ' + cleaned.slice(3, 6);
+      return "(" + cleaned.slice(0, 3) + ") " + cleaned.slice(3, 6);
     } else if (cleaned.length > 0) {
-      return '(' + cleaned;
+      return "(" + cleaned;
     }
-  
-    return '';
+
+    return "";
   };
 
   const handlePhoneInputChange = (text) => {
@@ -447,8 +448,7 @@ export default function SupportAdd() {
     // Formatlı girişi işlemek için yukarıdaki fonksiyon
     const formattedPhone = formatPhoneNumberLive(text);
     setPhone(formattedPhone);
-  };  
-  
+  };
 
   return (
     <AlertNotificationRoot>

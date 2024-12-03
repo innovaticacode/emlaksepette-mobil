@@ -90,16 +90,11 @@ export default function Personal({ type }) {
         "check-e": checked3,
       };
 
-      const response = await axios.post(
-
-        apiUrl+"register",
-        data,
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      const response = await axios.post(apiUrl + "register", data, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
 
       if (response.data.status == true) {
         {

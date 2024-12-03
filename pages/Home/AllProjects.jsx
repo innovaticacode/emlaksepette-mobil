@@ -147,7 +147,6 @@ export default function AllProjects() {
 
       setFilterDataState(apiUrlFilter);
       fetchFilteredProjects(apiUrlFilter, null);
-   
     } else {
       fetchFilteredProjects(buildApiUrl(params), null);
     }
@@ -194,7 +193,7 @@ export default function AllProjects() {
 
   const onChangeCity = (value) => {
     setState((prevState) => ({ ...prevState, selectedCity: value }));
-   
+
     if (value) {
       fetchDataCounty(value)
         .then((county) =>
@@ -230,7 +229,7 @@ export default function AllProjects() {
 
   const onChangeCounty = (value) => {
     setState((prevState) => ({ ...prevState, selectedCounty: value }));
-  
+
     if (value) {
       fetchDataNeighborhood(value)
         .then((neighborhood) =>
@@ -249,7 +248,6 @@ export default function AllProjects() {
 
   const onChangeNeighborhood = (value) => {
     setState((prevState) => ({ ...prevState, selectedNeighborhood: value }));
- 
   };
 
   const onChangeProjectStatus = (value) => {
@@ -764,18 +762,18 @@ export default function AllProjects() {
                 {state.openFilterIndex === "location" && (
                   <View style={styles.optionsContainer}>
                     <RNPickerSelect
-                    onDonePress={()=>{
-                      dispatch(
-                        setLocation({
-                          city: state.selectedCity
-                        })
-                      );
-                      dispatch(
-                        setLocation({
-                          county: null
-                        })
-                      );
-                    }}
+                      onDonePress={() => {
+                        dispatch(
+                          setLocation({
+                            city: state.selectedCity,
+                          })
+                        );
+                        dispatch(
+                          setLocation({
+                            county: null,
+                          })
+                        );
+                      }}
                       doneText="Tamam"
                       placeholder={{
                         label: "Şehir Seçiniz",
@@ -790,18 +788,18 @@ export default function AllProjects() {
                     />
 
                     <RNPickerSelect
-                    onDonePress={()=>{
-                      dispatch(
-                        setLocation({
-                          county: state.selectedCounty
-                        })
-                      );
-                      dispatch(
-                        setLocation({
-                          neigbourhood: null
-                        })
-                      );
-                    }}
+                      onDonePress={() => {
+                        dispatch(
+                          setLocation({
+                            county: state.selectedCounty,
+                          })
+                        );
+                        dispatch(
+                          setLocation({
+                            neigbourhood: null,
+                          })
+                        );
+                      }}
                       doneText="Tamam"
                       placeholder={{
                         label: "İlçe Seçiniz",
@@ -821,13 +819,13 @@ export default function AllProjects() {
                     />
 
                     <RNPickerSelect
-                    onDonePress={()=>{
-                      dispatch(
-                        setLocation({
-                          neigbourhood: state.selectedNeighborhood
-                        })
-                      );
-                    }}
+                      onDonePress={() => {
+                        dispatch(
+                          setLocation({
+                            neigbourhood: state.selectedNeighborhood,
+                          })
+                        );
+                      }}
                       doneText="Tamam"
                       placeholder={{
                         label: "Mahalle Seçiniz",
@@ -836,11 +834,11 @@ export default function AllProjects() {
                       style={pickerSelectStyles}
                       value={state.selectedNeighborhood}
                       onValueChange={(value) => {
-    //                        dispatch(
-    //   setLocation({
-    //     neigbourhood: value ? value : null,
-    //   })
-    // );
+                        //                        dispatch(
+                        //   setLocation({
+                        //     neigbourhood: value ? value : null,
+                        //   })
+                        // );
                         onChangeNeighborhood(value);
                       }}
                       items={state.neighborhoods}

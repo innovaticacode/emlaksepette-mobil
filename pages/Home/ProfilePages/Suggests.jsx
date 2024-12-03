@@ -54,14 +54,11 @@ export default function Suggests() {
     setloading(true);
     try {
       if (user.access_token) {
-        const response = await axios.get(
-          apiUrl+"institutional/user/offers",
-          {
-            headers: {
-              Authorization: `Bearer ${user.access_token}`,
-            },
-          }
-        );
+        const response = await axios.get(apiUrl + "institutional/user/offers", {
+          headers: {
+            Authorization: `Bearer ${user.access_token}`,
+          },
+        });
         setsuggests(response?.data?.offers);
       }
     } catch (error) {

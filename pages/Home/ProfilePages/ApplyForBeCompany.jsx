@@ -24,7 +24,11 @@ import { SafeAreaView } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import FontAwesome5Icon from "react-native-vector-icons/FontAwesome5";
 import { ActivityIndicator } from "react-native-paper";
-import { ALERT_TYPE, AlertNotificationRoot, Dialog } from "react-native-alert-notification";
+import {
+  ALERT_TYPE,
+  AlertNotificationRoot,
+  Dialog,
+} from "react-native-alert-notification";
 import { getValueFor } from "../../../components/methods/user";
 import { apiUrl } from "../../../components/methods/apiRequest";
 
@@ -97,9 +101,7 @@ export default function Company() {
   };
   const fetchData = async () => {
     try {
-      const response = await axios.get(
-        apiUrl+"cities"
-      );
+      const response = await axios.get(apiUrl + "cities");
       return response.data;
     } catch (error) {
       console.error("Hata:", error);
@@ -119,9 +121,7 @@ export default function Company() {
   const [counties, setcounties] = useState([]);
   const fetchDataCounty = async (value) => {
     try {
-      const response = await axios.get(
-        `${apiUrl}counties/${value}`
-      );
+      const response = await axios.get(`${apiUrl}counties/${value}`);
       return response.data;
     } catch (error) {
       console.error("Hata:", error);
@@ -138,7 +138,7 @@ export default function Company() {
   // Bu fonksiyon sayfanın en üstüne scroll etmek için kullanılabilir
 
   const scrollToTop = () => {
-    scrollViewRef.current.scrollTo({ y:0, animated: true });
+    scrollViewRef.current.scrollTo({ y: 0, animated: true });
   };
 
   const onChangeCity = (value) => {
@@ -156,9 +156,7 @@ export default function Company() {
   const [Neigbour, setNeigbour] = useState([]);
   const fetchDataNeigbour = async (value) => {
     try {
-      const response = await axios.get(
-        `${apiUrl}neighborhoods/${value}`
-      );
+      const response = await axios.get(`${apiUrl}neighborhoods/${value}`);
       return response.data;
     } catch (error) {
       console.error("Hata:", error);
@@ -179,19 +177,19 @@ export default function Company() {
     }
   };
   const [message, setmessage] = useState("");
-  const [IsSucces, setIsSucces] = useState(null)
+  const [IsSucces, setIsSucces] = useState(null);
   const [user, setuser] = useState({});
   useEffect(() => {
     getValueFor("user", setuser);
-  }, [])
+  }, []);
   useEffect(() => {
-    seteposta(user.email)
-    setphoneNumber(user.mobile_phone)
-  }, [user])
-  
-const [loadingBtn, setloadingBtn] = useState(false)
+    seteposta(user.email);
+    setphoneNumber(user.mobile_phone);
+  }, [user]);
+
+  const [loadingBtn, setloadingBtn] = useState(false);
   const postData = async () => {
-   setloadingBtn(true)
+    setloadingBtn(true);
     let fullNumber = `${cityCode}${companyPhone}`;
     try {
       const data = {
@@ -222,12 +220,12 @@ const [loadingBtn, setloadingBtn] = useState(false)
         brand_id: FrancheiseMarc,
       };
       const response = await axios.put(
-        apiUrl+"corporate/account/application",
+        apiUrl + "corporate/account/application",
         data,
         {
           headers: {
             Authorization: `Bearer ${user.access_token}`,
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
           },
         }
       );
@@ -235,33 +233,26 @@ const [loadingBtn, setloadingBtn] = useState(false)
       // İsteğin başarılı bir şekilde tamamlandığı durum
 
       setmessage(response.data.message);
- 
-      
+
       setTimeout(() => {
         Dialog.show({
           type: ALERT_TYPE.SUCCESS,
           title: "Tebrikler",
-          textBody: 'Emlaksepette Mağazanızı Başarıyla oluşturdunuz şimdi belge doğrulama zamanı',
-          button: 'Doğrula',
-         
-        
-          onHide:()=>{
+          textBody:
+            "Emlaksepette Mağazanızı Başarıyla oluşturdunuz şimdi belge doğrulama zamanı",
+          button: "Doğrula",
+
+          onHide: () => {
             Navigation.navigate("Drawer", {
               screen: "Home",
-            
             });
-          }
+          },
         });
       }, 700);
-    
-     
-    
     } catch (error) {
-      alert(error)
-
-      
+      alert(error);
     } finally {
-      setloadingBtn(false)
+      setloadingBtn(false);
       seteposta("");
       setphoneNumber("");
       setpassword("");
@@ -286,10 +277,9 @@ const [loadingBtn, setloadingBtn] = useState(false)
     }
   };
 
-
   const [errorStatu, seterrorStatu] = useState(0);
   const [errorMessage, seterrorMessage] = useState("");
-  
+
   const register = () => {
     switch (true) {
       case !phoneNumber:
@@ -308,40 +298,40 @@ const [loadingBtn, setloadingBtn] = useState(false)
           seterrorStatu(0);
         }, 10000);
         break;
-        case focusArea == "Emlak Ofisi" && !licence:
-          seterrorStatu(14);
-          seterrorMessage("Yetki Belgesi zorunludur");
-            scrollToTop()
-          setTimeout(() => {
-            seterrorStatu(0);
-          }, 10000);
-          break;
-          case (focusArea == "Emlak Ofisi" && IsConnectFranchaise==null):
-            seterrorStatu(16);
-            seterrorMessage("Bu Alan Zorunludur");
-            scrollToTop()
-            setTimeout(() => {
-              seterrorStatu(0);
-            }, 10000);
-            break;
-            case( focusArea == "Emlak Ofisi" && IsConnectFranchaise == 0 && !MarcaName):
-            seterrorStatu(17);
-            seterrorMessage("Marka Alanı Zorundludur");
-            scrollToTop()
-            setTimeout(() => {
-              seterrorStatu(0);
-            }, 10000);
-            break;
-          case focusArea == "Emlak Ofisi" &&
-            IsConnectFranchaise == 1 &&
-            !FrancheiseMarc:
-            seterrorStatu(18);
-            seterrorMessage("Bu Alan Zorunludur");
-            scrollToTop()
-            setTimeout(() => {
-              seterrorStatu(0);
-            }, 10000);
-            break;
+      case focusArea == "Emlak Ofisi" && !licence:
+        seterrorStatu(14);
+        seterrorMessage("Yetki Belgesi zorunludur");
+        scrollToTop();
+        setTimeout(() => {
+          seterrorStatu(0);
+        }, 10000);
+        break;
+      case focusArea == "Emlak Ofisi" && IsConnectFranchaise == null:
+        seterrorStatu(16);
+        seterrorMessage("Bu Alan Zorunludur");
+        scrollToTop();
+        setTimeout(() => {
+          seterrorStatu(0);
+        }, 10000);
+        break;
+      case focusArea == "Emlak Ofisi" && IsConnectFranchaise == 0 && !MarcaName:
+        seterrorStatu(17);
+        seterrorMessage("Marka Alanı Zorundludur");
+        scrollToTop();
+        setTimeout(() => {
+          seterrorStatu(0);
+        }, 10000);
+        break;
+      case focusArea == "Emlak Ofisi" &&
+        IsConnectFranchaise == 1 &&
+        !FrancheiseMarc:
+        seterrorStatu(18);
+        seterrorMessage("Bu Alan Zorunludur");
+        scrollToTop();
+        setTimeout(() => {
+          seterrorStatu(0);
+        }, 10000);
+        break;
       case !companyName:
         seterrorStatu(5);
         seterrorMessage("Ticaret Ünvanı Boş Bırakılamaz");
@@ -384,7 +374,7 @@ const [loadingBtn, setloadingBtn] = useState(false)
         break;
       case !TaxPlaceCity:
         seterrorStatu(11);
-        seterrorMessage('Vergi dairesi ili zorunludur');
+        seterrorMessage("Vergi dairesi ili zorunludur");
         scrollToTop();
         setTimeout(() => {
           seterrorStatu(0);
@@ -413,7 +403,7 @@ const [loadingBtn, setloadingBtn] = useState(false)
           seterrorStatu(0);
         }, 5000);
         break;
-  
+
       default:
         postData();
     }
@@ -421,9 +411,7 @@ const [loadingBtn, setloadingBtn] = useState(false)
 
   const fetchTaxOfficeCity = async () => {
     try {
-      const response = await axios.get(
-        apiUrl+"get-tax-offices"
-      );
+      const response = await axios.get(apiUrl + "get-tax-offices");
       return response.data;
     } catch (error) {
       console.error("Hata:", error);
@@ -453,9 +441,7 @@ const [loadingBtn, setloadingBtn] = useState(false)
   };
   const fetchTaxOffice = async (value) => {
     try {
-      const response = await axios.get(
-        `${apiUrl}get-tax-office/${value}`
-      );
+      const response = await axios.get(`${apiUrl}get-tax-office/${value}`);
       return response.data;
     } catch (error) {
       console.error("Hata:", error);
@@ -502,7 +488,6 @@ const [loadingBtn, setloadingBtn] = useState(false)
   const handlePhoneNumberChange = (value) => {
     const formattedPhoneNumber = formatPhoneNumber(value);
     setphoneNumber(formattedPhoneNumber);
-   
   };
 
   const GetDeal = (deal) => {
@@ -644,9 +629,7 @@ const [loadingBtn, setloadingBtn] = useState(false)
   // API'ye GET isteği atan fonksiyon
   const fetchFranchiseMarkalari = async () => {
     try {
-      const response = await axios.get(
-        apiUrl+"franchise-markalari"
-      );
+      const response = await axios.get(apiUrl + "franchise-markalari");
       setData(response.data.data); // 'data' alanına erişiyoruz
     } catch (error) {
       console.error("API isteği başarısız:", error);
@@ -668,71 +651,68 @@ const [loadingBtn, setloadingBtn] = useState(false)
   const [showUpperAlert, setShowUpperAlert] = useState(false);
   const [showSymbolAlert, setShowSymbolAlert] = useState(false);
   const [showNumberAlert, setShowNumberAlert] = useState(false);
-  const [colorForLength, setcolorForLength] = useState(false)
-  const [colorForNumberAlert, setcolorForNumberAlert] = useState(false)
-  const [colorForUpper, setcolorForUpper] = useState(false)
-  const [colorForSymbol, setcolorForSymbol] = useState(false)
-const handlePasswordChange = (text) => {
-  setpassword(text);
-  // Şifre uzunluğunu kontrol edin ve uyarıyı göstermek/gizlemek için durumu güncelleyin
+  const [colorForLength, setcolorForLength] = useState(false);
+  const [colorForNumberAlert, setcolorForNumberAlert] = useState(false);
+  const [colorForUpper, setcolorForUpper] = useState(false);
+  const [colorForSymbol, setcolorForSymbol] = useState(false);
+  const handlePasswordChange = (text) => {
+    setpassword(text);
+    // Şifre uzunluğunu kontrol edin ve uyarıyı göstermek/gizlemek için durumu güncelleyin
 
-  if (text.length+1 <= 8) {
-    setShowLengthAlert(true)
-    setcolorForLength(false)
-  } else {
+    if (text.length + 1 <= 8) {
+      setShowLengthAlert(true);
+      setcolorForLength(false);
+    } else {
+      setcolorForLength(true);
+    }
 
-    setcolorForLength(true)
-  }
-
-  //rakam kontrölü
-  const numberRegex = /[0-9]/;
-  if (!numberRegex.test(text)) {
-    setShowNumberAlert(true);
-    setcolorForNumberAlert(false)
-  } else {
-    
-    setcolorForNumberAlert(true)
-  }
-  //Büyük harf kontrolü
-  const upperCaseRegex = /[A-Z]/;
-  if (!upperCaseRegex.test(text)) {
-    setShowUpperAlert(true)
-    setcolorForUpper(false)
-  } else {
-    
-    setcolorForUpper(true)
-  }
-  // Sembole kontrolü
-  const symbolRegex = /[!@#$%^&*(),.?":{}|<>]/;
-  if (!symbolRegex.test(text)) {
-    setShowSymbolAlert(true)
-    setcolorForSymbol(false)
-  } else {
-   
-    setcolorForSymbol(true)
-  }
-};
-console.log(errorStatu)
+    //rakam kontrölü
+    const numberRegex = /[0-9]/;
+    if (!numberRegex.test(text)) {
+      setShowNumberAlert(true);
+      setcolorForNumberAlert(false);
+    } else {
+      setcolorForNumberAlert(true);
+    }
+    //Büyük harf kontrolü
+    const upperCaseRegex = /[A-Z]/;
+    if (!upperCaseRegex.test(text)) {
+      setShowUpperAlert(true);
+      setcolorForUpper(false);
+    } else {
+      setcolorForUpper(true);
+    }
+    // Sembole kontrolü
+    const symbolRegex = /[!@#$%^&*(),.?":{}|<>]/;
+    if (!symbolRegex.test(text)) {
+      setShowSymbolAlert(true);
+      setcolorForSymbol(false);
+    } else {
+      setcolorForSymbol(true);
+    }
+  };
+  console.log(errorStatu);
   return (
-      <AlertNotificationRoot>
-      <ScrollView behavior="padding" style={{flex:1}} ref={scrollViewRef}>
+    <AlertNotificationRoot>
+      <ScrollView behavior="padding" style={{ flex: 1 }} ref={scrollViewRef}>
         <View style={styles.container}>
-          <View style={{ padding: 15, gap: 20,paddingBottom:50 }}>
-         
-
+          <View style={{ padding: 15, gap: 20, paddingBottom: 50 }}>
             <View style={{ gap: 5 }}>
               <View style={{ paddingLeft: 5 }}>
                 <Text style={{ fontSize: 14, color: "black", fontWeight: 600 }}>
-                  E-Posta <Text style={{fontSize:10,color:'grey'}}>(Değiştirelemez)</Text>
+                  E-Posta{" "}
+                  <Text style={{ fontSize: 10, color: "grey" }}>
+                    (Değiştirelemez)
+                  </Text>
                 </Text>
               </View>
               <TextInput
-               editable={false}
+                editable={false}
                 style={[
                   styles.Input,
                   {
                     borderColor: errorStatu === 2 ? "red" : "#ebebeb",
-                     color:'#333'
+                    color: "#333",
                   },
                 ]}
                 value={eposta}
@@ -751,7 +731,10 @@ console.log(errorStatu)
             <View style={{ gap: 5 }}>
               <View style={{ paddingLeft: 5 }}>
                 <Text style={{ fontSize: 14, color: "black", fontWeight: 600 }}>
-                  Cep Telefonu <Text style={{fontSize:10,color:'grey'}}>(Profil güncelleme ksımında güncelleyebilirsiniz)</Text>
+                  Cep Telefonu{" "}
+                  <Text style={{ fontSize: 10, color: "grey" }}>
+                    (Profil güncelleme ksımında güncelleyebilirsiniz)
+                  </Text>
                 </Text>
               </View>
               <TextInput
@@ -761,10 +744,12 @@ console.log(errorStatu)
                   styles.Input,
                   {
                     borderColor: errorStatu == 4 ? "red" : "#ebebeb",
-                    color:'#333'
+                    color: "#333",
                   },
                 ]}
-                onChangeText={(value)=>{ handlePhoneNumberChange(value)}}
+                onChangeText={(value) => {
+                  handlePhoneNumberChange(value);
+                }}
                 placeholder="Cep Telefonu"
                 keyboardType="number-pad"
                 maxLength={15}
@@ -777,7 +762,6 @@ console.log(errorStatu)
                 ""
               )}
             </View>
-           
 
             <View style={{ gap: 5 }}>
               <Text style={{ fontSize: 14, color: "black", fontWeight: 600 }}>
@@ -798,7 +782,10 @@ console.log(errorStatu)
                   { label: "Banka", value: "Banka" },
                   { label: "Turizm", value: "Turizm Amaçlı Kiralama" },
                   { label: "Üretici", value: "Üretici" },
-                  { label: "Gayrimenkul Franchise", value: "Gayrimenkul Franchise" }
+                  {
+                    label: "Gayrimenkul Franchise",
+                    value: "Gayrimenkul Franchise",
+                  },
                 ]}
               />
               {errorStatu == 7 ? (
@@ -866,7 +853,7 @@ console.log(errorStatu)
                   )}
                 </View> */}
 
-                { focusArea=='Emlak Ofisi' && (
+                {focusArea == "Emlak Ofisi" && (
                   <View style={{ gap: 5 }}>
                     <Text
                       style={{ fontSize: 14, color: "black", fontWeight: 600 }}
@@ -897,7 +884,7 @@ console.log(errorStatu)
                   </View>
                 )}
 
-                {IsConnectFranchaise == 1  && (
+                {IsConnectFranchaise == 1 && (
                   <View style={{ gap: 5 }}>
                     <Text
                       style={{ fontSize: 14, color: "black", fontWeight: 600 }}
@@ -963,7 +950,10 @@ console.log(errorStatu)
             <View style={{ gap: 5 }}>
               <View style={{ paddingLeft: 5 }}>
                 <Text style={{ fontSize: 14, color: "black", fontWeight: 600 }}>
-                  Ticari Ünvan <Text style={{color:'#888888',fontSize:12}}>(Vergi Levhasında Yazan Firma Adı)</Text>
+                  Ticari Ünvan{" "}
+                  <Text style={{ color: "#888888", fontSize: 12 }}>
+                    (Vergi Levhasında Yazan Firma Adı)
+                  </Text>
                 </Text>
               </View>
               <TextInput
@@ -988,7 +978,10 @@ console.log(errorStatu)
             <View style={{ gap: 5 }}>
               <View style={{ paddingLeft: 5 }}>
                 <Text style={{ fontSize: 14, color: "black", fontWeight: 600 }}>
-                  Mağaza Adı <Text style={{fontSize:12,color:'#888888'}}>(Ofisinizin tabela adı ile aynı olmalıdır)</Text>
+                  Mağaza Adı{" "}
+                  <Text style={{ fontSize: 12, color: "#888888" }}>
+                    (Ofisinizin tabela adı ile aynı olmalıdır)
+                  </Text>
                 </Text>
               </View>
               <TextInput
@@ -1152,7 +1145,6 @@ console.log(errorStatu)
                   checkedColor="#E54242"
                   title={<Text style={{ fontSize: 12 }}>Şahıs Şirketi</Text>}
                   containerStyle={{
-                    
                     padding: 0,
                     backgroundColor: "transparent",
                     borderWidth: 0,
@@ -1170,9 +1162,7 @@ console.log(errorStatu)
                   checkedColor="#E54242"
                   title={
                     <View style={{}}>
-                      <Text style={{ fontSize: 12 }}>
-                        LTD.ŞTİ veya A.Ş{" "}
-                      </Text>
+                      <Text style={{ fontSize: 12 }}>LTD.ŞTİ veya A.Ş </Text>
                     </View>
                   }
                   containerStyle={{
@@ -1182,7 +1172,7 @@ console.log(errorStatu)
                     borderTopWidth: 1,
                   }}
                 />
-                   <CheckBox
+                <CheckBox
                   checked={selectedIndexRadio === 3}
                   onPress={() => {
                     setIndexRadio(3);
@@ -1193,9 +1183,7 @@ console.log(errorStatu)
                   checkedColor="#E54242"
                   title={
                     <View style={{}}>
-                      <Text style={{ fontSize: 12 }}>
-                        Diğer{" "}
-                      </Text>
+                      <Text style={{ fontSize: 12 }}>Diğer </Text>
                     </View>
                   }
                   containerStyle={{
@@ -1281,7 +1269,6 @@ console.log(errorStatu)
             <View
               style={{
                 gap: 5,
-                
               }}
             >
               <View style={{ paddingLeft: 5 }}>
@@ -1439,20 +1426,21 @@ console.log(errorStatu)
                 </Text>
               </TouchableOpacity>
             </View>
-                
+
             {/* Contract Finish */}
 
             {/* Register Button */}
             <View style={{ alignItems: "center" }}>
               <TouchableOpacity style={styles.btnRegister} onPress={register}>
-                {
-                  loadingBtn? 
-                  <View style={{alignItems:'center',justifyContent:'center'}}>
-                    <ActivityIndicator color="white" size={'small'}/>
-                  </View>:
-                   <Text style={styles.btnRegisterText}>Başvur</Text>
-                }
-               
+                {loadingBtn ? (
+                  <View
+                    style={{ alignItems: "center", justifyContent: "center" }}
+                  >
+                    <ActivityIndicator color="white" size={"small"} />
+                  </View>
+                ) : (
+                  <Text style={styles.btnRegisterText}>Başvur</Text>
+                )}
               </TouchableOpacity>
             </View>
             {/* Register Button */}
@@ -1606,9 +1594,7 @@ console.log(errorStatu)
           </SafeAreaView>
         </Modal>
       </ScrollView>
-      </AlertNotificationRoot>
-    
-   
+    </AlertNotificationRoot>
   );
 }
 const pickerSelectStyles = StyleSheet.create({

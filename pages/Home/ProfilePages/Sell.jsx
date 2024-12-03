@@ -46,14 +46,11 @@ export default function Sell() {
       setLoading(true);
       try {
         if (user?.access_token) {
-          const response = await axios.get(
-            apiUrl+"institutional/get_solds",
-            {
-              headers: {
-                Authorization: `Bearer ${user.access_token}`,
-              },
-            }
-          );
+          const response = await axios.get(apiUrl + "institutional/get_solds", {
+            headers: {
+              Authorization: `Bearer ${user.access_token}`,
+            },
+          });
           setProducts(response.data.solds);
         }
       } catch (error) {

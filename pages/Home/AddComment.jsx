@@ -54,7 +54,7 @@ export default function AddComment() {
   const [rating, setRating] = useState(0);
   const [rate, setrate] = useState(0);
   const [checkedForm, setCheckedForm] = React.useState(false);
-  
+
   const [user, setUser] = useState({});
   const [comment, setcomment] = useState("");
   const [loadingShare, setloadingShare] = useState(false);
@@ -115,7 +115,11 @@ export default function AddComment() {
       const uri = result.assets[0].uri;
       const newImages = [...image];
 
-      if (selectedIndexx !== null && selectedIndexx >= 0 && selectedIndexx < 3) {
+      if (
+        selectedIndexx !== null &&
+        selectedIndexx >= 0 &&
+        selectedIndexx < 3
+      ) {
         newImages[selectedIndexx] = uri;
       } else {
         if (newImages.length >= 3) {
@@ -200,7 +204,6 @@ export default function AddComment() {
     }
   };
 
-
   useEffect(() => {
     fetchDataDeal();
   }, []);
@@ -244,8 +247,9 @@ export default function AddComment() {
                   source={{
                     uri:
                       data && data.housing_type_data
-                        ? `${apiUrl}/housing_images/${JSON.parse(data.housing_type_data)["images"][0]
-                        }`
+                        ? `${apiUrl}/housing_images/${
+                            JSON.parse(data.housing_type_data)["images"][0]
+                          }`
                         : null,
                   }}
                   style={{ width: "100%", height: "100%" }}

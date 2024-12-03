@@ -77,14 +77,11 @@ export default function CreateUser() {
   const fetchData = async () => {
     try {
       if (user?.access_token) {
-        const response = await axios.get(
-          `${apiUrl}institutional/roles`,
-          {
-            headers: {
-              Authorization: `Bearer ${user.access_token}`,
-            },
-          }
-        );
+        const response = await axios.get(`${apiUrl}institutional/roles`, {
+          headers: {
+            Authorization: `Bearer ${user.access_token}`,
+          },
+        });
         setroles(response.data.roles); // Dönüştürülmüş veriyi state'e atama
       }
     } catch (error) {

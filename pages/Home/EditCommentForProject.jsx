@@ -78,7 +78,7 @@ export default function EditCommentForProject() {
             return fullUrl;
           });
           setImagesComment(updatedImages); // Resimleri state'e güncelleyin
-          console.debug("999999999999999999999 ", imagesComment)
+          console.debug("999999999999999999999 ", imagesComment);
         } else {
           console.error("Parsed images is not an array.");
           setImagesComment([]);
@@ -95,7 +95,6 @@ export default function EditCommentForProject() {
   useEffect(() => {
     fetchDataDeal();
   }, []);
-
 
   const fetchDataDeal = async () => {
     const url = `${apiUrl}sayfa/emlaksepette-yorum-yazma-kurallari`;
@@ -160,7 +159,11 @@ export default function EditCommentForProject() {
       const uri = result.assets[0].uri;
       const newImages = [...imagesComment];
 
-      if (selectedIndexx !== null && selectedIndexx >= 0 && selectedIndexx < 3) {
+      if (
+        selectedIndexx !== null &&
+        selectedIndexx >= 0 &&
+        selectedIndexx < 3
+      ) {
         newImages[selectedIndexx] = uri;
       } else {
         if (newImages.length >= 3) {

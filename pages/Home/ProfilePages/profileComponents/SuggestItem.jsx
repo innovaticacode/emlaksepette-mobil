@@ -16,7 +16,7 @@ import { frontEndUriBase } from "../../../../components/methods/apiRequest";
 
 export default function SuggestItem({ item }) {
   const [modalVisible, setModalVisible] = useState(false);
- 
+
   const stripHtmlTags = (str) => {
     if (str) {
       return str.replace(/<\/?[^>]+(>|$)/g, "");

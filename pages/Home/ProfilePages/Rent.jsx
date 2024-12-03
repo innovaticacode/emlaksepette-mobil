@@ -67,19 +67,16 @@ export default function Rent() {
       if (user?.access_token) {
         const skipValue = page * 10; // Calculate skip value
         console.log("Fetching items with skip:", skipValue, "and take:", 10);
-        const response = await axios.get(
-          apiUrl+"get_my_reservations",
-          {
-            headers: {
-              Authorization: `Bearer ${user?.access_token}`,
-            },
-            params: {
-              type: tabValue,
-              skip: skipValue,
-              take: 10,
-            },
-          }
-        );
+        const response = await axios.get(apiUrl + "get_my_reservations", {
+          headers: {
+            Authorization: `Bearer ${user?.access_token}`,
+          },
+          params: {
+            type: tabValue,
+            skip: skipValue,
+            take: 10,
+          },
+        });
         const newItems = response.data.reservations || [];
 
         setRentItems((prevItems) => {
@@ -148,7 +145,7 @@ export default function Rent() {
                       const selectedValue = item.value; // Get the value of the selected tab
                       setTabIndex(index);
                       setTabs(item.value);
-                      getRentCategoriesAnItem(item.value,0); // Fetch data immediately on press
+                      getRentCategoriesAnItem(item.value, 0); // Fetch data immediately on press
                     }}
                   >
                     <Text
@@ -209,7 +206,16 @@ export default function Rent() {
                 </TouchableOpacity>
               ))
             ) : (
-              <Text style={{textAlign:'center',fontSize:15,color:'#333',fontWeight:'600'}}>Rezervasyon bulunamadı.</Text>
+              <Text
+                style={{
+                  textAlign: "center",
+                  fontSize: 15,
+                  color: "#333",
+                  fontWeight: "600",
+                }}
+              >
+                Rezervasyon bulunamadı.
+              </Text>
             )}
           </View>
         </ScrollView>

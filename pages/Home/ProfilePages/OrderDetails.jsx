@@ -113,10 +113,9 @@ export default function OrderDetails({ item }) {
 
   const createdAt = new Date(Detail?.created_at).toLocaleDateString("tr-TR", {
     year: "numeric",
-    month: "long", 
+    month: "long",
     day: "numeric",
   });
-  
 
   const fetchDataDeal = async () => {
     const url = `${apiUrl}sayfa/mesafeli-guvenli-kapora-sozlesmesi`;
@@ -559,7 +558,7 @@ export default function OrderDetails({ item }) {
                         { textAlign: "center", color: "#606060", fontSize: 12 },
                       ]}
                     >
-                     {formattedDate}
+                      {formattedDate}
                     </Text>
                   </View>
                 </View>
@@ -584,7 +583,7 @@ export default function OrderDetails({ item }) {
                       Sipariş İptal Edildi
                     </Text>
                     <Text style={[style.boldText, { textAlign: "center" }]}>
-                    Üzgünüz, siparişiniz iptal edilmiştir.
+                      Üzgünüz, siparişiniz iptal edilmiştir.
                     </Text>
                     <Text
                       style={[

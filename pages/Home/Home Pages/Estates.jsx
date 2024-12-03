@@ -21,8 +21,11 @@ const Estates = ({ index }) => {
   const [loading, setLoading] = useState(false);
   const apiData = [{ key: "step1_slug", value: "konut" }];
 
-  const { data, hooksLoading, error, loadMore, setSkip } = UsePaginatedData("real-estates", 10, apiData);// take 10
-
+  const { data, hooksLoading, error, loadMore, setSkip } = UsePaginatedData(
+    "real-estates",
+    10,
+    apiData
+  ); // take 10
 
   useFocusEffect(
     useCallback(() => {
@@ -44,7 +47,11 @@ const Estates = ({ index }) => {
     if (!hooksLoading) return null;
     return (
       <View style={{ height: 100 }}>
-        <ActivityIndicator style={{ marginVertical: 16 }} size="small" color="#333" />
+        <ActivityIndicator
+          style={{ marginVertical: 16 }}
+          size="small"
+          color="#333"
+        />
       </View>
     );
   };
@@ -53,10 +60,7 @@ const Estates = ({ index }) => {
     return (
       <>
         <View style={{ paddingHorizontal: 0 }}>
-          <Image
-            source={Housing}
-            style={{ width: "100%", height: 120 }}
-          />
+          <Image source={Housing} style={{ width: "100%", height: 120 }} />
         </View>
 
         <View style={styles.header}>
@@ -94,41 +98,45 @@ const Estates = ({ index }) => {
           </TouchableOpacity>
         </View>
       </>
-    )
+    );
   };
 
-  const renderItem = useMemo(() => ({ item }) => {
-    const housingTypeData = JSON.parse(item.housing_type_data);
+  const renderItem = useMemo(
+    () =>
+      ({ item }) => {
+        const housingTypeData = JSON.parse(item.housing_type_data);
 
-    const getColumnName = (columnNameKey) => {
-      return housingTypeData[columnNameKey] || "";
-    };
+        const getColumnName = (columnNameKey) => {
+          return housingTypeData[columnNameKey] || "";
+        };
 
-    return (
-      <RealtorPost
-        sold={item?.sold}
-        HouseId={item?.id}
-        price={`${housingTypeData["price"]} `}
-        housing={item}
-        title={item?.housing_title}
-        loading={loading}
-        location={`${item?.city_title} / ${item?.county_title}`}
-        image={`${frontEndUriBase}housing_images/${housingTypeData?.image}`}
-        openSharing={housingTypeData["open_sharing1"]}
-        column1_additional={item?.column1_additional}
-        column1_name={getColumnName(item?.column1_name)}
-        column2_name={getColumnName(item?.column2_name)}
-        column2_additional={item?.column2_additional}
-        column3_name={getColumnName(item?.column3_name)}
-        column3_additional={item?.column3_additional}
-        column4_name={getColumnName(item?.column4_name)}
-        column4_additional={item?.column4_additional}
-        bookmarkStatus={true}
-        dailyRent={false}
-        isFavorite={item?.is_favorite}
-      />
-    );
-  }, [hooksLoading, loadMore]);
+        return (
+          <RealtorPost
+            sold={item?.sold}
+            HouseId={item?.id}
+            price={`${housingTypeData["price"]} `}
+            housing={item}
+            title={item?.housing_title}
+            loading={loading}
+            location={`${item?.city_title} / ${item?.county_title}`}
+            image={`${frontEndUriBase}housing_images/${housingTypeData?.image}`}
+            openSharing={housingTypeData["open_sharing1"]}
+            column1_additional={item?.column1_additional}
+            column1_name={getColumnName(item?.column1_name)}
+            column2_name={getColumnName(item?.column2_name)}
+            column2_additional={item?.column2_additional}
+            column3_name={getColumnName(item?.column3_name)}
+            column3_additional={item?.column3_additional}
+            column4_name={getColumnName(item?.column4_name)}
+            column4_additional={item?.column4_additional}
+            bookmarkStatus={true}
+            dailyRent={false}
+            isFavorite={item?.is_favorite}
+          />
+        );
+      },
+    [hooksLoading, loadMore]
+  );
 
   return (
     <>
@@ -180,7 +188,6 @@ const Estates = ({ index }) => {
         </View>
       )}
     </>
-
   );
 };
 
@@ -225,7 +232,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     textAlign: "center",
-  }
+  },
 });
 
 export default Estates;

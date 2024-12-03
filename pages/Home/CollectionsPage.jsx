@@ -151,14 +151,11 @@ export default function CollectionsPage() {
   const GetUserInfo = async () => {
     try {
       if (user?.access_token && user) {
-        const userInfo = await axios.get(
-          `${apiUrl}users/` + user?.id,
-          {
-            headers: {
-              Authorization: `Bearer ${user.access_token}`,
-            },
-          }
-        );
+        const userInfo = await axios.get(`${apiUrl}users/` + user?.id, {
+          headers: {
+            Authorization: `Bearer ${user.access_token}`,
+          },
+        });
         const userData = userInfo?.data?.user;
         setnamFromGetUser(userData);
       }
@@ -175,14 +172,11 @@ export default function CollectionsPage() {
       setloading(true);
 
       if (user?.access_token) {
-        const response = await axios.get(
-          `${apiUrl}client/collections`,
-          {
-            headers: {
-              Authorization: `Bearer ${user?.access_token}`,
-            },
-          }
-        );
+        const response = await axios.get(`${apiUrl}client/collections`, {
+          headers: {
+            Authorization: `Bearer ${user?.access_token}`,
+          },
+        });
         setProjectItems(response?.data?.items);
         setcollections(response?.data?.collections);
         GetUserInfo();
@@ -206,14 +200,11 @@ export default function CollectionsPage() {
     try {
       let formData = new FormData();
       formData.append();
-      const response = await axios.delete(
-        `${apiUrl}collection/${id}/delete`,
-        {
-          headers: {
-            Authorization: `Bearer ${user?.access_token}`,
-          },
-        }
-      );
+      const response = await axios.delete(`${apiUrl}collection/${id}/delete`, {
+        headers: {
+          Authorization: `Bearer ${user?.access_token}`,
+        },
+      });
 
       fetchData();
 

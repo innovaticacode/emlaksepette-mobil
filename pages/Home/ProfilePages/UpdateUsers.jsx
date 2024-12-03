@@ -122,14 +122,11 @@ export default function UpdateUsers() {
   const fetchData = async () => {
     try {
       if (user?.access_token) {
-        const response = await axios.get(
-          `${apiUrl}institutional/roles`,
-          {
-            headers: {
-              Authorization: `Bearer ${user.access_token}`,
-            },
-          }
-        );
+        const response = await axios.get(`${apiUrl}institutional/roles`, {
+          headers: {
+            Authorization: `Bearer ${user.access_token}`,
+          },
+        });
 
         // Dönüştürülmüş veriyi state'e atama
         setroles(response.data.roles);
@@ -236,15 +233,12 @@ export default function UpdateUsers() {
     setloading(true);
     try {
       if (user?.access_token) {
-        const response = await axios.get(
-          `${apiUrl}users/${UserID}`,
-          {
-            headers: {
-              Authorization: `Bearer ${user.access_token}`,
-              "Content-Type": "multipart/form-data",
-            },
-          }
-        );
+        const response = await axios.get(`${apiUrl}users/${UserID}`, {
+          headers: {
+            Authorization: `Bearer ${user.access_token}`,
+            "Content-Type": "multipart/form-data",
+          },
+        });
 
         // Dönüştürülmüş veriyi state'e atama
         setuserDetail(response.data.user);

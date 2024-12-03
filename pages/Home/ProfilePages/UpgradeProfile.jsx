@@ -37,8 +37,15 @@ import {
 } from "react-native-alert-notification";
 import { Forms } from "../../../components/ProfileUpgradeComponents/formshelper";
 import ImageView from "react-native-image-viewing";
-import { apiRequestPostWithBearer, apiUrl, frontEndUriBase } from "../../../components/methods/apiRequest";
-import { formatPhoneNumber, formatPhoneNumberNew } from "../../../utils/FormatPhoneNumber";
+import {
+  apiRequestPostWithBearer,
+  apiUrl,
+  frontEndUriBase,
+} from "../../../components/methods/apiRequest";
+import {
+  formatPhoneNumber,
+  formatPhoneNumberNew,
+} from "../../../utils/FormatPhoneNumber";
 import { areaData } from "../../helper";
 
 export default function UpgradeProfile() {
@@ -162,8 +169,6 @@ export default function UpgradeProfile() {
     }
   };
 
-
-
   const uniqueCities = TaxOfficesCities.map((city) => ({
     label: city.il,
     value: city.plaka,
@@ -175,9 +180,7 @@ export default function UpgradeProfile() {
     );
   const fetchTaxOffice = async (value) => {
     try {
-      const response = await axios.get(
-        `${apiUrl}get-tax-office/${value}`
-      );
+      const response = await axios.get(`${apiUrl}get-tax-office/${value}`);
       setTaxOffice(response.data);
     } catch (error) {
       console.error("Hata:", error);
@@ -191,9 +194,7 @@ export default function UpgradeProfile() {
 
   const fetchCounties = async (value) => {
     try {
-      const response = await axios.get(
-        `${apiUrl}counties/${value}`
-      );
+      const response = await axios.get(`${apiUrl}counties/${value}`);
       setCounties(response.data.data);
       setSelectedCounty(null); // Seçili ilçe sıfırla
       setSelectedNeighborhood(null); // Seçili mahalleyi sıfırla
@@ -204,9 +205,7 @@ export default function UpgradeProfile() {
 
   const fetchNeighborhoods = async (value) => {
     try {
-      const response = await axios.get(
-        `${apiUrl}neighborhoods/${value}`
-      );
+      const response = await axios.get(`${apiUrl}neighborhoods/${value}`);
       setNeighborhoods(response.data.data); // Gelen mahalle verisini set et
 
       setSelectedNeighborhood(null); // Seçili mahalleyi sıfırla
@@ -239,8 +238,6 @@ export default function UpgradeProfile() {
     }, 800);
   };
 
- 
-
   const onColorChangeComplete = (color) => {
     // Renk değişimi tamamlandığında burada istediğiniz işlemleri yapabilirsiniz
   };
@@ -267,45 +264,40 @@ export default function UpgradeProfile() {
     taxOfficeCity: "",
     taxOffice: "",
     taxNumber: "",
-    email:"",
-    idNumber:""
-
+    email: "",
+    idNumber: "",
   };
   useEffect(() => {
     getValueFor("user", setUser);
   }, []);
   const [formData, setFormData] = useState(initialFormData);
- 
-    const GetUserInfo = async () => {
-      setLoading(true);
-      try {
-        if (user.access_token) {
-          const userInfo = await axios.get(
-            `https://private.emlaksepette.com/api/users/${user.id}`,
-            {
-              headers: {
-                Authorization: `Bearer ${user.access_token}`,
-              },
-            }
-          );
-   
-          setnamFromGetUser(userInfo?.data?.user);
-        }
-      } catch (error) {
-        console.error("Kullanıcı verileri güncellenirken hata oluştu:", error);
-      } finally {
-        setLoading(false);
+
+  const GetUserInfo = async () => {
+    setLoading(true);
+    try {
+      if (user.access_token) {
+        const userInfo = await axios.get(
+          `http://192.168.18.31:8000/api/users/${user.id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${user.access_token}`,
+            },
+          }
+        );
+
+        setnamFromGetUser(userInfo?.data?.user);
       }
-    };
+    } catch (error) {
+      console.error("Kullanıcı verileri güncellenirken hata oluştu:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-  
- 
-useEffect(() => {
-
+  useEffect(() => {
     // Eğer user bilgileri geldiyse, GetUserInfo fonksiyonunu çalıştır
     GetUserInfo();
-
-}, [user])
+  }, [user]);
 
   useEffect(() => {
     if (Object.keys(namFromGetUser).length > 0) {
@@ -326,8 +318,8 @@ useEffect(() => {
         taxOfficeCity: namFromGetUser.taxOfficeCity || "",
         taxOffice: namFromGetUser.taxOffice || "",
         taxNumber: namFromGetUser.taxNumber || "",
-        email:namFromGetUser?.email || "",
-        idNumber:namFromGetUser.idNumber || ""
+        email: namFromGetUser?.email || "",
+        idNumber: namFromGetUser.idNumber || "",
       });
       setCurrentColor(namFromGetUser.banner_hex_code);
       setareaCode(namFromGetUser.area_code);
@@ -336,7 +328,7 @@ useEffect(() => {
         onChangeCounty(namFromGetUser.county_id);
         onChangeNeighborhood(namFromGetUser.neighborhood_id);
         onchangeTaxOffice(namFromGetUser.taxOfficeCity);
-        setRegion(initialRegion)
+        setRegion(initialRegion);
       }, 500);
     }
   }, [namFromGetUser]);
@@ -370,8 +362,6 @@ useEffect(() => {
     return finalIban.substring(0, 32);
   };
 
- 
-
   const handleInputChange = (key, value) => {
     setFormData({ ...formData, [key]: value });
     if (key == "city_id") {
@@ -387,7 +377,6 @@ useEffect(() => {
     label: item.daire,
     value: item.id.toString(), // id değerini string olarak çevirme
   }));
- 
 
   const getItemsForKey = (key) => {
     switch (key) {
@@ -405,7 +394,6 @@ useEffect(() => {
         return [];
     }
   };
- 
 
   const handleMapPress = (event) => {
     const { latitude, longitude } = event.nativeEvent.coordinate;
@@ -424,18 +412,16 @@ useEffect(() => {
   // }
 
   const postData = async () => {
-   
-  
-    var data = new FormData()
+    var data = new FormData();
     // Forms'u döngü ile dolaşıyoruz
     Forms.forEach((item) => {
-       if (Array.isArray(item.tab) && item.tab.includes(tab)) {
-        data.append(item.key,formData[item.key])
-       }
+      if (Array.isArray(item.tab) && item.tab.includes(tab)) {
+        data.append(item.key, formData[item.key]);
+      }
     });
-    
+
     const jsonData = JSON.stringify(data);
-    
+
     try {
       const response = await axios.put(
         `${apiUrl}client/profile/update`, // API URL'nizi belirtin
@@ -447,30 +433,24 @@ useEffect(() => {
           },
         }
       );
-      console.log('Response:', response.data);
-      
-        GetUserInfo()
-    
-  
-    }catch{
-      alert('hata')
-    }finally{
-     
+      console.log("Response:", response.data);
+
+      GetUserInfo();
+    } catch {
+      alert("hata");
+    } finally {
     }
-  
 
     // data.append("name", formData.name);
-    
 
-  
-        // Dialog.show({
-        //   type: ALERT_TYPE.SUCCESS,
-        //   title: "Başarılı",
-        //   textBody: "Profiliniz başarıyla güncellendi.",
-        //   button: "Tamam",
-        // });
-  
-        // GetUserInfo();
+    // Dialog.show({
+    //   type: ALERT_TYPE.SUCCESS,
+    //   title: "Başarılı",
+    //   textBody: "Profiliniz başarıyla güncellendi.",
+    //   button: "Tamam",
+    // });
+
+    // GetUserInfo();
     // try {
     //   let fullNumber = `${areaCode}${formData.phone}`;
     //   let FormData = new FormData();
@@ -559,11 +539,8 @@ useEffect(() => {
     //   });
     // }
   };
-const checkInput=()=>{
-
-}
+  const checkInput = () => {};
   return (
-    
     <KeyboardAvoidingView
       style={{ flex: 1 }}
       behavior={Platform.OS === "ios" ? "padding" : "height"} // iOS ve Android için farklı davranışlar
@@ -625,10 +602,11 @@ const checkInput=()=>{
                     {user.access_token ? (
                       <Image
                         source={
-                        
                           image
                             ? { uri: image.uri }
-                            : { uri: `${frontEndUriBase}storage/profile_images/${namFromGetUser.profile_image}` }
+                            : {
+                                uri: `${frontEndUriBase}storage/profile_images/${namFromGetUser.profile_image}`,
+                              }
                         }
                         style={{ width: "100%", height: "100%" }}
                         borderRadius={50}
@@ -639,7 +617,7 @@ const checkInput=()=>{
                   </View>
                 </View>
 
-                {(tab == 0 || tab==4) && (
+                {(tab == 0 || tab == 4) && (
                   <TouchableOpacity
                     onPress={() => {
                       setchoose(true);
@@ -773,7 +751,6 @@ const checkInput=()=>{
                               style={{ width: item.showArea ? "55%" : "100%" }}
                             >
                               <TextInput
-                             
                                 editable={item.disabled ? false : true}
                                 maxLength={item.maxlength ? item.maxlength : 90}
                                 placeholder={
@@ -788,7 +765,7 @@ const checkInput=()=>{
                                   item.key === "iban" ||
                                   item.key === "phone" ||
                                   item.key === "taxNumber" ||
-                                  item.key ==="idNumber"
+                                  item.key === "idNumber"
                                     ? "number-pad"
                                     : "default"
                                 }

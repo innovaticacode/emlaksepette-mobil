@@ -67,13 +67,10 @@ export default function SearchPage({ navigation }) {
       setLoading(true);
 
       try {
-        const { data } = await axios.get(
-          apiUrl+"get-search-list",
-          {
-            params: { searchTerm: term },
-            headers: { "Content-Type": "application/json" },
-          }
-        );
+        const { data } = await axios.get(apiUrl + "get-search-list", {
+          params: { searchTerm: term },
+          headers: { "Content-Type": "application/json" },
+        });
         setResults(data);
 
         if (term && !searchHistory.includes(term)) {
@@ -111,7 +108,7 @@ export default function SearchPage({ navigation }) {
     if (!items.length) return null;
 
     const photoBaseUrl = {
-      "Emlak İlanları": frontEndUriBase+"housing_images/",
+      "Emlak İlanları": frontEndUriBase + "housing_images/",
       "Proje İlanları": frontEndUriBase,
       Üyeler: `${frontEndUriBase}storage/profile_images`,
     }[type];

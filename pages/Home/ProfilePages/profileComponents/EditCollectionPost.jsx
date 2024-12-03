@@ -14,7 +14,10 @@ import Icon2 from "react-native-vector-icons/Feather";
 import { useNavigation } from "@react-navigation/native";
 import axios from "axios";
 import { getValueFor } from "../../../../components/methods/user";
-import { apiUrl, frontEndUriBase } from "../../../../components/methods/apiRequest";
+import {
+  apiUrl,
+  frontEndUriBase,
+} from "../../../../components/methods/apiRequest";
 
 export default function EditCollectionPost({ item, collection, onRemove }) {
   const parseHousingData = (data) => JSON.parse(data);

@@ -1,16 +1,10 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import {
-  View,
-  Image,
-  Text,
-  FlatList,
-  StyleSheet,
-} from "react-native";
+import { View, Image, Text, FlatList, StyleSheet } from "react-native";
 import { apiUrl, frontEndUriBase } from "../../components/methods/apiRequest";
 import { useNavigation } from "@react-navigation/native";
-import Ionicons from '@expo/vector-icons/Ionicons';
-import MaterialIcons from '@expo/vector-icons/MaterialIcons';
+import Ionicons from "@expo/vector-icons/Ionicons";
+import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { WhiteOrRedButtons } from "../../components";
 
 const AllFranchiseBrands = () => {
@@ -30,8 +24,6 @@ const AllFranchiseBrands = () => {
     fetchBrands();
   }, []);
 
-
-
   return (
     <View style={styles.container}>
       <FlatList
@@ -43,8 +35,9 @@ const AllFranchiseBrands = () => {
           <>
             <View style={styles.area}>
               <View style={styles.body}>
-                <View style={{ alignItems: 'center' }}>
-                  <Image source={{ uri: `${frontEndUriBase}/logos/${item.logo}` }}
+                <View style={{ alignItems: "center" }}>
+                  <Image
+                    source={{ uri: `${frontEndUriBase}/logos/${item.logo}` }}
                     alt="brands"
                     resizeMode="contain"
                     style={styles.image}
@@ -55,15 +48,19 @@ const AllFranchiseBrands = () => {
                   <Text style={styles.title}>{item.title}</Text>
                   <View style={styles.infoArea}>
                     <Ionicons name="person" size={12} color="#000" />
-                    <Text style={styles.info}>{`${item?.consultants_count} Danışman`}</Text>
+                    <Text
+                      style={styles.info}
+                    >{`${item?.consultants_count} Danışman`}</Text>
                   </View>
                   <View style={styles.infoArea}>
                     <MaterialIcons name="home" size={12} color="#000" />
-                    <Text style={styles.info}>{`${item?.offices_count} Ofis`}</Text>
+                    <Text
+                      style={styles.info}
+                    >{`${item?.offices_count} Ofis`}</Text>
                   </View>
                   <WhiteOrRedButtons
-                    text={'Hemen İncele'}
-                    bgColor={'#EA2B2E'}
+                    text={"Hemen İncele"}
+                    bgColor={"#EA2B2E"}
                     onPress={() => {
                       navigation.navigate("Profile", {
                         id: item?.user_id,
@@ -71,7 +68,6 @@ const AllFranchiseBrands = () => {
                     }}
                   />
                 </View>
-
               </View>
             </View>
           </>
@@ -126,14 +122,14 @@ const styles = StyleSheet.create({
     color: "#0C0C0C",
   },
   info: {
-    color: '#0C0C0C',
+    color: "#0C0C0C",
     fontSize: 10,
-    fontWeight: '400',
-    lineHeight: 12
+    fontWeight: "400",
+    lineHeight: 12,
   },
   infoArea: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6
-  }
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 6,
+  },
 });

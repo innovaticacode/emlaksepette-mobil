@@ -15,16 +15,13 @@ import * as IntentLauncher from "expo-intent-launcher";
 export default function EftPay({
   onPress,
   selectedDocumentName,
-  pdfUri,
   url,
-  checked,
-  checked2,
-  pickDocument,
   onHandlePayment,
+  selectedBank,
+  setSelectedBank
 }) {
   const navigation = useNavigation();
   const [selectedIban, setselectedIban] = useState(false);
-  const [selectedBank, setselectedBank] = useState(0);
   const [showCopyAlert, setshowCopyAlert] = useState(false);
   const [showCopyAlert2, setshowCopyAlert2] = useState(false);
   const [showPaymentAccountName, setshowPaymentAccountName] = useState(false);
@@ -33,8 +30,6 @@ export default function EftPay({
     setshowPaymentAccountName(true);
     Clipboard.setStringAsync(Iban);
   };
-
-  console.log(onPress);
 
   const openPdf = async () => {
     if (url) {
@@ -68,13 +63,13 @@ export default function EftPay({
           style={{
             width: 300,
             height: 150,
-            borderWidth: selectedBank == 1 ? 1 : 0,
+            borderWidth: selectedBank == 2 ? 1 : 0,
             padding: 10,
             borderColor: "red",
           }}
           onPress={() => {
             IbanControl("TR45 0006 2000 7030 0006 2959 64");
-            setselectedBank(1);
+            setSelectedBank(2);
             setshowCopyAlert(true);
             setTimeout(() => {
               setshowCopyAlert(false);
@@ -102,12 +97,12 @@ export default function EftPay({
             width: 300,
             height: 150,
             padding: 10,
-            borderWidth: selectedBank == 2 ? 1 : 0,
+            borderWidth: selectedBank == 5 ? 1 : 0,
             borderColor: "red",
           }}
           onPress={() => {
             IbanControl("TR16 0001 0020 9997 7967 8350 01");
-            setselectedBank(2);
+            setSelectedBank(5);
             setshowCopyAlert2(true);
             setTimeout(() => {
               setshowCopyAlert2(false);
@@ -232,7 +227,6 @@ export default function EftPay({
             borderRadius: 5,
           }}
           onPress={onHandlePayment}
-          disabled={!checked || !checked2} // Checkbox'ların kontrolü
         >
           <Text style={{ color: "white" }}>Ödemeyi Tamamla</Text>
         </TouchableOpacity>
