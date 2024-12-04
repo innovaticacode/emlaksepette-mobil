@@ -17,11 +17,7 @@ import {
   GestureHandlerRootView,
 } from "react-native-gesture-handler";
 import TrashIcon from "react-native-vector-icons/EvilIcons";
-import {
-  useRoute,
-  useNavigation,
-  useIsFocused,
-} from "@react-navigation/native";
+import { useNavigation, useIsFocused } from "@react-navigation/native";
 
 import Modal from "react-native-modal";
 import { getValueFor } from "../../components/methods/user";
@@ -112,7 +108,6 @@ export default function Basket() {
         });
         setCart(response?.data?.cart?.item);
         settype(response?.data?.cart);
-        console.log("clg--->", type.type);
         setsaleType(response?.data?.saleType);
         setofferControl(response?.data);
         setpayDec(response?.data?.cart?.item?.pay_decs);
@@ -300,10 +295,6 @@ export default function Basket() {
     }
   };
 
-  const nav = useNavigation();
-  const [index, setindex] = useState(0);
-  const [tab, settab] = useState(0);
-
   const [paymentMethod, setPaymentMethod] = useState("");
 
   const renderRightActions = () => (
@@ -313,40 +304,17 @@ export default function Basket() {
     </TouchableOpacity>
   );
 
+  useEffect(() => {
+    console.log("------>", basketItem);
+  }, [basketItem]);
+
   return (
     <View style={{ flex: 1 }}>
       {loading ? (
         <ActivityIndicator color="#333" size="large" />
       ) : (
         <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
-          <View
-            style={{
-              ...Platform.select({
-                ios: {},
-                android: {
-                  paddingTop: 25,
-                },
-              }),
-            }}
-          >
-            {/* <Header onPress={toggleDrawer} index={setindex} tab={settab} /> */}
-          </View>
-
-          <Modal
-            isVisible={isDrawerOpen}
-            onBackdropPress={() => setIsDrawerOpen(false)}
-            animationIn="bounceInLeft"
-            animationOut="bounceOutLeft"
-            swipeDirection={["left"]}
-            onSwipeComplete={() => setIsDrawerOpen(false)}
-            style={styles.modal}
-          >
-            {/* <View>
-              <DrawerMenu setIsDrawerOpen={setIsDrawerOpen} />
-            </View> */}
-          </Modal>
-
-          {basketItem !== false ? (
+          {basketItem ? (
             <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
               <ScrollView
                 style={styles.container}
