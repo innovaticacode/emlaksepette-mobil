@@ -172,7 +172,7 @@ const Home = ({ route }) => {
             ) : (
               <Feather name="shopping-cart" color="grey" size={20} />
             ),
-          tabBarBadge: basketItem ? 1 : 0,
+          tabBarBadge: basketItem ? 1 : null,
           tabBarBadgeStyle: styles.tabBarBadgeStyle,
         }}
         listeners={({ navigation }) => ({
