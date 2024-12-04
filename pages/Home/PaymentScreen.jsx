@@ -6,7 +6,7 @@ import {
   TextInput,
   TouchableOpacity,
   SafeAreaView,
-  ImageBackground,
+  Image,
   Dimensions,
   Keyboard,
 } from "react-native";
@@ -559,6 +559,15 @@ export default function PaymentScreen() {
       });
   };
 
+  const [parsed, setParsed] = useState("");
+
+  useEffect(() => {
+    if (housing?.housing?.housing_type_data) {
+      const parsedData = JSON.parse(housing.housing.housing_type_data);
+      setParsed(parsedData);
+    }
+  }, [housing]);
+
   return (
     <AlertNotificationRoot>
       <KeyboardAwareScrollView
@@ -604,10 +613,16 @@ export default function PaymentScreen() {
             }}
           >
             <View style={styles.image}>
-              <ImageBackground
-                source={{
-                  uri: `${frontEndUriBase}project_housing_images/${project["image[]"]}`,
-                }}
+              <Image
+                source={
+                  type?.type === "project"
+                    ? {
+                        uri: `${frontEndUriBase}project_housing_images/${project["image[]"]}`,
+                      }
+                    : {
+                        uri: `${frontEndUriBase}housing_images/${parsed.image}`,
+                      }
+                }
                 style={{ width: "100%", height: "100%" }}
               />
             </View>

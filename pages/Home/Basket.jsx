@@ -131,15 +131,22 @@ export default function Basket() {
     }
   }, [isFocused, user]);
   const [parsedshare, setparsedshare] = useState("");
-  const Parse = async () => {
+
+  const Parse = () => {
     try {
       if (Cart && isShare && type && saleType) {
-        setparsedshare(JSON.parse(isShare)[0]);
+        const parsed = JSON.parse(isShare);
+        if (Array.isArray(parsed)) {
+          setparsedshare(parsed[0]);
+        } else {
+          console.log("Parsed data is not an array");
+        }
       }
     } catch (error) {
-      console.log("parse edilemedi");
+      console.log("Error parsing data:", error);
     }
   };
+
   useEffect(() => {
     Parse();
   }, [fetchData]);
@@ -303,10 +310,6 @@ export default function Basket() {
       <TrashIcon name="trash" size={23} color={"white"} />
     </TouchableOpacity>
   );
-
-  useEffect(() => {
-    console.log("------>", basketItem);
-  }, [basketItem]);
 
   return (
     <View style={{ flex: 1 }}>
@@ -540,7 +543,7 @@ export default function Basket() {
 
                         {neightboord ? (
                           <View>
-                            <Text>adsaaddasd</Text>
+                            <Text>-</Text>
                           </View>
                         ) : (
                           <View>
