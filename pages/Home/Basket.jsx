@@ -311,7 +311,9 @@ export default function Basket() {
   return (
     <View style={{ flex: 1 }}>
       {loading ? (
-        <ActivityIndicator color="#333" size="large" />
+        <View style={styles.loader}>
+          <ActivityIndicator color="#333" size="large" />
+        </View>
       ) : (
         <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
           {basketItem ? (
@@ -940,5 +942,11 @@ const styles = StyleSheet.create({
         elevation: 5,
       },
     }),
+  },
+  loader: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "white",
   },
 });
