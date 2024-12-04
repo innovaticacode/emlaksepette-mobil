@@ -111,7 +111,7 @@ export default function RealtorCardHome({
         try {
           if (user?.access_token) {
             const response = await axios.post(
-              `${apiUrl}add_to_cart`,
+              `${apiUrl}institutional/add_to_cart`,
               formData,
               {
                 headers: {
