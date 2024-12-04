@@ -10,7 +10,6 @@ import UserSlice, { fetchUser } from "./user/UserSlice";
 import { thunk } from "redux-thunk";
 
 const userAutoFetchMiddleware = (storeAPI) => (next) => (action) => {
-  console.log(storeAPI);
   const result = next(action);
   const state = storeAPI.getState();
 

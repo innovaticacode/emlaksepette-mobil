@@ -15,7 +15,11 @@ import BackIcon from "react-native-vector-icons/AntDesign";
 import { useNavigation } from "@react-navigation/native";
 import axios from "axios";
 import { getValueFor } from "./methods/user";
-import { apiRequestPostWithBearer, apiUrl, frontEndUriBase } from "./methods/apiRequest";
+import {
+  apiRequestPostWithBearer,
+  apiUrl,
+  frontEndUriBase,
+} from "./methods/apiRequest";
 import { useDispatch, useSelector } from "react-redux";
 import { setNotificationsRedux } from "../store/slices/Notifications/NotificationsSlice";
 import { setUser } from "../store/user/UserSlice";
@@ -40,31 +44,26 @@ export default function Header({ showBack }) {
     (state) => state.notifications.notificationsCount
   );
 
-  const user = useSelector(
-    (state) => state.user
-  );
+  const user = useSelector((state) => state.user);
 
-
-  const [token,setToken] = useState("");
+  const [token, setToken] = useState("");
 
   useEffect(() => {
-    registerForPushNotificationsAsync().then(token => {
-      setToken(token);
-      if(!user?.push_token){
-        console.log("tokeni-yok")
-        apiRequestPostWithBearer('set_token',{
-          token : token
-        })
-      }else{
-        console.log(user?.token,"tokeni-var")
-      }
-      console.log("tok",token)
-    }).catch((err) => {
-      console.log(err,"qqq");
-    })
+    registerForPushNotificationsAsync()
+      .then((token) => {
+        setToken(token);
+        if (!user?.push_token) {
+          apiRequestPostWithBearer("set_token", {
+            token: token,
+          });
+        } else {
+          console.log(user?.token, "tokeni-var");
+        }
+      })
+      .catch((err) => {
+        console.log(err, "qqq");
+      });
   }, [token]);
-
-  console.log(user);
 
   const getNotifications = async () => {
     try {
@@ -102,36 +101,25 @@ export default function Header({ showBack }) {
   return (
     <SafeAreaView style={[styles.header, headerStyle, checkNotch]}>
       <View>
-
-        {
-                showBack ==1 ?
-                <TouchableOpacity 
-                hitSlop={{ top: 20, bottom: 20, left: 40, right: 20 }}
-                onPress={() => {
-                  navigation.goBack();
-                }}
-                >
-                     <BackIcon
-                name="left"
-                size={25}
-                color={"#333"}
-                
-              />
-                </TouchableOpacity>
-             :
-              <IconMenu
-              name="menu"
-              size={36}
-              color={"#333"}
-              onPress={() => {
-                navigation.openDrawer();
-              }}
-            />
-
-        }
-    
-      
-
+        {showBack == 1 ? (
+          <TouchableOpacity
+            hitSlop={{ top: 20, bottom: 20, left: 40, right: 20 }}
+            onPress={() => {
+              navigation.goBack();
+            }}
+          >
+            <BackIcon name="left" size={25} color={"#333"} />
+          </TouchableOpacity>
+        ) : (
+          <IconMenu
+            name="menu"
+            size={36}
+            color={"#333"}
+            onPress={() => {
+              navigation.openDrawer();
+            }}
+          />
+        )}
       </View>
       <View
         style={styles.logoContainer}
@@ -169,7 +157,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     padding: 10,
 
-    gap:50,
+    gap: 50,
 
     width: "100%",
     // Android için paddingTop ekle
