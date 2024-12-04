@@ -31,8 +31,6 @@ const Home = ({ route }) => {
 
   const basketItem = useSelector((state) => state.basket.basketItem);
 
-  console.log("basketItem---HOME-->", basketItem);
-
   const [user, setUser] = useState({});
   const [verifyStatus, setverifyStatus] = useState(null);
 
