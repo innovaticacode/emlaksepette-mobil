@@ -1116,7 +1116,7 @@ export default function PaymentScreen() {
                         Aylık Ödenecek Tutar:
                       </Text>
                       <Text style={{ color: "#7E7E7E", fontWeight: "500" }}>
-                        {addDotEveryThreeDigits(Cart.aylik)} ₺
+                        {addDotEveryThreeDigits(Cart?.aylik)} ₺
                       </Text>
                     </View>
                     <View
@@ -1129,7 +1129,7 @@ export default function PaymentScreen() {
                         Toplam Fiyat:
                       </Text>
                       <Text style={{ color: "#7E7E7E", fontWeight: "500" }}>
-                        {addDotEveryThreeDigits(Cart.installmentPrice)} ₺
+                        {addDotEveryThreeDigits(Cart?.installmentPrice)} ₺
                       </Text>
                     </View>
                     {payDec.map((item, _index) => (
@@ -1272,7 +1272,7 @@ export default function PaymentScreen() {
                             >
                               <Text>İlan Fiyatı:</Text>
                               <Text>
-                                {addDotEveryThreeDigits(Cart.price)} ₺
+                                {addDotEveryThreeDigits(Cart?.price)} ₺
                               </Text>
                             </View>
                             <View
@@ -1296,7 +1296,7 @@ export default function PaymentScreen() {
                             >
                               <Text style={{}}>Toplam Fiyatı:</Text>
                               <Text style={{}}>
-                                {addDotEveryThreeDigits(DiscountPrice)} ₺
+                                {addDotEveryThreeDigits(DiscountPrice ?? "")} ₺
                               </Text>
                             </View>
                             <View
@@ -1307,7 +1307,9 @@ export default function PaymentScreen() {
                             >
                               <Text style={{}}>%2 Kapora:</Text>
                               <Text style={{}}>
-                                {addDotEveryThreeDigits(KaporaForDiscountPrice)}{" "}
+                                {addDotEveryThreeDigits(
+                                  KaporaForDiscountPrice ?? ""
+                                )}{" "}
                                 ₺
                               </Text>
                             </View>
