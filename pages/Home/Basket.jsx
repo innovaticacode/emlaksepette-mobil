@@ -35,7 +35,6 @@ import axios from "axios";
 import { addDotEveryThreeDigits } from "../../components/methods/merhod";
 import { Alert } from "react-native";
 import * as SecureStore from "expo-secure-store";
-import { Image } from "react-native-svg";
 import Icon2 from "react-native-vector-icons/MaterialCommunityIcons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -395,31 +394,6 @@ export default function Basket() {
                   </Swipeable>
                 </GestureHandlerRootView>
 
-                {/* <View>
-            <View style={[styles.HouseInfo, { padding: 15 }]}>
-              <View style={{ flexDirection: "row", gap: 5 }}>
-                <Text style={{ fontSize: 12 }}>İlan Adı:</Text>
-                {
-                  type.type=='housing'?
-                  <Text>{Cart.title}</Text>
-                  :
-                  <Text style={{ fontSize: 12 }}>
-                    {Cart.title} Projesinde {Cart.housing} No'lu Konut
-                  </Text>
-                }
-              
-              </View>
-              <View style={{ flexDirection: "row", gap: 5 }}>
-                <Text style={{ fontSize: 12 }}>İlan Konumu:</Text>
-                <Text style={{ fontSize: 12 }}>{Cart.city} / Hendek</Text>
-              </View>
-              <View style={{ flexDirection: "row", gap: 5 }}>
-                <Text style={{ fontSize: 12 }}>Mağaza:</Text>
-                <Text style={{ fontSize: 12 }}>Maliyetine Ev</Text>
-              </View>
-            </View>
-          </View> */}
-
                 {Cart?.installmentPrice != 0 &&
                   Cart?.installmentPrice != null && (
                     <View
@@ -583,12 +557,6 @@ export default function Basket() {
                           </Text>
                         </View>
                       </View>
-                      // <View style={{flexDirection:'column',gap:5,alignItems:'center'}}>
-
-                      //       <Text style={{color:'#7E7E7E',fontWeight:'600'}}>{payDec.length}. Ara Ödeme</Text>
-                      //       <Text style={{color:'#7E7E7E',fontWeight:'600'}}>{addDotEveryThreeDigits(item[`pay_dec_price${_index}`])} ₺</Text>
-                      //       <Text style={{color:'#7E7E7E',fontWeight:'600'}}>{formatDate(item[`pay_dec_date${_index}`])}</Text>
-                      // </View>
                     ))}
                   </View>
                 )}
@@ -797,44 +765,6 @@ export default function Basket() {
                           )}
                         </>
                       )}
-
-                      {/* 
-                                    <View  style={{flexDirection:'row',justifyContent:'space-between'}}>
-                                        <Text>Toplam Fiyat:</Text>
-                                        <Text>{addDotEveryThreeDigits(Cart.amount) } ₺</Text>
-                                    </View>
-                                      {
-                                        saleType=='kiralik'?
-                                        <View  style={{flexDirection:'row',justifyContent:'space-between'}}>
-                                        <Text>Bir Kira Kapora</Text>
-                                        <Text>{addDotEveryThreeDigits(Cart.amount) } ₺</Text>
-                                    </View>:
-                                          type.hasCounter==true? 
-                                       <View  style={{flexDirection:'row',justifyContent:'space-between'}}>
-                                       <Text>%2 Kapora</Text>
-                                       <Text>{addDotEveryThreeDigits(KaporaForDiscountPrice)} ₺</Text>
-                                   </View>:  <View  style={{flexDirection:'row',justifyContent:'space-between'}}>
-                                       <Text>%2 Kapora</Text>
-                                       <Text>{addDotEveryThreeDigits(Cart.amount * 2 /100)} ₺</Text>
-                                   </View>
-                                      }
-
-                                      {
-                                          type.hasCounter==true?
-                                          <>
-                                              <View  style={{flexDirection:'row',justifyContent:'space-between'}}>
-                                          <Text>Emlak Kulüp İndirimi</Text>
-                                          <Text>%{Cart.discount_rate}</Text>
-                                      </View>
-                                              <View  style={{flexDirection:'row',justifyContent:'space-between'}}>
-                                          <Text>İndirimli Fiyat</Text>
-                                          <Text>{DiscountPrice} ₺</Text>
-                                      </View>
-                                          </>
-                                          :<></>
-                                      
-                                      }
-                               */}
                     </View>
                   </View>
                 )}
