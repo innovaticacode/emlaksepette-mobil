@@ -333,13 +333,7 @@ export default function PaymentScreen() {
   const [pdfFile, setPdfFile] = useState(null);
   const [selectedPdfUrl, setselectedPdfUrl] = useState(null);
 
-  const [creditCartData, setCreditCartData] = useState({
-    credit_cart_number: "5218487962459752",
-    exp_month: 12,
-    exp_year: 2026,
-    cvc: 246,
-    name: "Abdurrahman İslamoğlu",
-  });
+  const [creditCartData, setCreditCartData] = useState({});
 
   const pickDocument = async () => {
     DocumentPicker.getDocumentAsync({ type: "application/pdf" })
