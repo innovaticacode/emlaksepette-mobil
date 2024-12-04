@@ -4,6 +4,7 @@ import MenuSlice from "./slices/Menu/MenuSlice";
 import FavoritesSlice from "./slices/Favorites/FavoritesSlice";
 import SummarySlice from "./slices/Summary/Summary";
 import FilterProjectSlice from "./slices/FilterProject/FilterProjectSlice";
+import BasketSlice from "./slices/Basket/BasketSlice";
 
 import UserSlice, { fetchUser } from "./user/UserSlice";
 import { thunk } from "redux-thunk";
@@ -29,6 +30,7 @@ export const store = configureStore({
     summary: SummarySlice,
     favorites: FavoritesSlice,
     mapFilters: FilterProjectSlice,
+    basket: BasketSlice,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(userAutoFetchMiddleware, thunk),

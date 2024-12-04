@@ -5,11 +5,8 @@ import {
   Keyboard,
   ScrollView,
   StyleSheet,
-  FlatList,
   TouchableOpacity,
-  TextInput,
   SafeAreaView,
-  ImageBackground,
 } from "react-native";
 import { Platform } from "react-native";
 import IconIdCard from "react-native-vector-icons/FontAwesome";
@@ -26,27 +23,23 @@ import {
   useIsFocused,
 } from "@react-navigation/native";
 
-import Header from "../../components/Header";
-import Search from "./Search";
-import Categories from "../../components/Categories";
 import Modal from "react-native-modal";
 import { getValueFor } from "../../components/methods/user";
 import axios from "axios";
 import { addDotEveryThreeDigits } from "../../components/methods/merhod";
 import { Alert } from "react-native";
 import * as SecureStore from "expo-secure-store";
-import Icon2 from "react-native-vector-icons/MaterialCommunityIcons";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 
-import { DrawerMenu } from "../../components";
 import { ActivityIndicator } from "react-native-paper";
 import NoDataScreen from "../../components/NoDataScreen";
 import { apiUrl } from "../../components/methods/apiRequest";
+import { useDispatch, useSelector } from "react-redux";
+import { setBasketItem } from "../../store/slices/Basket/BasketSlice";
 
 export default function Basket() {
-  const route = useRoute();
-
   const navigation = useNavigation();
+  const dispatch = useDispatch();
+  const basketItem = useSelector((state) => state.basket.basketItem);
   const [title, setTitle] = useState("");
   const [amount, setAmount] = useState("");
   const [imageUrl, setImageUrl] = useState("");
@@ -89,18 +82,6 @@ export default function Basket() {
     fetchDatass();
   }, []);
 
-  /*   console.log(imageUrl, "aa");
-   */
-  const [Basket, SetBasket] = useState([
-    {
-      name: "MASTER ORMAN KÖY EVLERİ",
-      price: 2500000,
-      shopName: "Maliyetine Ev",
-      shopPoint: 8.3,
-      id: 1,
-      hisse: true,
-    },
-  ]);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   const toggleDrawer = () => {
@@ -114,7 +95,6 @@ export default function Basket() {
   const [offerControl, setofferControl] = useState({});
   const [payDec, setpayDec] = useState([]);
   const [isShare, setisShare] = useState([]);
-  const [CartLength, setCartLength] = useState([]);
   const isFocused = useIsFocused();
   const [loading, setLoading] = useState(false);
   useEffect(() => {
@@ -132,11 +112,16 @@ export default function Basket() {
         });
         setCart(response?.data?.cart?.item);
         settype(response?.data?.cart);
+        console.log("clg--->", type.type);
         setsaleType(response?.data?.saleType);
         setofferControl(response?.data);
         setpayDec(response?.data?.cart?.item?.pay_decs);
         setisShare(response?.data?.cart?.item?.isShare);
-        setCartLength(response?.data?.cart);
+        dispatch(
+          setBasketItem({
+            basketItem: response?.data?.cart?.item,
+          })
+        );
         setLoading(false);
       }
     } catch (error) {
@@ -166,8 +151,6 @@ export default function Basket() {
 
   const [isInstallament, setisInstallament] = useState(1);
 
-  let DiscountRate = Cart?.discount_rate;
-  let TotalPrice = Cart?.price;
   let DiscountPrice = Cart?.price - (Cart?.amount * Cart?.discount_rate) / 100;
   let KaporaForDiscountPrice = (DiscountPrice * 2) / 100;
 
@@ -195,8 +178,6 @@ export default function Basket() {
 
     return `${month}, ${day} ${year}`;
   };
-
-  const [shareCounter, setshareCounter] = useState(1);
 
   const [message, setmessage] = useState({});
   const [counter, setcounter] = useState(1);
@@ -322,8 +303,7 @@ export default function Basket() {
   const nav = useNavigation();
   const [index, setindex] = useState(0);
   const [tab, settab] = useState(0);
-  /*   console.log(CartLength);
-   */
+
   const [paymentMethod, setPaymentMethod] = useState("");
 
   const renderRightActions = () => (
@@ -366,7 +346,7 @@ export default function Basket() {
             </View> */}
           </Modal>
 
-          {CartLength !== false ? (
+          {basketItem !== false ? (
             <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
               <ScrollView
                 style={styles.container}
