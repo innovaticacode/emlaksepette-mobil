@@ -9,20 +9,18 @@ import {
   TouchableOpacity,
   Alert,
   Linking,
+  Platform,
+  PermissionsAndroid,
 } from "react-native";
 import { React, useState, useEffect } from "react";
 import Icon from "react-native-vector-icons/AntDesign";
 import Star from "react-native-vector-icons/MaterialIcons";
 import Icon2 from "react-native-vector-icons/Entypo";
 import Icon3 from "react-native-vector-icons/MaterialCommunityIcons";
-import Map from "../../../components/Map";
-import ShopComment from "./ShopComment";
-import ProfileMap from "./ProfileMap";
-import { Skeleton } from "@rneui/themed";
-import CommentItem from "../RealtorPages/CommentItem";
-import { Platform } from "react-native";
 import MapView, { Marker } from "react-native-maps";
 import openMap from "react-native-open-maps";
+import * as Location from "expo-location";
+
 export default function ShopInfo({ data, loading }) {
   const { width, height } = Dimensions.get("window");
   const dateTimeString = data?.data?.created_at;
@@ -33,7 +31,7 @@ export default function ShopInfo({ data, loading }) {
 
   const formattedDate = `${day}/${month}/${year}`;
   console.log(data?.data.latitude);
-  const [selectedLocation, setSelectedLocation] = useState(null);
+
   const handleGetDirections = () => {
     // Harita uygulamasını açmak ve seçilen konuma yönlendirme yapmak için openMap fonksiyonunu kullanıyoruz
     if (data?.data?.latitude && data?.data?.longitude) {
@@ -55,12 +53,9 @@ export default function ShopInfo({ data, loading }) {
       console.error("Couldn't load page", err)
     );
   };
-  
+
   return (
-    <ScrollView
-      contentContainerStyle={{}}
-      showsVerticalScrollIndicator={false}
-    >
+    <ScrollView contentContainerStyle={{}} showsVerticalScrollIndicator={false}>
       <View style={styles.container}>
         <View
           style={{
@@ -188,16 +183,12 @@ export default function ShopInfo({ data, loading }) {
           >
             <Text style={{ fontSize: 13, fontWeight: "600" }}>Konum</Text>
             <Text style={{ fontSize: 13, fontWeight: "400" }}>
-              {data?.data?.town?.sehir_title +
-              "/" +
-              data?.data?.district?.ilce_title +
-              "/" +
+              {data?.data?.town?.sehir_title ||
+              data?.data?.district?.ilce_title ||
               data?.data?.neighborhood?.mahalle_title
-                ? data?.data?.town?.sehir_title +
-                  "/" +
-                  data?.data?.district?.ilce_title +
-                  "/" +
-                  data?.data?.neighborhood?.mahalle_title
+                ? `${data?.data?.town?.sehir_title || "Bulunamadı"}/${
+                    data?.data?.district?.ilce_title || "Bulunamadı"
+                  }/${data?.data?.neighborhood?.mahalle_title || "Bulunamadı"}`
                 : "Konum Bilgisi Bulunmuyor"}
             </Text>
           </View>
@@ -269,43 +260,48 @@ export default function ShopInfo({ data, loading }) {
           </TouchableOpacity>
         </View>
         <View style={[{ width: "100%", height: 250, borderRadius: 10 }]}>
-          <MapView
-            initialRegion={{
-              latitude:
-                parseFloat(
-                  data?.data?.latitude == null ? 38.9637 : data?.data?.latitude
-                ) || 0,
-              longitude:
-                parseFloat(
-                  data?.data?.longitude == null
-                    ? 35.2433
-                    : data?.data?.longitude
-                ) || 0,
-              latitudeDelta: data?.data?.latitude == null ? 8.0 : 0.0922,
-              longitudeDelta: data?.data?.lingitude == null ? 8.0 : 0.0421,
-              altidute: 50.03281021118164,
-            }}
-            style={{ flex: 1, borderRadius: 12 }}
-          >
-            <Marker
-              coordinate={{
+          {data?.data?.latitude != null || data?.data?.longitude != null ? (
+            <MapView
+              showsUserLocation={false}
+              liteMode={true}
+              initialRegion={{
                 latitude:
                   parseFloat(
-                    data?.data?.latitude == null || undefined
-                      ? ""
+                    data?.data?.latitude == null
+                      ? 38.9637
                       : data?.data?.latitude
                   ) || 0,
                 longitude:
                   parseFloat(
-                    data?.data?.longitude == null || undefined
-                      ? ""
+                    data?.data?.longitude == null
+                      ? 35.2433
                       : data?.data?.longitude
                   ) || 0,
+                latitudeDelta: data?.data?.latitude == null ? 8.0 : 0.0922,
+                longitudeDelta: data?.data?.lingitude == null ? 8.0 : 0.0421,
               }}
-              title={data?.name}
-              description="Proje Konumu"
-            />
-          </MapView>
+              style={{ flex: 1, borderRadius: 12 }}
+            >
+              <Marker
+                coordinate={{
+                  latitude:
+                    parseFloat(
+                      data?.data?.latitude == null || undefined
+                        ? ""
+                        : data?.data?.latitude
+                    ) || 0,
+                  longitude:
+                    parseFloat(
+                      data?.data?.longitude == null || undefined
+                        ? ""
+                        : data?.data?.longitude
+                    ) || 0,
+                }}
+                title={data?.name}
+                description="Proje Konumu"
+              />
+            </MapView>
+          ) : null}
         </View>
         {/* <View style={{flexDirection:'row',width:'100%'}}>
    <View style={{borderWidth:1,borderColor:'#D7D7D7',borderRadius:12,gap:7,flexDirection:'row'}}>
