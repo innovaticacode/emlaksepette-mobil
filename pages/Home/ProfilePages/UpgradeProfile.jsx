@@ -136,15 +136,33 @@ export default function UpgradeProfile() {
   };
 
   const takePhoto = async () => {
-    let result = await ImagePicker.launchCameraAsync({
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
-    });
+    try {
+      let result = await ImagePicker.launchCameraAsync({
+        allowsEditing: true,
+        aspect: [4, 3],
+        quality: 1,
+      });
 
-    if (!result.canceled) {
-      setImage(result.assets[0]); // Çekilen fotoğrafı state'e kaydediyoruz
-      setchoose(false); // Modal'ı kapatıyoruz
+      console.log("Camera Result:", result);
+
+      if (!result.canceled && result.assets && result.assets.length > 0) {
+        const photo = result.assets[0];
+        console.log("Selected Photo Details:", {
+          uri: photo.uri,
+          type: photo.type,
+          name: photo.fileName || "photo.jpg",
+          width: photo.width,
+          height: photo.height,
+        });
+
+        setImage(photo); // Çekilen fotoğrafı state'e kaydediyoruz
+        setchoose(false); // Modal'ı kapatıyoruz
+      } else {
+        console.log("Photo capture was canceled or no photo was taken.");
+      }
+    } catch (error) {
+      console.error("Camera Error:", error);
+      alert("Kamera kullanılırken bir hata oluştu. Lütfen tekrar deneyin.");
     }
   };
 
@@ -424,30 +442,30 @@ export default function UpgradeProfile() {
     });
   };
 
-  // useEffect(() => {
-  //   console.debug("------->>", tab);
-  // }, [tab]);
-
   const handleProfileUpdate = async (data) => {
+    if (image?.uri) {
+      console.log("Valid Image Details:", {
+        uri: image.uri,
+        type: image.mimeType || "image/jpeg",
+        name: image.fileName || "photo.jpg",
+        size: image.size,
+        width: image.width,
+        height: image.height,
+      });
+    } else {
+      console.error("Image is missing or invalid.");
+      return;
+    }
+
     data.append("banner_hex_code", currentColor);
-    data.append(
-      `profile_image`,
-      image?.uri
-        ? {
-            uri:
-              Platform.OS === "android"
-                ? image
-                : image?.uri?.replace("file://", ""),
-            type: image.mimeType,
-            name:
-              file == null
-                ? "Image.jpeg"
-                : image.name?.slice(-3) == "pdf"
-                ? image?.name
-                : image?.fileName,
-          }
-        : namFromGetUser?.profile_image
-    );
+    data.append("profile_image", {
+      uri:
+        Platform.OS === "android"
+          ? image.uri
+          : image.uri.replace("file://", ""),
+      type: image.mimeType || "image/jpeg",
+      name: image.fileName || "photo.jpg",
+    });
 
     try {
       const response = await axios.post(`${apiUrl}profil-duzenleme`, data, {
@@ -460,7 +478,7 @@ export default function UpgradeProfile() {
       Dialog.show({
         type: ALERT_TYPE.SUCCESS,
         title: "Başarılı",
-        textBody: response?.data?.message,
+        textBody: response?.data?.message || "Profil başarıyla güncellendi.",
         button: "Tamam",
         onHide: () => GetUserInfo(),
       });
@@ -1247,7 +1265,7 @@ export default function UpgradeProfile() {
                       alignItems: "center",
                       gap: 10,
                     }}
-                    onPress={takePhoto}
+                    onPress={() => takePhoto()}
                   >
                     <Icon3 name="add-a-photo" size={21} color={"#333"} />
                     <Text
@@ -1313,7 +1331,7 @@ export default function UpgradeProfile() {
                       alignItems: "center",
                       gap: 10,
                     }}
-                    onPress={pickImageForfile}
+                    onPress={() => pickImageForfile()}
                   >
                     <Icon3 name="photo" size={23} color={"#333"} />
                     <Text
@@ -1328,7 +1346,7 @@ export default function UpgradeProfile() {
                       alignItems: "center",
                       gap: 10,
                     }}
-                    onPress={takePhotoforFile}
+                    onPress={() => takePhotoforFile()}
                   >
                     <Icon3 name="add-a-photo" size={21} color={"#333"} />
                     <Text
