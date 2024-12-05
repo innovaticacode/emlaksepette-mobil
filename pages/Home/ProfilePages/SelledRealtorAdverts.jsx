@@ -28,40 +28,30 @@ export default function SelledRealtorAdverts() {
   useEffect(() => {
     getValueFor("user", setUser);
   }, []);
-  const [start, setStart] = useState(0);
-  const [take, setTake] = useState(10);
+  const [take, setTake] = useState(0);
+  const [skip, setSkip] = useState(10);
   const [loading, setloading] = useState(true);
   const [housingRecords, sethousingRecords] = useState([]);
   const [parsePrice, setParsePrice] = useState(null);
+  const [sort, setsort] = useState(null);
+const [hasMore, setHasMore] = useState(true); 
 
-  const fetchHousings = async () => {
+  const fetchHousings = async (sort) => {
     setloading(true);
+
     try {
-      const response = await axios.get(`${apiUrl}real-estates`, {
+      const response = await axios.get(`${apiUrl}get_my_housings`, {
         headers: {
           Authorization: `Bearer ${user.access_token}`,
         },
         params: {
-          is_sold: 1,
+          orderByHousings: sort,
         },
       });
-      // Housing data response
-      const housings = response.data;
-      // Parse the prices and attach to housing objects
-      const updatedHousings = housings.map((housing) => {
-        try {
-          const housingTypeData = JSON.parse(housing.housing_type_data);
-          const price = housingTypeData.price
-            ? housingTypeData.price[0]
-            : "N/A";
-          return { ...housing, price: price }; // Add parsed price to housing
-        } catch (error) {
-          return { ...housing, price: "N/A" }; // Fallback if parsing fails
-        }
-      });
-      // Update state with modified housing data
-      sethousings(updatedHousings);
-      console.debug("Housings:", housings.price);
+
+      sethousings(response.data.soldHousingTypes);
+      sethousingRecords(response.data.soldHousingTypes);
+      console.debug("Housings:", response.data.soldHousingTypes); // Veriyi debug yapıyoruz
     } catch (e) {
       console.log(e + " hata");
     } finally {
@@ -80,15 +70,15 @@ export default function SelledRealtorAdverts() {
   };
   const [selectedProject, setSelectedProject] = useState(null);
   const isfocused = useIsFocused();
-  const [selectedIndex, setIndex] = React.useState(0);
+  const [selectedIndex, setIndex] = React.useState(null);
   const [searchValue, setsearchValue] = useState("");
 
   const [SortLıstModal, setSortLıstModal] = useState(false);
-  const handleRadio = (index) => {
+  const handleRadio = (index, sort) => {
     setIndex(index);
     setTimeout(() => {
       setSortLıstModal(false);
-      fetchHousings();
+      fetchHousings(sort);
     }, 600);
   };
 
@@ -164,18 +154,9 @@ export default function SelledRealtorAdverts() {
               <MaterialIcon name="swap-vertical" size={23} color={"#333"} />
             </TouchableOpacity>
           </View>
-          <View style={{ paddingTop: 10 }}>
-            {housings?.map((item, index) => (
-              <RealtorAdvertPost
-                key={index}
-                housing={item}
-                Onpress={openSheet}
-              />
-            ))}
-          </View>
 
           <View style={{ paddingTop: 10, gap: 10, alignItems: "center" }}>
-            {!searchValue && housings?.length === 0 ? (
+            {!searchValue && housingRecords?.length === 0 ? (
               <Text>Satılan İlanınız Bulunmamaktadır</Text>
             ) : searchValue && housingRecords.length == 0 ? (
               <Text
@@ -238,7 +219,9 @@ export default function SelledRealtorAdverts() {
                 <Stack row align="center" spacing={4}>
                   <CheckBox
                     checked={selectedIndex === 0}
-                    onPress={() => handleRadio(0)}
+                    onPress={() => {
+                      handleRadio(0, "asc-price");
+                    }}
                     checkedIcon="dot-circle-o"
                     uncheckedIcon="circle-o"
                     title={
@@ -255,7 +238,9 @@ export default function SelledRealtorAdverts() {
                   />
                   <CheckBox
                     checked={selectedIndex === 1}
-                    onPress={() => handleRadio(1)}
+                    onPress={() => {
+                      handleRadio(1, "desc-price");
+                    }}
                     checkedIcon="dot-circle-o"
                     uncheckedIcon="circle-o"
                     title={
@@ -272,7 +257,7 @@ export default function SelledRealtorAdverts() {
                   />
                   <CheckBox
                     checked={selectedIndex === 2}
-                    onPress={() => handleRadio(2)}
+                    onPress={() => handleRadio(2, "asc-date")}
                     checkedIcon="dot-circle-o"
                     uncheckedIcon="circle-o"
                     title={
@@ -289,7 +274,7 @@ export default function SelledRealtorAdverts() {
                   />
                   <CheckBox
                     checked={selectedIndex === 3}
-                    onPress={() => handleRadio(3)}
+                    onPress={() => handleRadio(3, "desc-date")}
                     checkedIcon="dot-circle-o"
                     uncheckedIcon="circle-o"
                     title={

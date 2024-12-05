@@ -1,22 +1,20 @@
 import {
   View,
   Text,
-  ScrollView,
   TouchableOpacity,
   StyleSheet,
   TextInput,
+  FlatList,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { getValueFor } from "../../../components/methods/user";
-import ProjectAdverts from "../ProfilePageItem/ProjectAdverts";
 import MaterialIcon from "react-native-vector-icons/MaterialCommunityIcons";
 import { useNavigation } from "@react-navigation/native";
 import RealtorAdvertPost from "./profileComponents/RealtorAdvertPost";
 import Modal from "react-native-modal";
 import { Platform } from "react-native";
 import Icon3 from "react-native-vector-icons/MaterialIcons";
-import Icon4 from "react-native-vector-icons/FontAwesome5";
 import { ActivityIndicator } from "react-native-paper";
 import { Stack } from "@react-native-material/core";
 import { CheckBox } from "react-native-elements";
@@ -26,44 +24,64 @@ export default function ActiveRealtorAdverts({ index }) {
   const [user, setUser] = useState({});
   const [housings, sethousings] = useState([]);
   const [projectCount, setProjectCount] = useState(0);
-  useEffect(() => {
-    getValueFor("user", setUser);
-  }, []);
-  const [start, setStart] = useState(0);
+
   const [take, setTake] = useState(10);
+  const [skip, setSkip] = useState(0);
   const [loading, setloading] = useState(true);
   const [housingRecords, sethousingRecords] = useState([]);
   const [sort, setsort] = useState(null);
+  useEffect(() => {
+    getValueFor("user", setUser);
+  }, []);
 
-  const fetchHousings = async (sort) => {
-    setloading(true);
-    // let formData= new FormData()
-    // formData.append('orderByHousings',sort)
-    const data = {
-      orderByHousings: sort,
-    };
+  const fetchHousings = async (sort, take, skip) => {
     try {
-      const res = await axios.get(
-        apiUrl + "get_my_housings?orderByHousings=" + sort,
-        {
-          headers: {
-            Authorization: `Bearer ${user?.access_token}`,
-            "Content-Type": "application/json", // FormData kullanıldığı için Content-Type belirtilmelidir
+      const res = await axios({
+        method: "get",
+        url: `${apiUrl}get_my_housings`,
+        headers: {
+          Authorization: `Bearer ${user?.access_token}`,
+          "Content-Type": "application/json",
+        },
+        params: {
+          orderByHousings: sort,
+          take: take,
+          skip: skip,
+          data: {
+            status: 1,
           },
-        }
-      );
-      sethousings(res?.data?.activeHousingTypes);
-      sethousingRecords(res?.data?.activeHousingTypes);
+        },
+      });
+
+      // Yalnızca yeni ilanları ekleyeceğiz
+      if (skip === 0) {
+        // İlk başta, ilk 10 ilanı yükle
+        sethousings(res?.data?.activeHousingTypes);
+      } else {
+        // Kaydırıldıkça, yeni ilanları mevcut listeye ekle
+        sethousings((prevHousings) => [
+          ...prevHousings,
+          ...res?.data?.activeHousingTypes,
+        ]);
+      }
     } catch (e) {
+      console.error("Error fetching housings:", e);
     } finally {
       setloading(false);
     }
   };
 
   useEffect(() => {
-    fetchHousings();
-  }, [user]);
-
+    if (user?.access_token) {
+      fetchHousings(sort, take, skip);
+    }
+  }, [user, sort, skip]);
+  const handleEndReached = () => {
+    // Sayfa sonuna geldiğinde skip değerini arttırıyoruz
+    if (!skip) {
+      setSkip((prevSkip) => prevSkip + take);
+    }
+  };
   const [EditModalVisible, setEditModalVisible] = useState(false);
   const [SortLıstModal, setSortLıstModal] = useState(false);
   const openSheet = (id) => {
@@ -78,7 +96,10 @@ export default function ActiveRealtorAdverts({ index }) {
     setIndex(index);
     setTimeout(() => {
       setSortLıstModal(false);
-      fetchHousings(sort);
+      setsort(sort); // Yeni sıralama kriterini ayarla
+      setSkip(0); // Sayfayı başa al
+
+      fetchHousings(sort, take, 0);
     }, 600);
   };
   const [searchValue, setsearchValue] = useState("");
@@ -106,7 +127,7 @@ export default function ActiveRealtorAdverts({ index }) {
           <ActivityIndicator size={"large"} color="#333" />
         </View>
       ) : (
-        <ScrollView stickyHeaderIndices={[0]}>
+        <View>
           <View
             style={{
               paddingTop: 6,
@@ -158,26 +179,24 @@ export default function ActiveRealtorAdverts({ index }) {
           </View>
 
           <View style={{ paddingTop: 10, gap: 10, alignItems: "center" }}>
-            {!searchValue && housingRecords.length === 0 ? (
+            {loading ? (
+              <Text>Yükleniyor...</Text>
+            ) : housings.length === 0 ? (
               <Text>Aktif İlanınız Bulunmamaktadır</Text>
-            ) : searchValue && housingRecords.length == 0 ? (
-              <Text
-                style={{
-                  textAlign: "center",
-                  color: "#333",
-                  fontWeight: "700",
-                }}
-              >
-                Sonuç Bulunamadı
-              </Text>
             ) : (
-              housingRecords?.map((item, index) => (
-                <RealtorAdvertPost
-                  key={index}
-                  housing={item}
-                  Onpress={openSheet}
-                />
-              ))
+              <FlatList
+                data={housings} // Yüklenen ilanları burada render ediyoruz
+                renderItem={({ item, index }) => (
+                  <RealtorAdvertPost
+                    key={index}
+                    housing={item}
+                    Onpress={openSheet}
+                  />
+                )}
+                keyExtractor={(item, index) => index.toString()}
+                onEndReached={handleEndReached} // Sayfa sonuna gelindiğinde yeni verileri yükle
+                onEndReachedThreshold={0.5} // Sayfa sonunda ne kadar yaklaşınca tetiklensin
+              />
             )}
           </View>
 
@@ -356,27 +375,10 @@ export default function ActiveRealtorAdverts({ index }) {
                     Resimler
                   </Text>
                 </TouchableOpacity>
-                {/*
-                  <TouchableOpacity
-                  style={{
-                    flexDirection: "row",
-                    alignItems: "center",
-                    gap: 10,
-                  }}
-                >
-                  <Icon4 name="handshake" size={21} color={"#333"} />
-                  <Text
-                    style={{ fontSize: 14, color: "#333", fontWeight: "700" }}
-                  >
-                    Pazarlık Teklifleri (0)
-                  </Text>
-                </TouchableOpacity>
-
-                  */}
               </View>
             </View>
           </Modal>
-        </ScrollView>
+        </View>
       )}
     </>
   );
