@@ -17,19 +17,18 @@ export default function UpdateProfile() {
   const navigation = useNavigation();
 
   useEffect(() => {
-    getValueFor('user', setUser)
+    getValueFor("user", setUser);
   }, []);
 
-  const SettingItem = ({ text, tab,navigate}) => {
+  const SettingItem = ({ text, tab, navigate }) => {
     return (
       <TouchableOpacity
         onPress={() => {
           if (navigate) {
-              navigation.navigate(navigate)
-          }else{
+            navigation.navigate(navigate);
+          } else {
             navigation.navigate("Upgrade", { name: text, tab: tab });
           }
-        
         }}
         style={{
           borderColor: "#ebebeb",
@@ -55,60 +54,64 @@ export default function UpdateProfile() {
   };
 
   return (
-    <ScrollView style={styles.container} contentContainerStyle={{gap:10}}>
-     
-        <View style={styles.card}>
-          <View
-            style={{
-              borderBottomWidth: 1,
-              borderBottomColor: "#ebebeb",
-              paddingTop: 15,
-              paddingLeft: 15,
-              paddingBottom: 10,
-            }}
-          >
-            <Text style={{ color: "#333", fontSize: 16, fontWeight: "700" }}>
-              Hesap Bigilerim
-            </Text>
-          </View>
-          <View style={{ gap: 10, paddingBottom: 5 }}>
-            <SettingItem text={"Kişisel Bilgilerim"} tab={0} />
-            <SettingItem text={'E-Posta Bilgileri'} tab={1}/>
-            <SettingItem text={"Cep Telefonu"} tab={2} />
-            <SettingItem text={"Şifre Değişikliği"} tab={3} navigate={'ChangePas'}/>
-          </View>
+    <ScrollView style={styles.container} contentContainerStyle={{ gap: 10 }}>
+      <View style={styles.card}>
+        <View
+          style={{
+            borderBottomWidth: 1,
+            borderBottomColor: "#ebebeb",
+            paddingTop: 15,
+            paddingLeft: 15,
+            paddingBottom: 10,
+          }}
+        >
+          <Text style={{ color: "#333", fontSize: 16, fontWeight: "700" }}>
+            Hesap Bigilerim
+          </Text>
         </View>
- 
-    
-        <View style={styles.card}>
-          <View
-            style={{
-              borderBottomWidth: 1,
-              borderBottomColor: "#ebebeb",
-              paddingTop: 15,
-              paddingLeft: 15,
-              paddingBottom: 10,
-            }}
-          >
-            <Text style={{ color: "#333", fontSize: 16, fontWeight: "700" }}>
-              Mağazam
-            </Text>
-          </View>
-          <View style={{ gap: 10, paddingBottom: 5 }}>
-            <SettingItem text={"Mağaza İçeriği"} tab={4} />
-            <SettingItem text={"Mağaza Bilgileri"} tab={5} />
-            <SettingItem text={"Ekip"} navigate={'UsersList'} />
-            {/* <SettingItem text={"Paketler"} tab={7} /> */}
-            {/* <SettingItem text={"Kayıtlı Kartlarım"} tab={8} /> */}
-            {/* <SettingItem text={"Faturalarım"} tab={9} /> */}
-            <SettingItem text={"Yetki Grubu"} navigate={'UserTypes'} />
-            <SettingItem text={"Reklam Görselleri"} tab={11} navigate={'UploadAdsPicture'}/>
-            <SettingItem text={"Proje Sözleşmelerim"} tab={12} />
-            <SettingItem text={'Tanıtım Yazısı Ekle'} navigate={'AddBioText'}/>
-            
-          </View>
+        <View style={{ gap: 10, paddingBottom: 5 }}>
+          <SettingItem text={"Mağaza Bilgileri"} tab={0} />
+          <SettingItem text={"E-Posta"} tab={1} />
+          <SettingItem text={"Cep Telefonu"} tab={2} />
+          <SettingItem
+            text={"Şifre Değişikliği"}
+            tab={3}
+            navigate={"ChangePas"}
+          />
         </View>
-   
+      </View>
+
+      <View style={styles.card}>
+        <View
+          style={{
+            borderBottomWidth: 1,
+            borderBottomColor: "#ebebeb",
+            paddingTop: 15,
+            paddingLeft: 15,
+            paddingBottom: 10,
+          }}
+        >
+          <Text style={{ color: "#333", fontSize: 16, fontWeight: "700" }}>
+            Mağazam
+          </Text>
+        </View>
+        <View style={{ gap: 10, paddingBottom: 5 }}>
+          {/* <SettingItem text={"Mağaza İçeriği"} tab={4} /> */}
+          <SettingItem text={"İşletme Bilgileri"} tab={5} />
+          <SettingItem text={"Ekip"} navigate={"UsersList"} />
+          {/* <SettingItem text={"Paketler"} tab={7} /> */}
+          {/* <SettingItem text={"Kayıtlı Kartlarım"} tab={8} /> */}
+          {/* <SettingItem text={"Faturalarım"} tab={9} /> */}
+          <SettingItem text={"Yetki Grubu"} navigate={"UserTypes"} />
+          <SettingItem
+            text={"Reklam Görselleri"}
+            tab={11}
+            navigate={"UploadAdsPicture"}
+          />
+          <SettingItem text={"Proje Sözleşmelerim"} tab={12} />
+          <SettingItem text={"Tanıtım Yazısı Ekle"} navigate={"AddBioText"} />
+        </View>
+      </View>
     </ScrollView>
   );
 }
