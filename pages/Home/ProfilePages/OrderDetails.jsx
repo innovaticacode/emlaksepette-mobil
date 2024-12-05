@@ -120,14 +120,11 @@ export default function OrderDetails({ item }) {
   const fetchDataDeal = async () => {
     const url = `${apiUrl}sayfa/mesafeli-guvenli-kapora-sozlesmesi`;
     try {
-      const response = await fetch(url);
-      // const data = await fetchFromURL(url);
-      const data = await response.json();
+      const response = await axios.get(url);
+      const data = response.data;
       setDeals(data.content);
-      // Burada isteğin başarılı olduğunda yapılacak işlemleri gerçekleştirebilirsiniz.
     } catch (error) {
       console.error("İstek hatası:", error);
-      // Burada isteğin başarısız olduğunda yapılacak işlemleri gerçekleştirebilirsiniz.
     }
   };
   useEffect(() => {
@@ -168,6 +165,8 @@ export default function OrderDetails({ item }) {
       }
     }
   }, [Detail]);
+
+  console.log("---deals--->", Deals);
 
   return (
     <View style={{ backgroundColor: "#FFF", flex: 1 }}>
@@ -598,7 +597,7 @@ export default function OrderDetails({ item }) {
               </>
             )}
 
-            {Detail?.can_refund === 1 && (
+            {Detail?.can_refund == 1 && (
               <View>
                 <WhiteOrRedButtons
                   bgColor={"#EA2B2E"}
