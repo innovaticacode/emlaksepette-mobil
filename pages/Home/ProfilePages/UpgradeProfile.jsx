@@ -982,41 +982,6 @@ export default function UpgradeProfile() {
                     );
                   }
                 })}
-                {
-                  //Harita
-                  // tab == 3 && (
-                  //   <View
-                  //     style={{
-                  //       alignItems: "center",
-                  //       height: 300,
-                  //       width: "100%",
-                  //     }}
-                  //   >
-                  //     {region && (
-                  //       <MapView
-                  //         style={{ width: "100%", height: "100%" }}
-                  //         initialRegion={region}
-                  //         onPress={handleMapPress}
-                  //       >
-                  //         {selectedLocation ? (
-                  //           <Marker
-                  //             coordinate={selectedLocation}
-                  //             title={namFromGetUser.name}
-                  //           />
-                  //         ) : (
-                  //           <Marker
-                  //             coordinate={{
-                  //               latitude: region.latitude,
-                  //               longitude: region.longitude,
-                  //             }}
-                  //             title={namFromGetUser.name}
-                  //           />
-                  //         )}
-                  //       </MapView>
-                  //     )}
-                  //   </View>
-                  // )
-                }
                 {tab == 2 && (
                   <>
                     <View style={[styles.card, { gap: 10 }]}>

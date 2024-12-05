@@ -1,5 +1,23 @@
 export const Forms = [
-  { key: "name", label: "Mağaza Adı", tab: [4], type: "input" },
+  { key: "username", label: "Yetkili İsim Soyisim", tab: [0], type: "input" },
+  { key: "iban", label: "Iban Numarası", tab: [0], type: "input" },
+  {
+    key: "idNumber",
+    label: "TC Kimlik Numarası",
+    tab: [0],
+    type: "input",
+    maxlength: 11,
+  },
+
+  {
+    key: "email",
+    label: "Mevcut E-Posta",
+    tab: [1],
+    type: "input",
+    disabled: true,
+  },
+  { key: "new_email", label: "Yeni E-Posta", tab: [1], type: "input" },
+
   {
     key: "mobile_phone",
     label: "Mevcut Telefon Numarası",
@@ -23,29 +41,8 @@ export const Forms = [
     maxlength: 50,
     multinine: true,
   },
-  { key: "username", label: "Yetkili İsim Soyisim", tab: [0], type: "input" },
-  { key: "store_name", label: "Ticari Unvan", tab: [5], type: "input" },
-  // { key: "username", label: "Yetkili İsim Soyisim", tab: [2], type: "input" },
+  { key: "year", label: "Kaç Yıldır Sektördesiniz", tab: 2, type: "input" },
 
-  { key: "iban", label: "Iban Numarası", tab: [0], type: "input" },
-  {
-    key: "idNumber",
-    label: "TC Kimlik Numarası",
-    tab: [0],
-    type: "input",
-    maxlength: 11,
-  },
-  // { key: "bday", label: "Doğum Tarihi", tab: [0], type: "input" },
-  {
-    key: "email",
-    label: "Mevcut E-Posta",
-    tab: [1],
-    type: "input",
-    disabled: true,
-  },
-  { key: "new_email", label: "Yeni E-Posta", tab: [1], type: "input" },
-  // { key: "about", label: "Hakkında", tab:[4], type: "input", multinine:true },
-  { key: "website", label: "Web Sitesi", tab: [4], type: "input" },
   { key: "password", label: "Mevcut Şifre", tab: [3], type: "input" },
   { key: "new_password", label: "Yeni Şifre", tab: [3], type: "input" },
   {
@@ -54,9 +51,12 @@ export const Forms = [
     tab: [3],
     type: "input",
   },
+  // { key: "about", label: "Hakkında", tab:[4], type: "input", multinine:true },
 
-  { key: "year", label: "Kaç Yıldır Sektördesiniz", tab: 2, type: "input" },
+  { key: "name", label: "Mağaza Adı", tab: [4], type: "input" },
+  { key: "website", label: "Web Sitesi", tab: [4], type: "input" },
 
+  { key: "store_name", label: "Ticari Unvan", tab: [5], type: "input" },
   {
     key: "taxNumber",
     label: "Vergi Kimlik Numarası",
