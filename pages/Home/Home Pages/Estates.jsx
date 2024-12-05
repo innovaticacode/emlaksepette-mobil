@@ -138,22 +138,24 @@ const Estates = ({ index }) => {
 
   return (
     <>
-      {error && (
-        <>
-          <Text style={styles.errorText}>Bir şeyler ters gitti: {error}</Text>
-        </>
-      )}
-
       {loading ? (
         <View
-          style={{ alignItems: "center", justifyContent: "center", flex: 1 }}
+          style={{
+            alignItems: "center",
+            justifyContent: "center",
+            flex: 1,
+          }}
         >
           <ActivityIndicator size={"large"} color="#333" />
+        </View>
+      ) : error ? (
+        <View style={styles.errArea}>
+          <Text style={styles.errorText}>Bir şeyler ters gitti: {error}</Text>
         </View>
       ) : (
         <View style={styles.container}>
           <AlertNotificationRoot>
-            {loading && data && data.length === 0 ? (
+            {data && data.length === 0 ? (
               <View style={{ width: "100%", paddingTop: 10 }}>
                 <Text
                   style={{
@@ -230,6 +232,11 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     textAlign: "center",
+  },
+  errArea: {
+    alignItems: "center",
+    justifyContent: "center",
+    flex: 1,
   },
 });
 
