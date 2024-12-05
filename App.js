@@ -976,6 +976,7 @@ const StackScreenNavigator = () => {
                 component={MapWiew}
                 options={({ route }) => ({
                   title: "Mapde Görüntüle",
+                  headerBackTitleVisible: false,
                 })}
               />
               {/* <Stack.Screen

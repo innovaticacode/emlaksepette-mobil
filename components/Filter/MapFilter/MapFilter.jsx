@@ -32,6 +32,10 @@ export default function MapFilter({
   setisVisible2,
   isVisible3,
   setisVisible3,
+  take,
+  skip,
+  settake,
+  setskip,
 }) {
   const location = useSelector((state) => state?.mapFilters?.location);
   const dispatch = useDispatch();
@@ -245,23 +249,8 @@ export default function MapFilter({
   };
 
   return (
-    <View
-      style={{
-        width: "100%",
-        position: "absolute",
-        zIndex: 1,
-        alignItems: "center",
-        paddingTop: 8,
-      }}
-    >
-      <View
-        style={{
-          alignItems: "center",
-          justifyContent: "space-around",
-          flexDirection: "row",
-          gap: 5,
-        }}
-      >
+    <View style={styles.FilterContainer}>
+      <View style={styles.filterRow}>
         <TouchableOpacity
           style={styles.butonfilter}
           onPress={() => {
@@ -308,16 +297,6 @@ export default function MapFilter({
               <Text style={{ color: "#606060", fontSize: 13 }}>(seçiniz)</Text>
             </Text>
           )}
-          {/* {location?.county?.length > 1 ? (
-            <Text>{location?.county?.length} İlçe</Text>
-          ) : county ? (
-            <Text>{findLabelByCounty(counties, location.county)}</Text>
-          ) : (
-            <Text style={{ fontWeight: "600", fontSize: 13 }}>
-              İlçe{" "}
-              <Text style={{ color: "#606060", fontSize: 13 }}>(seçiniz)</Text>
-            </Text>
-          )} */}
         </TouchableOpacity>
         <TouchableOpacity
           disabled={location?.county?.length > 0 ? false : true}
@@ -351,8 +330,8 @@ export default function MapFilter({
             setfilterLatiude(null);
             setfilterLongitude(null);
             setfilterMarker([]);
-
-            GetProjectsInfo();
+            setskip(0);
+            GetProjectsInfo(null, null, null, 0, 10);
 
             setcity(null);
             setcounty(null);
@@ -364,38 +343,26 @@ export default function MapFilter({
       </View>
       <ActionSheet
         onTouchBackdrop={() => {
-          GetProjectsInfo(city);
+          if (city) {
+            GetProjectsInfo(city ?? city);
+          }
         }}
         ref={actionSheetRef}
         onClose={() => setisVisible(false)} // Close ActionSheet when dismissed
-        containerStyle={{
-          backgroundColor: "#FFF",
-          width: "100%", // Set width to 32px less than screen width
-          height: "40%", // Set height to 80% of screen height
-          borderTopLeftRadius: 10,
-          borderTopRightRadius: 10,
-        }}
+        containerStyle={styles.actionSheet}
         closable={true}
         defaultOverlayOpacity={0.3}
         animated={true}
         drawUnderStatusBar={true} // Optional: if you want it to overlap the status bar
       >
         <ScrollView contentContainerStyle={{ padding: 15, paddingBottom: 35 }}>
-          <View
-            style={{
-              flexDirection: "row",
-
-              paddingTop: 10,
-              paddingBottom: 10,
-              justifyContent: "space-between",
-            }}
-          >
+          <View style={styles.cityActionSheetTop}>
             <TouchableOpacity
               onPress={() => {
                 dispatch(clearLocation());
                 setcity(null);
                 setisVisible(false);
-                GetProjectsInfo();
+                GetProjectsInfo(null, null, null, 0, 10);
               }}
             >
               <Text style={styles.clearCityButton}>Sıfırla</Text>
@@ -411,13 +378,13 @@ export default function MapFilter({
           {citites.map((item, i) => (
             <TouchableOpacity
               key={i}
-              style={{
-                padding: 15,
-                borderBottomWidth: 1,
-                borderBottomColor: "#ebebeb",
-                backgroundColor: city == item.value ? "#EA2C2E" : "transparent",
-                borderRadius: 10,
-              }}
+              style={[
+                styles.cityChooseContainer,
+                {
+                  backgroundColor:
+                    city == item.value ? "#EA2C2E" : "transparent",
+                },
+              ]}
               onPress={() => {
                 dispatch(
                   setLocation({
@@ -425,11 +392,12 @@ export default function MapFilter({
                     county: null,
                   })
                 );
-                GetProjectsInfo(item.value);
                 onChangeCity(item.value);
                 setcounty(null);
-                setcityLabel(item.label);
                 setisVisible(false);
+                setTimeout(() => {
+                  GetProjectsInfo(item.value, null, null, 0, 10);
+                }, 300);
               }}
             >
               <Text
@@ -445,19 +413,14 @@ export default function MapFilter({
           ))}
         </ScrollView>
       </ActionSheet>
+
       <ActionSheet
         onTouchBackdrop={() => {
           GetProjectsInfo(location.city, location.county, null);
         }}
         ref={actionSheetRef2}
         onClose={() => setisVisible2(false)} // Close ActionSheet when dismissed
-        containerStyle={{
-          backgroundColor: "#FFF",
-          width: "100%", // Set width to 32px less than screen width
-          height: "40%", // Set height to 80% of screen height
-          borderTopLeftRadius: 10,
-          borderTopRightRadius: 10,
-        }}
+        containerStyle={styles.actionSheet}
         closable={true}
         defaultOverlayOpacity={0.3}
         animated={true}
@@ -539,13 +502,7 @@ export default function MapFilter({
       <ActionSheet
         ref={actionSheetRef3}
         onClose={() => setisVisible3(false)} // Close ActionSheet when dismissed
-        containerStyle={{
-          backgroundColor: "#FFF",
-          width: "100%", // Set width to 32px less than screen width
-          height: "90%", // Set height to 80% of screen height
-          borderTopLeftRadius: 10,
-          borderTopRightRadius: 10,
-        }}
+        containerStyle={[styles.actionSheet, { height: "90%" }]}
         closable={true}
         defaultOverlayOpacity={0.3}
         animated={true}
@@ -589,137 +546,140 @@ export default function MapFilter({
           </TouchableOpacity>
         </View>
         <ScrollView contentContainerStyle={{ paddingBottom: 40 }}>
-          {countiesFilter.map((item, i) => (
-            <Collapse
-              onToggle={() => {
-                setOpenAccor((prevState) => ({
-                  ...prevState,
-                  [i]: !prevState[i],
-                }));
-                if (!neighbourhoods[i]) {
-                  fetchNeighbourhoods(item.value, i);
-                }
-              }}
-              isCollapsed={!openAccor[i]}
-            >
-              <CollapseHeader>
-                <View
-                  style={{
-                    padding: 10,
-                    borderBottomWidth: 1,
-                    borderBottomColor: "#ebebeb",
-                    flexDirection: "row",
-                    justifyContent: "space-between",
-                    paddingRight: 13,
-                  }}
-                >
-                  <Text
-                    style={{ fontSize: 14, color: "#333", fontWeight: "700" }}
-                  >
-                    {item.label}
-                  </Text>
-                  <View>
-                    {/* <View>
+          {countiesFilter ? (
+            countiesFilter.map((item, i) => (
+              <Collapse
+                onToggle={() => {
+                  setOpenAccor((prevState) => ({
+                    ...prevState,
+                    [i]: !prevState[i],
+                  }));
+                  if (!neighbourhoods[i]) {
+                    fetchNeighbourhoods(item.value, i);
+                  }
+                }}
+                isCollapsed={!openAccor[i]}
+              >
+                <CollapseHeader>
+                  <View style={styles.countyChooseContainer}>
+                    <Text
+                      style={{ fontSize: 14, color: "#333", fontWeight: "700" }}
+                    >
+                      {item.label}
+                    </Text>
+                    <View>
+                      {/* <View>
                     <Text>{neighbourhoods[i]?.lenth}</Text>
                   </View> */}
-                    <Arrow
-                      name={!openAccor[i] ? "arrow-down" : "arrow-up"}
-                      size={14}
-                      color={"#333"}
-                    />
+                      <Arrow
+                        name={!openAccor[i] ? "arrow-down" : "arrow-up"}
+                        size={14}
+                        color={"#333"}
+                      />
+                    </View>
                   </View>
-                </View>
-              </CollapseHeader>
-              <CollapseBody style={{ margin: 10, gap: 10 }}>
-                {neighbourhoods[i] ? (
-                  neighbourhoods[i]?.map((neighbourhood, key) => (
-                    <TouchableOpacity
-                      style={{
-                        padding: 6,
-                        flexDirection: "row",
-                        justifyContent: "space-between",
-                        alignItems: "center",
-                      }}
-                      key={key}
-                      onPress={() => {
-                        let updatedCounty = Array.isArray(location.neigbourhood)
-                          ? [...location.neigbourhood]
-                          : [];
-
-                        if (updatedCounty.includes(neighbourhood.value)) {
-                          // Eğer zaten dizide varsa, çıkar
-                          updatedCounty = updatedCounty.filter(
-                            (county) => county !== neighbourhood.value
-                          );
-                        } else {
-                          // Eğer dizide yoksa, ekle
-                          updatedCounty.push(neighbourhood.value);
-                        }
-                        setneigbourhod(updatedCounty);
-                        dispatch(
-                          setLocation({
-                            neigbourhood: updatedCounty, // Güncellenmiş county dizisini gönder
-                          })
-                        );
-                      }}
-                    >
-                      <Text
+                </CollapseHeader>
+                <CollapseBody style={{ margin: 10, gap: 10 }}>
+                  {neighbourhoods[i] ? (
+                    neighbourhoods[i]?.map((neighbourhood, key) => (
+                      <TouchableOpacity
                         style={{
-                          fontSize: 12,
-                          color: "#333",
-                          fontWeight: "500",
+                          padding: 6,
+                          flexDirection: "row",
+                          justifyContent: "space-between",
+                          alignItems: "center",
+                        }}
+                        key={key}
+                        onPress={() => {
+                          let updatedCounty = Array.isArray(
+                            location.neigbourhood
+                          )
+                            ? [...location.neigbourhood]
+                            : [];
+
+                          if (updatedCounty.includes(neighbourhood.value)) {
+                            // Eğer zaten dizide varsa, çıkar
+                            updatedCounty = updatedCounty.filter(
+                              (county) => county !== neighbourhood.value
+                            );
+                          } else {
+                            // Eğer dizide yoksa, ekle
+                            updatedCounty.push(neighbourhood.value);
+                          }
+                          setneigbourhod(updatedCounty);
+                          dispatch(
+                            setLocation({
+                              neigbourhood: updatedCounty, // Güncellenmiş county dizisini gönder
+                            })
+                          );
                         }}
                       >
-                        {neighbourhood?.label}
-                      </Text>
-                      {Array.isArray(location.neigbourhood) &&
-                      location?.neigbourhood?.includes(neighbourhood.value) ? (
-                        <Icon name="checkcircleo" size={20} color={"#EA2C2E"} />
-                      ) : (
-                        <TouchableOpacity
+                        <Text
                           style={{
-                            padding: 9,
-                            borderRadius: 20,
-                            borderWidth: 1,
-                            borderColor: "grey",
+                            fontSize: 12,
+                            color: "#333",
+                            fontWeight: "500",
                           }}
-                          onPress={() => {
-                            let updatedCounty = Array.isArray(
-                              location.neigbourhood
-                            )
-                              ? [...location.neigbourhood]
-                              : [];
+                        >
+                          {neighbourhood?.label}
+                        </Text>
+                        {Array.isArray(location.neigbourhood) &&
+                        location?.neigbourhood?.includes(
+                          neighbourhood.value
+                        ) ? (
+                          <Icon
+                            name="checkcircleo"
+                            size={20}
+                            color={"#EA2C2E"}
+                          />
+                        ) : (
+                          <TouchableOpacity
+                            style={{
+                              padding: 9,
+                              borderRadius: 20,
+                              borderWidth: 1,
+                              borderColor: "grey",
+                            }}
+                            onPress={() => {
+                              let updatedCounty = Array.isArray(
+                                location.neigbourhood
+                              )
+                                ? [...location.neigbourhood]
+                                : [];
 
-                            if (updatedCounty.includes(neighbourhood.value)) {
-                              // Eğer zaten dizide varsa, çıkar
-                              updatedCounty = updatedCounty.filter(
-                                (county) => county !== neighbourhood.value
+                              if (updatedCounty.includes(neighbourhood.value)) {
+                                // Eğer zaten dizide varsa, çıkar
+                                updatedCounty = updatedCounty.filter(
+                                  (county) => county !== neighbourhood.value
+                                );
+                              } else {
+                                // Eğer dizide yoksa, ekle
+                                updatedCounty.push(neighbourhood?.value);
+                              }
+                              setneigbourhod(updatedCounty);
+                              dispatch(
+                                setLocation({
+                                  neigbourhood: updatedCounty, // Güncellenmiş county dizisini gönder
+                                })
                               );
-                            } else {
-                              // Eğer dizide yoksa, ekle
-                              updatedCounty.push(neighbourhood?.value);
-                            }
-                            setneigbourhod(updatedCounty);
-                            dispatch(
-                              setLocation({
-                                neigbourhood: updatedCounty, // Güncellenmiş county dizisini gönder
-                              })
-                            );
-                          }}
-                        ></TouchableOpacity>
-                      )}
-                    </TouchableOpacity>
-                  ))
-                ) : (
-                  <View
-                    style={{ alignItems: "center", justifyContent: "center" }}
-                  >
-                    <ActivityIndicator />
-                  </View>
-                )}
-              </CollapseBody>
-            </Collapse>
-          ))}
+                            }}
+                          ></TouchableOpacity>
+                        )}
+                      </TouchableOpacity>
+                    ))
+                  ) : (
+                    <View
+                      style={{ alignItems: "center", justifyContent: "center" }}
+                    >
+                      <ActivityIndicator />
+                    </View>
+                  )}
+                </CollapseBody>
+              </Collapse>
+            ))
+          ) : (
+            <ActivityIndicator />
+          )}
         </ScrollView>
       </ActionSheet>
     </View>

@@ -122,4 +122,45 @@ export const styles = StyleSheet.create({
     fontWeight: "600",
     color: "#03bf3c",
   },
+  FilterContainer: {
+    width: "100%",
+    position: "absolute",
+    zIndex: 1,
+    alignItems: "center",
+    paddingTop: 8,
+  },
+  filterRow: {
+    alignItems: "center",
+    justifyContent: "space-around",
+    flexDirection: "row",
+    gap: 5,
+  },
+  actionSheet: {
+    backgroundColor: "#FFF",
+    width: "100%", // Set width to 32px less than screen width
+    height: "40%", // Set height to 80% of screen height
+    borderTopLeftRadius: 10,
+    borderTopRightRadius: 10,
+  },
+  countyChooseContainer: {
+    padding: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: "#ebebeb",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    paddingRight: 13,
+  },
+  cityChooseContainer: {
+    padding: 15,
+    borderBottomWidth: 1,
+    borderBottomColor: "#ebebeb",
+    borderRadius: 10,
+  },
+  cityActionSheetTop: {
+    flexDirection: "row",
+
+    paddingTop: 10,
+    paddingBottom: 10,
+    justifyContent: "space-between",
+  },
 });

@@ -35,39 +35,47 @@ const MapFilterRealtor = () => {
   const location = useSelector((state) => state?.mapFilters?.location);
   const dispatch = useDispatch();
   const [filterMarker, setfilterMarker] = useState([]);
-
+  const [skip, setskip] = useState(0);
+  const [take, settake] = useState(10);
   const [filterLatiude, setfilterLatiude] = useState(null);
   const [filterLongitude, setfilterLongitude] = useState(null);
-  const [loading, setloading] = useState(false);
+  const [loading, setloading] = useState(true);
   const [emptyFilterMarkerAlert, setemptyFilterMarkerAlert] = useState(false);
-  const GetProjectsInfo = (city, county, neighbourhood) => {
+  const GetProjectsInfo = (city, county, neighbourhood, skip, take) => {
     setloading(true);
     axios
-      .get(apiUrl + "real-estates")
+      .get(apiUrl + "real-estates", {
+        params: {
+          skip, // Başlangıç noktası
+          take, // Kaç veri alınacak
+        },
+      })
       .then((res) => {
-        const data = res?.data;
+        const data = res?.data?.data?.housings;
+        if (data.length === 0 || data.length < take) {
+          setskip(0);
+        } else {
+          const advertFiter = data.filter((item) => {
+            // Şehir, ilçe ve mahalleye göre filtreleme koşulları
+            const matchCity = city ? item.city_id === city : true;
+            const matchCounty =
+              Array.isArray(county) && county.length > 0
+                ? Array.isArray(county)
+                  ? county.includes(item.county_id)
+                  : true
+                : true;
+            const matchNeighbourhood =
+              Array.isArray(neighbourhood) && neighbourhood.length > 0
+                ? Array.isArray(neighbourhood)
+                  ? neighbourhood.includes(item.neighborhood_id)
+                  : true
+                : true;
 
-        const advertFiter = data.filter((item) => {
-          // Şehir, ilçe ve mahalleye göre filtreleme koşulları
-          const matchCity = city ? item.city_id === city : true;
-          const matchCounty =
-            Array.isArray(county) && county.length > 0
-              ? Array.isArray(county)
-                ? county.includes(item.county_id)
-                : true
-              : true;
-          const matchNeighbourhood =
-            Array.isArray(neighbourhood) && neighbourhood.length > 0
-              ? Array.isArray(neighbourhood)
-                ? neighbourhood.includes(item.neighborhood_id)
-                : true
-              : true;
-
-          return matchCity && matchCounty && matchNeighbourhood;
-        });
-
-        setfilterMarker(advertFiter);
-        setMarkers(data);
+            return matchCity && matchCounty && matchNeighbourhood;
+          });
+          setfilterMarker(advertFiter);
+          setMarkers(data);
+        }
 
         console.log("Çalıştı");
         // console.log(data[0].city_id, "Apiden Gele şehir");
@@ -84,8 +92,14 @@ const MapFilterRealtor = () => {
       });
   };
   useEffect(() => {
-    GetProjectsInfo(location.city, location.county, location.neigbourhood);
-  }, []);
+    GetProjectsInfo(
+      location.city,
+      location.county,
+      location.neigbourhood,
+      skip,
+      take
+    );
+  }, [skip]);
   useEffect(() => {
     setfilterLatiude(filterMarker[0]?.latitude);
     setfilterLongitude(filterMarker[0]?.longitude);
@@ -148,16 +162,20 @@ const MapFilterRealtor = () => {
             isVisible3={isVisible3}
             setisVisible2={setisVisible2}
             setisVisible3={setisVisible3}
+            skip={skip}
+            setskip={setskip}
+            take={take}
+            settake={settake}
           />
 
-          {location.city ? (
+          {location?.city ? (
             filterLatiude && filterLongitude ? (
               <MapView
                 provider={PROVIDER_DEFAULT}
                 style={styles.map}
                 initialRegion={{
-                  latitude: filterLatiude,
-                  longitude: filterLongitude,
+                  latitude: parseFloat(filterLatiude),
+                  longitude: parseFloat(filterLongitude),
                   latitudeDelta: 5,
                   longitudeDelta: 5,
                 }}
@@ -168,8 +186,8 @@ const MapFilterRealtor = () => {
                   <Marker
                     key={_i}
                     coordinate={{
-                      latitude: parseFloat(marker.latitude),
-                      longitude: parseFloat(marker.longitude),
+                      latitude: parseFloat(marker?.latitude),
+                      longitude: parseFloat(marker?.longitude),
                     }}
                     // title={marker.housing_title}
                     // description={marker.address}
@@ -246,7 +264,7 @@ const MapFilterRealtor = () => {
                     setemptyFilterMarkerAlert(false);
                     setTimeout(() => {
                       dispatch(clearLocation());
-                      GetProjectsInfo();
+                      GetProjectsInfo(null, null, null, skip, take);
                     }, 100);
                   }}
                   onConfirmPressed={() => {
@@ -275,10 +293,10 @@ const MapFilterRealtor = () => {
               style={styles.map}
               provider={PROVIDER_DEFAULT}
               initialRegion={{
-                latitude: 39.925533,
-                longitude: 32.866287,
+                latitude: 39.14656984,
+                longitude: 34.15954163,
                 latitudeDelta: 20,
-                longitudeDelta: 13,
+                longitudeDelta: 25,
               }}
               showsUserLocation={true}
               showsMyLocationButton={true}
@@ -480,21 +498,60 @@ const MapFilterRealtor = () => {
             padding: 10,
           }}
         >
-          <View>
-            <TouchableOpacity>
-              <ArrowIcon name="arrow-back-ios" size={25} color={"#333"} />
+          <View style={{ flexDirection: "row", alignItems: "center" }}>
+            <TouchableOpacity
+              disabled={skip === 0}
+              onPress={() => {
+                setskip((prevSkip) => Math.max(prevSkip - take, 0));
+              }}
+            >
+              <ArrowIcon
+                name="arrow-back-ios"
+                size={25}
+                color={"#333"}
+                style={{ opacity: skip == 0 ? 0.5 : 1 }}
+              />
             </TouchableOpacity>
+            {skip > 0 && (
+              <Text style={{ color: "#333", fontSize: 12, fontWeight: "600" }}>
+                {skip - take} - {skip}
+              </Text>
+            )}
           </View>
-          <View style={{ alignItems: "center", gap: 5 }}>
-            <Text style={{ color: "#333", fontSize: 15, fontWeight: "500" }}>
+
+          <View style={{ gap: 5 }}>
+            <Text
+              style={{
+                color: "#333",
+                fontSize: 15,
+                fontWeight: "500",
+                textAlign: "center",
+              }}
+            >
               Seçilen Konuma Göre
             </Text>
-            <Text style={{ color: "#333", fontWeight: "700", fontSize: 14 }}>
-              1-10
+            <Text
+              style={{
+                color: "#333",
+                fontWeight: "700",
+                fontSize: 14,
+                textAlign: "center",
+              }}
+            >
+              {skip} - {skip + 10}
             </Text>
           </View>
-          <View>
-            <TouchableOpacity>
+
+          <View style={{ flexDirection: "row", alignItems: "center", gap: 5 }}>
+            <Text style={{ color: "#333", fontSize: 12, fontWeight: "600" }}>
+              {skip + 11} - {skip + 20}
+            </Text>
+
+            <TouchableOpacity
+              onPress={() => {
+                setskip((prevSkip) => prevSkip + take);
+              }}
+            >
               <ArrowIcon name="arrow-forward-ios" size={25} color={"#333"} />
             </TouchableOpacity>
           </View>

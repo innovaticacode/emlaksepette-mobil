@@ -20,8 +20,6 @@ import bannerSRC from "../../src/assets/images/project-banner.png";
 import { useNavigation } from "@react-navigation/native";
 import { apiUrl, frontEndUriBase } from "../../components/methods/apiRequest";
 
-
-
 const HomePage = (props) => {
   const { index } = props;
 
@@ -41,9 +39,8 @@ const HomePage = (props) => {
     }
   };
   useEffect(() => {
-    fetchFeaturedSliders()
-  }, [user])
-  
+    fetchFeaturedSliders();
+  }, [user]);
 
   // State for featured projects
   const [loadingProjects, setLoadingProjects] = useState(false);
@@ -54,7 +51,7 @@ const HomePage = (props) => {
     try {
       setLoadingProjects(true);
       const response = await axios.get(`${apiUrl}featured-projects`);
-      setFeaturedProjects(response.data.data);
+      setFeaturedProjects(response.data);
     } catch (error) {
       console.log("Error fetching featured projects:", error);
     } finally {
@@ -73,7 +70,6 @@ const HomePage = (props) => {
   const pagerViewRef = useRef(null);
 
   useEffect(() => {
-    
     const interval = setInterval(() => {
       pagerViewRef.current?.setPage(
         currentPage === featuredSliders.length - 1 ? 0 : currentPage + 1
