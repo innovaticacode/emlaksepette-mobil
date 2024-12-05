@@ -378,8 +378,9 @@ const MapFilterRealtor = () => {
                         }, 500);
                       }}
                     >
+                      {/* ---- */}
                       <View style={styles.advertContainer}>
-                        <View style={{ width: "30%" }}>
+                        <View style={{ flex: 1, marginRight: 10 }}>
                           {selectedMarker &&
                             selectedMarker.housing_type_data && (
                               <Image
@@ -439,6 +440,7 @@ const MapFilterRealtor = () => {
                           </View>
                         </View>
                       </View>
+                      {/* ---- */}
                     </TouchableOpacity>
                     <View style={styles.buttonContainer}>
                       <TouchableOpacity
@@ -601,11 +603,13 @@ const styles = StyleSheet.create({
     marginBottom: 25,
   },
   modalImage: {
-    width: 110,
+    width: "100%",
     height: 110,
     marginRight: 10,
   },
-  textContainer: {},
+  textContainer: {
+    flex: 2,
+  },
   modalTitle: {
     fontSize: 18,
     fontWeight: "bold",
