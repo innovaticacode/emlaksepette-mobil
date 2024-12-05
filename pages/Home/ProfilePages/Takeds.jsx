@@ -42,7 +42,7 @@ export default function Takeds() {
       try {
         if (user.access_token) {
           const response = await axios.get(
-            apiUrl+"institutional/get_boughts",
+            apiUrl + "institutional/get_boughts",
             {
               headers: {
                 Authorization: `Bearer ${user?.access_token}`,
