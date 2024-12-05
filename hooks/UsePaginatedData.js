@@ -80,11 +80,11 @@ const UsePaginatedData = (endpoint, take = 10, apiData = []) => {
   };
 
   useEffect(() => {
-    fetchData();
+    if (skip >= 0) fetchData();
   }, [skip]);
 
   useEffect(() => {
-    user && fetchData();
+    if (user) fetchData();
   }, [user]);
 
   const loadMore = () => {
