@@ -10,9 +10,9 @@ import { apiUrl } from "../components/methods/apiRequest";
  * @param {Array} apiData - API'ye gönderilecek ek parametreler (örneğin, [{ key: "step1_slug", value: "konut" }]).
  * @returns {object} - Veriler, yükleme durumu, hata ve kontrol işlevleri.
  */
-
 const UsePaginatedData = (endpoint, take = 10, apiData = []) => {
   const [data, setData] = useState([]);
+  const [totalCount, setTotalCount] = useState(0);
   const [skip, setSkip] = useState(0);
   const [hooksLoading, setHooksLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -60,11 +60,13 @@ const UsePaginatedData = (endpoint, take = 10, apiData = []) => {
           data: jsonData,
         },
       });
-      if (response.data && Array.isArray(response.data)) {
+      const { housings, total_count } = response.data.data;
+      if (housings) {
         setData((prevData) =>
-          skip === 0 ? response.data : [...prevData, ...response.data]
+          skip === 0 ? housings : [...prevData, ...housings]
         );
-        if (response.data.length < take) {
+        setTotalCount(total_count || 0);
+        if (housings.length < take) {
           setIsLastPage(true);
         }
       } else {
@@ -91,7 +93,7 @@ const UsePaginatedData = (endpoint, take = 10, apiData = []) => {
     }
   };
 
-  return { data, hooksLoading, error, loadMore, setSkip };
+  return { data, totalCount, hooksLoading, error, loadMore, setSkip };
 };
 
 export default UsePaginatedData;
