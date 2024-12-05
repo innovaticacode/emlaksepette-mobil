@@ -2,9 +2,9 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { getValueFor } from "../components/methods/user";
 import { apiUrl } from "../components/methods/apiRequest";
+import { LogToSentry } from "../utils";
 
 /**
- * Bu hooks sadece real-estates için kullanılabilir durumda olup, diğer veri çekme işlemleri için genelleştirilebilir.
  * UsePaginatedData Hook: Pagination veri çekme işlemleri için kullanılır.
  * @param {string} endpoint - API'nin son noktası (örneğin, "real-estates").
  * @param {number} take - Bir seferde alınacak veri sayısı (varsayılan 10).
@@ -28,6 +28,10 @@ const UsePaginatedData = (endpoint, take = 10, apiData = []) => {
           setUser(retrievedUser);
         }
       } catch (error) {
+        LogToSentry(error, {
+          section: "user-fetch",
+          feature: "retrieve-user",
+        });
         console.error("Error getting user from async storage", error);
       }
     })();
@@ -71,10 +75,23 @@ const UsePaginatedData = (endpoint, take = 10, apiData = []) => {
           setIsLastPage(true);
         }
       } else {
-        setError("Unexpected data structure");
+        const errorMessage = "Unexpected data structure";
+        setError(errorMessage);
+        LogToSentry(new Error(errorMessage), {
+          section: "data-fetch",
+          feature: "pagination",
+          endpoint,
+        });
       }
     } catch (err) {
       setError(err.message);
+      LogToSentry(err, {
+        section: "data-fetch--paginated-hooks",
+        feature: "pagination",
+        endpoint,
+        user,
+        apiData,
+      });
     } finally {
       setHooksLoading(false);
     }
