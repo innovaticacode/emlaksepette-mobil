@@ -42,10 +42,10 @@ export default function SliderItem({
   const handleUrgentAdverts = async () => {
     try {
       const response = await axios.get(`${apiUrl}real-estates`);
-      const urgentFilter = response?.data?.filter((item) => {
+      const urgentFilter = response?.data.data.housings?.filter((item) => {
         try {
           const data = JSON.parse(item.housing_type_data);
-          return data?.buysellurgent?.[0] === 'Evet';
+          return data?.buysellurgent?.[0] === "Evet";
         } catch (error) {
           console.error("JSON parse error:", error);
           return false;
@@ -62,7 +62,6 @@ export default function SliderItem({
       handleUrgentAdverts();
     }
   }, [urgent]);
-
 
   const handlePress = () => {
     if (urgent) {
@@ -87,11 +86,10 @@ export default function SliderItem({
         id: StoreID,
       });
     }
-  }
+  };
 
   return (
-    <TouchableOpacity
-      onPress={() => handlePress()}>
+    <TouchableOpacity onPress={() => handlePress()}>
       <View
         style={[
           styles.container,

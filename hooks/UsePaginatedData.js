@@ -4,6 +4,7 @@ import { getValueFor } from "../components/methods/user";
 import { apiUrl } from "../components/methods/apiRequest";
 
 /**
+ * Bu hooks sadece real-estates için kullanılabilir durumda olup, diğer veri çekme işlemleri için genelleştirilebilir.
  * UsePaginatedData Hook: Pagination veri çekme işlemleri için kullanılır.
  * @param {string} endpoint - API'nin son noktası (örneğin, "real-estates").
  * @param {number} take - Bir seferde alınacak veri sayısı (varsayılan 10).
