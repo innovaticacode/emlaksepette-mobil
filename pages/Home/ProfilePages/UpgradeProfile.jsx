@@ -30,6 +30,7 @@ import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
 import axios from "axios";
 import { ActivityIndicator } from "react-native-paper";
 import * as Progress from "react-native-progress";
+import AdduserIcon from "react-native-vector-icons/AntDesign";
 import {
   AlertNotificationRoot,
   ALERT_TYPE,
@@ -298,13 +299,13 @@ export default function UpgradeProfile() {
     setLoading(true);
     try {
       if (user.access_token) {
-        const userInfo = await axios.get(`${apiUrl}users/${user.id}`, {
+        const userInfo = await axios.get(`${apiUrl}user`, {
           headers: {
             Authorization: `Bearer ${user.access_token}`,
           },
         });
 
-        setnamFromGetUser(userInfo?.data?.user);
+        setnamFromGetUser(userInfo?.data);
       }
     } catch (error) {
       console.error("Kullanıcı verileri güncellenirken hata oluştu:", error);
@@ -342,6 +343,7 @@ export default function UpgradeProfile() {
       });
       setCurrentColor(namFromGetUser.banner_hex_code);
       setareaCode(namFromGetUser.area_code);
+      setImage(namFromGetUser?.profile_image);
       setTimeout(() => {
         onChangeCity(namFromGetUser.city_id);
         onChangeCounty(namFromGetUser.county_id);
@@ -427,14 +429,15 @@ export default function UpgradeProfile() {
   // }, [tab]);
 
   const handleProfileUpdate = async (data) => {
+    data.append("banner_hex_code", currentColor);
     data.append(
       `profile_image`,
-      image
+      image?.uri
         ? {
             uri:
               Platform.OS === "android"
                 ? image
-                : image.uri.replace("file://", ""),
+                : image?.uri?.replace("file://", ""),
             type: image.mimeType,
             name:
               file == null
@@ -443,25 +446,21 @@ export default function UpgradeProfile() {
                 ? image?.name
                 : image?.fileName,
           }
-        : namFromGetUser.profile_image
+        : namFromGetUser?.profile_image
     );
 
     try {
-      const response = await axios.post(
-        `${apiUrl}client/profile/update`,
-        data,
-        {
-          headers: {
-            Authorization: `Bearer ${user?.access_token}`,
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
-      console.debug("response", response.data);
+      const response = await axios.post(`${apiUrl}profil-duzenleme`, data, {
+        headers: {
+          Authorization: `Bearer ${user?.access_token}`,
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      console.debug("Profil düzenleme çalıştı", response.data);
       Dialog.show({
         type: ALERT_TYPE.SUCCESS,
         title: "Başarılı",
-        textBody: "Profiliniz başarıyla güncellendi.",
+        textBody: response?.data?.message,
         button: "Tamam",
         onHide: () => GetUserInfo(),
       });
@@ -533,26 +532,25 @@ export default function UpgradeProfile() {
   };
 
   const handleGeneralUpdate = async (data) => {
-    data.append("_method", "PUT");
+    //  data.append("_method", "PUT");
     data.append("banner_hex_code", currentColor);
 
     try {
-      const response = await axios.post(
-        `${apiUrl}client/profile/update`,
-        data,
-        {
-          headers: {
-            Authorization: `Bearer ${user?.access_token}`,
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
+      const response = await axios.post(`${apiUrl}magaza-bilgileri`, data, {
+        headers: {
+          Authorization: `Bearer ${user?.access_token}`,
+          "Content-Type": "multipart/form-data",
+        },
+      });
       console.debug("response", response.data);
       Dialog.show({
         type: ALERT_TYPE.SUCCESS,
         title: "Başarılı",
-        textBody: "Güncelleme işlemi başarıyla tamamlandı.",
+        textBody: response?.data?.message,
         button: "Tamam",
+        onHide: () => {
+          GetUserInfo();
+        },
       });
     } catch (error) {
       handleApiError(error);
@@ -587,7 +585,26 @@ export default function UpgradeProfile() {
       });
     }
   };
-
+  const handeStoreUpdate = async (data) => {
+    try {
+      const response = await axios.post(`${apiUrl}magaza-bilgileri`, data, {
+        headers: {
+          Authorization: `Bearer ${user?.access_token}`,
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      console.debug("response", response.data);
+      Dialog.show({
+        type: ALERT_TYPE.SUCCESS,
+        title: "Başarılı",
+        textBody: "Mağaza Bilgileriniz başarıyla güncellendi.",
+        button: "Tamam",
+        onHide: () => GetUserInfo(),
+      });
+    } catch (error) {
+      handleApiError(error);
+    }
+  };
   const postData = async (param) => {
     setloadingUpdate(true);
     const data = new FormData();
@@ -610,6 +627,7 @@ export default function UpgradeProfile() {
       case 2:
         await handlePhoneUpdate(data);
         break;
+
       default:
         await handleGeneralUpdate(data);
     }
@@ -691,17 +709,29 @@ export default function UpgradeProfile() {
                           setIsVisible(true);
                         }}
                       >
-                        <Image
-                          source={
-                            image
-                              ? { uri: image.uri }
-                              : {
-                                  uri: `${frontEndUriBase}storage/profile_images/${namFromGetUser.profile_image}`,
-                                }
-                          }
-                          style={{ width: "100%", height: "100%" }}
-                          borderRadius={50}
-                        />
+                        {image || image?.uri ? (
+                          image?.uri ? (
+                            <Image
+                              source={{ uri: image.uri }}
+                              style={{ width: "100%", height: "100%" }}
+                              borderRadius={50}
+                            />
+                          ) : (
+                            <Image
+                              source={{
+                                uri: `${frontEndUriBase}storage/profile_images/${namFromGetUser.profile_image}`,
+                              }}
+                              style={{ width: "100%", height: "100%" }}
+                              borderRadius={50}
+                            />
+                          )
+                        ) : (
+                          <AdduserIcon
+                            name="adduser"
+                            size={30}
+                            color={"#737373"}
+                          />
+                        )}
                       </TouchableOpacity>
                     ) : (
                       <Icon2 name="user" size={65} color="#333" padding={10} />
@@ -709,7 +739,7 @@ export default function UpgradeProfile() {
                   </View>
                 </View>
 
-                {(tab == 0 || tab == 4) && (
+                {tab == 0 && (
                   <TouchableOpacity
                     onPress={() => {
                       setchoose(true);
