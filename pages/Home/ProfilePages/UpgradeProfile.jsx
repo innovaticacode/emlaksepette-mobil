@@ -494,10 +494,12 @@ export default function UpgradeProfile() {
           name: image.fileName || "photo.jpg",
         });
       }
+      console.log("year-->", formData.year);
       data.append("banner_hex_code", currentColor);
       data.append("name", formData.name);
       data.append("iban", formData.iban);
       data.append("id_number", formData.idNumber);
+      data.append("birthday", formData.year);
       try {
         const response = await axios.post(`${apiUrl}profil-duzenleme`, data, {
           headers: {
