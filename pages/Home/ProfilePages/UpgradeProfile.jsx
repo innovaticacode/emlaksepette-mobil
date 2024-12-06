@@ -115,7 +115,11 @@ export default function UpgradeProfile() {
     try {
       const response = await axios.get(`${apiUrl}get-corporate-types`);
       if (response.data.success) {
-        return setCorporateType(response?.data?.data?.corporate_types);
+        const items = response.data.data.corporate_types.map((val) => ({
+          label: val,
+          value: val,
+        }));
+        return setCorporateType(items);
       }
     } catch (error) {
       console.error("Hata:", error);
@@ -434,7 +438,7 @@ export default function UpgradeProfile() {
     value: item.id.toString(), // id değerini string olarak çevirme
   }));
 
-  const getItemsForKey = (key) => {
+  const getItemsForKey = async (key) => {
     switch (key) {
       case "city_id":
         return cities;
@@ -446,6 +450,10 @@ export default function UpgradeProfile() {
         return uniqueCities;
       case "taxOffice":
         return formattedTaxOfficePlace;
+      case "tax_city":
+        return cities;
+      case "corporate_type":
+        return corporateType;
       default:
         return [];
     }
