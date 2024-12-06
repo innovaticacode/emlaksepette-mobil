@@ -106,20 +106,34 @@ export const Forms = [
 
   { key: "store_name", label: "Ticari Unvan", tab: [5], type: "input" },
   {
+    key: "corporate_type",
+    label: "Faliyet Alanı",
+    tab: [5],
+    type: "select",
+    header: "Mağaza Adresi",
+  },
+  {
+    key: "",
+    label: "Vergi Dairesi İli",
+    tab: [5],
+    type: "select",
+    header: "Mağaza Adresi",
+  },
+  {
+    key: "",
+    label: "Vergi Dairesi",
+    tab: [5],
+    type: "select",
+    header: "Mağaza Adresi",
+  },
+
+  {
     key: "taxNumber",
     label: "Vergi Kimlik Numarası",
     tab: [5],
     type: "input",
     maxlength: 10,
     disabled: true,
-  },
-  {
-    key: "authority_licence",
-    label: "Yetki Belgesi No",
-    tab: [5],
-    isShow: "Emlak Ofisi",
-    type: "input",
-    maxlength: 7,
   },
   {
     key: "phone",
@@ -129,6 +143,15 @@ export const Forms = [
     maxlength: 9,
     showArea: true,
   },
+  {
+    key: "authority_licence",
+    label: "Yetki Belgesi No",
+    tab: [5],
+    isShow: "Emlak Ofisi",
+    type: "input",
+    maxlength: 7,
+  },
+
   {
     key: "city_id",
     label: "İl",

@@ -109,6 +109,23 @@ export default function UpgradeProfile() {
     new_mobile_phone: "",
   };
   const [formData, setFormData] = useState(initialFormData);
+  const [corporateType, setCorporateType] = useState();
+
+  const fetchCorporateType = async () => {
+    try {
+      const response = await axios.get(`${apiUrl}get-corporate-types`);
+      if (response.data.success) {
+        return setCorporateType(response?.data?.data?.corporate_types);
+      }
+    } catch (error) {
+      console.error("Hata:", error);
+    }
+  };
+  useEffect(() => {
+    if (tab == 5) {
+      fetchCorporateType();
+    }
+  }, [tab]);
 
   useEffect(() => {
     (async () => {
@@ -580,32 +597,6 @@ export default function UpgradeProfile() {
     }
   };
 
-  const handleGeneralUpdate = async (data) => {
-    //  data.append("_method", "PUT");
-    data.append("banner_hex_code", currentColor);
-
-    try {
-      const response = await axios.post(`${apiUrl}magaza-bilgileri`, data, {
-        headers: {
-          Authorization: `Bearer ${user?.access_token}`,
-          "Content-Type": "multipart/form-data",
-        },
-      });
-      console.debug("response", response.data);
-      Dialog.show({
-        type: ALERT_TYPE.SUCCESS,
-        title: "Başarılı",
-        textBody: response?.data?.message,
-        button: "Tamam",
-        onHide: () => {
-          GetUserInfo();
-        },
-      });
-    } catch (error) {
-      handleApiError(error);
-    }
-  };
-
   const handleApiError = (error) => {
     if (error.response) {
       console.error("Sunucu Yanıt Hatası:", error.response.data);
@@ -634,6 +625,7 @@ export default function UpgradeProfile() {
       });
     }
   };
+
   const handeStoreUpdate = async (data) => {
     try {
       const response = await axios.post(`${apiUrl}magaza-bilgileri`, data, {
@@ -654,6 +646,7 @@ export default function UpgradeProfile() {
       handleApiError(error);
     }
   };
+
   const postData = async (param) => {
     setloadingUpdate(true);
     const data = new FormData();
@@ -676,9 +669,10 @@ export default function UpgradeProfile() {
       case 2:
         await handlePhoneUpdate(data);
         break;
-
+      case 5:
+        await handeStoreUpdate(data);
       default:
-        await handleGeneralUpdate(data);
+        null;
     }
     setloadingUpdate(false);
   };
