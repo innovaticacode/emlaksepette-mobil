@@ -110,17 +110,23 @@ export default function UpgradeProfile() {
   };
   const [formData, setFormData] = useState(initialFormData);
   const [corporateType, setCorporateType] = useState();
-
   const fetchCorporateType = async () => {
     try {
       const response = await axios.get(`${apiUrl}get-corporate-types`);
+      console.log("corporate type--->", response.data.data.corporate_types);
+
       if (response.data.success) {
-        return setCorporateType(response?.data?.data?.corporate_types);
+        const items = response.data.data.corporate_types.map((item) => ({
+          label: item, // Gelen stringi label olarak kullan
+          value: item, // Gelen stringi value olarak kullan
+        }));
+        setCorporateType(items); // Dönüştürülmüş veriyi kaydet
       }
     } catch (error) {
       console.error("Hata:", error);
     }
   };
+
   useEffect(() => {
     if (tab == 5) {
       fetchCorporateType();
@@ -435,6 +441,7 @@ export default function UpgradeProfile() {
   }));
 
   const getItemsForKey = (key) => {
+    console.log("crprt type---", corporateType);
     switch (key) {
       case "city_id":
         return cities;
@@ -446,6 +453,10 @@ export default function UpgradeProfile() {
         return uniqueCities;
       case "taxOffice":
         return formattedTaxOfficePlace;
+      case "corporate_type":
+        return corporateType;
+      case "tax_city":
+        return cities;
       default:
         return [];
     }
