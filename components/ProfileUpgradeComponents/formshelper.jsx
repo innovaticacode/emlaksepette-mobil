@@ -25,7 +25,7 @@ export const Forms = [
     isType: ["1"],
   },
   {
-    key: "store_name",
+    key: "name",
     label: "Mağaza Adı",
     tab: [0],
     type: "input",

@@ -338,6 +338,10 @@ export default function UpgradeProfile() {
   }, [user]);
 
   useEffect(() => {
+    console.log("namFromGetUser", namFromGetUser);
+  }, [namFromGetUser]);
+
+  useEffect(() => {
     if (Object.keys(namFromGetUser).length > 0) {
       setFormData({
         name: namFromGetUser.name || "",
@@ -443,33 +447,21 @@ export default function UpgradeProfile() {
   };
 
   const handleProfileUpdate = async (data) => {
-    // if (image?.uri) {
-    //   console.log("Valid Image Details:", {
-    //     uri: image.uri,
-    //     type: image.mimeType || "image/jpeg",
-    //     name: image.fileName || "photo.jpg",
-    //     size: image.size,
-    //     width: image.width,
-    //     height: image.height,
-    //   });
-    // } else {
-    //   console.error("Image is missing or invalid.");
-    //   return;
-    // }
-
+    if (image?.uri) {
+      data.append("profile_image", {
+        uri:
+          Platform.OS === "android"
+            ? image.uri
+            : image.uri.replace("file://", ""),
+        type: image.mimeType || "image/jpeg",
+        name: image.fileName || "photo.jpg",
+      });
+    }
     data.append("banner_hex_code", currentColor);
-    data.append("profile_image", {
-      uri:
-        Platform.OS === "android"
-          ? image.uri
-          : image.uri.replace("file://", ""),
-      type: image.mimeType || "image/jpeg",
-      name: image.fileName || "photo.jpg",
-    });
-    data.append("username", formData.username);
-    data.append("name", formData.username);
-    data.append("iban", formData.iban);
+    data.append("username", formData.username); //yetkili isim soyisim
+    data.append("name", formData.store_name); //mağaza adı
     data.append("website", formData.website);
+    data.append("year", formData.year);
     try {
       const response = await axios.post(`${apiUrl}profil-duzenleme`, data, {
         headers: {
@@ -485,6 +477,8 @@ export default function UpgradeProfile() {
         button: "Tamam",
         onHide: () => GetUserInfo(),
       });
+
+      console.debug("success", response.data);
     } catch (error) {
       handleApiError(error);
     }
