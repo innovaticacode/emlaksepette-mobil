@@ -20,6 +20,9 @@ export default function UpdateProfile() {
     getValueFor("user", setUser);
   }, []);
 
+  useEffect(() => {
+    console.log("user---->", user);
+  }, [user]);
   const SettingItem = ({ text, tab, navigate }) => {
     return (
       <TouchableOpacity
@@ -81,37 +84,31 @@ export default function UpdateProfile() {
         </View>
       </View>
 
-      <View style={styles.card}>
-        <View
-          style={{
-            borderBottomWidth: 1,
-            borderBottomColor: "#ebebeb",
-            paddingTop: 15,
-            paddingLeft: 15,
-            paddingBottom: 10,
-          }}
-        >
-          <Text style={{ color: "#333", fontSize: 16, fontWeight: "700" }}>
-            Mağazam
-          </Text>
+      {user.type == 2 && (
+        <View style={styles.card}>
+          <View style={styles.storeArea}>
+            <Text style={{ color: "#333", fontSize: 16, fontWeight: "700" }}>
+              Mağazam
+            </Text>
+          </View>
+          <View style={{ gap: 10, paddingBottom: 5 }}>
+            {/* <SettingItem text={"Mağaza İçeriği"} tab={4} /> */}
+            <SettingItem text={"İşletme Bilgileri"} tab={5} />
+            <SettingItem text={"Ekip"} navigate={"UsersList"} />
+            {/* <SettingItem text={"Paketler"} tab={7} /> */}
+            {/* <SettingItem text={"Kayıtlı Kartlarım"} tab={8} /> */}
+            {/* <SettingItem text={"Faturalarım"} tab={9} /> */}
+            <SettingItem text={"Yetki Grubu"} navigate={"UserTypes"} />
+            <SettingItem
+              text={"Reklam Görselleri"}
+              tab={11}
+              navigate={"UploadAdsPicture"}
+            />
+            <SettingItem text={"Proje Sözleşmelerim"} tab={12} />
+            <SettingItem text={"Tanıtım Yazısı Ekle"} navigate={"AddBioText"} />
+          </View>
         </View>
-        <View style={{ gap: 10, paddingBottom: 5 }}>
-          {/* <SettingItem text={"Mağaza İçeriği"} tab={4} /> */}
-          <SettingItem text={"İşletme Bilgileri"} tab={5} />
-          <SettingItem text={"Ekip"} navigate={"UsersList"} />
-          {/* <SettingItem text={"Paketler"} tab={7} /> */}
-          {/* <SettingItem text={"Kayıtlı Kartlarım"} tab={8} /> */}
-          {/* <SettingItem text={"Faturalarım"} tab={9} /> */}
-          <SettingItem text={"Yetki Grubu"} navigate={"UserTypes"} />
-          <SettingItem
-            text={"Reklam Görselleri"}
-            tab={11}
-            navigate={"UploadAdsPicture"}
-          />
-          <SettingItem text={"Proje Sözleşmelerim"} tab={12} />
-          <SettingItem text={"Tanıtım Yazısı Ekle"} navigate={"AddBioText"} />
-        </View>
-      </View>
+      )}
     </ScrollView>
   );
 }
@@ -145,5 +142,12 @@ const styles = StyleSheet.create({
         elevation: 5,
       },
     }),
+  },
+  storeArea: {
+    borderBottomWidth: 1,
+    borderBottomColor: "#ebebeb",
+    paddingTop: 15,
+    paddingLeft: 15,
+    paddingBottom: 10,
   },
 });
