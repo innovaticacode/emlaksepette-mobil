@@ -188,6 +188,12 @@ export default function Company() {
     }
   };
 
+  const handleEpostaChange = (value) => {
+    // Türkçe karakterleri engelleyen regex
+    const filteredValue = value.replace(/[ğüşöçİĞÜŞÖÇ]/g, "");
+    seteposta(filteredValue);
+  };
+
   const postData = async () => {
     setsuccesRegister(true);
     let fullNumber = `${cityCode}${companyPhone}`;
@@ -753,7 +759,7 @@ export default function Company() {
                   },
                 ]}
                 value={eposta}
-                onChangeText={(value) => seteposta(value)}
+                onChangeText={handleEpostaChange}
                 placeholder="E-Posta Adresi"
                 autoCapitalize="none" // İlk harfin büyük olmasını engeller
               />
