@@ -50,15 +50,23 @@ export const Forms = [
   {
     key: "email",
     label: "Mevcut E-Posta",
+    label2: "Mevcut E-Posta",
     tab: [1],
     type: "input",
     disabled: true,
   },
-  { key: "new_email", label: "Yeni E-Posta", tab: [1], type: "input" },
+  {
+    key: "new_email",
+    label: "Yeni E-Posta",
+    label2: "Yeni E-Posta",
+    tab: [1],
+    type: "input",
+  },
 
   {
     key: "mobile_phone",
     label: "Mevcut Telefon Numarası",
+    label2: "Mevcut Telefon Numarası",
     tab: [2],
     type: "input",
     disabled: true,
@@ -66,6 +74,7 @@ export const Forms = [
   {
     key: "new_mobile_phone",
     label: "Yeni Telefon Numarası",
+    label2: "Yeni Telefon Numarası",
     tab: [2],
     type: "input",
     placeholder: "5********",
@@ -74,6 +83,7 @@ export const Forms = [
   {
     key: "change_reason",
     label: "Değiştirme Sebebi",
+    label2: "Değiştirme Sebebi",
     tab: [2],
     type: "input",
     maxlength: 50,

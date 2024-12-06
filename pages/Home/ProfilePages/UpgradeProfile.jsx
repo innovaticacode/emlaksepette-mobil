@@ -338,10 +338,6 @@ export default function UpgradeProfile() {
   }, [user]);
 
   useEffect(() => {
-    console.log("namFromGetUser", namFromGetUser);
-  }, [namFromGetUser]);
-
-  useEffect(() => {
     if (Object.keys(namFromGetUser).length > 0) {
       setFormData({
         name: namFromGetUser.name || "",
