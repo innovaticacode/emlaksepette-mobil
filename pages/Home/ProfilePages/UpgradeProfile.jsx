@@ -447,43 +447,79 @@ export default function UpgradeProfile() {
   };
 
   const handleProfileUpdate = async (data) => {
-    if (image?.uri) {
-      data.append("profile_image", {
-        uri:
-          Platform.OS === "android"
-            ? image.uri
-            : image.uri.replace("file://", ""),
-        type: image.mimeType || "image/jpeg",
-        name: image.fileName || "photo.jpg",
-      });
-    }
-    data.append("banner_hex_code", currentColor);
-    data.append("username", formData.username); //yetkili isim soyisim
-    data.append("name", formData.store_name); //mağaza adı
-    data.append("website", formData.website);
-    data.append("year", formData.year);
-    try {
-      const response = await axios.post(`${apiUrl}profil-duzenleme`, data, {
-        headers: {
-          Authorization: `Bearer ${user?.access_token}`,
-          "Content-Type": "multipart/form-data",
-        },
-      });
-      console.debug("Profil düzenleme çalıştı", response.data);
-      Dialog.show({
-        type: ALERT_TYPE.SUCCESS,
-        title: "Başarılı",
-        textBody: response?.data?.message || "Profil başarıyla güncellendi.",
-        button: "Tamam",
-        onHide: () => GetUserInfo(),
-      });
+    if (user.type == 2) {
+      if (image?.uri) {
+        data.append("profile_image", {
+          uri:
+            Platform.OS === "android"
+              ? image.uri
+              : image.uri.replace("file://", ""),
+          type: image.mimeType || "image/jpeg",
+          name: image.fileName || "photo.jpg",
+        });
+      }
+      data.append("banner_hex_code", currentColor);
+      data.append("username", formData.username); //yetkili isim soyisim
+      data.append("name", formData.store_name); //mağaza adı
+      data.append("website", formData.website);
+      data.append("year", formData.year);
+      try {
+        const response = await axios.post(`${apiUrl}profil-duzenleme`, data, {
+          headers: {
+            Authorization: `Bearer ${user?.access_token}`,
+            "Content-Type": "multipart/form-data",
+          },
+        });
+        console.debug("Profil düzenleme çalıştı", response.data);
+        Dialog.show({
+          type: ALERT_TYPE.SUCCESS,
+          title: "Başarılı",
+          textBody: response?.data?.message || "Profil başarıyla güncellendi.",
+          button: "Tamam",
+          onHide: () => GetUserInfo(),
+        });
 
-      console.debug("success", response.data);
-    } catch (error) {
-      handleApiError(error);
+        console.debug("success", response.data);
+      } catch (error) {
+        handleApiError(error);
+      }
+    } else {
+      if (image?.uri) {
+        data.append("profile_image", {
+          uri:
+            Platform.OS === "android"
+              ? image.uri
+              : image.uri.replace("file://", ""),
+          type: image.mimeType || "image/jpeg",
+          name: image.fileName || "photo.jpg",
+        });
+      }
+      data.append("banner_hex_code", currentColor);
+      data.append("name", formData.name);
+      data.append("iban", formData.iban);
+      data.append("id_number", formData.idNumber);
+      try {
+        const response = await axios.post(`${apiUrl}profil-duzenleme`, data, {
+          headers: {
+            Authorization: `Bearer ${user?.access_token}`,
+            "Content-Type": "multipart/form-data",
+          },
+        });
+        console.debug("Profil düzenleme çalıştı", response.data);
+        Dialog.show({
+          type: ALERT_TYPE.SUCCESS,
+          title: "Başarılı",
+          textBody: response?.data?.message || "Profil başarıyla güncellendi.",
+          button: "Tamam",
+          onHide: () => GetUserInfo(),
+        });
+
+        console.debug("success", response.data);
+      } catch (error) {
+        handleApiError(error);
+      }
     }
   };
-
   const handleEmailUpdate = async (data) => {
     console.debug("E-posta güncelleme işlemi başlatıldı.");
 
