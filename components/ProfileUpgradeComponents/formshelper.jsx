@@ -8,6 +8,24 @@ export const Forms = [
     type: "input",
     maxlength: 11,
   },
+  {
+    key: "store_name",
+    label: "Mağaza Adı",
+    tab: [0],
+    type: "input",
+  },
+  {
+    key: "website",
+    label: "Web Sitesi (Opsiyonel)",
+    tab: [0],
+    type: "input",
+  },
+  {
+    key: "year",
+    label: "Sektöre Giriş Tarihi",
+    tab: [0],
+    type: "input",
+  },
 
   {
     key: "email",

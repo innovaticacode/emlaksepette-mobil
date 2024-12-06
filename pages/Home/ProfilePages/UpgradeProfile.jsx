@@ -443,19 +443,19 @@ export default function UpgradeProfile() {
   };
 
   const handleProfileUpdate = async (data) => {
-    if (image?.uri) {
-      console.log("Valid Image Details:", {
-        uri: image.uri,
-        type: image.mimeType || "image/jpeg",
-        name: image.fileName || "photo.jpg",
-        size: image.size,
-        width: image.width,
-        height: image.height,
-      });
-    } else {
-      console.error("Image is missing or invalid.");
-      return;
-    }
+    // if (image?.uri) {
+    //   console.log("Valid Image Details:", {
+    //     uri: image.uri,
+    //     type: image.mimeType || "image/jpeg",
+    //     name: image.fileName || "photo.jpg",
+    //     size: image.size,
+    //     width: image.width,
+    //     height: image.height,
+    //   });
+    // } else {
+    //   console.error("Image is missing or invalid.");
+    //   return;
+    // }
 
     data.append("banner_hex_code", currentColor);
     data.append("profile_image", {
@@ -466,7 +466,10 @@ export default function UpgradeProfile() {
       type: image.mimeType || "image/jpeg",
       name: image.fileName || "photo.jpg",
     });
-
+    data.append("username", formData.username);
+    data.append("name", formData.username);
+    data.append("iban", formData.iban);
+    data.append("website", formData.website);
     try {
       const response = await axios.post(`${apiUrl}profil-duzenleme`, data, {
         headers: {
