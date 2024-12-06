@@ -111,23 +111,20 @@ export const Forms = [
     tab: [5],
     type: "select",
     header: "Mağaza Adresi",
-    data: "corporate_type",
   },
   {
-    key: "tax_city",
+    key: "",
     label: "Vergi Dairesi İli",
     tab: [5],
     type: "select",
-    data: "cities",
     header: "Mağaza Adresi",
   },
   {
-    key: "tax_office",
+    key: "",
     label: "Vergi Dairesi",
     tab: [5],
     type: "select",
     header: "Mağaza Adresi",
-    data: "taxOffices",
   },
 
   {
