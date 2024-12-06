@@ -109,7 +109,7 @@ export default function UpgradeProfile() {
     new_mobile_phone: "",
   };
   const [formData, setFormData] = useState(initialFormData);
-  const [corporateType, setCorporateType] = useState();
+  const [corporateType, setCorporateType] = useState([]);
   const fetchCorporateType = async () => {
     try {
       const response = await axios.get(`${apiUrl}get-corporate-types`);
@@ -452,8 +452,8 @@ export default function UpgradeProfile() {
         return uniqueCities;
       case "taxOffice":
         return formattedTaxOfficePlace;
-      // case "corporate_type":
-      //   return corporateType;
+      case "corporate_type":
+        return corporateType;
       case "tax_city":
         return cities;
       default:
