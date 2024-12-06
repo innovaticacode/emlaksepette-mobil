@@ -2,13 +2,15 @@ export const Forms = [
   {
     key: "username",
     label: "Yetkili İsim Soyisim",
+    label2: "Adı Soyadı",
     tab: [0],
     type: "input",
     isType: ["1", "2"],
   },
   {
     key: "iban",
-    label: "Iban Numarası",
+    label: "IBAN Numarası",
+    label2: "IBAN Numarası",
     tab: [0],
     type: "input",
     isType: ["1"],
@@ -16,6 +18,7 @@ export const Forms = [
   {
     key: "idNumber",
     label: "TC Kimlik Numarası",
+    label2: "TC Kimlik Numarası",
     tab: [0],
     type: "input",
     maxlength: 11,
@@ -38,6 +41,7 @@ export const Forms = [
   {
     key: "year",
     label: "Sektöre Giriş Tarihi",
+    label2: "Doğum Tarihi",
     tab: [0],
     type: "input",
     isType: ["1", "2"],

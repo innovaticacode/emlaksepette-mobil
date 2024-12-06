@@ -865,7 +865,9 @@ export default function UpgradeProfile() {
                         }}
                       >
                         <View style={{ paddingLeft: 5 }}>
-                          <Text style={styles.label}>{item.label}</Text>
+                          <Text style={styles.label}>
+                            {user.type == 2 ? item.label : item.label2}
+                          </Text>
                         </View>
                         <View
                           style={{
