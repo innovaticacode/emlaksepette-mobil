@@ -73,7 +73,10 @@ export default function UpdateProfile() {
           </Text>
         </View>
         <View style={{ gap: 10, paddingBottom: 5 }}>
-          <SettingItem text={"Mağaza Bilgileri"} tab={0} />
+          <SettingItem
+            text={user.type == 2 ? "Mağaza Bilgileri" : "Kişisel Bilgilerim"}
+            tab={0}
+          />
           <SettingItem text={"E-Posta"} tab={1} />
           <SettingItem text={"Cep Telefonu"} tab={2} />
           <SettingItem

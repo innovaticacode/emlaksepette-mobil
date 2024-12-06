@@ -847,8 +847,11 @@ export default function UpgradeProfile() {
                 {Forms.map((item, i) => {
                   if (
                     (item?.key == "authority_licence" &&
-                      item?.isShow == user?.corporate_type) ||
-                    !item.isShow
+                      item?.isShow == user?.corporate_type &&
+                      !item.isShow) ||
+                    !item.isType ||
+                    (Array.isArray(item.isType) &&
+                      item.isType.includes(String(user.type)))
                   ) {
                     return (
                       <View

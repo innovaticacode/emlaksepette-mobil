@@ -1,30 +1,46 @@
 export const Forms = [
-  { key: "username", label: "Yetkili İsim Soyisim", tab: [0], type: "input" },
-  { key: "iban", label: "Iban Numarası", tab: [0], type: "input" },
+  {
+    key: "username",
+    label: "Yetkili İsim Soyisim",
+    tab: [0],
+    type: "input",
+    isType: ["1", "2"],
+  },
+  {
+    key: "iban",
+    label: "Iban Numarası",
+    tab: [0],
+    type: "input",
+    isType: ["1"],
+  },
   {
     key: "idNumber",
     label: "TC Kimlik Numarası",
     tab: [0],
     type: "input",
     maxlength: 11,
+    isType: ["1"],
   },
   {
     key: "store_name",
     label: "Mağaza Adı",
     tab: [0],
     type: "input",
+    isType: ["2"],
   },
   {
     key: "website",
     label: "Web Sitesi (Opsiyonel)",
     tab: [0],
     type: "input",
+    isType: ["2"],
   },
   {
     key: "year",
     label: "Sektöre Giriş Tarihi",
     tab: [0],
     type: "input",
+    isType: ["1", "2"],
   },
 
   {
