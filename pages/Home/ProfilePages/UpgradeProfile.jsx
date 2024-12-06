@@ -441,7 +441,6 @@ export default function UpgradeProfile() {
   }));
 
   const getItemsForKey = (key) => {
-    console.log("crprt type---", corporateType);
     switch (key) {
       case "city_id":
         return cities;
@@ -453,8 +452,8 @@ export default function UpgradeProfile() {
         return uniqueCities;
       case "taxOffice":
         return formattedTaxOfficePlace;
-      case "corporate_type":
-        return corporateType;
+      // case "corporate_type":
+      //   return corporateType;
       case "tax_city":
         return cities;
       default:

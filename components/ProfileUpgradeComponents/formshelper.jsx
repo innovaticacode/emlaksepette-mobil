@@ -122,11 +122,12 @@ export const Forms = [
     data: "cities",
   },
   {
-    key: "",
+    key: "taxOffice",
     label: "Vergi Dairesi",
     tab: [5],
     type: "select",
     header: "Mağaza Adresi",
+    data: "tax_offices",
   },
 
   {
