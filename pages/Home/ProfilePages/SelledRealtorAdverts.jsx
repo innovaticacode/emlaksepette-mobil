@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   StyleSheet,
   TextInput,
+  FlatList,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import axios from "axios";
@@ -20,6 +21,7 @@ import { ActivityIndicator } from "react-native-paper";
 import { CheckBox } from "react-native-elements";
 import { Stack } from "@react-native-material/core";
 import { apiUrl } from "../../../components/methods/apiRequest";
+import { sk } from "date-fns/locale";
 export default function SelledRealtorAdverts() {
   const navigation = useNavigation();
   const [user, setUser] = useState({});
@@ -28,30 +30,43 @@ export default function SelledRealtorAdverts() {
   useEffect(() => {
     getValueFor("user", setUser);
   }, []);
-  const [take, setTake] = useState(0);
-  const [skip, setSkip] = useState(10);
+  const [take, setTake] = useState(10);
+  const [skip, setSkip] = useState(0);
   const [loading, setloading] = useState(true);
   const [housingRecords, sethousingRecords] = useState([]);
   const [parsePrice, setParsePrice] = useState(null);
   const [sort, setsort] = useState(null);
-const [hasMore, setHasMore] = useState(true); 
+  const [totalAdvert, setTotalAdvert] = useState("");
 
-  const fetchHousings = async (sort) => {
-    setloading(true);
+  const fetchHousings = async (sort,take,skip) => {
 
     try {
-      const response = await axios.get(`${apiUrl}get_my_housings`, {
+      const res = await axios({
+        method: "get",
+        url: `${apiUrl}get_my_housings`,
         headers: {
-          Authorization: `Bearer ${user.access_token}`,
+          Authorization: `Bearer ${user?.access_token}`,
+          "Content-Type": "application/json",
         },
         params: {
           orderByHousings: sort,
+          take: take,
+          skip: skip,
+          data: {
+            is_sold: 1,
+          },
         },
       });
+      setTotalAdvert(res?.data.total_count);
 
-      sethousings(response.data.soldHousingTypes);
-      sethousingRecords(response.data.soldHousingTypes);
-      console.debug("Housings:", response.data.soldHousingTypes); // Veriyi debug yapıyoruz
+      if (skip === 0) {
+        sethousings(res?.data?.soldHousingTypes);
+      } else {
+        sethousings((prevHousings) => [
+          ...prevHousings,
+          ...res?.data?.soldHousingTypes,
+        ]);
+      }
     } catch (e) {
       console.log(e + " hata");
     } finally {
@@ -60,8 +75,14 @@ const [hasMore, setHasMore] = useState(true);
   };
 
   useEffect(() => {
-    fetchHousings();
-  }, [user]);
+    if (user?.access_token) {
+      fetchHousings(sort, take, skip);
+    }
+  }, [user, sort, skip]);
+
+  const handleEndReached = () => {
+    setSkip((prevSkip) => prevSkip + take);
+  };
 
   const [EditModalVisible, setEditModalVisible] = useState(false);
   const openSheet = (id) => {
@@ -89,7 +110,7 @@ const [hasMore, setHasMore] = useState(true);
           item?.housing_title.toLowerCase().includes(value.toLowerCase())
         )
       : housings;
-    sethousingRecords(filteredData);
+    sethousings(filteredData);
   };
 
   return (
@@ -106,7 +127,7 @@ const [hasMore, setHasMore] = useState(true);
           <ActivityIndicator color="#333" />
         </View>
       ) : (
-        <ScrollView stickyHeaderIndices={[0]}>
+        <View stickyHeaderIndices={[0]}>
           <View
             style={{
               paddingTop: 6,
@@ -122,7 +143,7 @@ const [hasMore, setHasMore] = useState(true);
                 fontWeight: "600",
               }}
             >
-              Satılan İlanlar ({housings?.length})
+              Satılan İlanlar ({totalAdvert})
             </Text>
           </View>
           <View
@@ -156,26 +177,24 @@ const [hasMore, setHasMore] = useState(true);
           </View>
 
           <View style={{ paddingTop: 10, gap: 10, alignItems: "center" }}>
-            {!searchValue && housingRecords?.length === 0 ? (
-              <Text>Satılan İlanınız Bulunmamaktadır</Text>
-            ) : searchValue && housingRecords.length == 0 ? (
-              <Text
-                style={{
-                  textAlign: "center",
-                  color: "#333",
-                  fontWeight: "700",
-                }}
-              >
-                Sonuç Bulunamadı
-              </Text>
+            {loading ? (
+              <Text>Yükleniyor...</Text>
+            ) : housings.length === 0 ? (
+              <Text>Satılan İlanınız Bulunmamaktadır.</Text>
             ) : (
-              housingRecords?.map((item, index) => (
-                <RealtorAdvertPost
-                  key={index}
-                  housing={item}
-                  Onpress={openSheet}
-                />
-              ))
+              <FlatList
+                data={housings}
+                renderItem={({ item, index }) => (
+                  <RealtorAdvertPost
+                    key={index}
+                    housing={item}
+                    Onpress={openSheet}
+                  />
+                )}
+                keyExtractor={(item, index) => index.toString()}
+                onEndReached={handleEndReached}
+                onEndReachedThreshold={0.5}
+              />
             )}
           </View>
 
@@ -527,7 +546,7 @@ const [hasMore, setHasMore] = useState(true);
                 </View> */}
             </View>
           </Modal>
-        </ScrollView>
+        </View>
       )}
     </>
   );

@@ -29,6 +29,7 @@ export default function ActiveRealtorAdverts({ index }) {
   const [skip, setSkip] = useState(0);
   const [loading, setloading] = useState(true);
   const [housingRecords, sethousingRecords] = useState([]);
+const [totalAdvert,setTotalAdvert] = useState("");
   const [sort, setsort] = useState(null);
   useEffect(() => {
     getValueFor("user", setUser);
@@ -52,6 +53,7 @@ export default function ActiveRealtorAdverts({ index }) {
           },
         },
       });
+      setTotalAdvert(res?.data?.total_count);
 
       // Yalnızca yeni ilanları ekleyeceğiz
       if (skip === 0) {
@@ -78,9 +80,9 @@ export default function ActiveRealtorAdverts({ index }) {
   }, [user, sort, skip]);
   const handleEndReached = () => {
     // Sayfa sonuna geldiğinde skip değerini arttırıyoruz
-    if (!skip) {
+
       setSkip((prevSkip) => prevSkip + take);
-    }
+    
   };
   const [EditModalVisible, setEditModalVisible] = useState(false);
   const [SortLıstModal, setSortLıstModal] = useState(false);
@@ -111,7 +113,7 @@ export default function ActiveRealtorAdverts({ index }) {
           item?.housing_title.toLowerCase().includes(value.toLowerCase())
         )
       : housings;
-    sethousingRecords(filteredData);
+    sethousings(filteredData);
   };
   return (
     <>
@@ -143,7 +145,7 @@ export default function ActiveRealtorAdverts({ index }) {
                 fontWeight: "600",
               }}
             >
-              Aktif İlanlar ({housings?.length})
+              Aktif İlanlar ({totalAdvert})
             </Text>
           </View>
           <View
