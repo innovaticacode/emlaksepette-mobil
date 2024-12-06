@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   StyleSheet,
   TextInput,
+  FlatList,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import axios from "axios";
@@ -20,6 +21,7 @@ import { ActivityIndicator } from "react-native-paper";
 import { CheckBox } from "react-native-elements";
 import { Stack } from "@react-native-material/core";
 import { apiUrl } from "../../../components/methods/apiRequest";
+import { sk } from "date-fns/locale";
 export default function SelledRealtorAdverts() {
   const navigation = useNavigation();
   const [user, setUser] = useState({});
@@ -28,30 +30,59 @@ export default function SelledRealtorAdverts() {
   useEffect(() => {
     getValueFor("user", setUser);
   }, []);
-  const [start, setStart] = useState(0);
   const [take, setTake] = useState(10);
-  const [loading, setloading] = useState(false);
+  const [skip, setSkip] = useState(0);
+  const [loading, setloading] = useState(true);
+  const [housingRecords, sethousingRecords] = useState([]);
+  const [parsePrice, setParsePrice] = useState(null);
+  const [sort, setsort] = useState(null);
+  const [totalAdvert, setTotalAdvert] = useState("");
 
-  const fetchHousings = async () => {
-    setloading(true);
+  const fetchHousings = async (sort,take,skip) => {
+
     try {
-      const res = await axios.get(
-        apiUrl + "get_my_housings",
-        {
-          headers: { Authorization: "Bearer " + user.access_token },
-        }
-      );
-      sethousings(res?.data?.activeHousingTypes);
-      setloading(true);
+      const res = await axios({
+        method: "get",
+        url: `${apiUrl}get_my_housings`,
+        headers: {
+          Authorization: `Bearer ${user?.access_token}`,
+          "Content-Type": "application/json",
+        },
+        params: {
+          orderByHousings: sort,
+          take: take,
+          skip: skip,
+          data: {
+            is_sold: 1,
+          },
+        },
+      });
+      setTotalAdvert(res?.data.total_count);
+
+      if (skip === 0) {
+        sethousings(res?.data?.soldHousingTypes);
+      } else {
+        sethousings((prevHousings) => [
+          ...prevHousings,
+          ...res?.data?.soldHousingTypes,
+        ]);
+      }
     } catch (e) {
       console.log(e + " hata");
     } finally {
       setloading(false);
     }
   };
+
   useEffect(() => {
-    fetchHousings();
-  }, [user]);
+    if (user?.access_token) {
+      fetchHousings(sort, take, skip);
+    }
+  }, [user, sort, skip]);
+
+  const handleEndReached = () => {
+    setSkip((prevSkip) => prevSkip + take);
+  };
 
   const [EditModalVisible, setEditModalVisible] = useState(false);
   const openSheet = (id) => {
@@ -60,16 +91,28 @@ export default function SelledRealtorAdverts() {
   };
   const [selectedProject, setSelectedProject] = useState(null);
   const isfocused = useIsFocused();
-  const [selectedIndex, setIndex] = React.useState(0);
+  const [selectedIndex, setIndex] = React.useState(null);
+  const [searchValue, setsearchValue] = useState("");
 
   const [SortLıstModal, setSortLıstModal] = useState(false);
-  const handleRadio = (index) => {
+  const handleRadio = (index, sort) => {
     setIndex(index);
     setTimeout(() => {
       setSortLıstModal(false);
-      fetchHousings();
+      fetchHousings(sort);
     }, 600);
   };
+
+  const handleSearch = (value) => {
+    setsearchValue(value);
+    const filteredData = value
+      ? housings.filter((item) =>
+          item?.housing_title.toLowerCase().includes(value.toLowerCase())
+        )
+      : housings;
+    sethousings(filteredData);
+  };
+
   return (
     <>
       {loading ? (
@@ -84,7 +127,7 @@ export default function SelledRealtorAdverts() {
           <ActivityIndicator color="#333" />
         </View>
       ) : (
-        <ScrollView stickyHeaderIndices={[0]}>
+        <View stickyHeaderIndices={[0]}>
           <View
             style={{
               paddingTop: 6,
@@ -100,7 +143,7 @@ export default function SelledRealtorAdverts() {
                 fontWeight: "600",
               }}
             >
-              Satılan İlanlar ({housings?.length})
+              Satılan İlanlar ({totalAdvert})
             </Text>
           </View>
           <View
@@ -115,6 +158,8 @@ export default function SelledRealtorAdverts() {
             <TextInput
               style={styles.Input}
               placeholder="Kelime veya İlan No ile ara"
+              value={searchValue}
+              onChangeText={handleSearch}
             />
             <TouchableOpacity
               style={{
@@ -130,15 +175,29 @@ export default function SelledRealtorAdverts() {
               <MaterialIcon name="swap-vertical" size={23} color={"#333"} />
             </TouchableOpacity>
           </View>
-          <View style={{ paddingTop: 10 }}>
-            {housings.map((item, index) => (
-              <RealtorAdvertPost
-                key={index}
-                housing={item}
-                Onpress={openSheet}
+
+          <View style={{ paddingTop: 10, gap: 10, alignItems: "center" }}>
+            {loading ? (
+              <Text>Yükleniyor...</Text>
+            ) : housings.length === 0 ? (
+              <Text>Satılan İlanınız Bulunmamaktadır.</Text>
+            ) : (
+              <FlatList
+                data={housings}
+                renderItem={({ item, index }) => (
+                  <RealtorAdvertPost
+                    key={index}
+                    housing={item}
+                    Onpress={openSheet}
+                  />
+                )}
+                keyExtractor={(item, index) => index.toString()}
+                onEndReached={handleEndReached}
+                onEndReachedThreshold={0.5}
               />
-            ))}
+            )}
           </View>
+
           <Modal
             isVisible={SortLıstModal}
             onBackdropPress={() => setSortLıstModal(false)}
@@ -179,7 +238,9 @@ export default function SelledRealtorAdverts() {
                 <Stack row align="center" spacing={4}>
                   <CheckBox
                     checked={selectedIndex === 0}
-                    onPress={() => handleRadio(0)}
+                    onPress={() => {
+                      handleRadio(0, "asc-price");
+                    }}
                     checkedIcon="dot-circle-o"
                     uncheckedIcon="circle-o"
                     title={
@@ -196,7 +257,9 @@ export default function SelledRealtorAdverts() {
                   />
                   <CheckBox
                     checked={selectedIndex === 1}
-                    onPress={() => handleRadio(1)}
+                    onPress={() => {
+                      handleRadio(1, "desc-price");
+                    }}
                     checkedIcon="dot-circle-o"
                     uncheckedIcon="circle-o"
                     title={
@@ -213,7 +276,7 @@ export default function SelledRealtorAdverts() {
                   />
                   <CheckBox
                     checked={selectedIndex === 2}
-                    onPress={() => handleRadio(2)}
+                    onPress={() => handleRadio(2, "asc-date")}
                     checkedIcon="dot-circle-o"
                     uncheckedIcon="circle-o"
                     title={
@@ -230,7 +293,7 @@ export default function SelledRealtorAdverts() {
                   />
                   <CheckBox
                     checked={selectedIndex === 3}
-                    onPress={() => handleRadio(3)}
+                    onPress={() => handleRadio(3, "desc-date")}
                     checkedIcon="dot-circle-o"
                     uncheckedIcon="circle-o"
                     title={
@@ -483,7 +546,7 @@ export default function SelledRealtorAdverts() {
                 </View> */}
             </View>
           </Modal>
-        </ScrollView>
+        </View>
       )}
     </>
   );

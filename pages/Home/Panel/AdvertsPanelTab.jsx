@@ -36,7 +36,7 @@ const [user, setuser] = useState({})
     GetSummary();
     getValueFor('user',setuser)
   }, [tab]);
-console.log(user)
+
   return (
     <View style={{ flex: 1 }}>
        
