@@ -446,7 +446,6 @@ export default function UpgradeProfile() {
         setRegion(initialRegion);
       }, 500);
     }
-    console.log("-->", namFromGetUser.tax_office_city);
   }, [namFromGetUser]);
   const formatIban = (text) => {
     // Sadece harfleri ve rakamları içeren bir metin oluştur
@@ -537,7 +536,7 @@ export default function UpgradeProfile() {
       }
       data.append("banner_hex_code", currentColor);
       data.append("username", formData.username); //yetkili isim soyisim
-      data.append("name", formData.store_name); //mağaza adı
+      data.append("name", formData.name); //mağaza adı
       data.append("website", formData.website);
       data.append("year", formData.year);
       try {
