@@ -65,6 +65,23 @@ export default function UpgradeProfile() {
       uri: `${frontEndUriBase}images/phone-update-image/phonefile.jpg`,
     },
   ];
+  const formatDateInput = (value) => {
+    // Sadece rakamları al ve maksimum 8 karakterle sınırla
+    const digitsOnly = value.replace(/[^0-9]/g, "").slice(0, 8);
+
+    // Rakamları bölümlere ayırarak tarih formatını uygula
+    if (digitsOnly.length <= 2) {
+      return digitsOnly; // İlk 2 rakam
+    } else if (digitsOnly.length <= 4) {
+      return `${digitsOnly.slice(0, 2)}/${digitsOnly.slice(2)}`; // İlk 2 rakam / sonraki 2 rakam
+    } else {
+      return `${digitsOnly.slice(0, 2)}/${digitsOnly.slice(
+        2,
+        4
+      )}/${digitsOnly.slice(4)}`; // Gün/Ay/Yıl formatı
+    }
+  };
+
   const [cities, setCities] = useState([]);
   const [counties, setCounties] = useState([]);
   const [neighborhoods, setNeighborhoods] = useState([]);
@@ -554,7 +571,6 @@ export default function UpgradeProfile() {
           name: image.fileName || "photo.jpg",
         });
       }
-      console.log("year-->", formData.year);
       data.append("banner_hex_code", currentColor);
       data.append("name", formData.name);
       data.append("iban", formData.iban);
@@ -646,28 +662,24 @@ export default function UpgradeProfile() {
 
   const handleApiError = (error) => {
     if (error.response) {
-      console.error("Sunucu Yanıt Hatası:", error.response.data);
-      console.error("Status:", error.response.status);
       Dialog.show({
         type: ALERT_TYPE.DANGER,
         title: "Hata",
-        textBody: error.response.data.message,
+        textBody: "Beklenmeyen bir sorun oluştu",
         button: "Tamam",
       });
     } else if (error.request) {
-      console.error("İstek Gönderildi Ama Yanıt Alınamadı:", error.request);
       Dialog.show({
         type: ALERT_TYPE.DANGER,
         title: "Hata",
-        textBody: error.response.data.message,
+        textBody: "Beklenmeyen bir sorun oluştu",
         button: "Tamam",
       });
     } else {
-      console.error("Hata Mesajı:", error.message);
       Dialog.show({
         type: ALERT_TYPE.DANGER,
         title: "Hata",
-        textBody: error.response.data.message,
+        textBody: "Beklenmeyen bir sorun oluştu",
         button: "Tamam",
       });
     }
@@ -711,7 +723,6 @@ export default function UpgradeProfile() {
   const postData = async (param) => {
     setloadingUpdate(true);
     const data = new FormData();
-
     // Form verilerini ekliyoruz
     Forms.filter(
       (item) => Array.isArray(item.tab) && item.tab.includes(tab)
@@ -967,7 +978,7 @@ export default function UpgradeProfile() {
                         </View>
                         <View
                           style={{
-                            flexDirection: item.showArea ? "row" : "",
+                            flexDirection: item.showArea ? "row" : undefined, // "row" yerine undefined kullanmak daha güvenli olabilir
                             overflow: "hidden",
                             borderRadius: 8,
                           }}
@@ -997,9 +1008,7 @@ export default function UpgradeProfile() {
                               <TextInput
                                 editable={item.disabled ? false : true}
                                 maxLength={item.maxlength ? item.maxlength : 90}
-                                placeholder={
-                                  item.placeholder ? item.placeholder : ""
-                                }
+                                placeholder={item.placeholder || ""}
                                 style={[
                                   styles.input,
                                   item.disabled ? { color: "grey" } : {},
@@ -1018,32 +1027,38 @@ export default function UpgradeProfile() {
                                 }
                                 onChangeText={(value) => {
                                   if (item.key === "iban") {
-                                    // Eğer IBAN alanıysa formatlamayı uygula
                                     handleInputChange(
                                       item.key,
                                       formatIban(value)
                                     );
-                                  } else {
-                                    // Diğer alanlar için normal input değişikliği
-                                    handleInputChange(item.key, value);
-                                  }
-                                  if (item.key === "new_phone_number") {
+                                  } else if (item.key === "new_phone_number") {
                                     handleInputChange(
                                       item.key,
                                       formatPhoneNumberNew(value)
                                     );
-                                  }
-                                  if (item.key === "phone") {
+                                  } else if (item.key === "phone") {
                                     handleInputChange(
                                       item.key,
                                       formatPhoneNumber(value)
                                     );
-                                  }
-                                  if (item.key === "idNumber") {
+                                  } else if (item.key === "idNumber") {
                                     handleInputChange(
                                       item.key,
                                       parseInt(value)
                                     );
+                                  } else if (item.key === "username") {
+                                    // Türkçe harfleri, boşlukları ve özel karakterleri kabul et, yalnızca sayıları engelle
+                                    const filteredValue = value.replace(
+                                      /[0-9]/g, // Rakamları sil
+                                      ""
+                                    );
+                                    handleInputChange(item.key, filteredValue);
+                                  } else if (item.key === "year") {
+                                    const formattedValue =
+                                      formatDateInput(value);
+                                    handleInputChange(item.key, formattedValue);
+                                  } else {
+                                    handleInputChange(item.key, value);
                                   }
                                 }}
                               />
@@ -1086,6 +1101,7 @@ export default function UpgradeProfile() {
                     );
                   }
                 })}
+
                 {tab == 2 && (
                   <>
                     <View style={[styles.card, { gap: 10 }]}>
