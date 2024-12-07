@@ -26,6 +26,7 @@ import { apiUrl, frontEndUriBase } from "../../components/methods/apiRequest";
 import RealtorPost from "../../components/Card/RealtorCard/RealtorPost";
 import ViewFilter from "../../components/Filter/ViewFilter/ViewFilter";
 import FilterRealtor from "../../assets/filterRealtor.svg";
+import { sk } from "date-fns/locale";
 export default function AllRealtorAdverts() {
   const [cityItems, setCityItems] = useState();
   const [state, setState] = useState({
@@ -297,10 +298,40 @@ export default function AllRealtorAdverts() {
     });
   };
 
-  const fetchFilteredProjects = async (apiUrlFilter, filterData) => {
+  const [skip, setSkip] = useState(0);
+  const [take, setTake] = useState(10);
+  const [isLoadingMore, setIsLoadingMore] = useState(false); // Yeni veri yükleme durumunu kontrol etmek için
+
+  const handleLoadMore = async () => {
+    if (isLoadingMore) return; // Eğer yükleme işlemi devam ediyorsa bir daha yükleme yapma
+    setIsLoadingMore(true); // Yeni veri yükleme işlemi başlıyor
+    setSkip((prevSkip) => prevSkip + take);
+    await fetchFilteredProjects(buildApiUrl(params), filterData, false);
+    setIsLoadingMore(false); // Yeni veri yükleme işlemi tamamlandı
+  };
+
+  const fetchFilteredProjects = async (
+    apiUrlFilter,
+    filterData,
+    isInitialLoad = false
+  ) => {
     try {
+      if (!isInitialLoad) {
+        setIsLoadingMore(true); // Daha fazla veri yükleme işlemi başlıyor
+      }
+
       console.log(filterData);
-      const response = await axios.get(apiUrlFilter, { params: filterData });
+      console.log("take", take);
+      console.log("skip", skip);
+
+      const response = await axios.get(apiUrlFilter, {
+        params: {
+          ...filterData,
+          take: take,
+          skip: skip,
+        },
+      });
+
       const data = response.data;
 
       const newState = {
@@ -329,7 +360,6 @@ export default function AllRealtorAdverts() {
         slugName: data.slugName,
         housingTypeParent: data.housingTypeParent,
         housingType: data.housingType,
-        secondhandHousings: data.secondhandHousings,
         housingStatuses: data.housingStatuses,
         cities: data.cities,
         titleParam: data.title,
@@ -339,18 +369,31 @@ export default function AllRealtorAdverts() {
         projects: data.projects,
       };
 
-      if (data.secondhandHousings?.length == 0) {
+      // Eğer sonuçlar boşsa durum mesajını güncelle
+      if (data.secondhandHousings?.length == 0 && isInitialLoad) {
         newState.searchStatus = "Sonuç bulunamadı";
       }
 
+      // Yeni verileri mevcut verilere ekle veya ilk yükleme için mevcut verileri değiştir
       setState((prevState) => ({
         ...prevState,
         ...newState,
+        secondhandHousings: isInitialLoad
+          ? data.secondhandHousings // İlk yükleme sırasında eski veriler temizlenir
+          : [...prevState.secondhandHousings, ...data.secondhandHousings], // Sayfalama sırasında eski verilere ekleme yapılır
       }));
+
+      if (!isInitialLoad) {
+        setIsLoadingMore(false); // Daha fazla veri yüklendi
+      }
     } catch (error) {
       console.error(error);
+      if (!isInitialLoad) {
+        setIsLoadingMore(false); // Hata durumunda da yükleme tamamlanır
+      }
     }
   };
+
   const handleCheckboxChange = (filterName, value) => {
     setState((prevState) => {
       // Seçilenleri tutacak yeni bir nesne oluşturuyoruz
@@ -569,6 +612,8 @@ export default function AllRealtorAdverts() {
 
             <FlatList
               data={state.secondhandHousings}
+              onEndReached={handleLoadMore}
+              onEndReachedThreshold={0.5}
               renderItem={({ item }) => (
                 <RealtorPost
                   GetId={GetIdForCart}
@@ -615,7 +660,7 @@ export default function AllRealtorAdverts() {
                   sold={item.sold}
                 />
               )}
-              keyExtractor={(item) => item.id.toString()}
+              keyExtractor={(item, index) => `${item.id}-${index}`}
               ListEmptyComponent={
                 <View
                   style={{
@@ -631,6 +676,13 @@ export default function AllRealtorAdverts() {
                     <Text>{state.searchStatus}</Text>
                   </Text>
                 </View>
+              }
+              ListFooterComponent={
+                isLoadingMore && (
+                  <View style={{ padding: 20, alignItems: "center" }}>
+                    <ActivityIndicator size="small" color="#000" />
+                  </View>
+                )
               }
             />
           </>
