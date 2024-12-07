@@ -7,6 +7,7 @@ import {
   ScrollView,
   Image,
   KeyboardAvoidingView,
+  Linking,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import { useNavigation, useRoute } from "@react-navigation/native";
@@ -49,11 +50,13 @@ import {
 } from "../../../utils/FormatPhoneNumber";
 import { areaData } from "../../helper";
 import ImageViewing from "react-native-image-viewing";
+import { CheckBox } from "react-native-elements";
 export default function UpgradeProfile() {
   const route = useRoute();
   const { name, tab } = route.params;
   const [choose, setchoose] = useState(false);
   const navigation = useNavigation();
+  const [approve, setApprove] = useState(false);
 
   const [image, setImage] = useState(null);
   const [isImageVisible, setIsImageVisible] = useState(false);
@@ -646,7 +649,7 @@ export default function UpgradeProfile() {
       console.error("Sunucu Yanıt Hatası:", error.response.data);
       console.error("Status:", error.response.status);
       Dialog.show({
-        type: ALERT_TYPE.ERROR,
+        type: ALERT_TYPE.DANGER,
         title: "Hata",
         textBody: error.response.data.message,
         button: "Tamam",
@@ -654,7 +657,7 @@ export default function UpgradeProfile() {
     } else if (error.request) {
       console.error("İstek Gönderildi Ama Yanıt Alınamadı:", error.request);
       Dialog.show({
-        type: ALERT_TYPE.ERROR,
+        type: ALERT_TYPE.DANGER,
         title: "Hata",
         textBody: error.response.data.message,
         button: "Tamam",
@@ -662,7 +665,7 @@ export default function UpgradeProfile() {
     } else {
       console.error("Hata Mesajı:", error.message);
       Dialog.show({
-        type: ALERT_TYPE.ERROR,
+        type: ALERT_TYPE.DANGER,
         title: "Hata",
         textBody: error.response.data.message,
         button: "Tamam",
@@ -728,11 +731,24 @@ export default function UpgradeProfile() {
         await handlePhoneUpdate(data);
         break;
       case 5:
-        await handeStoreUpdate(data);
+        if (approve) {
+          await handeStoreUpdate(data);
+        } else {
+          Dialog.show({
+            type: ALERT_TYPE.WARNING,
+            title: "Uyarı",
+            textBody: "Lütfen onay kutucuğunu işaretleyin.",
+            button: "Tamam",
+          });
+        }
       default:
         null;
     }
     setloadingUpdate(false);
+  };
+
+  const linkKvkk = () => {
+    Linking.openURL(`${frontEndUriBase}sayfa/kvkk-politikasi`);
   };
 
   return (
@@ -1247,7 +1263,49 @@ export default function UpgradeProfile() {
                 )}
               </View>
             </View>
-
+            {tab == 5 && (
+              <View
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                  margin: 10,
+                  justifyContent: "flex-start",
+                }}
+              >
+                <CheckBox
+                  checked={approve}
+                  onPress={() => setApprove(!approve)}
+                  checkedColor="#EA2B2E"
+                  uncheckedColor="#EA2B2E"
+                  containerStyle={{
+                    margin: 0,
+                    padding: 0,
+                    backgroundColor: "transparent",
+                    borderWidth: 0,
+                  }}
+                />
+                <TouchableOpacity onPress={() => linkKvkk()}>
+                  <Text
+                    style={{
+                      color: "#EA2B2E",
+                      textDecorationLine: "underline",
+                      fontSize: 14,
+                    }}
+                  >
+                    KVKK politikasını
+                  </Text>
+                </TouchableOpacity>
+                <Text
+                  style={{
+                    fontSize: 14,
+                    textAlign: "center",
+                    marginLeft: 2,
+                  }}
+                >
+                  okudum onaylıyorum.
+                </Text>
+              </View>
+            )}
             <View style={{ alignItems: "center" }}>
               <TouchableOpacity
                 onPress={() => postData()}
