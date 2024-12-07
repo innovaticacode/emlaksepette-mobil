@@ -305,6 +305,7 @@ export default function AllRealtorAdverts() {
 
   const handleLoadMore = async () => {
     if (isLoadingMore || state.secondhandHousings.length >= totalCounts) {
+      console.log("Yükleme durumu:", isLoadingMore);
       return;
     }
     setIsLoadingMore(true); // Yeni veri yükleme işlemi başlıyor
@@ -337,7 +338,7 @@ export default function AllRealtorAdverts() {
 
       const data = response.data;
 
-      if (isInitialLoad) {
+      if (!isInitialLoad) {
         setTotalCounts(data?.total_count);
       }
 
