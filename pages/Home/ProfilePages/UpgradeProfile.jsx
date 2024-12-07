@@ -406,6 +406,14 @@ export default function UpgradeProfile() {
         email: namFromGetUser?.email || "",
         idNumber: namFromGetUser.idNumber || "",
         corporate_type: namFromGetUser.corporate_type || "",
+        tax_office_city: namFromGetUser.taxOfficeCity || "",
+        tax_office: namFromGetUser.taxOffice || "",
+        vergi_kimlik_no: namFromGetUser.taxNumber || "",
+        yetki_belgesi_no: namFromGetUser.authority_licence || "",
+        address_explanation: namFromGetUser.address_explanation || "",
+        sabit_telefon: namFromGetUser.phone || "",
+        latitude: namFromGetUser.latitude || "",
+        longitude: namFromGetUser.longitude || "",
       });
       setCurrentColor(namFromGetUser.banner_hex_code);
       setareaCode(namFromGetUser.area_code);
@@ -418,6 +426,7 @@ export default function UpgradeProfile() {
         setRegion(initialRegion);
       }, 500);
     }
+    console.log("-->", namFromGetUser.tax_office_city);
   }, [namFromGetUser]);
   const formatIban = (text) => {
     // Sadece harfleri ve rakamları içeren bir metin oluştur
@@ -662,7 +671,21 @@ export default function UpgradeProfile() {
   };
 
   const handeStoreUpdate = async (data) => {
-    data.append("commercial_title", formData.name);
+    console.log("commercial_title ------->", formData.store_name);
+    console.log("corporateType ------->", formData.corporate_type);
+    console.log("tax_office_city ------->", formData.tax_office_city);
+    console.log("tax_office ------->", formData.tax_office);
+    console.log("vergi_kimlik_no ------->", formData.vergi_kimlik_no);
+    console.log("yetki_belgesi_no ------->", formData.yetki_belgesi_no);
+    console.log("city ------->", formData.city_id);
+    console.log("district ------->", formData.county_id);
+    console.log("neighborhood ------->", formData.neighborhood_id);
+    console.log("address_explanation ------->", formData.address_explanation);
+    console.log("sabit_telefon ------->", formData.sabit_telefon);
+    console.log("latitude ------->", formData.latitude);
+    console.log("longitude ------->", formData.longitude);
+
+    data.append("commercial_title", formData.store_name);
     data.append("corporateType", formData.corporate_type);
     data.append("tax_office_city", formData.tax_office_city);
     data.append("tax_office", formData.tax_office);
