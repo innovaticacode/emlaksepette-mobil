@@ -34,6 +34,7 @@ import {
 } from "react-native-alert-notification";
 import { useDispatch } from "react-redux";
 import { setShoppingProfile } from "../../../store/slices/Menu/MenuSlice";
+import { sanitizeEmail } from "../../../utils";
 
 export default function Login({ navigation }) {
   const route = useRoute();
@@ -69,7 +70,8 @@ export default function Login({ navigation }) {
   };
 
   const handleTextInputChange = (text) => {
-    setEmail(text);
+ const filteredValue = sanitizeEmail(text);
+  setEmail(filteredValue);
   };
 
   useEffect(() => {
