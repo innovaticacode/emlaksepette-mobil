@@ -107,14 +107,22 @@ export default function UpgradeProfile() {
     email: "",
     idNumber: "",
     new_mobile_phone: "",
+    corporate_type: "",
+    tax_office_city: "",
+    tax_office: "",
+    vergi_kimlik_no: "",
+    yetki_belgesi_no: "",
+    neighborhood: "",
+    address_explanation: "",
+    sabit_telefon: "",
+    latitude: "",
+    longitude: "",
   };
   const [formData, setFormData] = useState(initialFormData);
   const [corporateType, setCorporateType] = useState([]);
   const fetchCorporateType = async () => {
     try {
       const response = await axios.get(`${apiUrl}get-corporate-types`);
-      console.log("corporate type--->", response.data.data.corporate_types);
-
       if (response.data.success) {
         const items = response.data.data.corporate_types.map((item) => ({
           label: item, // Gelen stringi label olarak kullan
@@ -126,12 +134,6 @@ export default function UpgradeProfile() {
       console.error("Hata:", error);
     }
   };
-
-  useEffect(() => {
-    if (tab == 5) {
-      fetchCorporateType();
-    }
-  }, [tab]);
 
   useEffect(() => {
     (async () => {
@@ -236,15 +238,37 @@ export default function UpgradeProfile() {
     }
   };
 
-  const uniqueCities = TaxOfficesCities.map((city) => ({
-    label: city.il,
-    value: city.plaka,
-  })) // Şehir isimlerini ve plakalarını map'le
-    .filter(
-      (city, index, self) =>
-        index ===
-        self.findIndex((c) => c.label === city.label && c.value === city.value) // Benzersiz olmasını kontrol et
-    );
+  const fetchTaxOfficesCities = async () => {
+    try {
+      const response = await axios.get(`${apiUrl}get-tax-offices`);
+      if (response.data && Array.isArray(response.data)) {
+        setTaxOfficesCities(response.data);
+      } else {
+        console.error("Beklenmeyen veri formatı:", response.data);
+        setTaxOfficesCities([]);
+      }
+    } catch (error) {
+      console.error("Tax offices verisi alınırken bir hata oluştu:", error);
+      setTaxOfficesCities([]);
+    }
+  };
+
+  useEffect(() => {
+    if (tab == 5) {
+      fetchTaxOfficesCities();
+      fetchCorporateType();
+    }
+  }, [tab]);
+
+  const uniqueCities = TaxOfficesCities?.length
+    ? [
+        ...new Set(TaxOfficesCities.map((city) => `${city.il}_${city.plaka}`)),
+      ].map((uniqueKey) => {
+        const [label, value] = uniqueKey.split("_");
+        return { label, value };
+      })
+    : [];
+
   const fetchTaxOffice = async (value) => {
     try {
       const response = await axios.get(`${apiUrl}get-tax-office/${value}`);
@@ -381,6 +405,7 @@ export default function UpgradeProfile() {
         taxNumber: namFromGetUser.taxNumber || "",
         email: namFromGetUser?.email || "",
         idNumber: namFromGetUser.idNumber || "",
+        corporate_type: namFromGetUser.corporate_type || "",
       });
       setCurrentColor(namFromGetUser.banner_hex_code);
       setareaCode(namFromGetUser.area_code);
@@ -454,8 +479,8 @@ export default function UpgradeProfile() {
         return formattedTaxOfficePlace;
       case "corporate_type":
         return corporateType;
-      case "tax_city":
-        return cities;
+      case "taxOfficeCity":
+        return uniqueCities;
       default:
         return [];
     }
@@ -637,6 +662,20 @@ export default function UpgradeProfile() {
   };
 
   const handeStoreUpdate = async (data) => {
+    data.append("commercial_title", formData.name);
+    data.append("corporateType", formData.corporate_type);
+    data.append("tax_office_city", formData.tax_office_city);
+    data.append("tax_office", formData.tax_office);
+    data.append("vergi_kimlik_no", formData.vergi_kimlik_no);
+    data.append("yetki_belgesi_no", formData.yetki_belgesi_no);
+    data.append("city", formData.city_id);
+    data.append("district", formData.county_id);
+    data.append("neighborhood", formData.neighborhood_id);
+    data.append("address_explanation", formData.address_explanation);
+    data.append("sabit_telefon", formData.sabit_telefon);
+    data.append("latitude", formData.latitude);
+    data.append("longitude", formData.longitude);
+
     try {
       const response = await axios.post(`${apiUrl}magaza-bilgileri`, data, {
         headers: {

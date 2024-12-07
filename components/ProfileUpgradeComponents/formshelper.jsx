@@ -114,12 +114,12 @@ export const Forms = [
     data: "corporate_types",
   },
   {
-    key: "tax_city",
+    key: "taxOfficeCity",
     label: "Vergi Dairesi İli",
     tab: [5],
     type: "select",
     header: "Mağaza Adresi",
-    data: "cities",
+    data: "uniqueCities",
   },
   {
     key: "taxOffice",
