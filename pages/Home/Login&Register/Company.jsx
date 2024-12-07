@@ -22,8 +22,7 @@ import FontAwesome5Icon from "react-native-vector-icons/FontAwesome5";
 import { ActivityIndicator } from "react-native-paper";
 import { apiUrl } from "../../../components/methods/apiRequest";
 import { Dialog } from "react-native-alert-notification";
-import { sanitizeEmail } from "../../../utils/formatEmail";
-
+import { sanitizeEmail } from "../../../utils";
 export default function Company() {
   const Navigation = useNavigation();
   const [selectedIndexRadio, setIndexRadio] = useState(0);
