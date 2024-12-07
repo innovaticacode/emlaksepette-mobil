@@ -298,8 +298,8 @@ export default function AllRealtorAdverts() {
     });
   };
 
+  const take = 10;
   const [skip, setSkip] = useState(0);
-  const [take, setTake] = useState(10);
   const [isLoadingMore, setIsLoadingMore] = useState(false); // Yeni veri yükleme durumunu kontrol etmek için
   const [totalCounts, setTotalCounts] = useState(0);
 
