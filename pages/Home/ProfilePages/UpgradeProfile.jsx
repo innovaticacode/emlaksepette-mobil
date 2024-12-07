@@ -671,20 +671,6 @@ export default function UpgradeProfile() {
   };
 
   const handeStoreUpdate = async (data) => {
-    console.log("commercial_title ------->", formData.store_name);
-    console.log("corporateType ------->", formData.corporate_type);
-    console.log("tax_office_city ------->", formData.tax_office_city);
-    console.log("tax_office ------->", formData.tax_office);
-    console.log("vergi_kimlik_no ------->", formData.vergi_kimlik_no);
-    console.log("yetki_belgesi_no ------->", formData.yetki_belgesi_no);
-    console.log("city ------->", formData.city_id);
-    console.log("district ------->", formData.county_id);
-    console.log("neighborhood ------->", formData.neighborhood_id);
-    console.log("address_explanation ------->", formData.address_explanation);
-    console.log("sabit_telefon ------->", formData.sabit_telefon);
-    console.log("latitude ------->", formData.latitude);
-    console.log("longitude ------->", formData.longitude);
-
     data.append("commercial_title", formData.store_name);
     data.append("corporateType", formData.corporate_type);
     data.append("tax_office_city", formData.tax_office_city);
@@ -750,12 +736,12 @@ export default function UpgradeProfile() {
   };
 
   return (
-    <KeyboardAvoidingView
-      style={{ flex: 1 }}
-      behavior={Platform.OS === "ios" ? "padding" : "height"} // iOS ve Android için farklı davranışlar
-      keyboardVerticalOffset={Platform.OS === "ios" ? 100 : 0} // iOS için klavyenin üstünde kalacak şekilde offset ayarı
-    >
-      <AlertNotificationRoot>
+    <AlertNotificationRoot>
+      <KeyboardAvoidingView
+        style={{ flex: 1 }}
+        behavior={Platform.OS === "ios" ? "padding" : "height"} // iOS ve Android için farklı davranışlar
+        keyboardVerticalOffset={Platform.OS === "ios" ? 100 : 0} // iOS için klavyenin üstünde kalacak şekilde offset ayarı
+      >
         {loading ? (
           <View
             style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
@@ -1453,8 +1439,8 @@ export default function UpgradeProfile() {
             </Modal>
           </ScrollView>
         )}
-      </AlertNotificationRoot>
-    </KeyboardAvoidingView>
+      </KeyboardAvoidingView>
+    </AlertNotificationRoot>
   );
 }
 const pickerSelectStyles = StyleSheet.create({
