@@ -301,9 +301,12 @@ export default function AllRealtorAdverts() {
   const [skip, setSkip] = useState(0);
   const [take, setTake] = useState(10);
   const [isLoadingMore, setIsLoadingMore] = useState(false); // Yeni veri yükleme durumunu kontrol etmek için
+  const [totalCounts, setTotalCounts] = useState(0);
 
   const handleLoadMore = async () => {
-    if (isLoadingMore) return; // Eğer yükleme işlemi devam ediyorsa bir daha yükleme yapma
+    if (isLoadingMore || state.secondhandHousings.length >= totalCounts) {
+      return;
+    }
     setIsLoadingMore(true); // Yeni veri yükleme işlemi başlıyor
     setSkip((prevSkip) => prevSkip + take);
     await fetchFilteredProjects(buildApiUrl(params), filterData, false);
@@ -333,6 +336,10 @@ export default function AllRealtorAdverts() {
       });
 
       const data = response.data;
+
+      if (isInitialLoad) {
+        setTotalCounts(data?.total_count);
+      }
 
       const newState = {
         neighborhoodTitle: data.neighborhoodTitle,
