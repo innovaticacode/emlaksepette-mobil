@@ -17,6 +17,7 @@ import { Platform } from "react-native";
 import { ActivityIndicator, Switch, TextInput } from "react-native-paper";
 import FontAwesome5Icon from "react-native-vector-icons/FontAwesome5";
 import RNPickerSelect from "react-native-picker-select";
+import { RefreshControl } from "react-native-gesture-handler";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
 import { getValueFor } from "../../components/methods/user";
@@ -26,7 +27,6 @@ import { apiUrl, frontEndUriBase } from "../../components/methods/apiRequest";
 import RealtorPost from "../../components/Card/RealtorCard/RealtorPost";
 import ViewFilter from "../../components/Filter/ViewFilter/ViewFilter";
 import FilterRealtor from "../../assets/filterRealtor.svg";
-import { sk } from "date-fns/locale";
 export default function AllRealtorAdverts() {
   const [cityItems, setCityItems] = useState();
   const [state, setState] = useState({
@@ -696,17 +696,8 @@ export default function AllRealtorAdverts() {
         )}
         <TouchableOpacity onPress={() => navigation.navigate("MapWiew")}>
           <View style={{ position: "relative", flex: 1 }}>
-            <View style={{ position: "absolute", bottom: 10, right: 10 }}>
-              <View
-                style={{
-                  backgroundColor: "red",
-                  width: 80,
-                  height: 80,
-                  borderRadius: 50,
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              >
+            <View style={styles.MapIconContainer}>
+              <View style={styles.MapIcon}>
                 <ImageBackground
                   resizeMode="contain"
                   style={{ width: "100%", height: "100%", borderRadius: 50 }}
@@ -1493,6 +1484,19 @@ const styles = StyleSheet.create({
     backgroundColor: "#fefefe",
     padding: 20,
     borderRadius: 5,
+  },
+  MapIcon: {
+    backgroundColor: "red",
+    width: 80,
+    height: 80,
+    borderRadius: 50,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  MapIconContainer: {
+    position: "absolute",
+    bottom: 22,
+    right: 10,
   },
 });
 

@@ -1,5 +1,3 @@
-
-
 import * as React from "react";
 import {
   View,
@@ -9,25 +7,22 @@ import {
   StyleSheet,
   TouchableOpacity,
   ScrollView,
-  ImageBackground,
 } from "react-native";
-import { TabView, SceneMap } from "react-native-tab-view";
+import { TabView } from "react-native-tab-view";
 
-import axios from "axios";
 import { useState } from "react";
 
-import { StatusBar } from "expo-status-bar";
 import { useNavigation, useRoute } from "@react-navigation/native";
 
- import ActiveRealtorAdverts from './ActiveRealtorAdverts'
- import WaitRealtorAdverts from './WaitRealtorAdverts'
- import RejectRealtorAdverts from './RejectRealtorAdverts'
- import PasiveRealtorAdverts from './PasiveRealtorAdverts'
+import ActiveRealtorAdverts from "./ActiveRealtorAdverts";
+import WaitRealtorAdverts from "./WaitRealtorAdverts";
+import RejectRealtorAdverts from "./RejectRealtorAdverts";
+import PasiveRealtorAdverts from "./PasiveRealtorAdverts";
 import SelledRealtorAdverts from "./SelledRealtorAdverts";
 import { useEffect } from "react";
 import { Dimensions } from "react-native";
 
-const { width, height } = Dimensions.get("window");
+const { width } = Dimensions.get("window");
 const renderScene = ({ route, index }) => {
   switch (route.key) {
     case "first":
@@ -38,10 +33,8 @@ const renderScene = ({ route, index }) => {
       return <RejectRealtorAdverts index={index} />;
     case "area":
       return <PasiveRealtorAdverts index={index} />;
-   ;
-   case "area2":
-    return <SelledRealtorAdverts index={index} />;
- ;
+    case "area2":
+      return <SelledRealtorAdverts index={index} />;
     default:
       return null;
   }
@@ -54,72 +47,69 @@ const CustomTabBar = ({
   tab,
   indexChange,
 }) => {
-  // const [menuItems, setMenuItems] = React.useState([]);
+  const menuItems = [
+    {
+      text: "Aktif İlanlar",
+    },
+    {
+      text: "Onay Bekleyen İlanlar",
+    },
+    {
+      text: "Reddedilen İlanlar",
+    },
+    {
+      text: "Pasif İlanlar",
+    },
+    {
+      text: "Satılan İlanlar",
+    },
+  ];
+  const scrollViewRef = React.useRef(null); // ScrollView için ref
+  const [tabWidth, setTabWidth] = React.useState(0);
+  React.useEffect(() => {
+    if (scrollViewRef.current && tabWidth > 0) {
+      const tabCount = menuItems.length;
+      const viewWidth = width;
+      const tabOffset = tab * tabWidth;
+      const contentWidth = tabWidth * tabCount;
+      const centeredOffset = Math.max(
+        0,
+        Math.min(
+          tabOffset - (viewWidth / 2 - tabWidth / 2),
+          contentWidth - viewWidth
+        )
+      );
 
-const menuItems=[
-  {
-      text : "Aktif İlanlar"
-  },
-  {
-    text : "Onay Bekleyen İlanlar"
-  
-  
-},
-{
-  text : "Reddedilen İlanlar"
-},
-{
-  text : "Pasif İlanlar"
-},
-{
-  text : "Satılan İlanlar"
-}
-   
-]
-const scrollViewRef = React.useRef(null); // ScrollView için ref
-const [tabWidth, setTabWidth] = React.useState(0);
-React.useEffect(() => {
-  if (scrollViewRef.current && tabWidth > 0) {
-    const tabCount = menuItems.length;
-    const viewWidth = width;
-    const tabOffset = tab * tabWidth;
-    const contentWidth = tabWidth * tabCount;
-    const centeredOffset = Math.max(
-      0,
-      Math.min(
-        tabOffset - (viewWidth / 2 - tabWidth / 2),
-        contentWidth - viewWidth
-      )
-    );
+      scrollViewRef.current.scrollTo({
+        x: centeredOffset,
+        animated: true,
+      });
+    }
+  }, [tab, menuItems, tabWidth]);
 
-    scrollViewRef.current.scrollTo({
-      x: centeredOffset,
-      animated: true,
-    });
-  }
-}, [tab, menuItems, tabWidth]);
-
-// Calculate the width of each tab after layout
-const onTabLayout = (event) => {
-  const { width: measuredWidth } = event.nativeEvent.layout;
-  setTabWidth(measuredWidth);
-};
+  // Calculate the width of each tab after layout
+  const onTabLayout = (event) => {
+    const { width: measuredWidth } = event.nativeEvent.layout;
+    setTabWidth(measuredWidth);
+  };
   return (
     <View>
-      <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} 
-         ref={scrollViewRef} // Ref ekleniyor
-         onLayout={() => {
-           // Calculate the width of each tab dynamically
-           if (menuItems.length > 0) {
-             const tabWidth = width / menuItems.length;
-             setTabWidth(tabWidth);
-           }
-         }}
+      <ScrollView
+        horizontal={true}
+        showsHorizontalScrollIndicator={false}
+        ref={scrollViewRef} // Ref ekleniyor
+        onLayout={() => {
+          // Calculate the width of each tab dynamically
+          if (menuItems.length > 0) {
+            const tabWidth = width / menuItems.length;
+            setTabWidth(tabWidth);
+          }
+        }}
       >
         <View style={{ padding: 10, flexDirection: "row", gap: 10 }}>
           {menuItems.map((item, index) => (
             <TouchableOpacity
-            onLayout={onTabLayout}
+              onLayout={onTabLayout}
               key={index}
               style={[
                 styles.tabBtn,
@@ -137,7 +127,7 @@ const onTabLayout = (event) => {
                   textAlign: "center",
                   color: tab == index ? "#333" : "#333",
                   fontSize: 12,
-                  fontWeight:'600'
+                  fontWeight: "600",
                 }}
               >
                 {item.text}
@@ -152,17 +142,17 @@ const onTabLayout = (event) => {
 export default function MyRealtorAdverts() {
   const navigation = useNavigation();
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-  const route =useRoute()
+  const route = useRoute();
   const [tab, settab] = React.useState(0);
   const [index, setIndex] = React.useState(0);
   const toggleDrawer = () => {
     setIsDrawerOpen(!isDrawerOpen);
   };
   useEffect(() => {
-      settab(route?.params?.tab ?route?.params?.tab :tab)
-      setIndex(route?.params?.tab ?route?.params?.tab :tab)
-  }, [])
-  
+    settab(route?.params?.tab ? route?.params?.tab : tab);
+    setIndex(route?.params?.tab ? route?.params?.tab : tab);
+  }, []);
+
   const layout = useWindowDimensions();
 
   const [routes] = React.useState([
@@ -170,8 +160,7 @@ export default function MyRealtorAdverts() {
     { key: "second", title: "Second" },
     { key: "shop", title: "Shop" },
     { key: "area", title: "Area" },
-    { key: "area2", title: "Area2" }
-  
+    { key: "area2", title: "Area2" },
   ]);
   const indexChange = (index) => {
     setIndex(index);
@@ -182,7 +171,6 @@ export default function MyRealtorAdverts() {
     <SafeAreaView
       style={{ flex: 1, backgroundColor: "#ffffff", paddingTop: 30 }}
     >
-    
       <TabView
         navigationState={{ index, routes }}
         renderScene={({ route, jumpTo }) =>
@@ -190,6 +178,8 @@ export default function MyRealtorAdverts() {
         }
         onIndexChange={indexChange}
         initialLayout={{ width: layout.width }}
+        lazy={true}
+        lazyPreloadDistance={0}
         renderTabBar={(props) => (
           <CustomTabBar {...props} indexChange={indexChange} tab={tab} />
         )}
@@ -246,4 +236,3 @@ const styles = StyleSheet.create({
     width: 320,
   },
 });
- 
