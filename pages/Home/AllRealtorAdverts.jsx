@@ -286,16 +286,25 @@ export default function AllRealtorAdverts() {
   };
 
   const handleSortChange = (value) => {
-    setSelectedSortOption(value);
+    // Önce sıralama durumunu güncelle
     setState((prevState) => ({
       ...prevState,
-      searchStatus: "Sıralanıyor...",
+      searchStatus: "Sıralanıyor...", // Durumu güncelle
+      secondhandHousings: [], // Önceki verileri sıfırla
     }));
 
-    fetchFilteredProjects(buildApiUrl(params), {
-      ...filterData, // Son filtreleme verilerini kullan
-      sortValue: value,
-    });
+    // Sıralama seçeneğini güncelle
+    setSelectedSortOption(value);
+
+    // Skip değerini sıfırla
+    setSkip(0);
+
+    // Yeni sıralama verisiyle API çağrısını yap
+    fetchFilteredProjects(
+      buildApiUrl(params),
+      { ...filterData, sortValue: value },
+      true
+    );
   };
 
   const take = 10;
