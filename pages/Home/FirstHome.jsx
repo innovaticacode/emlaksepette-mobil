@@ -193,7 +193,7 @@ const FirstHome = (props) => {
           skip: 0,
         },
       });
-      setBungalov(response.data);
+      setBungalov(response?.data?.data?.housings);
     } catch (error) {
       console.error("Error fetching real estate data:", error);
     }

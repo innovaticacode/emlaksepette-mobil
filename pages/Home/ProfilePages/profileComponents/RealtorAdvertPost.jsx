@@ -9,7 +9,10 @@ import {
 import { useEffect, useState } from "react";
 import Icon from "react-native-vector-icons/Ionicons";
 import Icon2 from "react-native-vector-icons/Entypo";
-import { frontEndUri, frontEndUriBase } from "../../../../components/methods/apiRequest";
+import {
+  frontEndUri,
+  frontEndUriBase,
+} from "../../../../components/methods/apiRequest";
 import { Platform } from "react-native";
 import { addDotEveryThreeDigits } from "../../../../components/methods/merhod";
 export default function RealtorAdvertPost({ Onpress, housing }) {
@@ -64,11 +67,13 @@ export default function RealtorAdvertPost({ Onpress, housing }) {
               </Text>
             )}
           </View>
-          <View style={{ paddingTop: 9 }}>
-            <Text style={{ fontSize: 13, fontWeight: "700", color: "#333" }}>
-              {addDotEveryThreeDigits(housing.price)} TL
-            </Text>
-          </View>
+          {housing?.price && (
+            <View style={{ paddingTop: 9 }}>
+              <Text style={{ fontSize: 13, fontWeight: "700", color: "#333" }}>
+                {addDotEveryThreeDigits(housing?.price)} TL
+              </Text>
+            </View>
+          )}
         </View>
       </View>
       <View

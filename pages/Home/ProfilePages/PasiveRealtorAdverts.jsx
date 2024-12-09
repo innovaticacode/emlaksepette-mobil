@@ -5,6 +5,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   TextInput,
+  FlatList,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import axios from "axios";
@@ -28,8 +29,9 @@ export default function PasiveRealtorAdverts() {
   useEffect(() => {
     getValueFor("user", setUser);
   }, []);
-  const [start, setStart] = useState(0);
+  const [skip, setSkip] = useState(0);
   const [take, setTake] = useState(10);
+  const [sort, setsort] = useState(null);
   const [selectedProject, setSelectedProject] = useState(null);
   const [EditModalVisible, setEditModalVisible] = useState(false);
   const openSheet = (id) => {
@@ -38,29 +40,52 @@ export default function PasiveRealtorAdverts() {
   };
   const [loading, setloading] = useState(false);
   const [housingRecords, sethousingRecords] = useState([]);
-  const fetchInactiveHousings = async (sort) => {
-    setloading(true);
+  const [totalAdvert, setTotalAdvert] = useState("");
+
+  const fetchInactiveHousings = async (sort, take, skip) => {
     try {
-      const res = await axios.get(
-        apiUrl + "get_my_housings?orderByHousings=" +
-        sort,
-        {
-          headers: { Authorization: "Bearer " + user.access_token },
-        }
-      );
-      sethousings(res.data.inactiveHousingTypes);
-      sethousingRecords(res.data.inactiveHousingTypes);
+      const res = await axios({
+        method: "get",
+        url: `${apiUrl}get_my_housings`,
+        headers: {
+          Authorization: `Bearer ${user?.access_token}`,
+          "Content-Type": "application/json",
+        },
+        params: {
+          orderByHousings: sort,
+          take: take,
+          skip: skip,
+          data: {
+            status: 0,
+          },
+        },
+      });
+      setTotalAdvert(res?.data?.total_count);
+
+      // Yalnızca yeni ilanları ekleyeceğiz
+      if (skip === 0) {
+        // İlk başta, ilk 10 ilanı yükle
+        sethousings(res?.data?.inactiveHousingTypes);
+      } else {
+        // Kaydırıldıkça, yeni ilanları mevcut listeye ekle
+        sethousings((prevHousings) => [
+          ...prevHousings,
+          ...res?.data?.inactiveHousingTypes,
+        ]);
+      }
     } catch (e) {
-      console.log(e + " hata");
+      console.error("Error fetching housings:", e);
     } finally {
       setloading(false);
     }
   };
   useEffect(() => {
-    fetchInactiveHousings();
-  }, [user]);
-
-  const [selectedIndex, setIndex] = React.useState(0);
+    fetchInactiveHousings(sort, take, skip);
+  }, [user, sort, skip]);
+  const handleEndReached = () => {
+    setSkip((prevSkip) => prevSkip + take);
+  };
+  const [selectedIndex, setIndex] = React.useState("");
   const [SortLıstModal, setSortLıstModal] = useState(false);
   const handleRadio = (index, sort) => {
     setIndex(index);
@@ -76,8 +101,8 @@ export default function PasiveRealtorAdverts() {
     setsearchValue(value);
     const filteredData = value
       ? housings.filter((item) =>
-        item?.housing_title.toLowerCase().includes(value.toLowerCase())
-      )
+          item?.housing_title.toLowerCase().includes(value.toLowerCase())
+        )
       : housings;
     sethousingRecords(filteredData);
   };
@@ -95,7 +120,7 @@ export default function PasiveRealtorAdverts() {
           <ActivityIndicator size={"large"} color="#333" />
         </View>
       ) : (
-        <ScrollView>
+        <View>
           <View
             style={{
               paddingTop: 6,
@@ -110,7 +135,7 @@ export default function PasiveRealtorAdverts() {
                 fontWeight: "600",
               }}
             >
-              Pasif İlanlar({housings?.length})
+              Pasif İlanlar({totalAdvert})
             </Text>
           </View>
           <View
@@ -142,14 +167,26 @@ export default function PasiveRealtorAdverts() {
               <MaterialIcon name="swap-vertical" size={23} color={"#333"} />
             </TouchableOpacity>
           </View>
-          <View style={{ paddingTop: 10, gap: 10 }}>
-            {housingRecords.map((item, index) => (
-              <RealtorAdvertPost
-                key={index}
-                housing={item}
-                Onpress={openSheet}
+          <View style={{ paddingTop: 10, gap: 10, alignItems: "center" }}>
+            {loading ? (
+              <Text>Yükleniyor...</Text>
+            ) : housings.length === 0 ? (
+              <Text>Pasif İlanınız Bulunmamaktadır</Text>
+            ) : (
+              <FlatList
+                data={housings} // Yüklenen ilanları burada render ediyoruz
+                renderItem={({ item, index }) => (
+                  <RealtorAdvertPost
+                    key={index}
+                    housing={item}
+                    Onpress={openSheet}
+                  />
+                )}
+                keyExtractor={(item, index) => index.toString()}
+                onEndReached={handleEndReached} // Sayfa sonuna gelindiğinde yeni verileri yükle
+                onEndReachedThreshold={0.5} // Sayfa sonunda ne kadar yaklaşınca tetiklensin
               />
-            ))}
+            )}
           </View>
           <Modal
             isVisible={SortLıstModal}
@@ -340,7 +377,7 @@ export default function PasiveRealtorAdverts() {
               </View>
             </View>
           </Modal>
-        </ScrollView>
+        </View>
       )}
     </>
   );

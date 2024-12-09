@@ -55,7 +55,7 @@ export default function PendingBalanceForProject() {
            
        {
          
-            (searchTerm && filterData.length==0)?
+            (searchTerm && filterData?.length==0)?
             <View >
               <Text style={{textAlign:'center',color:'#333',fontSize:14}}>Sonuç Bulunmadı</Text>
             </View>
