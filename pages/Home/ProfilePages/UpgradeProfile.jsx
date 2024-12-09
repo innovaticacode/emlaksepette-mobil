@@ -73,13 +73,16 @@ export default function UpgradeProfile() {
     if (digitsOnly.length <= 2) {
       return digitsOnly; // İlk 2 rakam
     } else if (digitsOnly.length <= 4) {
-      return `${digitsOnly.slice(0, 2)}/${digitsOnly.slice(2)}`; // İlk 2 rakam / sonraki 2 rakam
+      return `${digitsOnly.slice(0, 2)}.${digitsOnly.slice(2)}`; // İlk 2 rakam / sonraki 2 rakam
     } else {
-      return `${digitsOnly.slice(0, 2)}/${digitsOnly.slice(
+      return `${digitsOnly.slice(0, 2)}.${digitsOnly.slice(
         2,
         4
-      )}/${digitsOnly.slice(4)}`; // Gün/Ay/Yıl formatı
+      )}.${digitsOnly.slice(4)}`; // Gün/Ay/Yıl formatı
     }
+  };
+  const numericChange = (value) => {
+    return value.replace(/[^0-9]/g, "").substring(0, 10);
   };
 
   const [cities, setCities] = useState([]);
@@ -107,6 +110,7 @@ export default function UpgradeProfile() {
   const [areaCode, setareaCode] = useState(null);
   const [isVisible, setIsVisible] = useState(false);
   const [loadingUpdate, setloadingUpdate] = useState(false);
+  const [phoneData, setPhoneData] = useState({});
   const initialFormData = {
     name: "",
     mobile_phone: "",
@@ -154,6 +158,34 @@ export default function UpgradeProfile() {
       console.error("Hata:", error);
     }
   };
+
+  useEffect(() => {
+    const fetchPhoneData = async () => {
+      if (user?.access_token) {
+        try {
+          const response = await axios.get(
+            "https://private.emlaksepette.com/api/telefon-numarasi-sms-gonderimi-kontrolu",
+            {
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${user?.access_token}`,
+              },
+            }
+          );
+          console.log("API Response:", response.data); // Gelen veriyi konsola yazdır
+          setPhoneData(response?.data); // Gelen veriyi state'e aktar
+          setLoading(false); // Yükleme tamam
+        } catch (err) {
+          console.error("API Hatası:", err);
+          setError("Bir hata oluştu");
+          setLoading(false);
+        }
+      }
+    };
+    if (user?.access_token) {
+      fetchPhoneData(); // API'yi çağır
+    }
+  }, [user]);
 
   useEffect(() => {
     (async () => {
@@ -391,6 +423,11 @@ export default function UpgradeProfile() {
         });
 
         setnamFromGetUser(userInfo?.data);
+
+        console.log(
+          "Kullanıcının Telefon Numarası:",
+          userInfo?.data?.new_mobile_phone
+        );
       }
     } catch (error) {
       console.error("Kullanıcı verileri güncellenirken hata oluştu:", error);
@@ -649,7 +686,7 @@ export default function UpgradeProfile() {
         }
       );
 
-      if (response.data) {
+      if (response.status === 200 && response.data) {
         navigation.replace("VerifyPhoneChange", {
           phone: formData.new_mobile_phone,
         });
@@ -949,7 +986,16 @@ export default function UpgradeProfile() {
             </View>
 
             <View style={{ width: "100%", alignItems: "center" }}>
-              <View style={{ padding: 5, width: "90%", gap: 25 }}>
+              <View style={styles.mesg}>
+                {phoneData?.does_exist ? (
+                  <View style={styles.messageBox}>
+                    <Text style={styles.messageText}>
+                      Güncelleme işlemi yaptınız, onay bekliyorsunuz.
+                    </Text>
+                  </View>
+                ) : null}
+              </View>
+              <View style={{ width: "90%", gap: 25 }}>
                 {Forms.map((item, i) => {
                   if (
                     (item?.key == "authority_licence" &&
@@ -1017,7 +1063,8 @@ export default function UpgradeProfile() {
                                   item.key === "iban" ||
                                   item.key === "phone" ||
                                   item.key === "taxNumber" ||
-                                  item.key === "idNumber"
+                                  item.key === "idNumber" ||
+                                  item.key === "new_mobile_phone"
                                     ? "number-pad"
                                     : "default"
                                 }
@@ -1058,6 +1105,12 @@ export default function UpgradeProfile() {
                                     handleInputChange(item.key, formattedValue);
                                   } else {
                                     handleInputChange(item.key, value);
+                                  }
+                                  if (item.key === "new_mobile_phone") {
+                                    handleInputChange(
+                                      item.key,
+                                      numericChange(value)
+                                    );
                                   }
                                 }}
                               />
@@ -1615,5 +1668,33 @@ const styles = StyleSheet.create({
     transform: [{ translateX: -50 }, { translateY: -50 }],
     color: "#000",
     fontWeight: "bold",
+  },
+  mesg: {
+    width: "100%",
+    justifyContent: "center",
+    alignItems: "center",
+    paddingRight: 20,
+    paddingLeft: 20,
+    paddingBottom: 20,
+  },
+  messageBox: {
+    backgroundColor: "#FFC107", // Sarı arka plan
+    padding: 10,
+    borderRadius: 10,
+    width: "100%",
+
+    justifyContent: "center",
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 5, // Android için gölge
+  },
+  messageText: {
+    fontSize: 13,
+    fontWeight: "regular",
+    color: "#333", // Koyu gri renk
+    textAlign: "center",
   },
 });

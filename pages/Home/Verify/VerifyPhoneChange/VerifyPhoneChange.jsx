@@ -13,6 +13,12 @@ import axios from "axios";
 import { apiUrl } from "../../../../components/methods/apiRequest";
 import { getValueFor } from "../../../../components/methods/user";
 import { useNavigation } from "@react-navigation/native";
+import Ionicons from "react-native-vector-icons/Ionicons";
+import {
+  AlertNotificationRoot,
+  ALERT_TYPE,
+  Dialog,
+} from "react-native-alert-notification";
 
 const VerifyPhoneChange = ({ route }) => {
   const { phone } = route.params;
@@ -38,6 +44,16 @@ const VerifyPhoneChange = ({ route }) => {
     } else if (seconds === 0) {
       clearInterval(interval);
       setIsActive(false);
+     Dialog.show({
+        type: ALERT_TYPE.DANGER,
+          title: "Başarısız",
+          textBody: "Zaman aşımına uğradı",
+          button: "Tamam",
+          onHide: () => {
+          navigation.navigate("UpdateProfile");
+        }
+        
+      });
     }
 
     return () => clearInterval(interval);
@@ -81,7 +97,16 @@ const VerifyPhoneChange = ({ route }) => {
         }
       );
       if (response.data.success) {
-        navigation.navigate("Home");
+       Dialog.show({
+        type: ALERT_TYPE.SUCCESS,
+          title: "Başarılı",
+          textBody: "Başarıyla güncellediniz.",
+          button: "Tamam",
+          onHide: () => {
+          navigation.navigate("UpdateProfile");
+        }
+        
+      });
       } else {
         alert("Doğrulama başarısız!");
       }
@@ -102,70 +127,69 @@ const VerifyPhoneChange = ({ route }) => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.headerText}>Numarayı Doğrula!</Text>
-        <View style={styles.instruction}>
-          <Text style={styles.instructionText}>
-            Lütfen numaranızı doğrulamak için
-            <Text style={styles.phoneNumber}>{phone ?? ""}</Text> No'lu telefona
-            gönderdiğimiz 6 haneli doğrulama kodunu giriniz
-          </Text>
+    <AlertNotificationRoot>
+      <SafeAreaView style={styles.container}>
+        <View style={styles.header}>
+          <TouchableOpacity
+            onPress={() => navigation.goBack()}
+            style={{ paddingLeft: 15, paddingTop: 10 }} // Padding ekleniyor
+          >
+            <Ionicons name="arrow-back" size={30} color="black" />
+          </TouchableOpacity>
+          <Text style={styles.headerText}>Numarayı Doğrula!</Text>
+          <View style={styles.instruction}>
+            <Text style={styles.instructionText}>
+              Lütfen numaranızı doğrulamak için {""}
+              <Text style={styles.phoneNumber}>{phone ?? ""}</Text> No'lu
+              telefona gönderdiğimiz 6 haneli doğrulama kodunu giriniz.
+            </Text>
+          </View>
         </View>
-      </View>
-      <View style={styles.timerContainer}>
-        <View style={styles.timerCircle}>
-          <Text style={styles.timerText}>{formatTime(seconds)}</Text>
+        <View style={styles.timerContainer}>
+          <View style={styles.timerCircle}>
+            <Text style={styles.timerText}>{formatTime(seconds)}</Text>
+          </View>
         </View>
-      </View>
-      <View style={styles.codeInputContainer}>
-        <View style={styles.codeInputRow}>
-          {[...Array(6)].map((_, index) => (
-            <TextInput
-              key={index}
-              ref={(ref) => (inputs.current[index] = ref)}
-              style={styles.input}
-              value={codes[index] || ""}
-              maxLength={1}
-              keyboardType="numeric"
-              onChangeText={(text) => handleInputChange(index, text)}
-              onKeyPress={({ nativeEvent }) => {
-                if (nativeEvent.key === "Backspace" && !codes[index]) {
-                  if (index > 0) {
-                    inputs.current[index - 1]?.focus();
+        <View style={styles.codeInputContainer}>
+          <View style={styles.codeInputRow}>
+            {[...Array(6)].map((_, index) => (
+              <TextInput
+                key={index}
+                ref={(ref) => (inputs.current[index] = ref)}
+                style={styles.input}
+                value={codes[index] || ""}
+                maxLength={1}
+                keyboardType="numeric"
+                onChangeText={(text) => handleInputChange(index, text)}
+                onKeyPress={({ nativeEvent }) => {
+                  if (nativeEvent.key === "Backspace" && !codes[index]) {
+                    if (index > 0) {
+                      inputs.current[index - 1]?.focus();
+                    }
+                    handleDelete(index);
                   }
-                  handleDelete(index);
-                }
-              }}
-            />
-          ))}
+                }}
+              />
+            ))}
+          </View>
+          <View style={styles.actionButtons}>
+   
+              <TouchableOpacity
+                disabled={codes.length !== 6 || codes.includes("")}
+                onPress={() => sendPostRequest()}
+                style={[styles.submitButton]}
+              >
+                {loading ? (
+                  <ActivityIndicator color="white" />
+                ) : (
+                  <Text style={styles.buttonText}>Onayla</Text>
+                )}
+              </TouchableOpacity>
+            
+          </View>
         </View>
-        <View style={styles.actionButtons}>
-          {isActive && seconds > 0 ? (
-            <TouchableOpacity
-              disabled={codes.length !== 6 || codes.includes("")}
-              onPress={() => sendPostRequest()}
-              style={[styles.submitButton]}
-            >
-              {loading ? (
-                <ActivityIndicator color="white" />
-              ) : (
-                <Text style={styles.buttonText}>Onayla</Text>
-              )}
-            </TouchableOpacity>
-          ) : (
-            <TouchableOpacity
-              onPress={() => {
-                navigation.navigate("UpdateProfile");
-              }}
-              style={[styles.submitButton]}
-            >
-              <Text style={styles.buttonText}>Tekrar Deneyin</Text>
-            </TouchableOpacity>
-          )}
-        </View>
-      </View>
-    </SafeAreaView>
+      </SafeAreaView>
+    </AlertNotificationRoot>
   );
 };
 

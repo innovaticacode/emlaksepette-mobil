@@ -1557,6 +1557,18 @@ const StackScreenNavigator = () => {
                   headerShown: false,
                 })}
               />
+              <Stack.Screen
+                name="VerifyPhoneChange"
+                component={VerifyPhoneChange}
+                options={({ route }) => ({
+                  headerShown: false,
+                  gestureEnabled: false,
+                  headerBackTitleVisible: false,
+                  headerStyle: {
+                    backgroundColor: "#ffffff",
+                  },
+                })}
+              />
             </Stack.Navigator>
             {/* </NavigationContainer> */}
           </SheetProvider>

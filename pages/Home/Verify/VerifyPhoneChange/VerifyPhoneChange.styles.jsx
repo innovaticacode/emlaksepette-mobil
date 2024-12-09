@@ -90,4 +90,30 @@ export const styles = StyleSheet.create({
   disabledButton: {
     opacity: 0.5,
   },
+ modalOverlay: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Semi-transparent background
+  },
+  modalContainer: {
+    backgroundColor: 'white',
+    padding: 20,
+    borderRadius: 10,
+    alignItems: 'center',
+    width: '80%',
+    maxWidth: 300,
+  },
+  modalText: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 20,
+  },
+  modalButton: {
+    backgroundColor: '#EA2A28',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 5,
+    alignItems: 'center',
+  },
 });
