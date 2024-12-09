@@ -20,7 +20,7 @@ import FontAwesome5Icon from "react-native-vector-icons/FontAwesome5";
 import { RxDropdownMenu } from "react-icons/rx";
 import RNPickerSelect from "react-native-picker-select";
 import { RefreshControl } from "react-native-gesture-handler";
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
 import { getValueFor } from "../../components/methods/user";
 
@@ -30,7 +30,7 @@ import { DrawerMenu } from "../../components";
 import { apiUrl, frontEndUriBase } from "../../components/methods/apiRequest";
 import RealtorPost from "../../components/Card/RealtorCard/RealtorPost";
 import ViewFilter from "../../components/Filter/ViewFilter/ViewFilter";
-import FilterRealtor from '../../assets/filterRealtor.svg'
+import FilterRealtor from "../../assets/filterRealtor.svg";
 export default function AllRealtorAdverts() {
   const [cityItems, setCityItems] = useState();
   const [state, setState] = useState({
@@ -106,14 +106,12 @@ export default function AllRealtorAdverts() {
     return intValue.toLocaleString("tr-TR");
   };
 
-  
   const route = useRoute();
   const navigation = useNavigation();
   const { params } = route;
 
   useEffect(() => {
     if (params.href) {
-      
       const relativeUrl = params.href.replace(`${frontEndUriBase}kategori`, "");
       let urlSegments = relativeUrl.split("/").filter((segment) => segment);
 
@@ -250,7 +248,6 @@ export default function AllRealtorAdverts() {
         .catch((error) =>
           console.error("Veri alınırken bir hata oluştu:", error)
         );
-      
     } else {
       setState((prevState) => ({ ...prevState, neighborhoods: [] }));
     }
@@ -459,21 +456,20 @@ export default function AllRealtorAdverts() {
   useEffect(() => {
     getValueFor("user", setuser);
   }, []);
- const [showViewModal, setshowViewModal] = useState(false)
- const [selectedView, setselectedView] = useState(0)
- const [chekView, setchekView] = useState(false)
- const handleRadio = (index, sort) => {
-  setselectedView(index);
-if (index==1) {
-  setchekView(true)
-}else{
-  setchekView(false)
-}
-  setTimeout(() => {
-    setshowViewModal(false);
-  
-  }, 400);
-};
+  const [showViewModal, setshowViewModal] = useState(false);
+  const [selectedView, setselectedView] = useState(0);
+  const [chekView, setchekView] = useState(false);
+  const handleRadio = (index, sort) => {
+    setselectedView(index);
+    if (index == 1) {
+      setchekView(true);
+    } else {
+      setchekView(false);
+    }
+    setTimeout(() => {
+      setshowViewModal(false);
+    }, 400);
+  };
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
@@ -500,17 +496,22 @@ if (index==1) {
         </View> */}
       </Modal>
 
-      <View style={{ flexDirection: "row",justifyContent:'space-around',borderBottomWidth:1,borderColor:'#7C7C7C'}}>
+      <View
+        style={{
+          flexDirection: "row",
+          justifyContent: "space-around",
+          borderBottomWidth: 1,
+          borderColor: "#7C7C7C",
+        }}
+      >
         <TouchableOpacity
           style={styles.btn}
           onPress={() =>
             setState((prevState) => ({ ...prevState, modalVisible: true }))
           }
-        > 
-          <FilterRealtor/>
-          <Text style={styles.btnText}>
-            Filtrele
-          </Text>
+        >
+          <FilterRealtor />
+          <Text style={styles.btnText}>Filtrele</Text>
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() =>
@@ -522,10 +523,8 @@ if (index==1) {
             borderLeftWidth: 1,
           }}
         >
-            <Icon name="swap-vertical" size={18} color={'#7C7C7C'}/>
-          <Text style={styles.btnText}>
-            Sırala
-          </Text>
+          <Icon name="swap-vertical" size={18} color={"#7C7C7C"} />
+          <Text style={styles.btnText}>Sırala</Text>
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() =>
@@ -534,17 +533,20 @@ if (index==1) {
           }
           style={{
             ...styles.btn,
-           borderRightWidth:0
-           
+            borderRightWidth: 0,
           }}
         >
-          <Icon name="format-list-bulleted" size={18} color={'#7C7C7C'}/>
-          <Text style={styles.btnText}>
-           Görünüm
-          </Text>
+          <Icon name="format-list-bulleted" size={18} color={"#7C7C7C"} />
+          <Text style={styles.btnText}>Görünüm</Text>
         </TouchableOpacity>
       </View>
-      <ViewFilter selectedView={selectedView} showViewModal={showViewModal} setshowViewModal={setshowViewModal} handleRadio={handleRadio} show={2}/>
+      <ViewFilter
+        selectedView={selectedView}
+        showViewModal={showViewModal}
+        setshowViewModal={setshowViewModal}
+        handleRadio={handleRadio}
+        show={2}
+      />
       <SortModal
         isVisible={state.sortModalVisible}
         onClose={() =>
@@ -640,17 +642,8 @@ if (index==1) {
         )}
         <TouchableOpacity onPress={() => navigation.navigate("MapWiew")}>
           <View style={{ position: "relative", flex: 1 }}>
-            <View style={{ position: "absolute", bottom: 10, right: 10 }}>
-              <View
-                style={{
-                  backgroundColor: "red",
-                  width: 80,
-                  height: 80,
-                  borderRadius: 50,
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              >
+            <View style={styles.MapIconContainer}>
+              <View style={styles.MapIcon}>
                 <ImageBackground
                   resizeMode="contain"
                   style={{ width: "100%", height: "100%", borderRadius: 50 }}
@@ -1247,19 +1240,19 @@ const styles = StyleSheet.create({
     fontSize: 20,
   },
   btn: {
-    width:'33%',
-    borderRightWidth:1,
-    borderColor:'#7C7C7C',
-    flexDirection:'row',
-    gap:5,
+    width: "33%",
+    borderRightWidth: 1,
+    borderColor: "#7C7C7C",
+    flexDirection: "row",
+    gap: 5,
     padding: 12,
     justifyContent: "center",
     alignItems: "center",
   },
-  btnText:{
-    color:'#7C7C7C',
-    fontSize:14,
-    fontWeight:'600'
+  btnText: {
+    color: "#7C7C7C",
+    fontSize: 14,
+    fontWeight: "600",
   },
   switchInner: {
     width: 16,
@@ -1437,6 +1430,19 @@ const styles = StyleSheet.create({
     backgroundColor: "#fefefe",
     padding: 20,
     borderRadius: 5,
+  },
+  MapIcon: {
+    backgroundColor: "red",
+    width: 80,
+    height: 80,
+    borderRadius: 50,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  MapIconContainer: {
+    position: "absolute",
+    bottom: 22,
+    right: 10,
   },
 });
 

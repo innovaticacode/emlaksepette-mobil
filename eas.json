@@ -14,7 +14,15 @@
     "production": {
       "autoIncrement": true,
       "android": {
-        "buildType": "apk" 
+        "buildType": "apk",
+        "env": {
+          "SENTRY_AUTH_TOKEN": "$EXPO_PUBLIC_SENTRY_AUTH_TOKEN"
+        }
+      },
+      "ios": {
+        "env": {
+          "SENTRY_AUTH_TOKEN": "$EXPO_PUBLIC_SENTRY_AUTH_TOKEN"
+        }
       }
     }
   },
