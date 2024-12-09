@@ -9,23 +9,17 @@ import {
 import Modal from "react-native-modal";
 import React, { useState, useEffect } from "react";
 import HTML from "react-native-render-html";
-import Icon from "react-native-vector-icons/SimpleLineIcons";
 import Icon2 from "react-native-vector-icons/Fontisto";
 
 import Icon3 from "react-native-vector-icons/MaterialCommunityIcons";
-import Icon4 from "react-native-vector-icons/FontAwesome5";
 import { useRoute, useNavigation } from "@react-navigation/native";
 import { getValueFor } from "../../../components/methods/user";
 import axios from "axios";
-import { addDotEveryThreeDigits } from "../../../components/methods/merhod";
-import { Platform } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { ActivityIndicator } from "react-native-paper";
 import { style } from "../../../styles/OrderDetails.styles";
 import { WhiteOrRedButtons } from "../../../components";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
-import SecurityBlue from "../../../assets/securityBlue.png";
-import SecurityGreen from "../../../assets/securityGreen.png";
 import { apiUrl } from "../../../components/methods/apiRequest";
 import { formatedPrice } from "../../../utils";
 
@@ -50,6 +44,7 @@ export default function OrderDetails({ item }) {
 
   useEffect(() => {
     const fetchData = async () => {
+      console.log("OrderId---->", OrderId);
       try {
         if (user?.access_token) {
           const response = await axios.get(
@@ -165,8 +160,6 @@ export default function OrderDetails({ item }) {
       }
     }
   }, [Detail]);
-
-  console.log("---deals--->", Deals);
 
   return (
     <View style={{ backgroundColor: "#FFF", flex: 1 }}>
