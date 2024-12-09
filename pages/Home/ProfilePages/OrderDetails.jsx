@@ -41,11 +41,12 @@ export default function OrderDetails({ item }) {
   const [Deals, setDeals] = useState("");
   const [modalVisible2, setModalVisible2] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
+  const [orderStatus, setOrderStatus] = useState("");
 
   useEffect(() => {
     const fetchData = async () => {
-      console.log("OrderId---->", OrderId);
       try {
+        console.log("OrderId", OrderId);
         if (user?.access_token) {
           const response = await axios.get(
             `${apiUrl}institutional/order_detail/${OrderId}`,
@@ -59,15 +60,19 @@ export default function OrderDetails({ item }) {
           setRefund(response?.data?.order?.refund);
           setprojectDetail(response?.data.project);
           sethousingDetail(response?.data.housing);
+          setOrderStatus(response?.data?.order_status);
           return setLoading(false);
         }
       } catch (error) {
         console.error("Error fetching data:", error);
       }
     };
-
     fetchData();
   }, [user, OrderId]);
+
+  useEffect(() => {
+    console.log("orderStatus", orderStatus);
+  }, [orderStatus]);
 
   useEffect(() => {
     if (Detail?.cart && typeof Detail.cart === "string" && user.access_token) {
@@ -430,8 +435,8 @@ export default function OrderDetails({ item }) {
                 </TouchableOpacity>
               </View>
             </>
-
-            {Detail?.status == 0 && (
+            {/*-------------------------------------- ORDERSTATUS START----------------- */}
+            {orderStatus == "Admin Onayı Bekliyor" && (
               <>
                 <View style={style.blueCardBody}>
                   <View style={style.iconContainer}>
@@ -465,38 +470,8 @@ export default function OrderDetails({ item }) {
               </>
             )}
 
-            {Detail?.status == 1 && (
+            {orderStatus == "Alıcının Onayı Bekleniyor" && (
               <>
-                <View style={style.blueCardBody}>
-                  <View style={style.iconContainer}>
-                    <View style={style.iconWrapper}>
-                      <Icon2 name="wallet" color={"white"} size={20} />
-                    </View>
-                  </View>
-                  <View style={style.textArea}>
-                    <Text
-                      style={[
-                        style.largeBoldtext,
-                        { textAlign: "center", color: "#2F7DF7" },
-                      ]}
-                    >
-                      Ödemenizi Aldık. Teşekkür Ederiz!
-                    </Text>
-                    <Text style={[style.boldText, { textAlign: "center" }]}>
-                      Ödeme şu an da havuz hesabında. Satıcı ücretini sipariş
-                      tamamlandığında alacak.
-                    </Text>
-                    <Text
-                      style={[
-                        style.boldText,
-                        { textAlign: "center", color: "#606060", fontSize: 12 },
-                      ]}
-                    >
-                      {formattedDate}
-                    </Text>
-                  </View>
-                </View>
-
                 <View style={style.greenCardBody}>
                   <View style={style.iconContainer}>
                     <View style={style.iconWrapperGreen}>
@@ -517,7 +492,8 @@ export default function OrderDetails({ item }) {
                       Kaporanız Emlak Sepette İle Güvende!{" "}
                     </Text>
                     <Text style={[style.boldText, { textAlign: "center" }]}>
-                      Sipariş onayınız bekleniyor.
+                      Sipariş onayınız bekleniyor. 7 gün içerisinde sistem
+                      tarafından otomatik olarak onaylanacaktır.
                     </Text>
                     <View
                       style={{ flexDirection: "row", justifyContent: "center" }}
@@ -557,7 +533,46 @@ export default function OrderDetails({ item }) {
               </>
             )}
 
-            {Detail?.status == 2 && (
+            {orderStatus == "Alıcı Onayladı" && (
+              <>
+                <View style={style.greenCardBody}>
+                  <View style={style.iconContainer}>
+                    <View style={style.iconWrapperGreen}>
+                      <Icon3
+                        name="shield-check-outline"
+                        color={"white"}
+                        size={30}
+                      />
+                    </View>
+                  </View>
+                  <View style={style.textArea}>
+                    <Text
+                      style={[
+                        style.largeBoldtext,
+                        { textAlign: "center", color: "#0E713D" },
+                      ]}
+                    >
+                      Siparişiniz Başarıyla Tamamlandı!{" "}
+                    </Text>
+                    <Text style={[style.boldText, { textAlign: "center" }]}>
+                      Kapora ödemesi satıcıya aktarılacaktır. Satıcı ve ilan
+                      hakkında değerlendirme yapabilirsiniz.
+                    </Text>
+
+                    <Text
+                      style={[
+                        style.boldText,
+                        { textAlign: "center", color: "#606060", fontSize: 12 },
+                      ]}
+                    >
+                      {formattedDate}
+                    </Text>
+                  </View>
+                </View>
+              </>
+            )}
+
+            {orderStatus == "Admin İade Etti" && (
               <>
                 <View style={style.blueCardBody}>
                   <View style={style.iconContainer}>
@@ -589,6 +604,7 @@ export default function OrderDetails({ item }) {
                 </View>
               </>
             )}
+            {/*-------------------------------------- ORDERSTATUS END----------------- */}
 
             {Detail?.can_refund == 1 && (
               <View>
@@ -752,3 +768,97 @@ export default function OrderDetails({ item }) {
     </View>
   );
 }
+
+/*
+** Alıcı onayı bekleniyor durumu için ekran tasarımı
+ <View style={style.greenCardBody}>
+                  <View style={style.iconContainer}>
+                    <View style={style.iconWrapperGreen}>
+                      <Icon3
+                        name="shield-check-outline"
+                        color={"white"}
+                        size={30}
+                      />
+                    </View>
+                  </View>
+                  <View style={style.textArea}>
+                    <Text
+                      style={[
+                        style.largeBoldtext,
+                        { textAlign: "center", color: "#0E713D" },
+                      ]}
+                    >
+                      Kaporanız Emlak Sepette İle Güvende!{" "}
+                    </Text>
+                    <Text style={[style.boldText, { textAlign: "center" }]}>
+                      Sipariş onayınız bekleniyor.
+                    </Text>
+                    <View
+                      style={{ flexDirection: "row", justifyContent: "center" }}
+                    >
+                      <TouchableOpacity style={style.okeyBtn}>
+                        <Text
+                          style={[
+                            style.boldText,
+                            { textAlign: "center", color: "#FFF" },
+                          ]}
+                        >
+                          Onayla
+                        </Text>
+                      </TouchableOpacity>
+
+                      <TouchableOpacity style={style.rejectBtn}>
+                        <Text
+                          style={[
+                            style.boldText,
+                            { textAlign: "center", color: "#FFF" },
+                          ]}
+                        >
+                          İptal Et
+                        </Text>
+                      </TouchableOpacity>
+                    </View>
+                    <Text
+                      style={[
+                        style.boldText,
+                        { textAlign: "center", color: "#606060", fontSize: 12 },
+                      ]}
+                    >
+                      {formattedDate}
+                    </Text>
+                  </View>
+                </View>
+
+*/
+
+/*
+ <View style={style.blueCardBody}>
+                  <View style={style.iconContainer}>
+                    <View style={style.iconWrapper}>
+                      <Icon2 name="wallet" color={"white"} size={20} />
+                    </View>
+                  </View>
+                  <View style={style.textArea}>
+                    <Text
+                      style={[
+                        style.largeBoldtext,
+                        { textAlign: "center", color: "#2F7DF7" },
+                      ]}
+                    >
+                      Ödemenizi Aldık. Teşekkür Ederiz!
+                    </Text>
+                    <Text style={[style.boldText, { textAlign: "center" }]}>
+                      Ödeme şu an da havuz hesabında. Satıcı ücretini sipariş
+                      tamamlandığında alacak.
+                    </Text>
+                    <Text
+                      style={[
+                        style.boldText,
+                        { textAlign: "center", color: "#606060", fontSize: 12 },
+                      ]}
+                    >
+                      {formattedDate}
+                    </Text>
+                  </View>
+                </View>
+*/
