@@ -320,7 +320,7 @@ export const style = StyleSheet.create({
   approveContainer: {
     backgroundColor: "#f4f4f4",
     padding: 20,
-    height: "40%",
+    height: "auto",
     borderRadius: 20,
     justifyContent: "space-between",
     alignItems: "center",
@@ -378,5 +378,14 @@ export const style = StyleSheet.create({
   fileTxt: {
     textAlign: "center",
     color: "#606060",
+  },
+  rejectModalBody: {
+    backgroundColor: "#f4f4f4",
+    padding: 20,
+    height: "auto",
+    minHeight: "40%",
+    borderRadius: 20,
+    justifyContent: "space-between",
+    marginHorizontal: 20,
   },
 });

@@ -6,6 +6,7 @@ import {
   Dimensions,
   Image,
   TextInput,
+  Alert,
 } from "react-native";
 import Modal from "react-native-modal";
 import React, { useState, useEffect } from "react";
@@ -24,6 +25,8 @@ import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 import { apiUrl } from "../../../components/methods/apiRequest";
 import { formatedPrice } from "../../../utils";
 import { ALERT_TYPE, Dialog } from "react-native-alert-notification";
+import * as ImagePicker from "expo-image-picker";
+import * as DocumentPicker from "expo-document-picker";
 
 export default function OrderDetails({ item }) {
   const navigation = useNavigation();
@@ -182,7 +185,94 @@ export default function OrderDetails({ item }) {
     }
   };
 
-  const handleFile = async () => {};
+  const pickImage = async () => {
+    try {
+      let permissionResult =
+        await ImagePicker.requestMediaLibraryPermissionsAsync();
+
+      if (permissionResult.granted === false) {
+        Alert.alert(
+          "İzin Gerekli",
+          "Fotoğraf çekmek için kamera iznine ihtiyacımız var."
+        );
+        return;
+      }
+      let result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: true,
+        aspect: [4, 3],
+        quality: 1,
+      });
+
+      if (!result.canceled) {
+        setRejectFile(result.assets[0]);
+      }
+    } catch (error) {
+      Dialog.show({
+        type: ALERT_TYPE.WARNING,
+        title: "Hata",
+        textBody: "Fotoğraf seçilirken bir hata oluştu.",
+        button: "Tamam",
+      });
+      console.error("Error picking image:", error);
+    }
+  };
+  const takePhoto = async () => {
+    try {
+      const { status } = await ImagePicker.requestCameraPermissionsAsync();
+      if (status !== "granted") {
+        Alert.alert(
+          "İzin Gerekli",
+          "Fotoğraf çekmek için kamera iznine ihtiyacımız var."
+        );
+        return;
+      }
+
+      let result = await ImagePicker.launchCameraAsync({
+        allowsEditing: true,
+        aspect: [4, 3],
+        quality: 1,
+      });
+
+      if (!result.canceled) {
+        console.log("result", result.assets[0]);
+        setRejectFile(result.assets[0]);
+      }
+    } catch (error) {
+      Dialog.show({
+        type: ALERT_TYPE.WARNING,
+        title: "Hata",
+        textBody: "Fotoğraf çekilirken bir hata oluştu.",
+        button: "Tamam",
+      });
+      console.error("Error taking photo:", error);
+    }
+  };
+
+  const pickFileDocument = async () => {
+    try {
+      // PDF dosyası seçimi
+      const result = await DocumentPicker.getDocumentAsync({
+        type: "application/pdf", // Sadece PDF dosyalarını seçmek için
+        copyToCacheDirectory: true, // Seçilen dosyayı cache'e kopyalar
+      });
+
+      if (result.type === "success") {
+        setRejectFile(result);
+        console.log("Seçilen Dosya:", result);
+      } else {
+        console.log("Kullanıcı seçim yapmadı.");
+      }
+    } catch (error) {
+      Dialog.show({
+        type: ALERT_TYPE.WARNING,
+        title: "Hata",
+        textBody: "Dosya seçilirken bir  hata oluştu.",
+        button: "Tamam",
+      });
+      console.error("Dosya seçilirken hata oluştu:", error);
+    }
+  };
 
   const date = new Date(Detail.created_at);
   // Ay isimleri dizisi
@@ -271,7 +361,11 @@ export default function OrderDetails({ item }) {
         </View>
       ) : (
         <View style={style.container}>
-          <ScrollView showsVerticalScrollIndicator={false}>
+          <ScrollView
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={{ flexGrow: 1 }}
+            keyboardShouldPersistTaps="handled"
+          >
             <View style={style.orderStateBody}>
               <View style={style.statusBody}>
                 <>
@@ -1027,17 +1121,9 @@ export default function OrderDetails({ item }) {
               onBackdropPress={() => setRejectModal(false)}
               backdropColor="rgba(0, 0, 0, 0.5)"
               style={style.modalApprove}
+              avoidKeyboard={true}
             >
-              <View
-                style={{
-                  backgroundColor: "#f4f4f4",
-                  padding: 20,
-                  height: "40%",
-                  borderRadius: 20,
-                  justifyContent: "space-between",
-                  marginHorizontal: 20,
-                }}
-              >
+              <View style={style.rejectModalBody}>
                 {/* Başlık ve Kapatma İkonu */}
                 <View style={style.headApprove}>
                   <Text style={style.approveTitle}>İptal nedeniniz nedir?</Text>
