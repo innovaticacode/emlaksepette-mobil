@@ -42,6 +42,7 @@ export default function OrderDetails({ item }) {
   const [modalVisible2, setModalVisible2] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [orderStatus, setOrderStatus] = useState("");
+  const [approveModal, setApproveModal] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -88,6 +89,42 @@ export default function OrderDetails({ item }) {
       }
     }
   }, [Detail]);
+
+  const handleApprove = async () => {
+    try {
+      const response = await axios.post(
+        `${apiUrl}order/approve/${OrderId}`,
+        {
+          input: OrderId,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${user?.access_token}`,
+          },
+        }
+      );
+      console.log("Approve response:", response);
+    } catch (error) {
+      console.error("Error approving order:", error);
+    }
+  };
+
+  const handleReject = async () => {
+    try {
+      const response = await axios.post(
+        `${apiUrl}order/unapprove/${OrderId}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${user?.access_token}`,
+          },
+        }
+      );
+      console.log("Reject response:", response);
+    } catch (error) {
+      console.log("Error rejecting order:", error);
+    }
+  };
 
   const date = new Date(Detail.created_at);
   // Ay isimleri dizisi
@@ -498,7 +535,10 @@ export default function OrderDetails({ item }) {
                     <View
                       style={{ flexDirection: "row", justifyContent: "center" }}
                     >
-                      <TouchableOpacity style={style.okeyBtn}>
+                      <TouchableOpacity
+                        style={style.okeyBtn}
+                        onPress={() => setApproveModal(!approveModal)}
+                      >
                         <Text
                           style={[
                             style.boldText,
@@ -509,7 +549,10 @@ export default function OrderDetails({ item }) {
                         </Text>
                       </TouchableOpacity>
 
-                      <TouchableOpacity style={style.rejectBtn}>
+                      <TouchableOpacity
+                        style={style.rejectBtn}
+                        onPress={handleReject}
+                      >
                         <Text
                           style={[
                             style.boldText,
@@ -763,6 +806,44 @@ export default function OrderDetails({ item }) {
               </SafeAreaView>
             </Modal>
           </ScrollView>
+          <Modal
+            isVisible={approveModal}
+            onBackdropPress={() => setApproveModal(false)}
+            backdropColor="rgba(0, 0, 0, 0.5)"
+            style={style.modalApprove}
+          >
+            <>
+              <View style={style.approveContainer}>
+                <View style={style.headApprove}>
+                  <View />
+                  <Text style={style.approveTitle}>Siparişi Onayla</Text>
+                  <TouchableOpacity onPress={() => setApproveModal(false)}>
+                    <Icon3 name="close" size={24} color="black" />
+                  </TouchableOpacity>
+                </View>
+
+                <View>
+                  <Text style={style.approveContent}>
+                    Siparişini satıcıyla anlaştığın şekilde sorunsuz teslim
+                    aldığını ve ödemeni satıcıya aktarılmasına onaylıyor musun?
+                  </Text>
+
+                  <Text style={style.approveInfo}>
+                    İş Tamamen bitmeden kesinlikle siparişe onay vermemelisin.
+                  </Text>
+                </View>
+
+                <TouchableOpacity
+                  style={style.approveBtn}
+                  onPress={handleApprove}
+                >
+                  <Text style={{ color: "#FFF", fontWeight: "500" }}>
+                    Siparişi Onayla
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </>
+          </Modal>
         </View>
       )}
     </View>

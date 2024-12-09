@@ -174,7 +174,7 @@ export const style = StyleSheet.create({
   },
   info: {
     flexDirection: "column",
-    width:'70%',
+    width: "70%",
     justifyContent: "flex-start",
     paddingHorizontal: 6,
     gap: 10,
@@ -311,5 +311,48 @@ export const style = StyleSheet.create({
     shadowOpacity: 0.62, // Gölgenin opaklığı
     shadowRadius: 3.84, // Gölge bulanıklık yarıçapı
     elevation: 5, // Android için gölge efekti
+  },
+  modalApprove: {
+    justifyContent: "center",
+    alignItems: "center",
+    margin: 0,
+  },
+  approveContainer: {
+    backgroundColor: "#f4f4f4",
+    padding: 20,
+    height: "40%",
+    borderRadius: 20,
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginHorizontal: 20,
+  },
+  headApprove: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    width: "100%",
+  },
+  approveTitle: {
+    textAlign: "center",
+    fontSize: 16,
+    fontWeight: "700",
+  },
+  approveContent: {
+    textAlign: "center",
+    fontSize: 14,
+    fontWeight: "bold",
+    marginBottom: 10,
+  },
+  approveInfo: {
+    textAlign: "center",
+    fontSize: 14,
+    fontWeight: "500",
+    marginBottom: 10,
+    color: "#ea2b2e",
+  },
+  approveBtn: {
+    backgroundColor: "#34BC79",
+    padding: 12,
+    borderRadius: 5,
+    marginTop: 10,
   },
 });
