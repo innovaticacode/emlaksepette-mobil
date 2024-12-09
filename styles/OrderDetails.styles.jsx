@@ -355,4 +355,28 @@ export const style = StyleSheet.create({
     borderRadius: 5,
     marginTop: 10,
   },
+  rejectInput: {
+    borderWidth: 1,
+    borderColor: "#e6e6e6",
+    borderRadius: 5,
+    padding: 10,
+  },
+  rejectBtnModal: {
+    backgroundColor: "#D9D9D9",
+    padding: 12,
+    borderRadius: 5,
+    marginTop: 10,
+  },
+  rejectFile: {
+    borderWidth: 1,
+    borderColor: "#e6e6e6",
+    borderRadius: 10,
+    padding: 10,
+    width: "30%",
+    justifyContent: "center",
+  },
+  fileTxt: {
+    textAlign: "center",
+    color: "#606060",
+  },
 });

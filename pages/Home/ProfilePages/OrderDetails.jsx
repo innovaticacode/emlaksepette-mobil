@@ -5,6 +5,7 @@ import {
   ScrollView,
   Dimensions,
   Image,
+  TextInput,
 } from "react-native";
 import Modal from "react-native-modal";
 import React, { useState, useEffect } from "react";
@@ -43,6 +44,7 @@ export default function OrderDetails({ item }) {
   const [modalVisible, setModalVisible] = useState(false);
   const [orderStatus, setOrderStatus] = useState("");
   const [approveModal, setApproveModal] = useState(false);
+  const [rejectModal, setRejectModal] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -551,7 +553,7 @@ export default function OrderDetails({ item }) {
 
                       <TouchableOpacity
                         style={style.rejectBtn}
-                        onPress={handleReject}
+                        onPress={() => setRejectModal(!rejectModal)}
                       >
                         <Text
                           style={[
@@ -844,6 +846,69 @@ export default function OrderDetails({ item }) {
               </View>
             </>
           </Modal>
+
+          <>
+            <Modal
+              isVisible={rejectModal}
+              onBackdropPress={() => setRejectModal(false)}
+              backdropColor="rgba(0, 0, 0, 0.5)"
+              style={style.modalApprove}
+            >
+              <View
+                style={{
+                  backgroundColor: "#f4f4f4",
+                  padding: 20,
+                  height: "40%",
+                  borderRadius: 20,
+                  justifyContent: "space-between",
+                  marginHorizontal: 20,
+                }}
+              >
+                {/* Başlık ve Kapatma İkonu */}
+                <View style={style.headApprove}>
+                  <Text style={style.approveTitle}>İptal nedeniniz nedir?</Text>
+                  <TouchableOpacity onPress={() => setRejectModal(false)}>
+                    <Icon3 name="close" size={24} color="black" />
+                  </TouchableOpacity>
+                </View>
+
+                {/* TextInput ve Ek İçerik */}
+                <View style={{ gap: 12 }}>
+                  <TextInput
+                    multiline
+                    numberOfLines={4}
+                    style={style.rejectInput}
+                    placeholder="Lütfen iptal nedeninizi yazınız..."
+                    textAlignVertical="top"
+                    maxLength={255}
+                  />
+                  <TouchableOpacity onPress={null} style={style.rejectFile}>
+                    <Text style={style.fileTxt}>Dosya Ekle</Text>
+                  </TouchableOpacity>
+                  <Text>
+                    Talebiniz iptal birimine iletilecektir. 48 saat içerisinde
+                    incelenip geri dönüş sağlanacaktır.
+                  </Text>
+                </View>
+
+                <View
+                  style={{
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  <TouchableOpacity
+                    style={style.rejectBtnModal}
+                    onPress={handleReject}
+                  >
+                    <Text style={{ color: "#000", fontWeight: "500" }}>
+                      İptal Talebi Oluştur
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </Modal>
+          </>
         </View>
       )}
     </View>
