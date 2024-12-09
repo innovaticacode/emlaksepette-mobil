@@ -23,6 +23,7 @@ import { WhiteOrRedButtons } from "../../../components";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 import { apiUrl } from "../../../components/methods/apiRequest";
 import { formatedPrice } from "../../../utils";
+import { ALERT_TYPE, Dialog } from "react-native-alert-notification";
 
 export default function OrderDetails({ item }) {
   const navigation = useNavigation();
@@ -45,6 +46,8 @@ export default function OrderDetails({ item }) {
   const [orderStatus, setOrderStatus] = useState("");
   const [approveModal, setApproveModal] = useState(false);
   const [rejectModal, setRejectModal] = useState(false);
+  const [rejectText, setRejectText] = useState("");
+  const [rejectFile, setRejectFile] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -92,12 +95,24 @@ export default function OrderDetails({ item }) {
     }
   }, [Detail]);
 
+  const handleCheckIBAN = async () => {
+    if (!user.iban) {
+      Dialog.show({
+        type: ALERT_TYPE.WARNING,
+        title: "Hata",
+        description:
+          "İade talebi oluşturmadan önce IBAN numaranızı eklemeniz gerekmektedir.",
+        button: "Tamam",
+      });
+    }
+  };
+
   const handleApprove = async () => {
     try {
       const response = await axios.post(
         `${apiUrl}order/approve/${OrderId}`,
         {
-          input: OrderId,
+          cart_order_id: OrderId,
         },
         {
           headers: {
@@ -105,28 +120,69 @@ export default function OrderDetails({ item }) {
           },
         }
       );
-      console.log("Approve response:", response);
+      if (response?.data?.success) {
+        setApproveModal(false);
+        setTimeout(() => {
+          Dialog.show({
+            type: ALERT_TYPE.SUCCESS,
+            title: "Başarılı",
+            textBody: response?.data?.message ?? "Sipariş onaylandı.",
+            button: "Tamam",
+          });
+        }, 450);
+      }
     } catch (error) {
       console.error("Error approving order:", error);
+      Dialog.show({
+        type: ALERT_TYPE.WARNING,
+        title: "Hata",
+        description: "Sipariş onaylanırken bir hata oluştu.",
+        button: "Tamam",
+      });
     }
   };
 
   const handleReject = async () => {
     try {
+      console.log("rejectText", rejectText);
+      await handleCheckIBAN();
       const response = await axios.post(
         `${apiUrl}order/unapprove/${OrderId}`,
-        {},
+        {
+          cart_order_id: OrderId,
+          reject_reason: rejectText,
+          reject_document: rejectFile,
+        },
         {
           headers: {
             Authorization: `Bearer ${user?.access_token}`,
           },
         }
       );
-      console.log("Reject response:", response);
+      console.log("response", response.data);
+      if (response?.data?.success) {
+        setRejectModal(false);
+        setTimeout(() => {
+          Dialog.show({
+            type: ALERT_TYPE.SUCCESS,
+            title: "Başarılı",
+            textBody: response?.data?.message ?? "İade talebi oluşturuldu.",
+            button: "Tamam",
+          });
+        }, 450);
+      }
     } catch (error) {
-      console.log("Error rejecting order:", error);
+      console.error("Error approving order:", error);
+      Dialog.show({
+        type: ALERT_TYPE.WARNING,
+        title: "Hata",
+        description: "Sipariş onaylanırken bir hata oluştu.",
+        button: "Tamam",
+      });
     }
   };
+
+  const handleFile = async () => {};
 
   const date = new Date(Detail.created_at);
   // Ay isimleri dizisi
@@ -649,9 +705,127 @@ export default function OrderDetails({ item }) {
                 </View>
               </>
             )}
+
+            {orderStatus == "Adminden İade Onayı Bekleniyor" && (
+              <>
+                <View style={style.greenCardBody}>
+                  <View style={style.iconContainer}>
+                    <View style={style.iconWrapperGreen}>
+                      <Icon3
+                        name="shield-check-outline"
+                        color={"white"}
+                        size={30}
+                      />
+                    </View>
+                  </View>
+                  <View style={style.textArea}>
+                    <Text
+                      style={[
+                        style.largeBoldtext,
+                        { textAlign: "center", color: "#0E713D" },
+                      ]}
+                    >
+                      Kaporanız Emlak Sepette ile Güvende!{" "}
+                    </Text>
+                    <Text style={[style.boldText, { textAlign: "center" }]}>
+                      İptal talebiniz iletildi.
+                    </Text>
+
+                    <Text
+                      style={[
+                        style.boldText,
+                        { textAlign: "center", color: "#606060", fontSize: 12 },
+                      ]}
+                    >
+                      {formattedDate}
+                    </Text>
+                  </View>
+                </View>
+              </>
+            )}
+            {orderStatus == "Admin İadeyi Reddetti" && (
+              <>
+                <View
+                  style={[style.greenCardBody, { backgroundColor: "#FFF3F3" }]}
+                >
+                  <View style={style.iconContainer}>
+                    <View style={style.iconWrapperGreen}>
+                      <Icon3
+                        name="shield-check-outline"
+                        color={"white"}
+                        size={30}
+                      />
+                    </View>
+                  </View>
+                  <View style={style.textArea}>
+                    <Text
+                      style={[
+                        style.largeBoldtext,
+                        { textAlign: "center", color: "#0E713D" },
+                      ]}
+                    >
+                      Sipariş iptali admin tarafından reddedildi. Siparişiniz
+                      iptal edilmedi!{" "}
+                    </Text>
+                    <Text style={[style.boldText, { textAlign: "center" }]}>
+                      Kapora ödemesi satıcıya aktarılacaktır. Satıcı ve ilan
+                      hakkında değerlendirme yapabilirsiniz.
+                    </Text>
+
+                    <Text
+                      style={[
+                        style.boldText,
+                        { textAlign: "center", color: "#606060", fontSize: 12 },
+                      ]}
+                    >
+                      {formattedDate}
+                    </Text>
+                  </View>
+                </View>
+              </>
+            )}
+            {orderStatus == "Admin Ödemeyi Reddetti" && (
+              <>
+                <View
+                  style={[style.greenCardBody, { backgroundColor: "#FFF3F3" }]}
+                >
+                  <View style={style.iconContainer}>
+                    <View style={style.iconWrapperGreen}>
+                      <Icon3
+                        name="shield-check-outline"
+                        color={"white"}
+                        size={30}
+                      />
+                    </View>
+                  </View>
+                  <View style={style.textArea}>
+                    <Text
+                      style={[
+                        style.largeBoldtext,
+                        { textAlign: "center", color: "#0E713D" },
+                      ]}
+                    >
+                      Ödeme Reddedildi.!
+                    </Text>
+                    <Text style={[style.boldText, { textAlign: "center" }]}>
+                      Bir yanlışlık olduğunu düşünüyorsanız lütfen emlaksepette
+                      ekibi ile iletişime geçin
+                    </Text>
+                    <Text
+                      style={[
+                        style.boldText,
+                        { textAlign: "center", color: "#606060", fontSize: 12 },
+                      ]}
+                    >
+                      {formattedDate}
+                    </Text>
+                  </View>
+                </View>
+              </>
+            )}
             {/*-------------------------------------- ORDERSTATUS END----------------- */}
 
-            {Detail?.can_refund == 1 && (
+            {/* {Detail?.can_refund == 1 && (
               <View>
                 <WhiteOrRedButtons
                   bgColor={"#EA2B2E"}
@@ -663,9 +837,9 @@ export default function OrderDetails({ item }) {
                   }
                 />
               </View>
-            )}
+            )} */}
 
-            {(user?.id === Detail?.user?.id && Detail.status == 1 && !refund) ||
+            {/* {(user?.id === Detail?.user?.id && Detail.status == 1 && !refund) ||
               (user?.id === Detail?.user?.id && refund?.status == "2" && (
                 <View>
                   <TouchableOpacity
@@ -717,7 +891,7 @@ export default function OrderDetails({ item }) {
                     </Text>
                   </TouchableOpacity>
                 </View>
-              )}
+              )} */}
             <Modal
               animationType="slide"
               transparent={true}
@@ -881,6 +1055,8 @@ export default function OrderDetails({ item }) {
                     placeholder="Lütfen iptal nedeninizi yazınız..."
                     textAlignVertical="top"
                     maxLength={255}
+                    value={rejectText}
+                    onChangeText={(text) => setRejectText(text)}
                   />
                   <TouchableOpacity onPress={null} style={style.rejectFile}>
                     <Text style={style.fileTxt}>Dosya Ekle</Text>
