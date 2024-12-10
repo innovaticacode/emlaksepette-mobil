@@ -3,19 +3,17 @@ import {
   Text,
   TouchableOpacity,
   ScrollView,
-  Dimensions,
   Image,
   TextInput,
   Alert,
+  Linking,
 } from "react-native";
 import Modal from "react-native-modal";
 import React, { useState, useEffect } from "react";
-import HTML from "react-native-render-html";
 import Icon3 from "react-native-vector-icons/MaterialCommunityIcons";
-import { useRoute, useNavigation } from "@react-navigation/native";
+import { useRoute, useNavigation, Link } from "@react-navigation/native";
 import { getValueFor } from "../../../components/methods/user";
 import axios from "axios";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { ActivityIndicator } from "react-native-paper";
 import { style } from "../../../styles/OrderDetails.styles";
 import { DepositStatusCard, WhiteOrRedButtons } from "../../../components";
@@ -50,13 +48,8 @@ export default function OrderDetails({ item }) {
   const [rejectText, setRejectText] = useState("");
   const [rejectFile, setRejectFile] = useState(null);
 
-  useEffect(() => {
-    console.log("Detail", Detail);
-  }, [Detail]);
-
   const fetchData = async () => {
     try {
-      console.log("OrderId", OrderId);
       if (user?.access_token) {
         const response = await axios.get(
           `${apiUrl}institutional/order_detail/${OrderId}`,
@@ -319,18 +312,26 @@ export default function OrderDetails({ item }) {
   });
 
   const fetchDataDeal = async () => {
-    const url = `${apiUrl}sayfa/mesafeli-guvenli-kapora-sozlesmesi`;
+    const url = `${apiUrl}sozlesmeler`;
     try {
       const response = await axios.get(url);
       const data = response.data;
-      setDeals(data.content);
+      const specificContract = data.contracts.find(
+        (item) => item.slug === "mesafeli-kapora-emanet-sozlesmesi"
+      );
+      setDeals(specificContract);
     } catch (error) {
       console.error("İstek hatası:", error);
     }
   };
+
   useEffect(() => {
     fetchDataDeal();
   }, []);
+
+  const showPdfView = () => {
+    Linking.openURL(Deals?.file_path);
+  };
 
   const handlePress = () => {
     setModalVisible(true);
@@ -622,7 +623,10 @@ export default function OrderDetails({ item }) {
                     </View>
                   </View>
                 </>
-                <TouchableOpacity onPress={() => setModalVisible2(true)}>
+                <TouchableOpacity
+                  // onPress={() => setModalVisible2(true)}
+                  onPress={showPdfView}
+                >
                   <Text
                     style={[
                       style.boldText,
@@ -635,7 +639,7 @@ export default function OrderDetails({ item }) {
                       },
                     ]}
                   >
-                    Mesafeli Güvenli Kapora Sözleşmesi
+                    {Deals?.title}
                   </Text>
                 </TouchableOpacity>
               </View>
@@ -860,46 +864,19 @@ export default function OrderDetails({ item }) {
                 margin: 0,
               }}
             >
-              <SafeAreaView
-                style={{
-                  backgroundColor: "white",
-                  borderRadius: 10,
-                  padding: 20,
-                  width: "90%",
-                  maxHeight: "80%",
+              {/* <WebView
+                source={{
+                  uri: Deals?.file_path,
                 }}
-              >
-                <View
-                  style={{
-                    position: "absolute",
-                    top: 10,
-                    right: 10,
-                    zIndex: 1,
-                  }}
-                >
-                  <TouchableOpacity onPress={() => setModalVisible2(false)}>
-                    <Icon3 name="close-circle" size={31} color={"red"} />
-                  </TouchableOpacity>
-                </View>
-                <ScrollView>
-                  {Deals ? (
-                    <HTML
-                      source={{ html: Deals }}
-                      contentWidth={Dimensions.get("window").width * 0.8}
-                    />
-                  ) : (
-                    <View
-                      style={{
-                        alignItems: "center",
-                        justifyContent: "center",
-                        height: 200,
-                      }}
-                    >
-                      <Text>Yükleniyor...</Text>
-                    </View>
-                  )}
-                </ScrollView>
-              </SafeAreaView>
+                startInLoadingState={true}
+                renderLoading={() => <Text>Yükleniyor...</Text>}
+                style={{
+                  flex: 1,
+                  width: "100%",
+                  height: "100%",
+                  backgroundColor: "red",
+                }}
+              /> */}
             </Modal>
           </ScrollView>
           <Modal

@@ -18,10 +18,6 @@ const { width } = Dimensions.get("window");
 export default function Order({ item }) {
   const navigation = useNavigation();
 
-  useEffect(() => {
-    console.log("item", item);
-  }, [item]);
-
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     const monthNames = [
