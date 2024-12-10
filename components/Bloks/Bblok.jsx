@@ -4,7 +4,7 @@ import React from 'react'
 export default function Bblok() {
   return (
     <View>
-      <Text>Bblok</Text>
+      <Text>B Blok</Text>
     </View>
   )
 }
