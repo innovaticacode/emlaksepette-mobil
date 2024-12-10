@@ -379,6 +379,7 @@ export const style = StyleSheet.create({
   fileTxt: {
     textAlign: "center",
     color: "#606060",
+    fontSize: 12,
   },
   rejectModalBody: {
     backgroundColor: "#f4f4f4",

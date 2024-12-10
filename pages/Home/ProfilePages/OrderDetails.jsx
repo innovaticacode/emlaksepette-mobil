@@ -11,8 +11,6 @@ import {
 import Modal from "react-native-modal";
 import React, { useState, useEffect } from "react";
 import HTML from "react-native-render-html";
-import Icon2 from "react-native-vector-icons/Fontisto";
-
 import Icon3 from "react-native-vector-icons/MaterialCommunityIcons";
 import { useRoute, useNavigation } from "@react-navigation/native";
 import { getValueFor } from "../../../components/methods/user";
@@ -52,36 +50,32 @@ export default function OrderDetails({ item }) {
   const [rejectText, setRejectText] = useState("");
   const [rejectFile, setRejectFile] = useState(null);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        console.log("OrderId", OrderId);
-        if (user?.access_token) {
-          const response = await axios.get(
-            `${apiUrl}institutional/order_detail/${OrderId}`,
-            {
-              headers: {
-                Authorization: `Bearer ${user?.access_token}`,
-              },
-            }
-          );
-          setDetail(response?.data?.order);
-          setRefund(response?.data?.order?.refund);
-          setprojectDetail(response?.data.project);
-          sethousingDetail(response?.data.housing);
-          setOrderStatus(response?.data?.order_status);
-          return setLoading(false);
-        }
-      } catch (error) {
-        console.error("Error fetching data:", error);
+  const fetchData = async () => {
+    try {
+      console.log("OrderId", OrderId);
+      if (user?.access_token) {
+        const response = await axios.get(
+          `${apiUrl}institutional/order_detail/${OrderId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${user?.access_token}`,
+            },
+          }
+        );
+        setDetail(response?.data?.order);
+        setRefund(response?.data?.order?.refund);
+        setprojectDetail(response?.data.project);
+        sethousingDetail(response?.data.housing);
+        setOrderStatus(response?.data?.order_status);
+        return setLoading(false);
       }
-    };
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+  useEffect(() => {
     fetchData();
   }, [user, OrderId]);
-
-  useEffect(() => {
-    console.log("orderStatus", orderStatus);
-  }, [orderStatus]);
 
   useEffect(() => {
     if (Detail?.cart && typeof Detail.cart === "string" && user.access_token) {
@@ -124,6 +118,7 @@ export default function OrderDetails({ item }) {
         }
       );
       if (response?.data?.success) {
+        await fetchData();
         setApproveModal(false);
         setTimeout(() => {
           Dialog.show({
@@ -147,23 +142,43 @@ export default function OrderDetails({ item }) {
 
   const handleReject = async () => {
     try {
-      console.log("rejectText", rejectText);
       await handleCheckIBAN();
+      const formData = new FormData();
+      formData.append("cart_order_id", OrderId);
+      formData.append("reject_reason", rejectText);
+
+      if (
+        rejectFile.type === "image" ||
+        rejectFile.mimeType === "application/pdf"
+      ) {
+        formData.append("reject_document", {
+          uri: rejectFile.uri,
+          name:
+            rejectFile.fileName ||
+            (rejectFile.mimeType === "application/pdf"
+              ? "document.pdf"
+              : "document.jpg"),
+          type:
+            rejectFile.mimeType ||
+            (rejectFile.mimeType === "application/pdf"
+              ? "application/pdf"
+              : "image/jpeg"),
+        });
+      }
       const response = await axios.post(
         `${apiUrl}order/unapprove/${OrderId}`,
-        {
-          cart_order_id: OrderId,
-          reject_reason: rejectText,
-          reject_document: rejectFile,
-        },
+        formData,
         {
           headers: {
             Authorization: `Bearer ${user?.access_token}`,
+            "Content-Type": "multipart/form-data",
           },
         }
       );
+
       console.log("response", response.data);
       if (response?.data?.success) {
+        await fetchData();
         setRejectModal(false);
         setTimeout(() => {
           Dialog.show({
@@ -175,11 +190,11 @@ export default function OrderDetails({ item }) {
         }, 450);
       }
     } catch (error) {
-      console.error("Error approving order:", error);
+      console.error("Error reject order:", error);
       Dialog.show({
         type: ALERT_TYPE.WARNING,
         title: "Hata",
-        description: "Sipariş onaylanırken bir hata oluştu.",
+        textBody: "İptal talebi oluşturulurken bir hata oluştu.",
         button: "Tamam",
       });
     }
@@ -253,15 +268,12 @@ export default function OrderDetails({ item }) {
     try {
       // PDF dosyası seçimi
       const result = await DocumentPicker.getDocumentAsync({
-        type: "application/pdf", // Sadece PDF dosyalarını seçmek için
-        copyToCacheDirectory: true, // Seçilen dosyayı cache'e kopyalar
+        type: "application/pdf",
+        copyToCacheDirectory: true,
       });
 
-      if (result.type === "success") {
+      if (!result?.canceled) {
         setRejectFile(result);
-        console.log("Seçilen Dosya:", result);
-      } else {
-        console.log("Kullanıcı seçim yapmadı.");
       }
     } catch (error) {
       Dialog.show({
@@ -937,7 +949,13 @@ export default function OrderDetails({ item }) {
                 {/* Başlık ve Kapatma İkonu */}
                 <View style={style.headApprove}>
                   <Text style={style.approveTitle}>İptal nedeniniz nedir?</Text>
-                  <TouchableOpacity onPress={() => setRejectModal(false)}>
+                  <TouchableOpacity
+                    onPress={() => {
+                      setRejectModal(false);
+                      setRejectText("");
+                      setRejectFile(null);
+                    }}
+                  >
                     <Icon3 name="close" size={24} color="black" />
                   </TouchableOpacity>
                 </View>
@@ -954,9 +972,31 @@ export default function OrderDetails({ item }) {
                     value={rejectText}
                     onChangeText={(text) => setRejectText(text)}
                   />
-                  <TouchableOpacity onPress={null} style={style.rejectFile}>
-                    <Text style={style.fileTxt}>Dosya Ekle</Text>
-                  </TouchableOpacity>
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      justifyContent: "space-between",
+                    }}
+                  >
+                    <TouchableOpacity
+                      onPress={pickFileDocument}
+                      style={style.rejectFile}
+                    >
+                      <Text style={style.fileTxt}>Dosya Ekle</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      onPress={pickImage}
+                      style={style.rejectFile}
+                    >
+                      <Text style={style.fileTxt}>Fotoğraf Ekle</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      onPress={takePhoto}
+                      style={style.rejectFile}
+                    >
+                      <Text style={style.fileTxt}>Fotoğraf Çek</Text>
+                    </TouchableOpacity>
+                  </View>
                   <Text>
                     Talebiniz iptal birimine iletilecektir. 48 saat içerisinde
                     incelenip geri dönüş sağlanacaktır.
@@ -970,8 +1010,12 @@ export default function OrderDetails({ item }) {
                   }}
                 >
                   <TouchableOpacity
-                    style={style.rejectBtnModal}
+                    style={[
+                      style.rejectBtnModal,
+                      { opacity: rejectText.length < 10 ? 0.5 : 1 },
+                    ]}
                     onPress={handleReject}
+                    disabled={rejectText.length < 10}
                   >
                     <Text style={{ color: "#000", fontWeight: "500" }}>
                       İptal Talebi Oluştur
