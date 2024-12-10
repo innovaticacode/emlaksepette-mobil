@@ -20,7 +20,7 @@ import axios from "axios";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { ActivityIndicator } from "react-native-paper";
 import { style } from "../../../styles/OrderDetails.styles";
-import { WhiteOrRedButtons } from "../../../components";
+import { DepositStatusCard, WhiteOrRedButtons } from "../../../components";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 import { apiUrl } from "../../../components/methods/apiRequest";
 import { formatedPrice } from "../../../utils";
@@ -626,296 +626,106 @@ export default function OrderDetails({ item }) {
             </>
             {/*-------------------------------------- ORDERSTATUS START----------------- */}
             {orderStatus == "Admin Onayı Bekliyor" && (
-              <>
-                <View style={style.blueCardBody}>
-                  <View style={style.iconContainer}>
-                    <View style={style.iconWrapper}>
-                      <Icon2 name="wallet" color={"white"} size={20} />
-                    </View>
-                  </View>
-                  <View style={style.textArea}>
-                    <Text
-                      style={[
-                        style.largeBoldtext,
-                        { textAlign: "center", color: "#FC9B00" },
-                      ]}
-                    >
-                      Ödeme Onay Aşamasındadır
-                    </Text>
-                    <Text style={[style.boldText, { textAlign: "center" }]}>
-                      Ödeme şu anda onay aşamasındadır. Sürecin güncel durumunu
-                      ve gelişmeleri buradan takip edebilirsiniz.
-                    </Text>
-                    <Text
-                      style={[
-                        style.boldText,
-                        { textAlign: "center", color: "#606060", fontSize: 12 },
-                      ]}
-                    >
-                      {formattedDate}
-                    </Text>
-                  </View>
-                </View>
-              </>
+              <DepositStatusCard
+                titleColor={"#2F7DF7"}
+                iconBgColor={"#2F7DF7"}
+                icon={"wallet"}
+                cardColor={"#DCE9FE"}
+                title={"Ödeme Onay Aşamasındadır"}
+                content={
+                  "Ödeme şu anda onay aşamasındadır. Sürecin güncel durumunu ve gelişmeleri buradan takip edebilirsiniz."
+                }
+                date={formattedDate}
+              />
             )}
 
             {orderStatus == "Alıcının Onayı Bekleniyor" && (
-              <>
-                <View style={style.greenCardBody}>
-                  <View style={style.iconContainer}>
-                    <View style={style.iconWrapperGreen}>
-                      <Icon3
-                        name="shield-check-outline"
-                        color={"white"}
-                        size={30}
-                      />
-                    </View>
-                  </View>
-                  <View style={style.textArea}>
-                    <Text
-                      style={[
-                        style.largeBoldtext,
-                        { textAlign: "center", color: "#0E713D" },
-                      ]}
-                    >
-                      Kaporanız Emlak Sepette İle Güvende!{" "}
-                    </Text>
-                    <Text style={[style.boldText, { textAlign: "center" }]}>
-                      Sipariş onayınız bekleniyor. 7 gün içerisinde sistem
-                      tarafından otomatik olarak onaylanacaktır.
-                    </Text>
-                    <View
-                      style={{ flexDirection: "row", justifyContent: "center" }}
-                    >
-                      <TouchableOpacity
-                        style={style.okeyBtn}
-                        onPress={() => setApproveModal(!approveModal)}
-                      >
-                        <Text
-                          style={[
-                            style.boldText,
-                            { textAlign: "center", color: "#FFF" },
-                          ]}
-                        >
-                          Onayla
-                        </Text>
-                      </TouchableOpacity>
-
-                      <TouchableOpacity
-                        style={style.rejectBtn}
-                        onPress={() => setRejectModal(!rejectModal)}
-                      >
-                        <Text
-                          style={[
-                            style.boldText,
-                            { textAlign: "center", color: "#FFF" },
-                          ]}
-                        >
-                          İptal Et
-                        </Text>
-                      </TouchableOpacity>
-                    </View>
-                    <Text
-                      style={[
-                        style.boldText,
-                        { textAlign: "center", color: "#606060", fontSize: 12 },
-                      ]}
-                    >
-                      {formattedDate}
-                    </Text>
-                  </View>
-                </View>
-              </>
+              <DepositStatusCard
+                titleColor={"#0E713D"}
+                iconBgColor={"#0E713D"}
+                icon={"shield-check-outline"}
+                cardColor={"#BADECB"}
+                title={"Kaporanız Emlak Sepette ile Güvende"}
+                content={
+                  "Sipariş onayınız bekleniyor. 7 gün içerisinde sistem tarafından otomatik olarak onaylanacaktır."
+                }
+                date={formattedDate}
+                showButton={true}
+                approveModal={approveModal}
+                setApproveModal={setApproveModal}
+                rejectModal={rejectModal}
+                setRejectModal={setRejectModal}
+              />
             )}
 
             {orderStatus == "Alıcı Onayladı" && (
-              <>
-                <View style={style.greenCardBody}>
-                  <View style={style.iconContainer}>
-                    <View style={style.iconWrapperGreen}>
-                      <Icon3
-                        name="shield-check-outline"
-                        color={"white"}
-                        size={30}
-                      />
-                    </View>
-                  </View>
-                  <View style={style.textArea}>
-                    <Text
-                      style={[
-                        style.largeBoldtext,
-                        { textAlign: "center", color: "#0E713D" },
-                      ]}
-                    >
-                      Siparişiniz Başarıyla Tamamlandı!{" "}
-                    </Text>
-                    <Text style={[style.boldText, { textAlign: "center" }]}>
-                      Kapora ödemesi satıcıya aktarılacaktır. Satıcı ve ilan
-                      hakkında değerlendirme yapabilirsiniz.
-                    </Text>
-
-                    <Text
-                      style={[
-                        style.boldText,
-                        { textAlign: "center", color: "#606060", fontSize: 12 },
-                      ]}
-                    >
-                      {formattedDate}
-                    </Text>
-                  </View>
-                </View>
-              </>
+              <DepositStatusCard
+                titleColor={"#0FA958"}
+                iconBgColor={"#0FA958"}
+                icon={"check-bold"}
+                cardColor={"#E0F2E3"}
+                title={"Siparişiniz Başarıyla Tamamlandı"}
+                content={
+                  "Kapora ödemesi satıcıya aktarılacaktır. Satıcı ve ilan hakkında değerlendirme yapabilirsiniz."
+                }
+                date={formattedDate}
+              />
             )}
 
             {orderStatus == "Admin İade Etti" && (
-              <>
-                <View style={style.blueCardBody}>
-                  <View style={style.iconContainer}>
-                    <View style={style.iconWrapper}>
-                      <Icon2 name="wallet" color={"white"} size={20} />
-                    </View>
-                  </View>
-                  <View style={style.textArea}>
-                    <Text
-                      style={[
-                        style.largeBoldtext,
-                        { textAlign: "center", color: "#EA2A28" },
-                      ]}
-                    >
-                      Sipariş İptal Edildi
-                    </Text>
-                    <Text style={[style.boldText, { textAlign: "center" }]}>
-                      Üzgünüz, siparişiniz iptal edilmiştir.
-                    </Text>
-                    <Text
-                      style={[
-                        style.boldText,
-                        { textAlign: "center", color: "#606060", fontSize: 12 },
-                      ]}
-                    >
-                      {formattedDate}
-                    </Text>
-                  </View>
-                </View>
-              </>
+              <DepositStatusCard
+                titleColor={"#606060"}
+                iconBgColor={"#A1A1A1"}
+                icon={"trash-can-outline"}
+                cardColor={"#E2E2E2"}
+                title={
+                  "Sipariş iptali admin tarafından reddedildi. Siparişiniz iptal edilmedi."
+                }
+                content={
+                  "Kapora ödemesi satıcıya aktarılacaktır. Satıcı ve ilan hakkında değerlendirme yapabilirsiniz."
+                }
+                date={formattedDate}
+              />
             )}
 
             {orderStatus == "Adminden İade Onayı Bekleniyor" && (
-              <>
-                <View style={style.greenCardBody}>
-                  <View style={style.iconContainer}>
-                    <View style={style.iconWrapperGreen}>
-                      <Icon3
-                        name="shield-check-outline"
-                        color={"white"}
-                        size={30}
-                      />
-                    </View>
-                  </View>
-                  <View style={style.textArea}>
-                    <Text
-                      style={[
-                        style.largeBoldtext,
-                        { textAlign: "center", color: "#0E713D" },
-                      ]}
-                    >
-                      Kaporanız Emlak Sepette ile Güvende!{" "}
-                    </Text>
-                    <Text style={[style.boldText, { textAlign: "center" }]}>
-                      İptal talebiniz iletildi.
-                    </Text>
-
-                    <Text
-                      style={[
-                        style.boldText,
-                        { textAlign: "center", color: "#606060", fontSize: 12 },
-                      ]}
-                    >
-                      {formattedDate}
-                    </Text>
-                  </View>
-                </View>
-              </>
+              <DepositStatusCard
+                titleColor={"#0E713D"}
+                iconBgColor={"#0E713D"}
+                icon={"shield-check-outline"}
+                cardColor={"#BADECB"}
+                title={"Kaporanız Emlak Sepette ile Güvende"}
+                content={"İptal talebiniz iletildi."}
+                date={formattedDate}
+              />
             )}
             {orderStatus == "Admin İadeyi Reddetti" && (
-              <>
-                <View
-                  style={[style.greenCardBody, { backgroundColor: "#FFF3F3" }]}
-                >
-                  <View style={style.iconContainer}>
-                    <View style={style.iconWrapperGreen}>
-                      <Icon3
-                        name="shield-check-outline"
-                        color={"white"}
-                        size={30}
-                      />
-                    </View>
-                  </View>
-                  <View style={style.textArea}>
-                    <Text
-                      style={[
-                        style.largeBoldtext,
-                        { textAlign: "center", color: "#0E713D" },
-                      ]}
-                    >
-                      Sipariş iptali admin tarafından reddedildi. Siparişiniz
-                      iptal edilmedi!{" "}
-                    </Text>
-                    <Text style={[style.boldText, { textAlign: "center" }]}>
-                      Kapora ödemesi satıcıya aktarılacaktır. Satıcı ve ilan
-                      hakkında değerlendirme yapabilirsiniz.
-                    </Text>
-
-                    <Text
-                      style={[
-                        style.boldText,
-                        { textAlign: "center", color: "#606060", fontSize: 12 },
-                      ]}
-                    >
-                      {formattedDate}
-                    </Text>
-                  </View>
-                </View>
-              </>
+              <DepositStatusCard
+                titleColor={"#EA2B2E"}
+                iconBgColor={"#EA2B2E"}
+                icon={"close"}
+                cardColor={"#FFF3F3"}
+                title={
+                  "Sipariş iptali admin tarafından reddedildi. Siparişiniz iptal edilmedi."
+                }
+                content={
+                  "Kapora ödemesi satıcıya aktarılacaktır. Satıcı ve ilan hakkında değerlendirme yapabilirsiniz."
+                }
+                date={formattedDate}
+              />
             )}
             {orderStatus == "Admin Ödemeyi Reddetti" && (
-              <>
-                <View
-                  style={[style.greenCardBody, { backgroundColor: "#FFF3F3" }]}
-                >
-                  <View style={style.iconContainer}>
-                    <View style={style.iconWrapperGreen}>
-                      <Icon3
-                        name="shield-check-outline"
-                        color={"white"}
-                        size={30}
-                      />
-                    </View>
-                  </View>
-                  <View style={style.textArea}>
-                    <Text
-                      style={[
-                        style.largeBoldtext,
-                        { textAlign: "center", color: "#0E713D" },
-                      ]}
-                    >
-                      Ödeme Reddedildi.!
-                    </Text>
-                    <Text style={[style.boldText, { textAlign: "center" }]}>
-                      Bir yanlışlık olduğunu düşünüyorsanız lütfen emlaksepette
-                      ekibi ile iletişime geçin
-                    </Text>
-                    <Text
-                      style={[
-                        style.boldText,
-                        { textAlign: "center", color: "#606060", fontSize: 12 },
-                      ]}
-                    >
-                      {formattedDate}
-                    </Text>
-                  </View>
-                </View>
-              </>
+              <DepositStatusCard
+                titleColor={"#EA2B2E"}
+                iconBgColor={"#EA2B2E"}
+                icon={"close"}
+                cardColor={"#FFF3F3"}
+                title={"Ödeme Reddedildi"}
+                content={
+                  "Bir yanlışlık olduğunu düşünüyorsanız lütfen emlaksepette ekibi ile iletişime geçin."
+                }
+                date={formattedDate}
+              />
             )}
             {/*-------------------------------------- ORDERSTATUS END----------------- */}
 
@@ -1176,97 +986,3 @@ export default function OrderDetails({ item }) {
     </View>
   );
 }
-
-/*
-** Alıcı onayı bekleniyor durumu için ekran tasarımı
- <View style={style.greenCardBody}>
-                  <View style={style.iconContainer}>
-                    <View style={style.iconWrapperGreen}>
-                      <Icon3
-                        name="shield-check-outline"
-                        color={"white"}
-                        size={30}
-                      />
-                    </View>
-                  </View>
-                  <View style={style.textArea}>
-                    <Text
-                      style={[
-                        style.largeBoldtext,
-                        { textAlign: "center", color: "#0E713D" },
-                      ]}
-                    >
-                      Kaporanız Emlak Sepette İle Güvende!{" "}
-                    </Text>
-                    <Text style={[style.boldText, { textAlign: "center" }]}>
-                      Sipariş onayınız bekleniyor.
-                    </Text>
-                    <View
-                      style={{ flexDirection: "row", justifyContent: "center" }}
-                    >
-                      <TouchableOpacity style={style.okeyBtn}>
-                        <Text
-                          style={[
-                            style.boldText,
-                            { textAlign: "center", color: "#FFF" },
-                          ]}
-                        >
-                          Onayla
-                        </Text>
-                      </TouchableOpacity>
-
-                      <TouchableOpacity style={style.rejectBtn}>
-                        <Text
-                          style={[
-                            style.boldText,
-                            { textAlign: "center", color: "#FFF" },
-                          ]}
-                        >
-                          İptal Et
-                        </Text>
-                      </TouchableOpacity>
-                    </View>
-                    <Text
-                      style={[
-                        style.boldText,
-                        { textAlign: "center", color: "#606060", fontSize: 12 },
-                      ]}
-                    >
-                      {formattedDate}
-                    </Text>
-                  </View>
-                </View>
-
-*/
-
-/*
- <View style={style.blueCardBody}>
-                  <View style={style.iconContainer}>
-                    <View style={style.iconWrapper}>
-                      <Icon2 name="wallet" color={"white"} size={20} />
-                    </View>
-                  </View>
-                  <View style={style.textArea}>
-                    <Text
-                      style={[
-                        style.largeBoldtext,
-                        { textAlign: "center", color: "#2F7DF7" },
-                      ]}
-                    >
-                      Ödemenizi Aldık. Teşekkür Ederiz!
-                    </Text>
-                    <Text style={[style.boldText, { textAlign: "center" }]}>
-                      Ödeme şu an da havuz hesabında. Satıcı ücretini sipariş
-                      tamamlandığında alacak.
-                    </Text>
-                    <Text
-                      style={[
-                        style.boldText,
-                        { textAlign: "center", color: "#606060", fontSize: 12 },
-                      ]}
-                    >
-                      {formattedDate}
-                    </Text>
-                  </View>
-                </View>
-*/

@@ -239,6 +239,7 @@ export const style = StyleSheet.create({
     gap: 16,
     marginTop: 52,
   },
+  // start
   greenCardBody: {
     width: "100%",
     backgroundColor: "#DCF1E6",
