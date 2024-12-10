@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   View,
   Text,
@@ -17,6 +17,10 @@ const { width } = Dimensions.get("window");
 
 export default function Order({ item }) {
   const navigation = useNavigation();
+
+  useEffect(() => {
+    console.log("item", item);
+  }, [item]);
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
@@ -267,7 +271,7 @@ export default function Order({ item }) {
             </View>
           )}
           <View>
-            {item.status == 1 && (
+            {item.is_sold == 1 && (
               <TouchableOpacity
                 style={{
                   borderWidth: 1,

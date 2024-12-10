@@ -7,6 +7,7 @@ import {
   Keyboard,
   ScrollView,
   Platform,
+  FlatList,
 } from "react-native";
 import { SearchBar } from "@rneui/base";
 import Icon from "react-native-vector-icons/Ionicons";
@@ -27,7 +28,7 @@ export default function Takeds() {
   const [user, setUser] = useState({});
   const [takeds, setTakeds] = useState([]);
   const [filteredTakeds, setFilteredTakeds] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [selectedIndex, setIndex] = useState(0);
   const [sortListModal, setSortListModal] = useState(false);
   const searchLower = search.toLowerCase();
@@ -59,6 +60,10 @@ export default function Takeds() {
     };
     fetchData();
   }, [user]);
+
+  useEffect(() => {
+    setLoading(true);
+  }, []);
 
   useEffect(() => {
     const filterTakeds = () => {
@@ -265,7 +270,11 @@ export default function Takeds() {
                   </Text>
                 </View>
               ) : (
-                filteredTakeds.map((taked, i) => <Order key={i} item={taked} />)
+                <FlatList
+                  data={filteredTakeds}
+                  keyExtractor={(item) => item.id.toString()}
+                  renderItem={({ item }) => <Order item={item} />}
+                />
               )}
             </View>
           </ScrollView>

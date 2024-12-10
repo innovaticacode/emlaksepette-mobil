@@ -50,6 +50,10 @@ export default function OrderDetails({ item }) {
   const [rejectText, setRejectText] = useState("");
   const [rejectFile, setRejectFile] = useState(null);
 
+  useEffect(() => {
+    console.log("Detail", Detail);
+  }, [Detail]);
+
   const fetchData = async () => {
     try {
       console.log("OrderId", OrderId);
@@ -369,7 +373,7 @@ export default function OrderDetails({ item }) {
         <View
           style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
         >
-          <ActivityIndicator size="large" />
+          <ActivityIndicator size="large" color="#333" />
         </View>
       ) : (
         <View style={style.container}>
