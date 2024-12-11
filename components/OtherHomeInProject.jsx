@@ -9,8 +9,6 @@ import {
  
 } from "react-native";
 import { React, useCallback, useEffect, useState } from "react";
-import Ablok from "./Bloks/Ablok";
-import Bblok from "./Bloks/Bblok";
 import Posts from "./Posts";
 import { apiRequestGet } from "./methods/apiRequest";
 import { Platform } from "react-native";
