@@ -21,6 +21,7 @@ import FontAwesomeIcon from "react-native-vector-icons/FontAwesome";
 import { useDispatch, useSelector } from "react-redux";
 import { setShoppingProfile } from "../../store/slices/Menu/MenuSlice";
 import { apiUrl } from "../../components/methods/apiRequest";
+import VerifyScreen from "./VerifyScreen";
 const Tab = createBottomTabNavigator();
 
 const Home = ({ route }) => {
@@ -70,13 +71,13 @@ const Home = ({ route }) => {
     GetUserInfo();
   }, [user]);
 
-  if (userdata && user.access_token) {
-    if (user.type === 1 && verifyStatus === 0) {
-      setTimeout(() => nav.replace("VerifyScreen"), 100);
-    } else if (verifyStatus === 0 || userdata.corporate_account_status === 0) {
-      setTimeout(() => nav.replace("VerifyScreen"), 100);
-    }
-  }
+  // if (userdata && user.access_token) {
+  //   if (user.type === 1 && verifyStatus === 0) {
+  //     setTimeout(() => nav.replace("VerifyScreen"), 100);
+  //   } else if (verifyStatus === 0 || userdata.corporate_account_status === 0) {
+  //     setTimeout(() => nav.replace("VerifyScreen"), 100);
+  //   }
+  // }
 
   const handleTabPress = (e, navigation) => {
     if (!user.access_token) {
@@ -181,7 +182,11 @@ const Home = ({ route }) => {
       />
       <Tab.Screen
         name="Hesabım"
-        component={ShoppingProfile}
+        component={
+          user.type == 2 && userdata.corporate_account_status === 0
+            ? VerifyScreen
+            : ShoppingProfile
+        }
         options={{
           tabBarLabel: user.access_token
             ? user.role === "Kurumsal Hesap"
