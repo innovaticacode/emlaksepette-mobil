@@ -111,8 +111,8 @@ const FirstHome = (props) => {
     try {
       const response = await axios.get(`${apiUrl}markalar/uretici`);
       // console.log("Popular Construction Brands: ", response.data);
-      if (response?.data?.markalar.length > 0) {
-        setcreatorBrands(response?.data?.markalar);
+      if (response?.data?.data?.markalar.length > 0) {
+        setcreatorBrands(response?.data?.data?.markalar);
       }
     } catch (error) {
       console.log("Error fetching uretici:", error);
@@ -222,7 +222,7 @@ const FirstHome = (props) => {
           skip: 0,
         },
       });
-      setBungalov(response.data);
+      setBungalov(response?.data?.data?.housings);
     } catch (error) {
       console.error("Error fetching real estate data:", error);
     }

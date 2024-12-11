@@ -30,17 +30,16 @@ const BookHouse = ({ index }) => {
 
   useFocusEffect(
     useCallback(() => {
-      if (index == 6) {
-        setLoading(true);
-        loadMore();
-        setLoading(false);
+      if (index === 6 && data.length === 0) {
+        setSkip(0);
       }
-    }, [index])
+    }, [index, data.length])
   );
 
   const onRefresh = async () => {
     setLoading(true);
     await setSkip(0);
+    setLoading(false);
     setLoading(false);
   };
 
@@ -48,6 +47,11 @@ const BookHouse = ({ index }) => {
     if (!hooksLoading) return null;
     return (
       <View style={{ height: 100 }}>
+        <ActivityIndicator
+          style={{ marginVertical: 16 }}
+          size="small"
+          color="#333"
+        />
         <ActivityIndicator
           style={{ marginVertical: 16 }}
           size="small"
@@ -147,17 +151,15 @@ const BookHouse = ({ index }) => {
 
   return (
     <>
-      {error && (
-        <>
-          <Text style={styles.errorText}>Bir şeyler ters gitti: {error}</Text>
-        </>
-      )}
-
       {loading ? (
         <View
           style={{ alignItems: "center", justifyContent: "center", flex: 1 }}
         >
           <ActivityIndicator size={"large"} color="#333" />
+        </View>
+      ) : error ? (
+        <View style={styles.errArea}>
+          <Text style={styles.errorText}>Bir şeyler ters gitti: {error}</Text>
         </View>
       ) : (
         <View style={styles.container}>
@@ -234,6 +236,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: "white",
     marginTop: 20,
+  },
+  errArea: {
+    alignItems: "center",
+    justifyContent: "center",
+    flex: 1,
   },
 });
 

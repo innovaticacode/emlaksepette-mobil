@@ -25,6 +25,7 @@ import {
   ALERT_TYPE,
 } from "react-native-alert-notification";
 import { apiUrl } from "../../../components/methods/apiRequest";
+import { sanitizeEmail } from "../../../utils";
 export default function Personal({ type }) {
   const navigation = useNavigation();
   const [eye, seteye] = useState("eye-off-sharp");
@@ -75,6 +76,11 @@ export default function Personal({ type }) {
       [key]: value,
     }));
   };
+  const handleEpostaChange = (value) => {
+    const filteredValue = sanitizeEmail(value);
+    setePosta(filteredValue);
+  };
+
   const postData = async () => {
     setIsloading(true);
     try {
@@ -365,7 +371,7 @@ export default function Personal({ type }) {
                 },
               ]}
               value={ePosta}
-              onChangeText={(value) => setePosta(value)}
+              onChangeText={handleEpostaChange}
               placeholder="E-Posta Adresi"
               autoCapitalize="none" // İlk harfin büyük olmasını engeller
             />

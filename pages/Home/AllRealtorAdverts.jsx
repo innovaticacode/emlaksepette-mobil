@@ -9,15 +9,13 @@ import {
   FlatList,
   Dimensions,
 } from "react-native";
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useRoute, useNavigation } from "@react-navigation/native";
-import Header from "../../components/Header";
 import Modal from "react-native-modal";
 import axios from "axios";
 import { Platform } from "react-native";
 import { ActivityIndicator, Switch, TextInput } from "react-native-paper";
 import FontAwesome5Icon from "react-native-vector-icons/FontAwesome5";
-import { RxDropdownMenu } from "react-icons/rx";
 import RNPickerSelect from "react-native-picker-select";
 import { RefreshControl } from "react-native-gesture-handler";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
@@ -25,8 +23,6 @@ import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { getValueFor } from "../../components/methods/user";
 
 import SortModal from "../../components/SortModal";
-import { Image } from "react-native-svg";
-import { DrawerMenu } from "../../components";
 import { apiUrl, frontEndUriBase } from "../../components/methods/apiRequest";
 import RealtorPost from "../../components/Card/RealtorCard/RealtorPost";
 import ViewFilter from "../../components/Filter/ViewFilter/ViewFilter";
@@ -290,23 +286,70 @@ export default function AllRealtorAdverts() {
   };
 
   const handleSortChange = (value) => {
-    setSelectedSortOption(value);
+    // Önce sıralama durumunu güncelle
     setState((prevState) => ({
       ...prevState,
-      searchStatus: "Sıralanıyor...",
+      searchStatus: "Sıralanıyor...", // Durumu güncelle
+      secondhandHousings: [], // Önceki verileri sıfırla
     }));
 
-    fetchFilteredProjects(buildApiUrl(params), {
-      ...filterData, // Son filtreleme verilerini kullan
-      sortValue: value,
-    });
+    // Sıralama seçeneğini güncelle
+    setSelectedSortOption(value);
+
+    // Skip değerini sıfırla
+    setSkip(0);
+
+    // Yeni sıralama verisiyle API çağrısını yap
+    fetchFilteredProjects(
+      buildApiUrl(params),
+      { ...filterData, sortValue: value },
+      true
+    );
   };
 
-  const fetchFilteredProjects = async (apiUrlFilter, filterData) => {
+  const take = 10;
+  const [skip, setSkip] = useState(0);
+  const [isLoadingMore, setIsLoadingMore] = useState(false); // Yeni veri yükleme durumunu kontrol etmek için
+  const [totalCounts, setTotalCounts] = useState(0);
+
+  const handleLoadMore = async () => {
+    if (isLoadingMore || state.secondhandHousings.length >= totalCounts) {
+      console.log("Yükleme durumu:", isLoadingMore);
+      return;
+    }
+    setIsLoadingMore(true); // Yeni veri yükleme işlemi başlıyor
+    setSkip((prevSkip) => prevSkip + take);
+    await fetchFilteredProjects(buildApiUrl(params), filterData, false);
+    setIsLoadingMore(false); // Yeni veri yükleme işlemi tamamlandı
+  };
+
+  const fetchFilteredProjects = async (
+    apiUrlFilter,
+    filterData,
+    isInitialLoad = false
+  ) => {
     try {
+      if (!isInitialLoad) {
+        setIsLoadingMore(true); // Daha fazla veri yükleme işlemi başlıyor
+      }
+
       console.log(filterData);
-      const response = await axios.get(apiUrlFilter, { params: filterData });
+      console.log("take", take);
+      console.log("skip", skip);
+
+      const response = await axios.get(apiUrlFilter, {
+        params: {
+          ...filterData,
+          take: take,
+          skip: skip,
+        },
+      });
+
       const data = response.data;
+
+      if (!isInitialLoad) {
+        setTotalCounts(data?.total_count);
+      }
 
       const newState = {
         neighborhoodTitle: data.neighborhoodTitle,
@@ -334,7 +377,6 @@ export default function AllRealtorAdverts() {
         slugName: data.slugName,
         housingTypeParent: data.housingTypeParent,
         housingType: data.housingType,
-        secondhandHousings: data.secondhandHousings,
         housingStatuses: data.housingStatuses,
         cities: data.cities,
         titleParam: data.title,
@@ -344,18 +386,31 @@ export default function AllRealtorAdverts() {
         projects: data.projects,
       };
 
-      if (data.secondhandHousings?.length == 0) {
+      // Eğer sonuçlar boşsa durum mesajını güncelle
+      if (data.secondhandHousings?.length == 0 && isInitialLoad) {
         newState.searchStatus = "Sonuç bulunamadı";
       }
 
+      // Yeni verileri mevcut verilere ekle veya ilk yükleme için mevcut verileri değiştir
       setState((prevState) => ({
         ...prevState,
         ...newState,
+        secondhandHousings: isInitialLoad
+          ? data.secondhandHousings // İlk yükleme sırasında eski veriler temizlenir
+          : [...prevState.secondhandHousings, ...data.secondhandHousings], // Sayfalama sırasında eski verilere ekleme yapılır
       }));
+
+      if (!isInitialLoad) {
+        setIsLoadingMore(false); // Daha fazla veri yüklendi
+      }
     } catch (error) {
       console.error(error);
+      if (!isInitialLoad) {
+        setIsLoadingMore(false); // Hata durumunda da yükleme tamamlanır
+      }
     }
   };
+
   const handleCheckboxChange = (filterName, value) => {
     setState((prevState) => {
       // Seçilenleri tutacak yeni bir nesne oluşturuyoruz
@@ -574,6 +629,8 @@ export default function AllRealtorAdverts() {
 
             <FlatList
               data={state.secondhandHousings}
+              onEndReached={handleLoadMore}
+              onEndReachedThreshold={0.5}
               renderItem={({ item }) => (
                 <RealtorPost
                   GetId={GetIdForCart}
@@ -620,7 +677,7 @@ export default function AllRealtorAdverts() {
                   sold={item.sold}
                 />
               )}
-              keyExtractor={(item) => item.id.toString()}
+              keyExtractor={(item, index) => `${item.id}-${index}`}
               ListEmptyComponent={
                 <View
                   style={{
@@ -637,22 +694,20 @@ export default function AllRealtorAdverts() {
                   </Text>
                 </View>
               }
+              ListFooterComponent={
+                isLoadingMore && (
+                  <View style={{ padding: 20, alignItems: "center" }}>
+                    <ActivityIndicator size="small" color="#000" />
+                  </View>
+                )
+              }
             />
           </>
         )}
         <TouchableOpacity onPress={() => navigation.navigate("MapWiew")}>
           <View style={{ position: "relative", flex: 1 }}>
-            <View style={{ position: "absolute", bottom: 10, right: 10 }}>
-              <View
-                style={{
-                  backgroundColor: "red",
-                  width: 80,
-                  height: 80,
-                  borderRadius: 50,
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              >
+            <View style={styles.MapIconContainer}>
+              <View style={styles.MapIcon}>
                 <ImageBackground
                   resizeMode="contain"
                   style={{ width: "100%", height: "100%", borderRadius: 50 }}
@@ -1439,6 +1494,19 @@ const styles = StyleSheet.create({
     backgroundColor: "#fefefe",
     padding: 20,
     borderRadius: 5,
+  },
+  MapIcon: {
+    backgroundColor: "red",
+    width: 80,
+    height: 80,
+    borderRadius: 50,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  MapIconContainer: {
+    position: "absolute",
+    bottom: 22,
+    right: 10,
   },
 });
 

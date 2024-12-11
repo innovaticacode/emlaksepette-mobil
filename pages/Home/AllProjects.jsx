@@ -283,25 +283,61 @@ export default function AllProjects() {
   };
 
   const handleSortChange = (value) => {
-    setSelectedSortOption(value);
     setState((prevState) => ({
       ...prevState,
       searchStatus: "Sıralanıyor...",
     }));
 
-    fetchFilteredProjects(buildApiUrl(params), {
-      ...filterData, // Son filtreleme verilerini kullan
-      sortValue: value,
-    });
+    // Sıralama seçeneğini güncelle
+    setSelectedSortOption(value);
+
+    // Skip değerini sıfırla
+    setSkip(0);
+
+    // Yeni sıralama verisiyle API çağrısını yap
+    fetchFilteredProjects(
+      buildApiUrl(params),
+      { ...filterData, sortValue: value },
+      true
+    );
   };
 
-  const fetchFilteredProjects = async (apiUrlFilter, filterData) => {
+  const take = 10;
+  const [totalCounts, setTotalCounts] = useState(0); // Toplam kayıt sayısını saklamak için
+  const [isLoadingMore, setIsLoadingMore] = useState(false); // Daha fazla veri yüklenip yüklenmediğini kontrol etmek için
+  const [skip, setSkip] = useState(0); // Hangi noktadan itibaren veri alınacak
+
+  const handleLoadMore = async () => {
+    if (isLoadingMore || state.secondhandHousings.length >= totalCounts) {
+      return;
+    }
+    setIsLoadingMore(true); // Yeni veri yükleme işlemi başlıyor
+    setSkip((prevSkip) => prevSkip + take);
+    await fetchFilteredProjects(buildApiUrl(params), filterData, false);
+    setIsLoadingMore(false); // Yeni veri yükleme işlemi tamamlandı
+  };
+
+  const fetchFilteredProjects = async (
+    apiUrlFilter,
+    filterData,
+    isInitialLoad = false
+  ) => {
+    console.log("apiUrlFilter", apiUrlFilter);
+    console.log("take", take);
+    console.log("skip", skip);
     try {
-      const response = await axios.get(
-        apiUrlFilterState ? apiUrlFilterState : apiUrlFilter,
-        { params: filterData }
-      );
+      const response = await axios.get(apiUrlFilter, {
+        params: {
+          ...filterData,
+          take: take,
+          skip: skip,
+        },
+      });
       const data = response.data;
+
+      if (!isInitialLoad) {
+        setTotalCounts(data?.total_count);
+      }
 
       const newState = {
         neighborhoodTitle: data.neighborhoodTitle,
@@ -339,16 +375,27 @@ export default function AllProjects() {
         projects: data.projects,
       };
 
-      if (data.projects.length === 0) {
+      if (data.projects.length === 0 && isInitialLoad) {
         newState.searchStatus = "Sonuç bulunamadı";
       }
 
+      // Yeni verileri mevcut verilere ekle veya ilk yükleme için mevcut verileri değiştir
       setState((prevState) => ({
         ...prevState,
         ...newState,
+        projects: isInitialLoad
+          ? data.projects // İlk yüklemede sadece yeni projeler set edilir
+          : [...prevState.projects, ...data.projects], // Sayfalama sırasında eski verilere yenileri eklenir
       }));
+
+      if (!isInitialLoad) {
+        setIsLoadingMore(false); // Daha fazla veri yüklendi
+      }
     } catch (error) {
       console.error(error);
+      if (!isInitialLoad) {
+        setIsLoadingMore(false); // Hata durumunda da yükleme tamamlanır
+      }
     }
   };
 
@@ -570,6 +617,8 @@ export default function AllProjects() {
 
             <FlatList
               data={state.projects}
+              onEndReached={handleLoadMore}
+              onEndReachedThreshold={0.5}
               renderItem={({ item }) => (
                 <View
                   style={{
@@ -603,7 +652,7 @@ export default function AllProjects() {
                   </View>
                 </View>
               )}
-              keyExtractor={(item) => item.id.toString()}
+              keyExtractor={(item, index) => `${item.id}-${index}`}
               ListEmptyComponent={
                 <View
                   style={{
@@ -619,6 +668,13 @@ export default function AllProjects() {
                     <Text>{state.searchStatus}</Text>
                   </Text>
                 </View>
+              }
+              ListFooterComponent={
+                isLoadingMore && (
+                  <View style={{ padding: 20, alignItems: "center" }}>
+                    <ActivityIndicator size="small" color="#000" />
+                  </View>
+                )
               }
             />
           </>

@@ -5,6 +5,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   TextInput,
+  FlatList,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import axios from "axios";
@@ -25,39 +26,63 @@ export default function RejectRealtorAdverts() {
   const [user, setUser] = useState({});
   const [housings, sethousings] = useState([]);
   const [projectCount, setProjectCount] = useState(0);
+
+  const [skip, setSkip] = useState(0);
+  const [take, setTake] = useState(10);
+  const [totalAdverts, setTotalAdverts] = useState("");
+  const [selectedProject, setSelectedProject] = useState(null);
+  const [EditModalVisible, setEditModalVisible] = useState(false);
   useEffect(() => {
     getValueFor("user", setUser);
   }, []);
-  const [start, setStart] = useState(0);
-  const [take, setTake] = useState(10);
-  const [selectedProject, setSelectedProject] = useState(null);
-  const [EditModalVisible, setEditModalVisible] = useState(false);
   const openSheet = (id) => {
     setSelectedProject(id);
     setEditModalVisible(!EditModalVisible);
   };
   const [loading, setloading] = useState(false);
   const [housingRecords, sethousingRecords] = useState([]);
-  const fetchDisabledHousings = async (sort) => {
-    setloading(true);
+  const [sort, setsort] = useState(null);
+
+  const fetchDisabledHousings = async (sort, take, skip) => {
     try {
-      const res = await axios.get(
-        apiUrl + "get_my_housings?orderByHousings=" + sort,
-        {
-          headers: { Authorization: "Bearer " + user.access_token },
-        }
-      );
-      sethousings(res.data.disabledHousingTypes);
-      sethousingRecords(res.data.disabledHousingTypes);
+      const res = await axios({
+        method: "get",
+        url: `${apiUrl}get_my_housings`,
+        headers: {
+          Authorization: `Bearer ${user?.access_token}`,
+          "Content-Type": "application/json",
+        },
+        params: {
+          orderByHousings: sort,
+          take: take,
+          skip: skip,
+          data: {
+            status: 3,
+          },
+        },
+      });
+
+      setTotalAdverts(res?.data?.total_count);
+      if (skip === 0) {
+        sethousings(res?.data?.disabledHousingTypes);
+        console.log("test2--");
+      } else {
+        sethousings((prevHousing) => [
+          ...prevHousing,
+          ...res?.data?.disabledHousingTypes,
+        ]);
+      }
     } catch (e) {
       console.log(e + " hata");
     } finally {
       setloading(false);
     }
   };
+
   useEffect(() => {
-    fetchDisabledHousings();
-  }, [user]);
+    fetchDisabledHousings(sort, take, skip);
+    console.log(user?.acces_token + "aswww");
+  }, [user, sort, skip]);
 
   const [selectedIndex, setIndex] = React.useState(null);
   const [SortLıstModal, setSortLıstModal] = useState(false);
@@ -65,7 +90,7 @@ export default function RejectRealtorAdverts() {
     setIndex(index);
     setTimeout(() => {
       setSortLıstModal(false);
-      fetchDisabledHousings(sort);
+      fetchDisabledHousings(sort, take, 0);
     }, 600);
   };
   const [searchValue, setsearchValue] = useState("");
@@ -77,7 +102,11 @@ export default function RejectRealtorAdverts() {
           item?.housing_title.toLowerCase().includes(value.toLowerCase())
         )
       : housings;
-    sethousingRecords(filteredData);
+    sethousings(filteredData);
+  };
+
+  const handleEndReached = () => {
+    setSkip((prevSkip) => prevSkip + take);
   };
   return (
     <>
@@ -93,7 +122,7 @@ export default function RejectRealtorAdverts() {
           <ActivityIndicator size={"large"} color="#333" />
         </View>
       ) : (
-        <ScrollView>
+        <View>
           <View
             style={{
               paddingTop: 6,
@@ -108,7 +137,7 @@ export default function RejectRealtorAdverts() {
                 fontWeight: "600",
               }}
             >
-              Reddedilen İlanlar ({housings?.length})
+              Reddedilen İlanlar ({totalAdverts})
             </Text>
           </View>
           <View
@@ -140,15 +169,29 @@ export default function RejectRealtorAdverts() {
               <MaterialIcon name="swap-vertical" size={23} color={"#333"} />
             </TouchableOpacity>
           </View>
-          <View style={{ paddingTop: 10, gap: 10 }}>
-            {housingRecords.map((item, index) => (
-              <RealtorAdvertPost
-                key={index}
-                housing={item}
-                Onpress={openSheet}
+
+          <View style={{ paddingTop: 10, gap: 10, alignItems: "center" }}>
+            {loading ? (
+              <Text>Yükleniyor...</Text>
+            ) : housings.length === 0 ? (
+              <Text>Reddedilen İlanınız Bulunmamaktadır</Text>
+            ) : (
+              <FlatList
+                data={housings} // Yüklenen ilanları burada render ediyoruz
+                renderItem={({ item, index }) => (
+                  <RealtorAdvertPost
+                    key={index}
+                    housing={item}
+                    Onpress={openSheet}
+                  />
+                )}
+                keyExtractor={(item, index) => index.toString()}
+                onEndReached={handleEndReached} // Sayfa sonuna gelindiğinde yeni verileri yükle
+                onEndReachedThreshold={0.5} // Sayfa sonunda ne kadar yaklaşınca tetiklensin
               />
-            ))}
+            )}
           </View>
+
           <Modal
             isVisible={SortLıstModal}
             onBackdropPress={() => setSortLıstModal(false)}
@@ -338,7 +381,7 @@ export default function RejectRealtorAdverts() {
               </View>
             </View>
           </Modal>
-        </ScrollView>
+        </View>
       )}
     </>
   );

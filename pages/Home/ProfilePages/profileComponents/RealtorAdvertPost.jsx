@@ -67,11 +67,13 @@ export default function RealtorAdvertPost({ Onpress, housing }) {
               </Text>
             )}
           </View>
-          <View style={{ paddingTop: 9 }}>
-            <Text style={{ fontSize: 13, fontWeight: "700", color: "#333" }}>
-              {addDotEveryThreeDigits(housing.price)} TL
-            </Text>
-          </View>
+          {housing?.price && (
+            <View style={{ paddingTop: 9 }}>
+              <Text style={{ fontSize: 13, fontWeight: "700", color: "#333" }}>
+                {addDotEveryThreeDigits(housing?.price)} TL
+              </Text>
+            </View>
+          )}
         </View>
       </View>
       <View

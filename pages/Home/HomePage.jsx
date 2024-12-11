@@ -51,7 +51,7 @@ const HomePage = (props) => {
     try {
       setLoadingProjects(true);
       const response = await axios.get(`${apiUrl}featured-projects`);
-      setFeaturedProjects(response.data.data);
+      setFeaturedProjects(response.data);
     } catch (error) {
       console.log("Error fetching featured projects:", error);
     } finally {
