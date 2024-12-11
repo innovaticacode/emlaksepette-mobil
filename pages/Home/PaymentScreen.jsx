@@ -59,6 +59,8 @@ export default function PaymentScreen() {
     offerControl,
   } = route.params;
 
+  console.log("--------route.params-->>>", route.params);
+
   const [checked, setChecked] = React.useState(false);
   const [cartInfoHeight, setCartInfoHeight] = useState(0);
   const toggleCheckbox = () => setChecked(!checked);

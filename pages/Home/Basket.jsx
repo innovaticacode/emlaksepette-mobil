@@ -155,7 +155,11 @@ export default function Basket() {
   const [isInstallament, setisInstallament] = useState(1);
 
   let DiscountPrice = Cart?.price - (Cart?.amount * Cart?.discount_rate) / 100;
-  let KaporaForDiscountPrice = (DiscountPrice * 2) / 100;
+  let KaporaForDiscountPrice =
+    (DiscountPrice *
+      (offerControl?.housing?.total_rate_percentage ??
+        offerControl?.project?.total_rate_percentage)) /
+    100;
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
@@ -669,7 +673,7 @@ export default function Basket() {
                             }}
                           >
                             <Text style={{ color: "#333" }}>
-                              %{offerControl?.housing.total_rate_percentage}{" "}
+                              %{offerControl?.housing?.total_rate_percentage}{" "}
                               Kapora:
                             </Text>
                             <Text style={{ color: "#333" }}>
@@ -727,8 +731,8 @@ export default function Basket() {
                                 {addDotEveryThreeDigits(
                                   Math.round(
                                     (Cart?.price *
-                                      offerControl.housing
-                                        .total_rate_percentage) /
+                                      offerControl?.housing
+                                        ?.total_rate_percentage) /
                                       100
                                   )
                                 )}{" "}
