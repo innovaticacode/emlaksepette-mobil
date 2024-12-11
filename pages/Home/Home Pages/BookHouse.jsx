@@ -16,11 +16,12 @@ import bannerSRC from "../../../src/assets/images/tatilim-sepette-banner.png";
 import { frontEndUriBase } from "../../../components/methods/apiRequest";
 import RealtorPost from "../../../components/Card/RealtorCard/RealtorPost";
 import { UsePaginatedData } from "../../../hooks";
+import { useSelector } from "react-redux";
 
 const BookHouse = ({ index }) => {
   const navigation = useNavigation();
   const [loading, setLoading] = useState(false);
-
+  const banners = useSelector((state) => state?.banners?.banners);
   const apiData = [{ key: "step2_slug", value: "gunluk-kiralik" }];
   const { data, hooksLoading, error, loadMore, setSkip } = UsePaginatedData(
     "real-estates",
@@ -59,7 +60,7 @@ const BookHouse = ({ index }) => {
       <>
         <View style={{ paddingHorizontal: 0 }}>
           <Image
-            source={bannerSRC}
+            source={{ uri: banners?.mustakil_tatil }}
             style={{
               width: "100%",
               height: 120,
