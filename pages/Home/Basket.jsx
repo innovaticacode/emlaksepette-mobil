@@ -582,19 +582,22 @@ export default function Basket() {
                         }}
                       >
                         <Text>
-                          %{offerControl?.project?.deposit_rate} Kapora:
+                          %{offerControl?.project?.total_rate_percentage}{" "}
+                          Kapora:
                         </Text>
                         <Text>
                           {" "}
                           {isInstallament == 2
                             ? formatAmount(
                                 (Cart?.installmentPrice *
-                                  offerControl?.project?.deposit_rate) /
+                                  offerControl?.project
+                                    ?.total_rate_percentage) /
                                   100
                               )
                             : formatAmount(
                                 (Cart?.amount *
-                                  offerControl?.project?.deposit_rate) /
+                                  offerControl?.project
+                                    ?.total_rate_percentage) /
                                   100
                               )}{" "}
                           ₺
@@ -659,7 +662,10 @@ export default function Basket() {
                               justifyContent: "space-between",
                             }}
                           >
-                            <Text style={{ color: "#333" }}>%2 Kapora:</Text>
+                            <Text style={{ color: "#333" }}>
+                              %{offerControl?.housing.total_rate_percentage}{" "}
+                              Kapora:
+                            </Text>
                             <Text style={{ color: "#333" }}>
                               {addDotEveryThreeDigits(KaporaForDiscountPrice)} ₺
                             </Text>
@@ -707,7 +713,10 @@ export default function Basket() {
                                 justifyContent: "space-between",
                               }}
                             >
-                              <Text>%2 Kapora:</Text>
+                              <Text>
+                                % {offerControl?.housing?.total_rate_percentage}{" "}
+                                Kapora:
+                              </Text>
                               <Text>
                                 {addDotEveryThreeDigits(
                                   Math.round((Cart?.price * 2) / 100)
@@ -740,14 +749,14 @@ export default function Basket() {
                           type?.type == "project" &&
                           formatAmount(
                             (Cart?.amount *
-                              offerControl?.project?.deposit_rate) /
+                              offerControl?.project?.total_rate_percentage) /
                               100
                           )}
                         {isInstallament == 2 &&
                           type?.type == "project" &&
                           addDotEveryThreeDigits(
                             (Cart?.installmentPrice *
-                              offerControl?.project?.deposit_rate) /
+                              offerControl?.project?.total_rate_percentage) /
                               100
                           )}
                         {type?.type == "housing" &&
@@ -770,7 +779,7 @@ export default function Basket() {
                           price: Cart.price,
                           totalPrice: DiscountPrice,
                           deposit: KaporaForDiscountPrice,
-                          kapora: offerControl?.project?.deposit_rate,
+                          Kapora: offerControl?.project?.total_rate_percentage,
                           isInstallament: isInstallament,
                           installmentPrice: Cart?.installmentPrice,
                           paymentMethod: paymentMethod,
