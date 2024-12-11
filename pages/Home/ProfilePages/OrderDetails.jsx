@@ -47,6 +47,7 @@ export default function OrderDetails({ item }) {
   const [rejectModal, setRejectModal] = useState(false);
   const [rejectText, setRejectText] = useState("");
   const [rejectFile, setRejectFile] = useState(null);
+  const [orderCompleted, setOrderCompleted] = useState(false);
 
   const fetchData = async () => {
     try {
@@ -64,6 +65,8 @@ export default function OrderDetails({ item }) {
         setprojectDetail(response?.data.project);
         sethousingDetail(response?.data.housing);
         setOrderStatus(response?.data?.order_status);
+        setOrderCompleted(response.data.is_order_completed);
+        console.log("---------->j", response.data);
         return setLoading(false);
       }
     } catch (error) {
@@ -508,7 +511,7 @@ export default function OrderDetails({ item }) {
                   </View>
                 </View>
                 <View style={style.seperator} />
-                {Detail.status == 1 && (
+                {orderCompleted == 1 && (
                   <>
                     <TouchableOpacity
                       activeOpacity={0.7}
@@ -612,7 +615,11 @@ export default function OrderDetails({ item }) {
                     <View style={style.amount}>
                       <Text style={style.boldText}>Kapora Oranı</Text>
                       <Text style={[style.boldText, { color: "#606060" }]}>
-                        {`${projectDetail?.deposit_rate ?? 2}%`}
+                        {`${
+                          projectDetail
+                            ? projectDetail?.total_rate_percentage
+                            : housingDetail?.total_rate_percentage
+                        }%`}
                       </Text>
                     </View>
                     <View style={style.amount}>
