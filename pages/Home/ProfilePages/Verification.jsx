@@ -4,6 +4,8 @@ import {
   StyleSheet,
   TouchableOpacity,
   SafeAreaView,
+  TouchableWithoutFeedback,
+  Keyboard,
 } from "react-native";
 import React, { useState, useRef, useEffect } from "react";
 import { TextInput } from "react-native";
@@ -115,7 +117,7 @@ export default function Verification({ nextStep, prevStep }) {
         }, 2000);
         // Başarıyla yönlendir
         setTimeout(() => {
-          navigation.navigate("Drawer", { screen: "Home" });
+         nextStep()
         }, 1000);
       }
     } catch (error) {
@@ -204,7 +206,10 @@ export default function Verification({ nextStep, prevStep }) {
   };
   console.log(isActive);
   return (
-    <SafeAreaView style={styles.container}>
+    <TouchableWithoutFeedback onPress={()=>{
+      Keyboard.dismiss()
+    }}>
+        <View style={styles.container}>
       <View style={{ padding: 10 }}>
         <View style={{}}>
           <Text
@@ -250,7 +255,7 @@ export default function Verification({ nextStep, prevStep }) {
           </Text>
         </View>
       </View>
-      <View style={{ paddingTop: 30 }}>
+      <View style={{ paddingTop: 20 }}>
         <View
           style={{ flexDirection: "row", justifyContent: "center", gap: 10 }}
         >
@@ -274,7 +279,7 @@ export default function Verification({ nextStep, prevStep }) {
             />
           ))}
         </View>
-        <View style={{ padding: 10, paddingTop: 50, gap: 20 }}>
+        <View style={{ padding: 10, paddingTop: 20, gap: 20 }}>
           {isActive ? (
             <TouchableOpacity
               disabled={codes.length == 6 ? false : true}
@@ -444,7 +449,9 @@ export default function Verification({ nextStep, prevStep }) {
           </View>
         </View>
       </Modal>
-    </SafeAreaView>
+    </View>
+    </TouchableWithoutFeedback>
+  
   );
 }
 const styles = StyleSheet.create({
