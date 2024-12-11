@@ -129,6 +129,7 @@ export default function Basket() {
     if (user?.access_token) {
       fetchData();
     }
+    console.log("CART------------->", Cart);
   }, [isFocused, user]);
   const [parsedshare, setparsedshare] = useState("");
 
@@ -523,11 +524,18 @@ export default function Basket() {
                         gap: 10,
                         paddingBottom: 5,
                         alignItems: "center",
+                        maxWidth: "100%",
                       }}
                     >
                       <IconIdCard name="star-o" size={15} />
-                      <Text>Sepet Özeti</Text>
-                      <Text>İlan Başlığı: {Cart.title}</Text>
+                      <Text style={{ flexShrink: 1 }}>Sepet Özeti</Text>
+                      <Text
+                        style={{ flexShrink: 1 }}
+                        numberOfLines={2}
+                        ellipsizeMode="tail"
+                      >
+                        İlan Başlığı: {Cart.title}
+                      </Text>
                     </View>
 
                     <View style={{ gap: 20 }}>
@@ -717,7 +725,12 @@ export default function Basket() {
                               </Text>
                               <Text>
                                 {addDotEveryThreeDigits(
-                                  Math.round((Cart?.price * 2) / 100)
+                                  Math.round(
+                                    (Cart?.price *
+                                      offerControl.housing
+                                        .total_rate_percentage) /
+                                      100
+                                  )
                                 )}{" "}
                                 ₺
                               </Text>
@@ -763,7 +776,11 @@ export default function Basket() {
                         {type?.type == "housing" &&
                           saleType == "satilik" &&
                           addDotEveryThreeDigits(
-                            Math.round((Cart?.price * 2) / 100)
+                            Math.round(
+                              (Cart?.price *
+                                offerControl?.housing?.total_rate_percentage) /
+                                100
+                            )
                           )}
                         ₺
                       </Text>
