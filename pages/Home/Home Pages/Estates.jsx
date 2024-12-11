@@ -26,11 +26,6 @@ const Estates = ({ index }) => {
     10,
     apiData
   ); // take 10
-  const { data, hooksLoading, error, loadMore, setSkip } = UsePaginatedData(
-    "real-estates",
-    10,
-    apiData
-  ); // take 10
 
   useFocusEffect(
     useCallback(() => {
