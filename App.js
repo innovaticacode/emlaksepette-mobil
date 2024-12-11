@@ -132,6 +132,7 @@ import * as SplashScreen from "expo-splash-screen"; // Import SplashScreen
 import { enableScreens } from "react-native-screens";
 import MapFilterRealtor from "./pages/Home/MapFilterRealtor";
 import * as Sentry from "@sentry/react-native";
+import Verification from "./pages/Home/ProfilePages/Verification";
 
 enableScreens();
 
@@ -1554,6 +1555,14 @@ const StackScreenNavigator = () => {
                 component={FranchisePersonDetail}
                 options={() => ({
                   headerShown: false,
+                })}
+              />
+              <Stack.Screen
+                name="PhoneVerify"
+                component={Verification}
+                options={() => ({
+                  headerShown: false,
+                  gestureEnabled: false,
                 })}
               />
             </Stack.Navigator>

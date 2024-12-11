@@ -46,8 +46,10 @@ export default function UpdateAdress({ nextStep, prevStep }) {
         onChangeCounty(userData.county_id);
         setneigbourhood(userData.neighborhood_id);
         setSelectedLocation({
-          latitude: userData?.latitude ? userData?.latitude : null,
-          longitude: userData?.longitude ? userData?.longitude : null,
+          latitude: userData?.latitude ? parseFloat(userData?.latitude) : null,
+          longitude: userData?.longitude
+            ? parseFloat(userData?.longitude)
+            : null,
         });
       }
     } catch (error) {
@@ -228,7 +230,8 @@ export default function UpdateAdress({ nextStep, prevStep }) {
         padding: 10,
         gap: 20,
         paddingTop: 20,
-        height: "100%",
+
+        flexGrow: 1,
       }}
     >
       {loadingForUserInfo ? (
@@ -238,7 +241,7 @@ export default function UpdateAdress({ nextStep, prevStep }) {
           <ActivityIndicator />
         </View>
       ) : (
-        <View style={{ gap: 20, height: "100%" }}>
+        <View style={{ gap: 20, flex: 1 }}>
           <AwesomeAlert
             show={controlForNextStep}
             showProgress={false}
@@ -379,7 +382,7 @@ export default function UpdateAdress({ nextStep, prevStep }) {
               )} */}
           </View>
 
-          <View style={{ height: "55%" }}>
+          <View style={{ height: 300 }}>
             <MapView
               onPress={handleMapPress}
               initialRegion={{
@@ -400,6 +403,7 @@ export default function UpdateAdress({ nextStep, prevStep }) {
             </MapView>
           </View>
           <NextAndPrevButton
+            style={"0"}
             nextButtonPress={nextStep}
             prevButtonPress={prevStep}
             SendInfo={checkNextStep}
@@ -429,10 +433,10 @@ const pickerSelectStyles = StyleSheet.create({
     fontSize: 14, // to ensure the text is never behind the icon
   },
   inputAndroid: {
-    backgroundColor: "#FAFAFA",
+    backgroundColor: "#ebebeb",
     borderWidth: 1,
     borderColor: "#eaeff5",
-    borderRadius: 5,
+    borderRadius: 10,
     padding: 6,
     fontSize: 14, // to ensure the text is never behind the icon
   },
