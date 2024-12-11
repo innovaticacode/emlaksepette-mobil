@@ -527,9 +527,7 @@ export default function Basket() {
                     >
                       <IconIdCard name="star-o" size={15} />
                       <Text>Sepet Özeti</Text>
-                      <Text>
-                        İlan Başlığı: {amount}, {title}
-                      </Text>
+                      <Text>İlan Başlığı: {Cart.title}</Text>
                     </View>
 
                     <View style={{ gap: 20 }}>
