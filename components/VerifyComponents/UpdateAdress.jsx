@@ -65,7 +65,7 @@ export default function UpdateAdress({ nextStep, prevStep }) {
     try {
       if (user?.access_token) {
         // Gönderilecek JSON verisi
-        formData.append("step", user.type == 1 ? 4 : 3);
+        formData.append("step", user.type == 1 ? 1 : 2);
         const response = await axios.post(
           `${apiUrl}set_first_register_step`,
           formData, // JSON verisi doğrudan gönderiliyor

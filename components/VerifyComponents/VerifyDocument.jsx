@@ -583,14 +583,6 @@ export default function VerifyDocument({ nextStep, prevStep }) {
             style={{ flexDirection: "row", justifyContent: "space-around" }}
           >
             <TouchableOpacity
-              disabled={
-                FormDatas.approve_website &&
-                FormDatas.identity_document &&
-                FormDatas.record_document &&
-                FormDatas.tax_document
-                  ? false
-                  : true
-              }
               style={[styles.finishButton]}
               activeOpacity={0.7}
               onPress={() => {

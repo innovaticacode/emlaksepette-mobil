@@ -10,64 +10,33 @@ const NextAndPrevButton = ({
   NextButtonDisabled,
   PrevButtonDisabled,
   step,
-  SendInfo
+  SendInfo,
+  style,
 }) => {
- 
   const [user, setuser] = useState({});
   useEffect(() => {
-getValueFor('user',setuser)
-  }, [])
-  
-  const SetStep = async () => {
-    const formData=new FormData()
-    try {
-      if (user?.access_token) {
-        // Gönderilecek JSON verisi
-          formData.append('step',step)
-        const response = await axios.post(
-          `${apiUrl}set_first_register_step`,
-          formData, // JSON verisi doğrudan gönderiliyor
-          {
-            headers: {
-              Authorization: `Bearer ${user.access_token}`,
-              "Content-Type": "multipart/form-data", // Raw format için Content-Type
-            },
-          }
-        );
-         
-      
-      }
-    } catch (error) {
-      console.error("Post isteği başarısız dsfdsf", error);
-    }
-  };
+    getValueFor("user", setuser);
+  }, []);
+
   return (
-    <View style={styles.containerButtons}>
-      
-        <TouchableOpacity
-          style={[styles.PrevButton]}
-          onPress={() => {
-            prevButtonPress();
-          }}
-        >
-          <Text style={styles.PrevButtonText}>Önceki Adım</Text>
-        </TouchableOpacity>
-     
+    <View
+      style={
+        style && style == 0 ? styles.containerButtons2 : styles.containerButtons
+      }
+    >
+      <TouchableOpacity
+        style={[styles.PrevButton]}
+        onPress={() => {
+          prevButtonPress();
+        }}
+      >
+        <Text style={styles.PrevButtonText}>Önceki Adım</Text>
+      </TouchableOpacity>
 
       <TouchableOpacity
-        disabled={NextButtonDisabled == false ? true : false}
-        style={[
-          styles.NextButton,
-          { opacity: NextButtonDisabled == false ? 0.5 : 1 },
-        ]}
+        style={[styles.NextButton]}
         onPress={() => {
-        
-            SendInfo()
-         
-         
-       
-          
-
+          SendInfo();
         }}
       >
         <Text style={styles.NextButtonText}>Sonraki Adım</Text>
@@ -109,6 +78,11 @@ const styles = StyleSheet.create({
     position: "absolute",
     zIndex: 1,
     bottom: 30,
+    flexDirection: "row",
+    width: "100%",
+    justifyContent: "space-around",
+  },
+  containerButtons2: {
     flexDirection: "row",
     width: "100%",
     justifyContent: "space-around",

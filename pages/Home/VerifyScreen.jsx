@@ -22,16 +22,17 @@ import SuccessRegistered from "../../components/VerifyComponents/SuccessRegister
 import UpdateAdress from "../../components/VerifyComponents/UpdateAdress";
 const labels = [
   "Telefon Doğrulama",
-  "Profil Fotoğrafı Güncelle",
-  "Mağaza Bilgisi",
+  "Mağaza Profili Oluştur",
   "Adres Bilgisi",
+  "Profil Fotoğrafı Güncelle",
   "Belgeler",
   "Başarılı",
 ];
 const labels2 = [
   "Telefon Doğrulama",
-  "Profil Fotoğrafı Güncelle",
   "Adres Bilgisi",
+  "Profil Fotoğrafı Güncelle",
+
   "Başarılı",
 ];
 const customStyles = {
@@ -126,11 +127,12 @@ const VerifyScreen = () => {
         case 0:
           return <Verification nextStep={nextStep} prevStep={prevStep} />;
         case 1:
-          return <UpdateProfileImage nextStep={nextStep} prevStep={prevStep} />;
-        case 2:
           return <UpdateShopInfo nextStep={nextStep} prevStep={prevStep} />;
-        case 3:
+
+        case 2:
           return <UpdateAdress nextStep={nextStep} prevStep={prevStep} />;
+        case 3:
+          return <UpdateProfileImage nextStep={nextStep} prevStep={prevStep} />;
         case 4:
           return <VerifyDocument nextStep={nextStep} prevStep={prevStep} />;
         case 5:
@@ -175,105 +177,6 @@ const VerifyScreen = () => {
           />
           {/* <Text>{namFromGetUser.phone_verification_status} </Text> */}
           <View style={styles.content}>{renderStepContent()}</View>
-
-          {/* <View style={styles.buttonContainer}>
-             {currentPosition > 0 && (
-               <Button title="Önceki" onPress={prevStep} />
-             )}
-             {currentPosition < labels.length - 1 && (
-               <Button title="Sonraki" onPress={nextStep} />
-             )}
-           </View>  */}
-          {/* <View style={{ alignItems: "center", paddingBottom: 20,flexDirection:'row',justifyContent:'space-around'}}>
-            <TouchableOpacity
-              style={{
-                backgroundColor: "transparent",
-                padding: 8,
-                borderRadius: 8,
-                width: "45%",
-                borderWidth:1,
-                borderColor:'#EC302E',
-              }}
-              onPress={() => {
-                 prevStep()
-                // SecureStore.setItemAsync("user", "");
-                // navigation.navigate("Drawer", {
-                //   screen: "Home",
-                //   params: {
-                //     status: "logout" 
-                //   },
-                // });
-                
-              }}
-            >
-              <Text
-                style={{
-                  textAlign: "center",
-                  color: "#EC302E",
-                  fontWeight: "600",
-                }}
-              >
-                Çıkış Yap
-              </Text>
-            </TouchableOpacity>
-            {
-               currentPosition!==4 &&
-                <TouchableOpacity
-              onPress={()=>{
-              nextStep()
-              }}
-                style={{
-                  backgroundColor:'#EC302E',
-                  borderWidth:1,
-                  borderColor:'#EC302E',
-                  padding: 8,
-                  borderRadius: 8,
-                  width: "45%",
-                }}
-              
-              >
-                <Text
-                  style={{
-                    textAlign: "center",
-                    color: "white",
-                    fontWeight: "600",
-                  }}
-                >
-                  Sonraki Adım
-                </Text>
-              </TouchableOpacity>
-            }
-           
-            
-            {
-              currentPosition===4 &&
-              <TouchableOpacity
-              onPress={()=>{
-              
-              }}
-                style={{
-                  backgroundColor:'#EC302E',
-                  borderWidth:1,
-                  borderColor:'#EC302E',
-                  padding: 8,
-                  borderRadius: 8,
-                  width: "45%",
-                }}
-              
-              >
-                <Text
-                  style={{
-                    textAlign: "center",
-                    color: "white",
-                    fontWeight: "600",
-                  }}
-                >
-                  Atla
-                </Text>
-              </TouchableOpacity>
-            }
-         
-          </View> */}
         </SafeAreaView>
       )}
     </>

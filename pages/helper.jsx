@@ -297,3 +297,62 @@ export const areaData = [
   { label: "Yozgat (354)", value: 354 },
   { label: "Zonguldak (372)", value: 372 },
 ];
+export const workTimesItems = [
+  {
+    label: "Çalışma günleri bilgisi yok",
+    text: "Çalışma günleri gösterme",
+  },
+  {
+    label: "Sürekli açık",
+    text: "İşletmen her gün 24 saat açık",
+  },
+  {
+    label: "Belirli günler açık",
+    text: "Belirli çalışma günlerini girin",
+  },
+];
+export const workDays = [
+  {
+    label: "Çalışma saatleri bilgisi yok",
+    text: "Çalışma saatleri gösterme",
+  },
+  {
+    label: "Hafta İçi açık",
+    text: "İşletmen hafta içi günlerinde",
+  },
+  {
+    label: "Belirli saatlerde açık",
+    text: "Belirli çalışma saatlerini girin",
+  },
+];
+
+export const Days = [
+  {
+    day: "Pazartesi",
+    dayShort: "Pzt",
+  },
+  {
+    day: "Salı",
+    dayShort: "Sal",
+  },
+  {
+    day: "Çarşamba",
+    dayShort: "Çar",
+  },
+  {
+    day: "Perşembe",
+    dayShort: "Per",
+  },
+  {
+    day: "Cuma",
+    dayShort: "Cum",
+  },
+  {
+    day: "Cumartesi",
+    dayShort: "Cmt",
+  },
+  {
+    day: "Pazar",
+    dayShort: "Paz",
+  },
+];

@@ -115,6 +115,33 @@ const UpdateProfileImage = ({ nextStep, prevStep }) => {
       console.error("post isteği olmadı", error);
     }
   };
+  const SetStep = async () => {
+    const formData = new FormData();
+    try {
+      if (user?.access_token) {
+        // Gönderilecek JSON verisi
+        if (user.type == 1) {
+          formData.append("step", 2);
+        } else {
+          formData.append("step", 3);
+        }
+
+        const response = await axios.post(
+          `${apiUrl}set_first_register_step`,
+          formData, // JSON verisi doğrudan gönderiliyor
+          {
+            headers: {
+              Authorization: `Bearer ${user.access_token}`,
+              "Content-Type": "multipart/form-data", // Raw format için Content-Type
+            },
+          }
+        );
+        nextStep();
+      }
+    } catch (error) {
+      console.error("Post isteği başarısız dsfdsf", error);
+    }
+  };
   const UploadBannerHexCode = async () => {
     try {
       if (user?.access_token) {
@@ -134,12 +161,9 @@ const UpdateProfileImage = ({ nextStep, prevStep }) => {
             },
           }
         );
-
-     
+        SetStep();
       }
-    } catch (error) {
-    
-    }
+    } catch (error) {}
   };
   const [loading, setloading] = useState(false);
   const [namFromGetUser, setnamFromGetUser] = useState([]);
@@ -165,7 +189,7 @@ const UpdateProfileImage = ({ nextStep, prevStep }) => {
   useEffect(() => {
     GetUserInfo();
   }, [user]);
- console.log(user.access_token)
+
   return (
     <AlertNotificationRoot>
       <View
@@ -236,7 +260,6 @@ const UpdateProfileImage = ({ nextStep, prevStep }) => {
           useNativeLayout={false}
         />
       </View>
- 
 
       <Modal
         isVisible={choose}
@@ -317,7 +340,7 @@ const UpdateProfileImage = ({ nextStep, prevStep }) => {
         prevButtonPress={prevStep}
         PrevButtonDisabled={true}
         NextButtonDisabled={image && currentColor ? true : false}
-        step={ user.type==1? 2:1}
+        step={user.type == 1 ? 2 : 1}
         SendInfo={UploadBannerHexCode}
       />
     </AlertNotificationRoot>
