@@ -146,14 +146,14 @@ export const Forms = [
     maxlength: 9,
     showArea: true,
   },
-  {
-    key: "authority_licence",
-    label: "Yetki Belgesi No",
-    tab: [5],
-    isShow: "Emlak Ofisi",
-    type: "input",
-    maxlength: 7,
-  },
+  // {
+  //   key: "authority_licence",
+  //   label: "Yetki Belgesi No",
+  //   tab: [5],
+  //   isShow: "Emlak Ofisi",
+  //   type: "input",
+  //   maxlength: 7,
+  // },
 
   {
     key: "city_id",
@@ -180,7 +180,7 @@ export const Forms = [
     header: "Mağaza Adresi",
   },
   {
-    key: "neighborhood_id",
+    key: "address_explanation",
     label: "Açık Adres",
     tab: [5],
     type: "input",

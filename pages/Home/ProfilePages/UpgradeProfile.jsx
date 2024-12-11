@@ -111,6 +111,8 @@ export default function UpgradeProfile() {
   const [isVisible, setIsVisible] = useState(false);
   const [loadingUpdate, setloadingUpdate] = useState(false);
   const [phoneData, setPhoneData] = useState({});
+  const [emailChangeData, setEmailChangeData] = useState({});
+  const [personalChange, setPersonalChange] = useState({});
   const initialFormData = {
     name: "",
     mobile_phone: "",
@@ -172,11 +174,10 @@ export default function UpgradeProfile() {
               },
             }
           );
-          console.log("API Response:", response.data); // Gelen veriyi konsola yazdır
+
           setPhoneData(response?.data); // Gelen veriyi state'e aktar
           setLoading(false); // Yükleme tamam
         } catch (err) {
-          console.error("API Hatası:", err);
           setError("Bir hata oluştu");
           setLoading(false);
         }
@@ -184,6 +185,63 @@ export default function UpgradeProfile() {
     };
     if (user?.access_token) {
       fetchPhoneData(); // API'yi çağır
+    }
+  }, [user]);
+
+  useEffect(() => {
+    const personalChangeData = async () => {
+      if (user?.access_token) {
+        try {
+          const response = await axios.get(
+            "https://private.emlaksepette.com/api/kisisel-profil-degisikligi-kontrolu", // API URL
+            {
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${user?.access_token}`, // Bearer token
+              },
+            }
+          );
+          // console.log("API Response: budur", response.data);
+
+          // console.log(
+          //   "does_exist: true mi false mi gorcez",
+          //   response.data.does_exist
+          // );
+          setPersonalChange(response?.data?.does_exist); // Gelen veriyi state'e aktar
+        } catch (err) {
+          console.error("API Hatası:", err);
+          // setError("Bir hata oluştu");
+        }
+      }
+    };
+
+    if (user?.access_token) {
+      personalChangeData(); // API'yi çağır
+    }
+  }, [user]);
+
+  useEffect(() => {
+    const emailFetchData = async () => {
+      if (user?.access_token) {
+        try {
+          const res = await axios.get(`${apiUrl}e-posta-degisikligi-kontrolu`, {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${user?.access_token}`,
+            },
+          });
+
+          setEmailChangeData(res?.data);
+        } catch (err) {
+          // console.error("Hata Detayı:", err.message);
+        }
+        if (err.response) {
+          // console.error("Yanıt Hatası:", err.res.data);
+        }
+      }
+    };
+    if (user?.access_token) {
+      emailFetchData();
     }
   }, [user]);
 
@@ -375,7 +433,10 @@ export default function UpgradeProfile() {
   };
 
   const onChangeCity = (value) => {
+setSelectedCounty(null);
+setSelectedNeighborhood(null);
     setSelectedCity(value);
+
     setTimeout(() => {
       if (value) {
         fetchCounties(value);
@@ -423,11 +484,6 @@ export default function UpgradeProfile() {
         });
 
         setnamFromGetUser(userInfo?.data);
-
-        console.log(
-          "Kullanıcının Telefon Numarası:",
-          userInfo?.data?.new_mobile_phone
-        );
       }
     } catch (error) {
       console.error("Kullanıcı verileri güncellenirken hata oluştu:", error);
@@ -463,8 +519,6 @@ export default function UpgradeProfile() {
         email: namFromGetUser?.email || "",
         idNumber: namFromGetUser.idNumber || "",
         corporate_type: namFromGetUser.corporate_type || "",
-        tax_office_city: namFromGetUser.taxOfficeCity || "",
-        tax_office: namFromGetUser.taxOffice || "",
         vergi_kimlik_no: namFromGetUser.taxNumber || "",
         yetki_belgesi_no: namFromGetUser.authority_licence || "",
         address_explanation: namFromGetUser.address_explanation || "",
@@ -544,8 +598,6 @@ export default function UpgradeProfile() {
         return formattedTaxOfficePlace;
       case "corporate_type":
         return corporateType;
-      case "taxOfficeCity":
-        return uniqueCities;
       default:
         return [];
     }
@@ -589,7 +641,9 @@ export default function UpgradeProfile() {
           title: "Başarılı",
           textBody: response?.data?.message || "Profil başarıyla güncellendi.",
           button: "Tamam",
-          onHide: () => GetUserInfo(),
+          onHide: () => {
+            navigation.navigate("UpdateProfile");
+          }
         });
 
         console.debug("success", response.data);
@@ -634,6 +688,7 @@ export default function UpgradeProfile() {
       }
     }
   };
+
   const handleEmailUpdate = async (data) => {
     console.debug("E-posta güncelleme işlemi başlatıldı.");
 
@@ -724,8 +779,8 @@ export default function UpgradeProfile() {
   const handeStoreUpdate = async (data) => {
     data.append("commercial_title", formData.store_name);
     data.append("corporateType", formData.corporate_type);
-    data.append("tax_office_city", formData.tax_office_city);
-    data.append("tax_office", formData.tax_office);
+    data.append("tax_office_city", formData.taxOfficeCity);
+    data.append("tax_Office", formData.taxOffice);
     data.append("vergi_kimlik_no", formData.vergi_kimlik_no);
     data.append("yetki_belgesi_no", formData.yetki_belgesi_no);
     data.append("city", formData.city_id);
@@ -736,6 +791,8 @@ export default function UpgradeProfile() {
     data.append("latitude", formData.latitude);
     data.append("longitude", formData.longitude);
 
+
+console.log("district"  ,formData.county_id)
     try {
       const response = await axios.post(`${apiUrl}magaza-bilgileri`, data, {
         headers: {
@@ -987,10 +1044,27 @@ export default function UpgradeProfile() {
 
             <View style={{ width: "100%", alignItems: "center" }}>
               <View style={styles.mesg}>
-                {phoneData?.does_exist ? (
+                {tab == 2 && phoneData?.does_exist ? (
                   <View style={styles.messageBox}>
                     <Text style={styles.messageText}>
-                      Güncelleme işlemi yaptınız, onay bekliyorsunuz.
+                      Telefon Güncelleme işlemi yaptınız, onay bekliyorsunuz.
+                    </Text>
+                  </View>
+                ) : null}
+              </View>
+              <View style={styles.mesg}>
+                {tab == 0 && user.type == 2 && personalChange === true ? (
+                  <View style={styles.messageBox}>
+                    <Text style={styles.messageText}>
+                      Profilinizi Güncelleme işlemi yaptınız, onay
+                      bekliyorsunuz.
+                    </Text>
+                  </View>
+                ) : tab == 0 && user.type == 1 && personalChange === true ? (
+                  <View style={styles.messageBox}>
+                    <Text style={styles.messageText}>
+                      Kişisel Bilgilerinizi Güncelleme işlemi yaptınız, onay
+                      bekliyorsunuz.
                     </Text>
                   </View>
                 ) : null}
