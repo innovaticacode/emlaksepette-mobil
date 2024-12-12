@@ -66,7 +66,6 @@ export default function OrderDetails({ item }) {
         sethousingDetail(response?.data.housing);
         setOrderStatus(response?.data?.order_status);
         setOrderCompleted(response.data.is_order_completed);
-        console.log("---------->j", response.data);
         return setLoading(false);
       }
     } catch (error) {
