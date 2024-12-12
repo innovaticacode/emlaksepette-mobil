@@ -188,11 +188,11 @@ export default function Company() {
     }
   };
 
-const handleEpostaChange = (value) => {
-  // Türkçe karakterleri engelleyen regex
-  const filteredValue = sanitizeEmail(value);
-  seteposta(filteredValue);
-};
+  const handleEpostaChange = (value) => {
+    // Türkçe karakterleri engelleyen regex
+    const filteredValue = sanitizeEmail(value);
+    seteposta(filteredValue);
+  };
 
   const postData = async () => {
     setsuccesRegister(true);
@@ -759,7 +759,7 @@ const handleEpostaChange = (value) => {
                   },
                 ]}
                 value={eposta}
-                onChangeText={handleEpostaChange }
+                onChangeText={handleEpostaChange}
                 placeholder="E-Posta Adresi"
                 autoCapitalize="none" // İlk harfin büyük olmasını engeller
               />
@@ -1382,13 +1382,10 @@ const handleEpostaChange = (value) => {
             <View style={styles.container}>
               <TouchableOpacity
                 onPress={() =>
-                  handleCheckboxChange(
-                    checked,
-                    setChecked,
-                    modalVisible,
-                    setModalVisible,
-                    "kurumsal-uyelik-sozlesmesi"
-                  )
+                  Navigation.navigate("ShowContracts", {
+                    filePath:
+                      "https://private.emlaksepette.com/agreements/kurumsal-uyelik-sozlesmesi_11-12-24-03-12-14.docx",
+                  })
                 }
                 style={styles.checkboxContainer}
               >

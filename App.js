@@ -132,6 +132,7 @@ import * as SplashScreen from "expo-splash-screen"; // Import SplashScreen
 import { enableScreens } from "react-native-screens";
 import MapFilterRealtor from "./pages/Home/MapFilterRealtor";
 import * as Sentry from "@sentry/react-native";
+import ShowContracts from "./pages/Home/Login&Register/ShowContracts";
 
 enableScreens();
 
@@ -1554,6 +1555,13 @@ const StackScreenNavigator = () => {
                 component={FranchisePersonDetail}
                 options={() => ({
                   headerShown: false,
+                })}
+              />
+              <Stack.Screen
+                name="ShowContracts"
+                component={ShowContracts}
+                options={() => ({
+                  title: "sözleşme",
                 })}
               />
             </Stack.Navigator>
