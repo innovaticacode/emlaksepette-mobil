@@ -104,7 +104,7 @@ export default function UpgradeProfile() {
   const [user, setUser] = useState({});
   const [namFromGetUser, setnamFromGetUser] = useState({});
   const [currentColor, setCurrentColor] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [region, setRegion] = useState(null);
   const [selectedLocation, setSelectedLocation] = useState(null);
   const [areaCode, setareaCode] = useState(null);
@@ -149,13 +149,12 @@ export default function UpgradeProfile() {
   const fetchCorporateType = async () => {
     try {
       const response = await axios.get(`${apiUrl}get-corporate-types`);
-      if (response.data.success) {
-        const items = response.data.data.corporate_types.map((item) => ({
-          label: item, // Gelen stringi label olarak kullan
-          value: item, // Gelen stringi value olarak kullan
-        }));
-        setCorporateType(items); // Dönüştürülmüş veriyi kaydet
-      }
+
+      const items = response.data.corporate_types.map((item) => ({
+        label: item, // Gelen stringi label olarak kullan
+        value: item, // Gelen stringi value olarak kullan
+      }));
+      setCorporateType(items); // Dönüştürülmüş veriyi kaydet
     } catch (error) {
       console.error("Hata:", error);
     }
@@ -177,7 +176,7 @@ export default function UpgradeProfile() {
 
           setPhoneData(response?.data); // Gelen veriyi state'e aktar
           setLoading(false); // Yükleme tamam
-        } catch (err) {
+        } catch (error) {
           setError("Bir hata oluştu");
           setLoading(false);
         }
@@ -208,8 +207,8 @@ export default function UpgradeProfile() {
           //   response.data.does_exist
           // );
           setPersonalChange(response?.data?.does_exist); // Gelen veriyi state'e aktar
-        } catch (err) {
-          console.error("API Hatası:", err);
+        } catch (error) {
+          console.error("API Hatası:", error);
           // setError("Bir hata oluştu");
         }
       }
@@ -232,11 +231,11 @@ export default function UpgradeProfile() {
           });
 
           setEmailChangeData(res?.data);
-        } catch (err) {
+        } catch (error) {
           // console.error("Hata Detayı:", err.message);
-        }
-        if (err.response) {
-          // console.error("Yanıt Hatası:", err.res.data);
+          if (error?.response) {
+            // console.error("Yanıt Hatası:", err.res.data);
+          }
         }
       }
     };
@@ -426,17 +425,15 @@ export default function UpgradeProfile() {
       const response = await axios.get(`${apiUrl}neighborhoods/${value}`);
       setNeighborhoods(response.data.data); // Gelen mahalle verisini set et
 
-      setSelectedNeighborhood(null); // Seçili mahalleyi sıfırla
+      // Seçili mahalleyi sıfırla
     } catch (error) {
       console.error("Hata:", error);
     }
   };
 
   const onChangeCity = (value) => {
-setSelectedCounty(null);
-setSelectedNeighborhood(null);
     setSelectedCity(value);
-
+    setNeighborhoods([]);
     setTimeout(() => {
       if (value) {
         fetchCounties(value);
@@ -529,13 +526,12 @@ setSelectedNeighborhood(null);
       setCurrentColor(namFromGetUser.banner_hex_code);
       setareaCode(namFromGetUser.area_code);
       setImage(namFromGetUser?.profile_image);
-      setTimeout(() => {
-        onChangeCity(namFromGetUser.city_id);
-        onChangeCounty(namFromGetUser.county_id);
-        onChangeNeighborhood(namFromGetUser.neighborhood_id);
-        onchangeTaxOffice(namFromGetUser.taxOfficeCity);
-        setRegion(initialRegion);
-      }, 500);
+      onChangeCity(namFromGetUser?.city_id);
+      onChangeCounty(namFromGetUser?.county_id);
+      onChangeNeighborhood(namFromGetUser?.neighborhood_id);
+      onchangeTaxOffice(namFromGetUser.taxOfficeCity);
+
+      setRegion(initialRegion);
     }
   }, [namFromGetUser]);
   const formatIban = (text) => {
@@ -570,9 +566,9 @@ setSelectedNeighborhood(null);
 
   const handleInputChange = (key, value) => {
     setFormData({ ...formData, [key]: value });
-    if (key == "city_id") {
-      onChangeCity(key);
-    }
+    // if (key == "city_id") {
+    //   onChangeCity(key);
+    // }
   };
 
   const onColorChange = (color) => {
@@ -643,7 +639,7 @@ setSelectedNeighborhood(null);
           button: "Tamam",
           onHide: () => {
             navigation.navigate("UpdateProfile");
-          }
+          },
         });
 
         console.debug("success", response.data);
@@ -791,8 +787,7 @@ setSelectedNeighborhood(null);
     data.append("latitude", formData.latitude);
     data.append("longitude", formData.longitude);
 
-
-console.log("district"  ,formData.county_id)
+    console.log("district", formData.county_id);
     try {
       const response = await axios.post(`${apiUrl}magaza-bilgileri`, data, {
         headers: {
@@ -800,7 +795,7 @@ console.log("district"  ,formData.county_id)
           "Content-Type": "multipart/form-data",
         },
       });
-      console.debug("response", response.data);
+
       Dialog.show({
         type: ALERT_TYPE.SUCCESS,
         title: "Başarılı",
