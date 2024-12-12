@@ -1567,8 +1567,18 @@ const StackScreenNavigator = () => {
                   headerShown: false,
                 })}
               />
+              <Stack.Screen
+                name="PaymentSuccess"
+                component={PaymentSuccessScreen}
+                options={({ route }) => ({
+                  title: "Ödeme Başarılı",
+                  headerBackTitleVisible: false,
+                  headerStyle: {
+                    backgroundColor: "#ffffff",
+                  },
+                })}
+              />
             </Stack.Navigator>
-            {/* </NavigationContainer> */}
           </SheetProvider>
         </GestureHandlerRootView>
       </AlertNotificationRoot>
