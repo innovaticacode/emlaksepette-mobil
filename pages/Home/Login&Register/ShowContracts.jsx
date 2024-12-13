@@ -1,22 +1,24 @@
-import { View, Text } from "react-native";
-import React from "react";
-import WebView from "react-native-webview";
-import { useRoute } from "@react-navigation/native";
+import React, { useEffect, useState } from "react";
+import { View, StyleSheet, ActivityIndicator } from "react-native";
+import { WebView } from "react-native-webview";
 
 export default function ShowContracts() {
-  const route = useRoute();
-  const { filePath } = route.params;
   return (
-    <View style={{ flex: 1 }}>
+    <View style={styles.container}>
       <WebView
         originWhitelist={["*"]}
-        source={{
-          uri: `https://docs.google.com/gview?url=${encodeURIComponent(
-            filePath
-          )}&embedded=true`,
-        }}
-        style={{ flex: 1 }}
+        source={{ uri: "https://emlaksepette.com/sozlesmeler" }}
+        style={styles.webview}
       />
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  webview: {
+    flex: 1,
+  },
+});
