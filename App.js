@@ -128,6 +128,7 @@ import RealEstateLeague from "./pages/RealEstateLeague/RealEstateLeague";
 import TeamFilter from "./pages/Home/ProfilePageItem/TeamFilter/TeamFilter";
 import FranchisePersonDetail from "./pages/Home/FranchisePerson/FranchisePersonDetail/FranchisePersonDetail";
 import * as Linking from "expo-linking";
+import VerifyPhoneChange from "./pages/Home/Verify/VerifyPhoneChange/VerifyPhoneChange";
 import * as SplashScreen from "expo-splash-screen"; // Import SplashScreen
 import { enableScreens } from "react-native-screens";
 import MapFilterRealtor from "./pages/Home/MapFilterRealtor";
@@ -1554,6 +1555,18 @@ const StackScreenNavigator = () => {
                 component={FranchisePersonDetail}
                 options={() => ({
                   headerShown: false,
+                })}
+              />
+              <Stack.Screen
+                name="VerifyPhoneChange"
+                component={VerifyPhoneChange}
+                options={({ route }) => ({
+                  headerShown: false,
+                  gestureEnabled: false,
+                  headerBackTitleVisible: false,
+                  headerStyle: {
+                    backgroundColor: "#ffffff",
+                  },
                 })}
               />
             </Stack.Navigator>
