@@ -21,20 +21,13 @@ import UpdateShopInfo from "../../components/VerifyComponents/UpdateShopInfo";
 import SuccessRegistered from "../../components/VerifyComponents/SuccessRegistered";
 import UpdateAdress from "../../components/VerifyComponents/UpdateAdress";
 const labels = [
-  "Telefon Doğrulama",
   "Mağaza Profili Oluştur",
   "Adres Bilgisi",
   "Profil Fotoğrafı Güncelle",
   "Belgeler",
   "Başarılı",
 ];
-const labels2 = [
-  "Telefon Doğrulama",
-  "Adres Bilgisi",
-  "Profil Fotoğrafı Güncelle",
-
-  "Başarılı",
-];
+const labels2 = ["Adres Bilgisi", "Profil Fotoğrafı Güncelle", "Başarılı"];
 const customStyles = {
   stepIndicatorSize: 30,
   currentStepIndicatorSize: 40,
@@ -112,12 +105,10 @@ const VerifyScreen = () => {
     if (namFromGetUser.type == 1) {
       switch (currentPosition) {
         case 0:
-          return <Verification nextStep={nextStep} prevStep={prevStep} />;
-        case 1:
           return <UpdateProfileImage nextStep={nextStep} prevStep={prevStep} />;
-        case 2:
+        case 1:
           return <UpdateAdress nextStep={nextStep} prevStep={prevStep} />;
-        case 3:
+        case 2:
           return <SuccessRegistered nextStep={nextStep} prevStep={prevStep} />;
         default:
           return null;
@@ -125,17 +116,15 @@ const VerifyScreen = () => {
     } else {
       switch (currentPosition) {
         case 0:
-          return <Verification nextStep={nextStep} prevStep={prevStep} />;
-        case 1:
           return <UpdateShopInfo nextStep={nextStep} prevStep={prevStep} />;
 
-        case 2:
+        case 1:
           return <UpdateAdress nextStep={nextStep} prevStep={prevStep} />;
-        case 3:
+        case 2:
           return <UpdateProfileImage nextStep={nextStep} prevStep={prevStep} />;
-        case 4:
+        case 3:
           return <VerifyDocument nextStep={nextStep} prevStep={prevStep} />;
-        case 5:
+        case 4:
           return <SuccessRegistered nextStep={nextStep} prevStep={prevStep} />;
 
         default:
@@ -187,7 +176,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#FCFCFC",
-    paddingTop: 10,
+    paddingTop: 30,
   },
   content: {
     flex: 1,

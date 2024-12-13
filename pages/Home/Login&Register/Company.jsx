@@ -21,8 +21,9 @@ import { useNavigation } from "@react-navigation/native";
 import FontAwesome5Icon from "react-native-vector-icons/FontAwesome5";
 import { ActivityIndicator } from "react-native-paper";
 import { apiUrl } from "../../../components/methods/apiRequest";
-import { Dialog } from "react-native-alert-notification";
+import { ALERT_TYPE, Dialog } from "react-native-alert-notification";
 import { sanitizeEmail } from "../../../utils";
+import { areaData } from "../../helper";
 export default function Company() {
   const Navigation = useNavigation();
   const [selectedIndexRadio, setIndexRadio] = useState(0);
@@ -188,11 +189,11 @@ export default function Company() {
     }
   };
 
-const handleEpostaChange = (value) => {
-  // Türkçe karakterleri engelleyen regex
-  const filteredValue = sanitizeEmail(value);
-  seteposta(filteredValue);
-};
+  const handleEpostaChange = (value) => {
+    // Türkçe karakterleri engelleyen regex
+    const filteredValue = sanitizeEmail(value);
+    seteposta(filteredValue);
+  };
 
   const postData = async () => {
     setsuccesRegister(true);
@@ -265,14 +266,16 @@ const handleEpostaChange = (value) => {
     } catch (error) {
       // Handle error
       Dialog.show({
+        type: ALERT_TYPE.DANGER,
         title: "Hata",
-        description: error.response.data.message,
+        textBody: error?.response?.data?.errors?.email,
+        button: "Tamam",
         animationType: "fade",
       });
       scrollToTop();
-      if (error.response.data.errors.email) {
+      if (error?.response?.data?.errors?.email) {
         seterrorStatu(2);
-        seterrorMessage(error.response.data.errors.email);
+        seterrorMessage(error?.response?.data?.errors?.email);
         setTimeout(() => {
           seterrorStatu(0);
         }, 10000);
@@ -431,6 +434,13 @@ const handleEpostaChange = (value) => {
           seterrorStatu(0);
         }, 5000);
         break;
+      case selectedIndexRadio == 1 && !IdCardNo:
+        seterrorStatu(16);
+        seterrorMessage("Şahıs Şirketinde T.C Kimlik Numarası Zorunludur!");
+        setTimeout(() => {
+          seterrorStatu(0);
+        }, 5000);
+        break;
 
       default:
         postData();
@@ -539,91 +549,7 @@ const handleEpostaChange = (value) => {
   const chooseType = (title) => {
     setacccountType(title);
   };
-  const cityData = [
-    { label: "İstanbul Avrupa Yakası (212)", value: 212 },
-    { label: "İstanbul Anadolu Yakası (216)", value: 216 },
-    { label: "Adana (322)", value: 322 },
-    { label: "Adıyaman (416)", value: 416 },
-    { label: "Afyon (272)", value: 272 },
-    { label: "Ağrı (472)", value: 472 },
-    { label: "Aksaray (382)", value: 382 },
-    { label: "Amasya (358)", value: 358 },
-    { label: "Ankara (312)", value: 312 },
-    { label: "Antalya (242)", value: 242 },
-    { label: "Ardahan (478)", value: 478 },
-    { label: "Artvin (466)", value: 466 },
-    { label: "Aydın (256)", value: 256 },
-    { label: "Balıkesir (266)", value: 266 },
-    { label: "Bartın (378)", value: 378 },
-    { label: "Batman (488)", value: 488 },
-    { label: "Bayburt (458)", value: 458 },
-    { label: "Bilecik (228)", value: 228 },
-    { label: "Bingöl (426)", value: 426 },
-    { label: "Bitlis (434)", value: 434 },
-    { label: "Bolu (374)", value: 374 },
-    { label: "Burdur (248)", value: 248 },
-    { label: "Bursa (224)", value: 224 },
-    { label: "Çanakkale (286)", value: 286 },
-    { label: "Çankırı (376)", value: 376 },
-    { label: "Çorum (364)", value: 364 },
-    { label: "Denizli (258)", value: 258 },
-    { label: "Diyarbakır (412)", value: 412 },
-    { label: "Düzce (380)", value: 380 },
-    { label: "Edirne (284)", value: 284 },
-    { label: "Elazığ (424)", value: 424 },
-    { label: "Erzincan (446)", value: 446 },
-    { label: "Erzurum (442)", value: 442 },
-    { label: "Eskişehir (222)", value: 222 },
-    { label: "Gaziantep (342)", value: 342 },
-    { label: "Giresun (454)", value: 454 },
-    { label: "Gümüşhane (456)", value: 456 },
-    { label: "Hakkari (438)", value: 438 },
-    { label: "Hatay (326)", value: 326 },
-    { label: "Iğdır (476)", value: 476 },
-    { label: "Isparta (246)", value: 246 },
-    { label: "İçel (Mersin) (324)", value: 324 },
 
-    { label: "İzmir (232)", value: 232 },
-    { label: "Kahramanmaraş (344)", value: 344 },
-    { label: "Karabük (370)", value: 370 },
-    { label: "Karaman (338)", value: 338 },
-    { label: "Kars (474)", value: 474 },
-    { label: "Kastamonu (366)", value: 366 },
-    { label: "Kayseri (352)", value: 352 },
-    { label: "Kırıkkale (318)", value: 318 },
-    { label: "Kırklareli (288)", value: 288 },
-    { label: "Kırşehir (386)", value: 386 },
-    { label: "Kilis (348)", value: 348 },
-    { label: "Kocaeli (262)", value: 262 },
-    { label: "Konya (332)", value: 332 },
-    { label: "Kütahya (274)", value: 274 },
-    { label: "Malatya (422)", value: 422 },
-    { label: "Manisa (236)", value: 236 },
-    { label: "Mardin (482)", value: 482 },
-    { label: "Muğla (252)", value: 252 },
-    { label: "Muş (436)", value: 436 },
-    { label: "Nevşehir (384)", value: 384 },
-    { label: "Niğde (388)", value: 388 },
-    { label: "Ordu (452)", value: 452 },
-    { label: "Osmaniye (328)", value: 328 },
-    { label: "Rize (464)", value: 464 },
-    { label: "Sakarya (264)", value: 264 },
-    { label: "Samsun (362)", value: 362 },
-    { label: "Siirt (484)", value: 484 },
-    { label: "Sinop (368)", value: 368 },
-    { label: "Sivas (346)", value: 346 },
-    { label: "Şanlıurfa (414)", value: 414 },
-    { label: "Şırnak (486)", value: 486 },
-    { label: "Tekirdağ (282)", value: 282 },
-    { label: "Tokat (356)", value: 356 },
-    { label: "Trabzon (462)", value: 462 },
-    { label: "Tunceli (428)", value: 428 },
-    { label: "Uşak (276)", value: 276 },
-    { label: "Van (432)", value: 432 },
-    { label: "Yalova (226)", value: 226 },
-    { label: "Yozgat (354)", value: 354 },
-    { label: "Zonguldak (372)", value: 372 },
-  ];
   const formatNumber = (text) => {
     // Sadece rakamları filtrele
     let cleaned = text.replace(/[^0-9]/g, "");
@@ -759,7 +685,7 @@ const handleEpostaChange = (value) => {
                   },
                 ]}
                 value={eposta}
-                onChangeText={handleEpostaChange }
+                onChangeText={handleEpostaChange}
                 placeholder="E-Posta Adresi"
                 autoCapitalize="none" // İlk harfin büyük olmasını engeller
               />
@@ -955,16 +881,19 @@ const handleEpostaChange = (value) => {
                     </Text>
                     <RNPickerSelect
                       doneText="Tamam"
-                      value={IsConnectFranchaise}
+                      useNativeAndroidPickerStyle={true}
+                      value={String(IsConnectFranchaise)}
                       placeholder={{
                         label: "Seçiniz...",
                         value: null,
                       }}
                       style={pickerSelectStyles}
-                      onValueChange={(value) => setIsConnectFranchaise(value)}
+                      onValueChange={(value) =>
+                        setIsConnectFranchaise(Number(value))
+                      }
                       items={[
-                        { label: "Evet", value: 1 },
-                        { label: "Hayır", value: 0 },
+                        { label: "Evet", value: "1" },
+                        { label: "Hayır", value: "0" },
                       ]}
                     />
                     {errorStatu == 16 ? (
@@ -1116,7 +1045,7 @@ const handleEpostaChange = (value) => {
                     onValueChange={(value) => {
                       setcityCode(value);
                     }}
-                    items={cityData}
+                    items={areaData}
                   />
                 </View>
                 <View style={{ width: "70%" }}>
@@ -1358,26 +1287,37 @@ const handleEpostaChange = (value) => {
                 ""
               )}
             </View>
-
-            <View
-              style={{
-                gap: 5,
-              }}
-            >
-              <View style={{ paddingLeft: 5 }}>
-                <Text style={{ fontSize: 14, color: "black", fontWeight: 600 }}>
-                  TC Kimlik No
-                </Text>
+            {selectedIndexRadio == 1 && (
+              <View
+                style={{
+                  gap: 5,
+                }}
+              >
+                <View style={{ paddingLeft: 5 }}>
+                  <Text
+                    style={{ fontSize: 14, color: "black", fontWeight: 600 }}
+                  >
+                    TC Kimlik No
+                  </Text>
+                </View>
+                <TextInput
+                  value={IdCardNo}
+                  onChangeText={(value) => setIdCardNo(value)}
+                  style={styles.Input}
+                  placeholder="Tc Kimlik No"
+                  keyboardType="number-pad"
+                  maxLength={11}
+                />
+                {errorStatu == 16 ? (
+                  <Text style={{ fontSize: 12, color: "red" }}>
+                    {errorMessage}
+                  </Text>
+                ) : (
+                  ""
+                )}
               </View>
-              <TextInput
-                value={IdCardNo}
-                onChangeText={(value) => setIdCardNo(value)}
-                style={styles.Input}
-                placeholder="Tc Kimlik No"
-                keyboardType="number-pad"
-                maxLength={11}
-              />
-            </View>
+            )}
+
             {/* Contracts */}
             <View style={styles.container}>
               <TouchableOpacity
