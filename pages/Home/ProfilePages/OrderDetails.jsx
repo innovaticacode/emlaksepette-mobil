@@ -667,7 +667,6 @@ export default function OrderDetails({ item }) {
                 date={formattedDate}
               />
             )}
-            {/* this is probşem */}
             {orderStatus == "Alıcının Onayı Bekleniyor" && (
               <DepositStatusCard
                 titleColor={"#0E713D"}
