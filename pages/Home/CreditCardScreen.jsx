@@ -310,6 +310,7 @@ export default function CreditCardScreen({
                     }
                   }
                 }
+                setCreditCartData({ ...creditCartData, name: value });
               }}
             />
           </View>

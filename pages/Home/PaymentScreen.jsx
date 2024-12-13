@@ -85,6 +85,25 @@ export default function PaymentScreen() {
   // });
 
   const [user, setUser] = useState({});
+  const [payResponse, setPayResponse] = useState({
+    Ecom_Payment_Card_ExpDate_Month: 0,
+    Ecom_Payment_Card_ExpDate_Year: 0,
+    amount: 0,
+    callbackurl: "",
+    clientid: "",
+    currency: "",
+    failurl: "",
+    hash: "",
+    hashAlgorithm: "",
+    islemtipi: "",
+    lang: "",
+    oid: "",
+    okurl: "",
+    pan: "",
+    rnd: "",
+    storetype: "",
+    taksit: "",
+  });
 
   useEffect(() => {
     getValueFor("user", setUser);
@@ -326,9 +345,6 @@ export default function PaymentScreen() {
     // }
   };
 
-  useEffect(() => {
-    console.log("creditCartData", creditCartData);
-  }, [creditCartData]);
   {
     /** State Of Inputs **/
   }
@@ -349,7 +365,12 @@ export default function PaymentScreen() {
   const [pdfFile, setPdfFile] = useState(null);
   const [selectedPdfUrl, setselectedPdfUrl] = useState(null);
 
-  const [creditCartData, setCreditCartData] = useState({});
+  const [creditCartData, setCreditCartData] = useState({
+    credit_cart_number: "",
+    exp_month: "",
+    exp_year: "",
+    name: "",
+  });
 
   const pickDocument = async () => {
     DocumentPicker.getDocumentAsync({ type: "application/pdf" })
@@ -403,65 +424,88 @@ export default function PaymentScreen() {
     }
   };
 
-  // const formHtml = `
-  // ${console.log("creditCartData--------->", creditCartData)}
-  //   <html>
-  //     <body>
-  //       <form id="paymentForm" action="https://private.emlaksepette.com/api/pay-cart" method="POST">
-  //         <input type="hidden" name="name" value="${creditCartData.name}" />
-  //         <input type="hidden" name="creditcard" value="${
-  //           creditCartData.credit_cart_number
-  //         }" />
-  //         <input type="hidden" name="month" value="${
-  //           creditCartData.exp_month
-  //         }" />
-  //         <input type="hidden" name="year" value="${creditCartData.exp_year}" />
-  //         <input type="hidden" name="cvc" value="${creditCartData.cvc}" />
-  //         <input type="hidden" name="user_id" value="${user?.id}" />
-  //         <input type="hidden" name="payable_amount" value="${
-  //           route.params.deposit
-  //         }" />
-  //         <input type="submit" value="2" />
-  //       </form>
-  //       <script>
-  //         document.getElementById('paymentForm').submit();
-  //       </script>
-  //     </body>
-  //   </html>
-  // `;
-
   const formHtml = `
   <html>
-    <body onload="javascript:moveWindow()">
-        <form name="pay_form" method="post" action="https://entegrasyon.asseco-see.com.tr/fim/est3dgate">
+      <body onload="javascript:moveWindow()">
+          <form name="pay_form" method="post" action=${process.env.EXPO_PUBLIC_PAYMENT_URL}>
+              <input type="hidden" name="clientid" value="${payResponse?.clientid}"/>
+              <input type="hidden" name="callbackurl" value="${payResponse?.callbackurl}"/>
+              <input type="hidden" name="amount" value="${payResponse?.amount}"/>
+              <input type="hidden" name="Ecom_Payment_Card_ExpDate_Year" value="${payResponse?.Ecom_Payment_Card_ExpDate_Year}"/>
+              <input type="hidden" name="Ecom_Payment_Card_ExpDate_Month" value="${payResponse?.Ecom_Payment_Card_ExpDate_Month}"/>
+              <input type="hidden" name="currency" value="${payResponse?.currency}"/>
+              <input type="hidden" name="hashAlgorithm" value="${payResponse?.hashAlgorithm}"/>
+              <input type="hidden" name="hash" value="${payResponse?.hash}"/>
+              <input type="hidden" name="islemtipi" value="${payResponse?.islemtipi}"/>
+              <input type="hidden" name="lang" value="${payResponse?.lang}"/>
+              <input type="hidden" name="oid" value="${payResponse?.oid}"/>
+              <input type="hidden" name="okurl" value="${payResponse?.okurl}"/>
+              <input type="hidden" name="pan" value="${payResponse?.pan}"/>
+              <input type="hidden" name="rnd" value="${payResponse?.rnd}"/>
+              <input type="hidden" name="storetype" value="${payResponse?.storetype}"/>
+              <input type="hidden" name="taksit" value="${payResponse?.taksit}"/>
+              <input type="hidden" name="failurl" value="${payResponse?.failurl}"/>
+          </form>
+          <script type="text/javascript">
+              function moveWindow() {
+                document.pay_form.submit();
+              }
+          </script>
+      </body>
+    </html>`;
 
-            <input type="hidden" name="clientid" value="191126300"/>
-            <input type="hidden" name="callbackurl" value="https://private.emlaksepette.com/api/cart-payment-result-success"/>
-            <input type="hidden" name="amount" value="123"/>
-            <input type="hidden" name="Ecom_Payment_Card_ExpDate_Year" value="2026"/>
-            <input type="hidden" name="Ecom_Payment_Card_ExpDate_Month" value="4"/>
-            <input type="hidden" name="currency" value="949"/>
-            <input type="hidden" name="hashAlgorithm" value="ver3"/>
-            <input type="hidden" name="hash" value="rOYq/jEA12VFR4uXOdAHDbP3BS2xr93s7lLZV7BPtjiqMRpUxKDR+PV0EnwdLLjbQRs5fD+Vu+H04l05ok8bcg=="/>
-            <input type="hidden" name="islemtipi" value="Auth"/>
-            <input type="hidden" name="lang" value="tr"/>
-            <input type="hidden" name="oid" value="17b67f78-551e-4e08-96ae-a27509c4794c"/>
-            <input type="hidden" name="okurl" value="https://private.emlaksepette.com/api/cart-payment-result-success"/>
-            <input type="hidden" name="pan" value="4446 7631 2581 3623"/>
-            <input type="hidden" name="rnd" value="5"/>
-            <input type="hidden" name="storetype" value="3d_pay_hosting"/>
-            <input type="hidden" name="taksit" value=""/>
-            <input type="hidden" name="failurl" value="https://private.emlaksepette.com/api/cart-payment-result-fail"/>
-        </form>
-        
-        <script type="text/javascript" language="javascript">
-            function moveWindow() {
-              document.pay_form.submit();
-            }
-        </script>
-    </body>
-  </html>
-  `;
+  /**
+   * Sends a payment request to the server.
+   *
+   * This function collects payment-related data, including user information and credit card details,
+   * and sends it to the server for processing. If the payment is successful, a modal is displayed
+   * to inform the user.
+   *
+   * 3d security is shown in webview according to the returned response
+   *
+   * @async
+   * @function sendPaymentRequest
+   * @returns {Promise<Object>} The response data from the server if the payment is successful.
+   * @throws {Error} Throws an error if the payment request fails.
+   */
+
+  const sendPaymentRequest = async () => {
+    const paymentData = {
+      key: "order_key_app",
+      payable_amount: route.params.deposit,
+      is_show_user: true,
+      fullName: creditCartData.name,
+      email: ePosta,
+      phone: phoneNumber,
+      address: adress,
+      tc: IdNumber,
+      notes: notes,
+      creditcard: creditCartData.credit_cart_number,
+      month: creditCartData.exp_month,
+      year: creditCartData.exp_year,
+    };
+    const token = user?.access_token;
+    const headers = {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    };
+    try {
+      const response = await axios.post(apiUrl + "pay-cart", paymentData, {
+        headers,
+      });
+      console.log("Ödeme başarılı:", response);
+      if (response.status == 200) {
+        setPaymentModalShow(true);
+      }
+      return setPayResponse(response.data);
+    } catch (error) {
+      console.error(
+        "Ödeme işlemi sırasında hata:",
+        error.response?.data || error.message
+      );
+      throw error;
+    }
+  };
 
   const { height } = Dimensions.get("window");
 
@@ -624,51 +668,6 @@ export default function PaymentScreen() {
     }
   }, [housing]);
 
-  const sendPaymentRequest = async () => {
-    const paymentData = {
-      key: "order_key",
-      payable_amount: 123,
-      is_show_user: true,
-      fullName: "John Doe",
-      email: "john.doe@example.com",
-      phone: "+905555555555",
-      address: "123 Street Name, City, Country",
-      tc: "12345678901",
-      notes: "Bu bir not örneğidir.",
-      creditcard: "4446 7631 2581 3623",
-      month: 4,
-      year: 2026,
-    };
-
-    const token = user?.access_token;
-
-    const headers = {
-      Authorization: `Bearer ${token}`, // Bearer Token
-      "Content-Type": "application/json", // JSON formatında veri gönderimi
-    };
-
-    try {
-      const response = await axios.post(
-        apiUrl + "pay-cart", // Ödeme API URL'si
-        paymentData, // Gönderilecek JSON verisi
-        { headers } // Header ekle
-      );
-
-      console.log("Ödeme başarılı:", response.data);
-      if (response.data) {
-        setPaymentModalShow(true);
-      }
-
-      return response.data;
-    } catch (error) {
-      console.error(
-        "Ödeme işlemi sırasında hata:",
-        error.response?.data || error.message
-      );
-      throw error;
-    }
-  };
-
   return (
     <AlertNotificationRoot>
       <KeyboardAwareScrollView
@@ -692,15 +691,6 @@ export default function PaymentScreen() {
               automaticallyAdjustContentInsets={false}
               javaScriptEnabled={true} // JavaScript'i etkinleştir
               domStorageEnabled={true} // DOM depolamayı etkinleştir
-              // onNavigationStateChange={(navState) => {
-              //   if (navState.url.includes("success")) {
-              //     // Başarılı işlem sonucu yakalanır.
-              //     console.log("Ödeme başarılı!");
-              //   } else if (navState.url.includes("fail")) {
-              //     // Başarısız işlem sonucu yakalanır.
-              //     console.log("Ödeme başarısız.");
-              //   }
-              // }}
             />
           </View>
         </Modal>
