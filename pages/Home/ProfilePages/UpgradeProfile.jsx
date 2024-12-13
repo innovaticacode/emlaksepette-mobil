@@ -177,7 +177,7 @@ export default function UpgradeProfile() {
           setPhoneData(response?.data); // Gelen veriyi state'e aktar
           setLoading(false); // Yükleme tamam
         } catch (error) {
-          setError("Bir hata oluştu");
+          // setError("Bir hata oluştu");
           setLoading(false);
         }
       }
@@ -745,7 +745,6 @@ export default function UpgradeProfile() {
     } catch (error) {
       handleApiError(error);
     }
-
   };
 
   const handleApiError = (error) => {
@@ -1039,32 +1038,26 @@ export default function UpgradeProfile() {
             </View>
 
             <View style={{ width: "100%", alignItems: "center" }}>
-              <View style={styles.mesg}>
-                {tab == 2 && phoneData?.does_exist ? (
-                  <View style={styles.messageBox}>
-                    <Text style={styles.messageText}>
-                      Telefon Güncelleme işlemi yaptınız, onay bekliyorsunuz.
-                    </Text>
-                  </View>
-                ) : null}
-              </View>
-              <View style={styles.mesg}>
-                {tab == 0 && user.type == 2 && personalChange === true ? (
-                  <View style={styles.messageBox}>
-                    <Text style={styles.messageText}>
-                      Profilinizi Güncelleme işlemi yaptınız, onay
-                      bekliyorsunuz.
-                    </Text>
-                  </View>
-                ) : tab == 0 && user.type == 1 && personalChange === true ? (
-                  <View style={styles.messageBox}>
-                    <Text style={styles.messageText}>
-                      Kişisel Bilgilerinizi Güncelleme işlemi yaptınız, onay
-                      bekliyorsunuz.
-                    </Text>
-                  </View>
-                ) : null}
-              </View>
+              {tab == 0 && user.type == 2 && personalChange === true && (
+                <View style={styles.mesg}>
+                  {tab == 0 && user.type == 2 && personalChange === true ? (
+                    <View style={styles.messageBox}>
+                      <Text style={styles.messageText}>
+                        Profilinizi Güncelleme işlemi yaptınız, onay
+                        bekliyorsunuz.
+                      </Text>
+                    </View>
+                  ) : tab == 0 && user.type == 1 && personalChange === true ? (
+                    <View style={styles.messageBox}>
+                      <Text style={styles.messageText}>
+                        Kişisel Bilgilerinizi Güncelleme işlemi yaptınız, onay
+                        bekliyorsunuz.
+                      </Text>
+                    </View>
+                  ) : null}
+                </View>
+              )}
+
               <View style={{ width: "90%", gap: 25 }}>
                 {Forms.map((item, i) => {
                   if (
