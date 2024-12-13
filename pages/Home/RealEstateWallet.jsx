@@ -164,18 +164,41 @@ const RealEstateWallet = () => {
     }
   }, [user]);
 
+  const getStatusText = (item) => {
+    if (
+      item.status === "3" &&
+      item.should_payout == 1 &&
+      new Date(item.payout_date) > new Date()
+    ) {
+      return "Previzyon Bekliyor";
+    }
+    if (item.status === "3") {
+      return "Onay Bekliyor";
+    }
+    if (item.status === "2") {
+      return "Reddedilen";
+    }
+    if (item.status === "1") {
+      return "Onaylandı";
+    }
+    return "Bilinmiyor";
+  };
+
+  const getStatusStyle = (status) => {
+    if (status === "1") {
+      return { color: "#28a745" };
+    }
+    if (status === "3") {
+      return { color: "#ffc107" };
+    }
+    return { color: "#dc3545" };
+  };
+
   return (
     <AlertNotificationRoot>
       <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
         {loading ? (
-          <View
-            style={{
-              flex: 1,
-              justifyContent: "center",
-              alignItems: "center",
-              height: "100%",
-            }}
-          >
+          <View style={styles.loader}>
             <ActivityIndicator size="large" color="#333" />
           </View>
         ) : (
@@ -265,31 +288,17 @@ const RealEstateWallet = () => {
                     data={withDrawsList}
                     renderItem={({ item }) => (
                       <View style={styles.listBody}>
-                        <Text style={styles.listText}>
+                        <Text style={styles.listDate}>
                           {formatDate(item?.created_at)}
                         </Text>
-                        <Text style={styles.listText}>
-                          {item.status === "3" &&
-                          item.should_payout == 1 &&
-                          new Date(item?.payout_date) > new Date()
-                            ? "Previzyon Bekliyor"
-                            : item.status === "3"
-                            ? "Onay Bekliyor"
-                            : item.status === "2"
-                            ? "Reddedilen"
-                            : item.status === "1"
-                            ? "Onaylandı"
-                            : "Bilinmiyor"}
+                        <Text style={styles.listStatus}>
+                          {getStatusText(item)}
                         </Text>
 
                         <Text
                           style={[
-                            styles.listText,
-                            item?.status === "1"
-                              ? { color: "#28a745" }
-                              : item?.status === "3"
-                              ? { color: "#ffc107" }
-                              : { color: "#dc3545" },
+                            styles.listAmount,
+                            getStatusStyle(item?.status),
                           ]}
                         >
                           {formatedPrice(item?.amount)}
@@ -309,6 +318,12 @@ const RealEstateWallet = () => {
 };
 
 const styles = StyleSheet.create({
+  loader: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    height: "100%",
+  },
   container: {
     flex: 1,
     backgroundColor: "#f2f2f2",
@@ -492,6 +507,28 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: "#333",
     fontWeight: "500",
+    textAlign: "left",
+  },
+  listDate: {
+    fontSize: 14,
+    color: "#333",
+    fontWeight: "500",
+    flex: 1.5,
+    textAlign: "left",
+  },
+  listStatus: {
+    fontSize: 14,
+    color: "#333",
+    fontWeight: "500",
+    flex: 2,
+    textAlign: "left",
+  },
+  listAmount: {
+    fontSize: 14,
+    fontWeight: "500",
+    color: "#333",
+    flex: 1,
+    textAlign: "right",
   },
 });
 
