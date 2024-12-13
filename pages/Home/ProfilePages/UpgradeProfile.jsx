@@ -745,6 +745,7 @@ export default function UpgradeProfile() {
     } catch (error) {
       handleApiError(error);
     }
+
   };
 
   const handleApiError = (error) => {

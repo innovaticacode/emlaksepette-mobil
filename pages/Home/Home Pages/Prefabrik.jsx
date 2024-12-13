@@ -16,22 +16,25 @@ import PrefabrikBanner from "../../../src/assets/images/prefabrik.png";
 import { frontEndUriBase } from "../../../components/methods/apiRequest";
 import RealtorPost from "../../../components/Card/RealtorCard/RealtorPost";
 import { UsePaginatedData } from "../../../hooks";
+import { useSelector } from "react-redux";
 
 const Prefabrik = ({ index }) => {
   const navigation = useNavigation();
   const [loading, setLoading] = useState(false);
-
+  const banners = useSelector((state) => state?.banners?.banners);
   const apiData = [{ key: "step1_slug", value: "prefabrik-yapilar" }];
-  const { data, hooksLoading, error, loadMore, setSkip } = UsePaginatedData("real-estates", 10, apiData);
+  const { data, hooksLoading, error, loadMore, setSkip } = UsePaginatedData(
+    "real-estates",
+    10,
+    apiData
+  );
 
   useFocusEffect(
     useCallback(() => {
-      if (index == 5) {
-        setLoading(true);
-        loadMore();
-        setLoading(false);
+      if (index === 5 && data.length === 0) {
+        setSkip(0);
       }
-    }, [index])
+    }, [index, data.length])
   );
 
   const onRefresh = async () => {
@@ -44,48 +47,55 @@ const Prefabrik = ({ index }) => {
     if (!hooksLoading) return null;
     return (
       <View style={{ height: 100 }}>
-        <ActivityIndicator style={{ marginVertical: 16 }} size="small" color="#333" />
+        <ActivityIndicator
+          style={{ marginVertical: 16 }}
+          size="small"
+          color="#333"
+        />
       </View>
     );
   };
 
-  const renderItem = useMemo(() => ({ item }) => {
-    const housingTypeData = JSON.parse(item.housing_type_data);
-    const getColumnName = (columnNameKey) => {
-      return housingTypeData[columnNameKey] || "";
-    };
-    return (
-      <RealtorPost
-        openSharing={housingTypeData["open_sharing1"]}
-        HouseId={item.id}
-        price={`${housingTypeData["price"]} `}
-        housing={item}
-        title={item.housing_title}
-        loading={loading}
-        location={`${item.city_title} / ${item.county_title}`}
-        image={`${frontEndUriBase}housing_images/${housingTypeData?.image}`}
-        column1_additional={item.column1_additional}
-        column1_name={getColumnName(item.column1_name)}
-        column2_name={getColumnName(item.column2_name)}
-        column2_additional={item.column2_additional}
-        column3_name={getColumnName(item.column3_name)}
-        column3_additional={item.column3_additional}
-        column4_name={getColumnName(item.column4_name)}
-        column4_additional={item.column4_additional}
-        bookmarkStatus={true}
-        dailyRent={false}
-        isFavorite={item.is_favorite}
-      />
-    );
-  }, [loadMore, hooksLoading]);
-
+  const renderItem = useMemo(
+    () =>
+      ({ item }) => {
+        const housingTypeData = JSON.parse(item.housing_type_data);
+        const getColumnName = (columnNameKey) => {
+          return housingTypeData[columnNameKey] || "";
+        };
+        return (
+          <RealtorPost
+            openSharing={housingTypeData["open_sharing1"]}
+            HouseId={item.id}
+            price={`${housingTypeData["price"]} `}
+            housing={item}
+            title={item.housing_title}
+            loading={loading}
+            location={`${item.city_title} / ${item.county_title}`}
+            image={`${frontEndUriBase}housing_images/${housingTypeData?.image}`}
+            column1_additional={item.column1_additional}
+            column1_name={getColumnName(item.column1_name)}
+            column2_name={getColumnName(item.column2_name)}
+            column2_additional={item.column2_additional}
+            column3_name={getColumnName(item.column3_name)}
+            column3_additional={item.column3_additional}
+            column4_name={getColumnName(item.column4_name)}
+            column4_additional={item.column4_additional}
+            bookmarkStatus={true}
+            dailyRent={false}
+            isFavorite={item.is_favorite}
+          />
+        );
+      },
+    [loadMore, hooksLoading]
+  );
 
   const renderHeader = () => {
     return (
       <View>
         <View style={{ paddingHorizontal: 0 }}>
           <Image
-            source={PrefabrikBanner}
+            source={{ uri: banners?.prefabrik_yapilar }}
             style={{ width: "100%", height: 120 }}
             resizeMode="cover"
           />
@@ -123,21 +133,19 @@ const Prefabrik = ({ index }) => {
           </TouchableOpacity>
         </View>
       </View>
-    )
+    );
   };
   return (
     <>
-      {error && (
-        <>
-          <Text style={styles.errorText}>Bir şeyler ters gitti: {error}</Text>
-        </>
-      )}
-
       {loading ? (
         <View
           style={{ alignItems: "center", justifyContent: "center", flex: 1 }}
         >
           <ActivityIndicator size={"large"} color="#333" />
+        </View>
+      ) : error ? (
+        <View style={styles.errArea}>
+          <Text style={styles.errorText}>Bir şeyler ters gitti: {error}</Text>
         </View>
       ) : (
         <View style={styles.container}>
@@ -214,6 +222,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: "white",
     marginTop: 20,
+  },
+  errArea: {
+    alignItems: "center",
+    justifyContent: "center",
+    flex: 1,
   },
 });
 

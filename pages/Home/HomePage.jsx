@@ -19,10 +19,11 @@ import { ActivityIndicator } from "react-native-paper";
 import bannerSRC from "../../src/assets/images/project-banner.png";
 import { useNavigation } from "@react-navigation/native";
 import { apiUrl, frontEndUriBase } from "../../components/methods/apiRequest";
+import { useSelector } from "react-redux";
 
 const HomePage = (props) => {
   const { index } = props;
-
+  const banners = useSelector((state) => state?.banners?.banners);
   const navigation = useNavigation();
   // Fetch featured sliders
   const fetchFeaturedSliders = async () => {
@@ -101,7 +102,7 @@ const HomePage = (props) => {
             <ScrollView contentContainerStyle={styles.scrollViewContent}>
               <View>
                 <Image
-                  source={bannerSRC}
+                  source={{ uri: banners?.tum_projeler }}
                   alt="project"
                   style={styles.bannerImage}
                   resizeMode="cover"

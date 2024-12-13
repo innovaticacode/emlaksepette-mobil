@@ -43,22 +43,36 @@ export default function ProjectPost({
 
   return (
     <TouchableOpacity
-      onPress={() =>
-        navigation.navigate('Details',{ProjectId: ProjectNo})
-       
-      }
+      onPress={() => navigation.navigate("Details", { ProjectId: ProjectNo })}
     >
-      
       <View style={styles.container}>
-        {
-          userLogin.corporate_type ==='Emlak Ofisi' &&
-          <View style={{position:'absolute',right:0,height:'50%',zIndex:1,justifyContent:'flex-end'}}>
-          <View style={{backgroundColor:'white',padding:8,borderTopLeftRadius:40,borderBottomLeftRadius:40}}>
-            <Text style={{color:'#EA2C2E',fontSize:14,fontWeight:'700'}}>%{project.club_rate} KOMİSYON!</Text>
+        {userLogin.corporate_type === "Emlak Ofisi" && (
+          <View
+            style={{
+              position: "absolute",
+              left: 0,
+              height: "50%",
+              zIndex: 1,
+              justifyContent: "flex-end",
+            }}
+          >
+            <View
+              style={{
+                backgroundColor: "white",
+                padding: 8,
+                borderTopRightRadius: 40,
+                borderBottomRightRadius: 40,
+              }}
+            >
+              <Text
+                style={{ color: "#EA2C2E", fontSize: 14, fontWeight: "700" }}
+              >
+                %{project.club_rate} KOMİSYON!
+              </Text>
+            </View>
           </View>
-  </View>
-        }
-   
+        )}
+
         <Image
           source={{ uri: ımage }}
           style={styles.image}
@@ -68,14 +82,12 @@ export default function ProjectPost({
 
         {/* Logo ve Başlığı içeren alan */}
         <View style={styles.logoTitleContainer}>
-      
           <View
             style={[
               styles.titleContainer,
-              { backgroundColor: randomColor + "CC" },
+              { backgroundColor: randomColor + "e8" },
             ]}
           >
-          
             <View
               style={{
                 height: "40%",
@@ -129,11 +141,8 @@ const styles = StyleSheet.create({
     width: "40%",
     height: "100%",
     position: "absolute",
-    top: 0,
-    left: 0,
+
     right: 0,
-    bottom: 0,
-    padding: 0,
   },
   logoContainer: {
     width: 50,
@@ -152,7 +161,6 @@ const styles = StyleSheet.create({
     paddingVertical: 5,
     paddingHorizontal: 15,
     borderRadius: 5,
-    opacity: 0.8,
   },
   titleText: {
     color: "#FFFFFF",
