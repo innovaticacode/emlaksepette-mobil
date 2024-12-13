@@ -48,6 +48,7 @@ export default function OrderDetails({ item }) {
   const [rejectText, setRejectText] = useState("");
   const [rejectFile, setRejectFile] = useState(null);
   const [orderCompleted, setOrderCompleted] = useState(false);
+  const [storeID, setStoreID] = useState("");
 
   const fetchData = async () => {
     try {
@@ -60,12 +61,14 @@ export default function OrderDetails({ item }) {
             },
           }
         );
+        console.debug("response", response.data);
         setDetail(response?.data?.order);
         setRefund(response?.data?.order?.refund);
         setprojectDetail(response?.data.project);
         sethousingDetail(response?.data.housing);
         setOrderStatus(response?.data?.order_status);
         setOrderCompleted(response.data.is_order_completed);
+        setStoreID(response?.data?.order?.store_id);
         return setLoading(false);
       }
     } catch (error) {
@@ -664,7 +667,7 @@ export default function OrderDetails({ item }) {
                 date={formattedDate}
               />
             )}
-
+            {/* this is probşem */}
             {orderStatus == "Alıcının Onayı Bekleniyor" && (
               <DepositStatusCard
                 titleColor={"#0E713D"}
@@ -673,10 +676,12 @@ export default function OrderDetails({ item }) {
                 cardColor={"#BADECB"}
                 title={"Kaporanız Emlak Sepette ile Güvende"}
                 content={
-                  "Sipariş onayınız bekleniyor. 7 gün içerisinde sistem tarafından otomatik olarak onaylanacaktır."
+                  user?.id == storeID
+                    ? "Alıcının onayını bekliyorsunuz."
+                    : "Sipariş onayınız bekleniyor. 7 gün içerisinde sistem tarafından otomatik olarak onaylanacaktır."
                 }
                 date={formattedDate}
-                showButton={true}
+                showButton={user?.id == storeID ? false : true}
                 approveModal={approveModal}
                 setApproveModal={setApproveModal}
                 rejectModal={rejectModal}
