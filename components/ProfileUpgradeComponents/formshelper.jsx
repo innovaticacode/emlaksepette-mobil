@@ -10,10 +10,10 @@ export const Forms = [
   {
     key: "iban",
     label: "IBAN Numarası",
-    label2: "IBAN Numarası",
+
     tab: [0],
     type: "input",
-    isType: ["1"],
+    isType: ["2"],
   },
   {
     key: "idNumber",
