@@ -71,6 +71,15 @@ const RealEstateWallet = () => {
         headers: { Authorization: `Bearer ${user?.access_token}` },
       });
       setWallet(response?.data || {});
+      const withdraws = response?.data?.withdraws || [];
+      const deposits = response?.data?.deposits || [];
+      const combinedList = [...withdraws, ...deposits];
+      const sortedList = combinedList.sort((a, b) => {
+        const dateA = new Date(a?.created_at);
+        const dateB = new Date(b?.created_at);
+        return dateB - dateA; // Yeni işlemler önce gelir
+      });
+      setWithDrawsList(sortedList || []);
     } catch (error) {
       const errorMessage =
         error?.response?.data?.message ||
@@ -108,7 +117,7 @@ const RealEstateWallet = () => {
         { headers: { Authorization: `Bearer ${user?.access_token}` } }
       );
       fetchWallet();
-      handleWithDrawsList();
+      // handleWithDrawsList();
       setCustomAmount("");
       Dialog.show({
         type: ALERT_TYPE.SUCCESS,
@@ -139,7 +148,7 @@ const RealEstateWallet = () => {
       setWithDrawsList(sortedWithdraws || []);
     } catch (error) {
       Dialog.show({
-        type: ALERT_TYPE.ERROR,
+        type: ALERT_TYPE.WARNING,
         title: "Hata",
         textBody: "Listeleme başarısız oldu.",
       });
@@ -151,7 +160,7 @@ const RealEstateWallet = () => {
   useEffect(() => {
     if (user?.access_token) {
       fetchWallet();
-      handleWithDrawsList();
+      // handleWithDrawsList();
     }
   }, [user]);
 
@@ -260,7 +269,11 @@ const RealEstateWallet = () => {
                           {formatDate(item?.created_at)}
                         </Text>
                         <Text style={styles.listText}>
-                          {item.status === "3"
+                          {item.status === "3" &&
+                          item.should_payout == 1 &&
+                          new Date(item?.payout_date) > new Date()
+                            ? "Previzyon Bekliyor"
+                            : item.status === "3"
                             ? "Onay Bekliyor"
                             : item.status === "2"
                             ? "Reddedilen"
