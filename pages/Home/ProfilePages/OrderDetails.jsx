@@ -61,7 +61,6 @@ export default function OrderDetails({ item }) {
             },
           }
         );
-        console.debug("response", response.data);
         setDetail(response?.data?.order);
         setRefund(response?.data?.order?.refund);
         setprojectDetail(response?.data.project);
@@ -108,17 +107,17 @@ export default function OrderDetails({ item }) {
 
   const handleApprove = async () => {
     try {
-      const response = await axios.post(
-        `${apiUrl}order/approve/${OrderId}`,
-        {
+      console.log("orderId", OrderId);
+      const response = await axios.get(`${apiUrl}order/approve/${OrderId}`, {
+        params: {
           cart_order_id: OrderId,
         },
-        {
-          headers: {
-            Authorization: `Bearer ${user?.access_token}`,
-          },
-        }
-      );
+        headers: {
+          Authorization: `Bearer ${user?.access_token}`,
+          "Content-Type": "application/json",
+        },
+      });
+
       if (response?.data?.success) {
         await fetchData();
         setApproveModal(false);
