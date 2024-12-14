@@ -39,6 +39,7 @@ import {
 import AbsoluteErrorInput from "../../components/custom_inputs/AbsoluteErrorInput";
 import axios from "axios";
 import { getValueFor } from "../../components/methods/user";
+import Toast from "react-native-toast-message";
 export default function PaymentScreen() {
   // Kullanarak bu değerleri göstermek için devam edin
 
@@ -144,13 +145,20 @@ export default function PaymentScreen() {
 
   // payments başarılı olursa
   useEffect(() => {
-    function onConnect() {}
+    function onConnect() {
+      console.log("Socket connected!");
+    }
 
-    function onDisconnect() {}
+    function onDisconnect() {
+      console.log("Socket disconnected!");
+    }
 
     function paymentCheck(value) {
+      console.log("Payment result received:", value); // Gelen ödeme sonucu loglanır
       setPaymentModalShow(false);
-      if (value.status) {
+
+      if (value?.status) {
+        console.log("Payment successful, navigating to PaymentSuccess screen.");
         nav.navigate("PaymentSuccess", {
           title: "SİPARİŞ İÇİN TEŞEKKÜRLER!",
           message: "Siparişiniz başarıyla oluşturuldu.",
@@ -161,6 +169,7 @@ export default function PaymentScreen() {
           onGoHome: () => nav.navigate("Home"), // Ana sayfaya git
         });
       } else {
+        console.log("Payment failed, showing error toast.");
         Toast.show({
           type: ALERT_TYPE.DANGER,
           title: "Hata",
@@ -169,14 +178,17 @@ export default function PaymentScreen() {
       }
     }
 
-    socket.on("connect", onConnect);
-    socket.on("disconnect", onDisconnect);
-    socket.on("result_api_payment_cart", paymentCheck);
+    // Socket olayları
+    socket.on("connect", onConnect());
+    socket.on("disconnect", onDisconnect());
+    socket.on("result-api-payment-cart", paymentCheck());
 
+    // Temizlik
     return () => {
+      console.log("Cleaning up socket listeners.");
       socket.off("connect", onConnect);
       socket.off("disconnect", onDisconnect);
-      socket.off("result_api_payment_cart", paymentCheck);
+      socket.off("result-api-payment-cart", paymentCheck);
     };
   }, [nav]);
 
