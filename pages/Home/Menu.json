@@ -62,7 +62,7 @@
       },
       {
         "text": "Sattıklarım",
-        "key": "disabled_ShowCartOrders",
+        "key": "ShowCartOrders",
         "url": "Sell",
         "activePath": "/hesabim/sattiklarim"
       }

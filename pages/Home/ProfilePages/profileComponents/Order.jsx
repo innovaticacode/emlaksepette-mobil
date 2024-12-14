@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   View,
   Text,
@@ -267,7 +267,7 @@ export default function Order({ item }) {
             </View>
           )}
           <View>
-            {item.status == 1 && (
+            {item.is_sold == 1 && (
               <TouchableOpacity
                 style={{
                   borderWidth: 1,
