@@ -191,7 +191,7 @@ const UpdateProfileImage = ({ nextStep, prevStep }) => {
         };
 
         const response = await axios.post(
-          `https://private.emlaksepette.com/api/change-profile-value-by-column-name`,
+          `${apiUrl}change-profile-value-by-column-name`,
           payload, // JSON verisi doğrudan gönderiliyor
           {
             headers: {

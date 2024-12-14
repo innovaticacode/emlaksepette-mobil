@@ -315,14 +315,11 @@ export default function UpgradeProfile() {
     setLoading(true);
     try {
       if (user.access_token) {
-        const userInfo = await axios.get(
-          `https://private.emlaksepette.com/api/users/${user.id}`,
-          {
-            headers: {
-              Authorization: `Bearer ${user.access_token}`,
-            },
-          }
-        );
+        const userInfo = await axios.get(`${apiUrl}users/${user.id}`, {
+          headers: {
+            Authorization: `Bearer ${user.access_token}`,
+          },
+        });
 
         setnamFromGetUser(userInfo?.data?.user);
       }
