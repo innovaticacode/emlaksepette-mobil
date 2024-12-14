@@ -3,8 +3,9 @@ const screenHeight = Dimensions.get("screen").height;
 const actionSheetHeight = screenHeight * 0.71;
 export const styles = StyleSheet.create({
   container: {
-    width: "94%",
+    width: "100%",
     height: actionSheetHeight,
+    padding: 10,
   },
   header: {
     flexDirection: "row",

@@ -40,8 +40,17 @@ import Introduction from "./ProfilePageItem/Introduction/Introduction";
 import Filter from "../../assets/filter.png";
 import ProjectBottomSheetFilter from "../../components/ProjectBottomSheetFilter";
 import EstateBottomSheetFilter from "../../components/EstateBottomSheetFilter";
-import BecomingFranchise from "./ProfilePageItem/BecomingFranchise/BecomingFranchise";
+
 import BecomeConsultant from "./ProfilePageItem/BecomeConsultant/BecomeConsultant";
+import FranchiseForm from "../../components/BottomModals/FranchiseForm/FranchiseForm";
+import { BecomingFranchise } from "./ProfilePageItem/BecomingFranchise/BecomingFranchise";
+import {
+  BuilderOffice,
+  FranchiseTab,
+  RealEstateOfficeTab,
+  TourismAcent,
+  Uretici,
+} from "../helper";
 
 export default function Profile() {
   const route = useRoute();
@@ -76,50 +85,6 @@ export default function Profile() {
   const [checkImage, setCheckImage] = useState(null);
   const [color, setColor] = useState("#000000");
   const [corporateType, setCorporateType] = useState(null);
-
-  const items = [
-    {
-      text: "Tanıtım",
-      isShow: "All",
-    },
-    {
-      text: "Emlak İlanları",
-      isShow: "All",
-    },
-    {
-      text: "Proje İlanları",
-      isShow: "İnşaat Ofisi",
-    },
-    {
-      text: "Mağaza Profili",
-      isShow: "All",
-    },
-    {
-      text: "Satış Noktalarımız", // Koleksiyonlar yerine bu eklendi
-      isShow: "İnşaat Ofisi",
-    },
-    {
-      text: "Değerlendirmeler",
-      isShow: "All",
-    },
-    {
-      text:
-        // storeData?.data?.is_brand == 0 &&
-        //     storeData?.data?.brand_id !== null
-        storeData?.data?.is_brand == 1 || corporateType == "Emlak Ofisi"
-          ? "Danışmanlar"
-          : "Yönetim Ekibi",
-      isShow: "All",
-    },
-    {
-      text: "Franchise Ol",
-      isShow: "Franchise Markası",
-    },
-    {
-      text: "Danışman Ol",
-      isShow: "Franchise Markası",
-    },
-  ];
 
   useEffect(() => {
     getValueFor("user", setUser);
@@ -325,6 +290,358 @@ export default function Profile() {
     }
   }, [storeData]);
 
+  const renderFranchiseTab = () => {
+    return (
+      <ScrollView
+        ref={scrollViewRef} // Ref ekleniyor
+        onLayout={() => {
+          // Calculate the width of each tab dynamically
+          if (FranchiseTab.length > 0) {
+            const tabWidth = width / FranchiseTab.length;
+            setTabWidth(tabWidth);
+          }
+        }}
+        horizontal
+        style={{
+          paddingTop: 5,
+          marginBottom: 5,
+          marginLeft: 5,
+          marginRight: 5,
+        }}
+        showsHorizontalScrollIndicator={false}
+        nestedScrollEnabled={true}
+        contentContainerStyle={{ gap: 5 }}
+      >
+        {FranchiseTab.map((item, index) => (
+          <TouchableOpacity
+            key={index}
+            style={[
+              styles.TabBarBtn,
+              {
+                borderBottomWidth: tab === index ? 3 : 0,
+                borderBottomColor: tab === index ? "#EA2C2E" : "transparent",
+                top: 2,
+              },
+            ]}
+            onPress={() => settab(index)}
+          >
+            <Text
+              style={{
+                color: tab === index ? "#EA2C2E" : "grey",
+                fontWeight: tab === index ? "500" : "normal",
+              }}
+            >
+              {item.text}
+            </Text>
+          </TouchableOpacity>
+        ))}
+      </ScrollView>
+    );
+  };
+  const renderRealEstateOfficeTab = () => {
+    return (
+      <ScrollView
+        ref={scrollViewRef} // Ref ekleniyor
+        onLayout={() => {
+          // Calculate the width of each tab dynamically
+          if (RealEstateOfficeTab.length > 0) {
+            const tabWidth = width / RealEstateOfficeTab.length;
+            setTabWidth(tabWidth);
+          }
+        }}
+        horizontal
+        style={{
+          paddingTop: 5,
+          marginBottom: 5,
+          marginLeft: 5,
+          marginRight: 5,
+        }}
+        showsHorizontalScrollIndicator={false}
+        nestedScrollEnabled={true}
+        contentContainerStyle={{ gap: 5 }}
+      >
+        {RealEstateOfficeTab.map((item, index) => (
+          <TouchableOpacity
+            key={index}
+            style={[
+              styles.TabBarBtn,
+              {
+                borderBottomWidth: tab === index ? 3 : 0,
+                borderBottomColor: tab === index ? "#EA2C2E" : "transparent",
+                top: 2,
+              },
+            ]}
+            onPress={() => settab(index)}
+          >
+            <Text
+              style={{
+                color: tab === index ? "#EA2C2E" : "grey",
+                fontWeight: tab === index ? "500" : "normal",
+              }}
+            >
+              {item.text}
+            </Text>
+          </TouchableOpacity>
+        ))}
+      </ScrollView>
+    );
+  };
+  const renderBuilderOfficeTab = () => {
+    return (
+      <ScrollView
+        ref={scrollViewRef} // Ref ekleniyor
+        onLayout={() => {
+          // Calculate the width of each tab dynamically
+          if (BuilderOffice.length > 0) {
+            const tabWidth = width / BuilderOffice.length;
+            setTabWidth(tabWidth);
+          }
+        }}
+        horizontal
+        style={{
+          paddingTop: 5,
+          marginBottom: 5,
+          marginLeft: 5,
+          marginRight: 5,
+        }}
+        showsHorizontalScrollIndicator={false}
+        nestedScrollEnabled={true}
+        contentContainerStyle={{ gap: 5 }}
+      >
+        {BuilderOffice.map((item, index) => (
+          <TouchableOpacity
+            key={index}
+            style={[
+              styles.TabBarBtn,
+              {
+                borderBottomWidth: tab === index ? 3 : 0,
+                borderBottomColor: tab === index ? "#EA2C2E" : "transparent",
+                top: 2,
+              },
+            ]}
+            onPress={() => settab(index)}
+          >
+            <Text
+              style={{
+                color: tab === index ? "#EA2C2E" : "grey",
+                fontWeight: tab === index ? "500" : "normal",
+              }}
+            >
+              {item.text}
+            </Text>
+          </TouchableOpacity>
+        ))}
+      </ScrollView>
+    );
+  };
+  const renderUretici = () => {
+    return (
+      <ScrollView
+        ref={scrollViewRef} // Ref ekleniyor
+        onLayout={() => {
+          // Calculate the width of each tab dynamically
+          if (Uretici.length > 0) {
+            const tabWidth = width / Uretici.length;
+            setTabWidth(tabWidth);
+          }
+        }}
+        horizontal
+        style={{
+          paddingTop: 5,
+          marginBottom: 5,
+          marginLeft: 5,
+          marginRight: 5,
+        }}
+        showsHorizontalScrollIndicator={false}
+        nestedScrollEnabled={true}
+        contentContainerStyle={{ gap: 5 }}
+      >
+        {Uretici.map((item, index) => (
+          <TouchableOpacity
+            key={index}
+            style={[
+              styles.TabBarBtn,
+              {
+                borderBottomWidth: tab === index ? 3 : 0,
+                borderBottomColor: tab === index ? "#EA2C2E" : "transparent",
+                top: 2,
+              },
+            ]}
+            onPress={() => settab(index)}
+          >
+            <Text
+              style={{
+                color: tab === index ? "#EA2C2E" : "grey",
+                fontWeight: tab === index ? "500" : "normal",
+              }}
+            >
+              {item.text}
+            </Text>
+          </TouchableOpacity>
+        ))}
+      </ScrollView>
+    );
+  };
+  const renderTourismOfficeTab = () => {
+    return (
+      <ScrollView
+        ref={scrollViewRef} // Ref ekleniyor
+        onLayout={() => {
+          // Calculate the width of each tab dynamically
+          if (TourismAcent.length > 0) {
+            const tabWidth = width / TourismAcent.length;
+            setTabWidth(tabWidth);
+          }
+        }}
+        horizontal
+        style={{
+          paddingTop: 5,
+          marginBottom: 5,
+          marginLeft: 5,
+          marginRight: 5,
+        }}
+        showsHorizontalScrollIndicator={false}
+        nestedScrollEnabled={true}
+        contentContainerStyle={{ gap: 5 }}
+      >
+        {TourismAcent.map((item, index) => (
+          <TouchableOpacity
+            key={index}
+            style={[
+              styles.TabBarBtn,
+              {
+                borderBottomWidth: tab === index ? 3 : 0,
+                borderBottomColor: tab === index ? "#EA2C2E" : "transparent",
+                top: 2,
+              },
+            ]}
+            onPress={() => settab(index)}
+          >
+            <Text
+              style={{
+                color: tab === index ? "#EA2C2E" : "grey",
+                fontWeight: tab === index ? "500" : "normal",
+              }}
+            >
+              {item.text}
+            </Text>
+          </TouchableOpacity>
+        ))}
+      </ScrollView>
+    );
+  };
+  const renderFranchiseTabPages = () => {
+    return (
+      <>
+        {tab === 0 && <Introduction id={id} setTab={settab} />}
+        {tab === 1 && <RealtorAdverts housingdata={housingRecords} />}
+        {tab === 2 && <Text>Ofislermizi</Text>}
+        {tab === 3 && <Team team={teamm} type={corporateType} />}
+        {tab === 4 && <Team team={teamm} type={corporateType} />}
+        {tab === 5 && <Text>Birincilikler</Text>}
+      </>
+    );
+  };
+  const renderRealtorTabPages = () => {
+    return (
+      <>
+        {tab === 0 && <RealtorAdverts housingdata={housingRecords} />}
+        {tab === 1 && <Introduction id={id} setTab={settab} />}
+
+        {tab === 2 && <ShopInfo data={storeData} loading={loading} />}
+        {tab === 3 && <CommentsOfBrands id={id} />}
+        {tab === 4 && <Team team={teamm} type={corporateType} />}
+      </>
+    );
+  };
+  const renderTourismTabPages = () => {
+    return (
+      <>
+        {tab === 0 && <RealtorAdverts housingdata={housingRecords} />}
+        {tab === 1 && <Introduction id={id} setTab={settab} />}
+
+        {tab === 2 && <ShopInfo data={storeData} loading={loading} />}
+        {tab === 3 && <CommentsOfBrands id={id} />}
+        {tab === 4 && <Team team={teamm} type={corporateType} />}
+      </>
+    );
+  };
+  const renderBuilderPages = () => {
+    return (
+      <>
+        {tab === 0 && (
+          <ProjectAdverts
+            data={projectData}
+            isVisible={openProjectFilter}
+            setIsVisible={setOpenProjectFilter}
+            id={id}
+          />
+        )}
+        {tab === 1 && <RealtorAdverts housingdata={housingRecords} />}
+        {tab === 2 && <Introduction id={id} setTab={settab} />}
+        {tab === 3 && <SellPlacesForBrands data={storeData} />}
+        {tab === 4 && <ShopInfo data={storeData} loading={loading} />}
+
+        {tab === 5 && <CommentsOfBrands id={id} />}
+        {tab === 6 && <Team team={teamm} type={corporateType} />}
+      </>
+    );
+  };
+  const renderUreticiPages = () => {
+    return (
+      <>
+        {tab === 0 && (
+          <ProjectAdverts
+            data={projectData}
+            isVisible={openProjectFilter}
+            setIsVisible={setOpenProjectFilter}
+            id={id}
+          />
+        )}
+        {tab === 1 && <RealtorAdverts housingdata={housingRecords} />}
+        {tab === 2 && <Introduction id={id} setTab={settab} />}
+
+        {tab === 3 && <ShopInfo data={storeData} loading={loading} />}
+
+        {tab === 4 && <CommentsOfBrands id={id} />}
+        {tab === 5 && <Team team={teamm} type={corporateType} />}
+      </>
+    );
+  };
+  const rendertab = () => {
+    switch (true) {
+      case corporateType === "Emlak Ofisi" && storeData?.data?.is_brand == 1:
+        return renderFranchiseTab();
+
+      case corporateType === "Emlak Ofisi" && storeData?.data?.is_brand !== 1:
+        return renderRealEstateOfficeTab();
+      case corporateType === "İnşaat Ofisi":
+        return renderBuilderOfficeTab();
+      case corporateType === "Üretici":
+        return renderUretici();
+      case corporateType === "Turizm Amaçlı Kiralama":
+        return renderTourismOfficeTab();
+      default:
+        break;
+    }
+  };
+  const renderPages = () => {
+    switch (true) {
+      case corporateType === "Emlak Ofisi" && storeData?.data?.is_brand == 1:
+        return renderFranchiseTabPages();
+
+      case corporateType === "Emlak Ofisi" && storeData?.data?.is_brand !== 1:
+        return renderRealtorTabPages();
+      case corporateType === "İnşaat Ofisi":
+        return renderBuilderPages();
+      case corporateType === "Üretici":
+        return renderUreticiPages();
+      case corporateType === "Turizm Amaçlı Kiralama":
+        return renderTourismTabPages();
+      default:
+        break;
+    }
+  };
   return (
     <>
       {loadingShopping ? (
@@ -478,91 +795,9 @@ export default function Profile() {
               </View>
             </View>
 
-            <View>
-              <ScrollView
-                ref={scrollViewRef} // Ref ekleniyor
-                onLayout={() => {
-                  // Calculate the width of each tab dynamically
-                  if (items.length > 0) {
-                    const tabWidth = width / items.length;
-                    setTabWidth(tabWidth);
-                  }
-                }}
-                horizontal
-                style={{ paddingTop: 10, marginBottom: 10 }}
-                showsHorizontalScrollIndicator={false}
-                nestedScrollEnabled={true}
-              >
-                <View
-                  style={{
-                    flexDirection: "row",
-                    gap: 10,
-                    borderBottomWidth: 1,
-                    borderBottomColor: "#D7D7D7",
-                    paddingLeft: 15,
-                    paddingRight: 15,
-                  }}
-                >
-                  {items.map((item, index) => {
-                    // 'item.isShow' değerini kontrol ediyoruz
-                    if (
-                      item.isShow !== "All" &&
-                      item.isShow !== corporateType
-                    ) {
-                      return null; // 'isShow' değeri eşleşmezse, bu item'ı render etmiyoruz
-                    }
+            <View>{rendertab()}</View>
 
-                    return (
-                      <TouchableOpacity
-                        key={index}
-                        style={[
-                          styles.TabBarBtn,
-                          {
-                            borderBottomWidth: tab === index ? 3 : 0,
-                            borderBottomColor:
-                              tab === index ? "#EA2C2E" : "transparent",
-                            top: 2,
-                          },
-                        ]}
-                        onPress={() => settab(index)}
-                      >
-                        <Text
-                          style={{
-                            color: tab === index ? "#EA2C2E" : "grey",
-                            fontWeight: tab === index ? "500" : "normal",
-                          }}
-                        >
-                          {item.text === "Satış Noktalarımız" &&
-                          (storeData?.data?.corporate_type === "Emlak Ofisi" ||
-                            storeData?.data?.type === 1)
-                            ? null
-                            : item.text}
-                        </Text>
-                      </TouchableOpacity>
-                    );
-                  })}
-                </View>
-              </ScrollView>
-            </View>
-            <View style={{ flex: 1, paddingBottom: 60 }}>
-              {tab === 0 && <Introduction id={id} setTab={settab} />}
-              {tab === 1 && <RealtorAdverts housingdata={housingRecords} />}
-              {tab === 2 && (
-                <ProjectAdverts
-                  data={projectData}
-                  isVisible={openProjectFilter}
-                  setIsVisible={setOpenProjectFilter}
-                  id={id}
-                />
-              )}
-              {tab === 3 && <ShopInfo data={storeData} loading={loading} />}
-              {tab === 4 && <SellPlacesForBrands data={storeData} />}
-
-              {tab === 5 && <CommentsOfBrands id={id} />}
-              {tab === 6 && <Team team={teamm} type={corporateType} />}
-              {tab === 7 && <BecomingFranchise />}
-              {tab === 8 && <BecomeConsultant />}
-            </View>
+            <View style={{ flex: 1, paddingBottom: 60 }}>{renderPages()}</View>
           </View>
 
           <View>
@@ -598,55 +833,107 @@ export default function Profile() {
                   <Image source={Filter} style={{ width: 16, height: 16 }} />
                 </TouchableOpacity>
               )}
-
-              <TouchableOpacity
-                onPress={() => handleOpenPhone()}
-                style={{
-                  backgroundColor: "#ffffff",
-                  width: "45%",
-                  padding: 10,
-                  borderRadius: 5,
-                  borderWidth: 1,
-                  borderColor: "#EB2B2E",
-                  backgroundColor: "#EA2B2E",
-                }}
-              >
-                <Text
-                  style={{
-                    textAlign: "center",
-                    color: "#FFF",
-                    fontWeight: "700",
+              {corporateType == "Emlak Ofisi" &&
+              storeData?.data?.is_brand == 1 ? (
+                <TouchableOpacity
+                  onPress={() => {
+                    settab(8);
                   }}
-                >
-                  Ara
-                </Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity
-                style={{
-                  width: "40%",
-                  backgroundColor: "#EA2C2E",
-                  borderRadius: 5,
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-                onPress={() => {
-                  setloading(true);
-                  setFormVisible(true); // veya hangi işlevi çağırmak istiyorsanız
-                }} // Burada yükleme durumunu göstermek için geçici bir işlem
-              >
-                <Text
                   style={{
+                    backgroundColor: "#ffffff",
+                    width: "45%",
                     padding: 10,
-                    color: "white",
-                    fontWeight: "500",
-                    fontSize: 13,
-                    textAlign: "center",
+                    borderRadius: 5,
+                    borderWidth: 1,
+                    borderColor: "#EB2B2E",
+                    backgroundColor: "#EA2B2E",
                   }}
                 >
-                  Hemen Başvur
-                </Text>
-              </TouchableOpacity>
+                  <Text
+                    style={{
+                      textAlign: "center",
+                      color: "#FFF",
+                      fontWeight: "700",
+                    }}
+                  >
+                    Danışman Ol
+                  </Text>
+                </TouchableOpacity>
+              ) : (
+                <TouchableOpacity
+                  onPress={() => handleOpenPhone()}
+                  style={{
+                    backgroundColor: "#ffffff",
+                    width: "45%",
+                    padding: 10,
+                    borderRadius: 5,
+                    borderWidth: 1,
+                    borderColor: "#EB2B2E",
+                    backgroundColor: "#EA2B2E",
+                  }}
+                >
+                  <Text
+                    style={{
+                      textAlign: "center",
+                      color: "#FFF",
+                      fontWeight: "700",
+                    }}
+                  >
+                    Ara
+                  </Text>
+                </TouchableOpacity>
+              )}
+              {corporateType == "Emlak Ofisi" &&
+              storeData?.data?.is_brand == 1 ? (
+                <TouchableOpacity
+                  style={{
+                    width: "45%",
+                    backgroundColor: "#EA2C2E",
+                    borderRadius: 5,
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                  onPress={() => {
+                    settab(7);
+                  }}
+                >
+                  <Text
+                    style={{
+                      color: "white",
+                      fontWeight: "700",
+
+                      textAlign: "center",
+                    }}
+                  >
+                    Franchise Ol
+                  </Text>
+                </TouchableOpacity>
+              ) : (
+                <TouchableOpacity
+                  style={{
+                    width: "45%",
+                    backgroundColor: "#EA2C2E",
+                    borderRadius: 5,
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                  onPress={() => {
+                    setloading(true);
+                    setFormVisible(true); // veya hangi işlevi çağırmak istiyorsanız
+                  }} // Burada yükleme durumunu göstermek için geçici bir işlem
+                >
+                  <Text
+                    style={{
+                      color: "white",
+                      fontWeight: "700",
+
+                      textAlign: "center",
+                    }}
+                  >
+                    Hemen Başvur
+                  </Text>
+                </TouchableOpacity>
+              )}
             </View>
           </View>
           <Modal

@@ -356,3 +356,114 @@ export const Days = [
     dayShort: "Paz",
   },
 ];
+
+//Mağaza Profili Tabler
+
+export const FranchiseTab = [
+  {
+    text: "Biz Kimiz",
+  },
+  {
+    text: "İlanlarımız",
+  },
+  {
+    text: "Ofislerimiz",
+  },
+  {
+    text: "Danışmanlarımız",
+  },
+  {
+    text: "Yönetim Ekibi",
+  },
+  {
+    text: "Birincilikler",
+  },
+];
+export const RealEstateOfficeTab = [
+  {
+    text: "Emlak İlanlarımız",
+    tab: 0,
+  },
+  {
+    text: "Hakkımızda",
+    tab: 1,
+  },
+  {
+    text: "İletişim Bilgilerimiz",
+    tab: 2,
+  },
+  {
+    text: "Değerlendirmelirimiz",
+    tab: 3,
+  },
+  {
+    text: "Ekibimiz",
+    tab: 3,
+  },
+];
+export const BuilderOffice = [
+  {
+    text: "Proje İlanlarımız",
+  },
+  {
+    text: "Emlak İlanlarımız",
+  },
+  {
+    text: "Hakkımızda",
+  },
+  {
+    text: "Satış Noktalarımız",
+  },
+  {
+    text: "İletişim Bilgilerimiz",
+  },
+  {
+    text: "Değerlendirmelerimiz",
+  },
+  {
+    text: "Ekibimiz",
+  },
+];
+export const Uretici = [
+  {
+    text: "Toplu ilanlarımız",
+  },
+  {
+    text: "Tekli İlanlarımız",
+  },
+  {
+    text: "Hakkımızda",
+  },
+
+  {
+    text: "İletişim Bilgilerimiz",
+  },
+  {
+    text: "Değerlendirmelerimiz",
+  },
+  {
+    text: "Ekibimiz",
+  },
+];
+export const TourismAcent = [
+  {
+    text: "Günlük Kiralık İlanlarım",
+    tab: 0,
+  },
+  {
+    text: "Hakkımızda",
+    tab: 1,
+  },
+  {
+    text: "İletişim Bilgilerimiz",
+    tab: 2,
+  },
+  {
+    text: "Değerlendirmelirimiz",
+    tab: 3,
+  },
+  {
+    text: "Ekibimiz",
+    tab: 3,
+  },
+];

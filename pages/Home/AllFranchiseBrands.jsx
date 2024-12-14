@@ -6,11 +6,12 @@ import {
   Text,
   FlatList,
   StyleSheet,
+  TouchableOpacity,
 } from "react-native";
 import { apiUrl, frontEndUriBase } from "../../components/methods/apiRequest";
 import { useNavigation } from "@react-navigation/native";
-import Ionicons from '@expo/vector-icons/Ionicons';
-import MaterialIcons from '@expo/vector-icons/MaterialIcons';
+import Ionicons from "@expo/vector-icons/Ionicons";
+import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { WhiteOrRedButtons } from "../../components";
 
 const AllFranchiseBrands = () => {
@@ -30,8 +31,6 @@ const AllFranchiseBrands = () => {
     fetchBrands();
   }, []);
 
-
-
   return (
     <View style={styles.container}>
       <FlatList
@@ -42,9 +41,16 @@ const AllFranchiseBrands = () => {
         renderItem={({ item }) => (
           <>
             <View style={styles.area}>
-              <View style={styles.body}>
-                <View style={{ alignItems: 'center' }}>
-                  <Image source={{ uri: `${frontEndUriBase}/logos/${item.logo}` }}
+              <TouchableOpacity
+                style={styles.body}
+                activeOpacity={0.7}
+                onPress={() => {
+                  navigation.navigate("Profile", { id: item?.user_id });
+                }}
+              >
+                <View style={{ alignItems: "center" }}>
+                  <Image
+                    source={{ uri: `${frontEndUriBase}/logos/${item.logo}` }}
                     alt="brands"
                     resizeMode="contain"
                     style={styles.image}
@@ -55,15 +61,19 @@ const AllFranchiseBrands = () => {
                   <Text style={styles.title}>{item.title}</Text>
                   <View style={styles.infoArea}>
                     <Ionicons name="person" size={12} color="#000" />
-                    <Text style={styles.info}>{`${item?.consultants_count} Danışman`}</Text>
+                    <Text
+                      style={styles.info}
+                    >{`${item?.consultants_count} Danışman`}</Text>
                   </View>
                   <View style={styles.infoArea}>
                     <MaterialIcons name="home" size={12} color="#000" />
-                    <Text style={styles.info}>{`${item?.offices_count} Ofis`}</Text>
+                    <Text
+                      style={styles.info}
+                    >{`${item?.offices_count} Ofis`}</Text>
                   </View>
                   <WhiteOrRedButtons
-                    text={'Hemen İncele'}
-                    bgColor={'#EA2B2E'}
+                    text={"Hemen İncele"}
+                    bgColor={"#EA2B2E"}
                     onPress={() => {
                       navigation.navigate("Profile", {
                         id: item?.user_id,
@@ -71,8 +81,7 @@ const AllFranchiseBrands = () => {
                     }}
                   />
                 </View>
-
-              </View>
+              </TouchableOpacity>
             </View>
           </>
         )}
@@ -88,6 +97,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFF",
     flex: 1,
     paddingHorizontal: 10,
+    paddingBottom: 25,
   },
   area: {
     flex: 1,
@@ -126,14 +136,14 @@ const styles = StyleSheet.create({
     color: "#0C0C0C",
   },
   info: {
-    color: '#0C0C0C',
+    color: "#0C0C0C",
     fontSize: 10,
-    fontWeight: '400',
-    lineHeight: 12
+    fontWeight: "400",
+    lineHeight: 12,
   },
   infoArea: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6
-  }
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 6,
+  },
 });
