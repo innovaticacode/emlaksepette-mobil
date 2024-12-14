@@ -49,6 +49,7 @@ import {
   formatPhoneNumberNew,
 } from "../../../utils/FormatPhoneNumber";
 import { areaData } from "../../helper";
+import { checkFileSize } from "../../../utils";
 import ImageViewing from "react-native-image-viewing";
 import { CheckBox } from "react-native-elements";
 export default function UpgradeProfile() {
@@ -264,6 +265,25 @@ export default function UpgradeProfile() {
     });
 
     if (!result.canceled) {
+      const imageUri = result.assets[0].uri;
+
+      // Dosya boyutunu kontrol et
+      const isFileSizeValid = await checkFileSize(imageUri);
+      if (!isFileSizeValid) {
+        setchoose(false);
+        setTimeout(() => {
+          Dialog.show({
+            type: ALERT_TYPE.WARNING,
+            title: "Uyarı",
+            textBody: "Çektiğiniz fotoğraf 5 mb den yüksek olamaz",
+            button: "Tamam",
+            onHide: () => {
+              setchoose(true);
+            },
+          });
+        }, 800);
+        return;
+      }
       setImage(result.assets[0]); // Seçilen fotoğrafı state'e kaydediyoruz
       setchoose(false); // Modal'ı kapatıyoruz
     }
@@ -280,6 +300,25 @@ export default function UpgradeProfile() {
       console.log("Camera Result:", result);
 
       if (!result.canceled && result.assets && result.assets.length > 0) {
+      const imageUri = result.assets[0].uri;
+
+      // Dosya boyutunu kontrol et
+      const isFileSizeValid = await checkFileSize(imageUri);
+      if (!isFileSizeValid) {
+        setchoose(false);
+        setTimeout(() => {
+          Dialog.show({
+            type: ALERT_TYPE.WARNING,
+            title: "Uyarı",
+            textBody: "Çektiğiniz fotoğraf 5 mb den yüksek olamaz",
+            button: "Tamam",
+            onHide: () => {
+              setchoose(true);
+            },
+          });
+        }, 800);
+        return;
+      }
         const photo = result.assets[0];
         console.log("Selected Photo Details:", {
           uri: photo.uri,
@@ -465,22 +504,42 @@ export default function UpgradeProfile() {
     latitudeDelta: 0.05,
     longitudeDelta: 0.05,
   };
-
+  const initialFormData = {
+    name: "",
+    mobile_phone: "",
+    new_phone_number: "",
+    store_name: "",
+    username: "",
+    authority_licence: "",
+    iban: "",
+    website: "",
+    phone: "",
+    year: "",
+    city_id: "",
+    county_id: "",
+    neighborhood_id: "",
+    taxOfficeCity: "",
+    taxOffice: "",
+    taxNumber: "",
+    email: "",
+    idNumber: "",
+  };
   useEffect(() => {
     getValueFor("user", setUser);
   }, []);
+  const [formData, setFormData] = useState(initialFormData);
 
   const GetUserInfo = async () => {
     setLoading(true);
     try {
       if (user.access_token) {
-        const userInfo = await axios.get(`${apiUrl}user`, {
+        const userInfo = await axios.get(`${apiUrl}users/${user.id}`, {
           headers: {
             Authorization: `Bearer ${user.access_token}`,
           },
         });
 
-        setnamFromGetUser(userInfo?.data);
+        setnamFromGetUser(userInfo?.data?.user);
       }
     } catch (error) {
       console.error("Kullanıcı verileri güncellenirken hata oluştu:", error);
@@ -492,6 +551,7 @@ export default function UpgradeProfile() {
   useEffect(() => {
     // Eğer user bilgileri geldiyse, GetUserInfo fonksiyonunu çalıştır
     GetUserInfo();
+  }, [user]);
   }, [user]);
 
   useEffect(() => {
@@ -954,7 +1014,7 @@ export default function UpgradeProfile() {
                   </View>
                 </View>
 
-                {tab == 0 && (
+                {(tab == 0 || tab == 4) && (
                   <TouchableOpacity
                     onPress={() => {
                       setchoose(true);
@@ -1125,8 +1185,7 @@ export default function UpgradeProfile() {
                                   item.key === "iban" ||
                                   item.key === "phone" ||
                                   item.key === "taxNumber" ||
-                                  item.key === "idNumber" ||
-                                  item.key === "new_mobile_phone"
+                                  item.key === "idNumber"
                                     ? "number-pad"
                                     : "default"
                                 }

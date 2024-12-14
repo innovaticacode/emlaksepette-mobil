@@ -20,13 +20,15 @@ import { ActivityIndicator } from "react-native-paper";
 import Modal from "react-native-modal";
 import Icon3 from "react-native-vector-icons/MaterialIcons";
 import AwesomeAlert from "react-native-awesome-alerts";
-
+import * as FileSystem from "expo-file-system";
 import {
   ALERT_TYPE,
   AlertNotificationRoot,
   Dialog,
 } from "react-native-alert-notification";
 import AdsPictureList from "./AdsPictureList";
+import { checkFileSize } from "../../../utils";
+
 export default function UploadAdsPicture() {
   const [choose, setchoose] = useState(false);
   const [ımage, setImage] = useState(null);
@@ -49,9 +51,31 @@ export default function UploadAdsPicture() {
     });
 
     if (!result.canceled) {
-      setImage(result.assets[0]);
+      const imageUri = result.assets[0].uri;
+
+      // Dosya boyutunu kontrol et
+      const isFileSizeValid = await checkFileSize(imageUri);
+      if (!isFileSizeValid) {
+        setchoose(false);
+        setTimeout(() => {
+          Dialog.show({
+            type: ALERT_TYPE.WARNING,
+            title: "Uyarı",
+            textBody: "Seçtiğiniz fotoğraf 5 mb den yüksek olamaz",
+            button: "Tamam",
+            onHide: () => {
+              setchoose(true);
+            },
+          });
+        }, 800);
+
+        return;
+      }
+
+      // Eğer boyut geçerli ise resmi işle
+      setImage(result.assets[0]); // Resmi state'e kaydet
       console.log(result.assets[0]); // Seçilen resmin URI'si
-      setchoose(false);
+      setchoose(false); // Diğer işlemleri yap
     }
   };
 
@@ -71,6 +95,24 @@ export default function UploadAdsPicture() {
     });
 
     if (!result.canceled) {
+      const imageUri = result.assets[0].uri;
+
+      // Dosya boyutunu kontrol et
+      const isFileSizeValid = await checkFileSize(imageUri);
+      if (!isFileSizeValid) {
+        setTimeout(() => {
+          Dialog.show({
+            type: ALERT_TYPE.WARNING,
+            title: "Uyarı",
+            textBody: "Çektiğiniz fotoğraf 5 mb den yüksek olamaz",
+            button: "Tamam",
+            onHide: () => {
+              setchoose(true);
+            },
+          });
+        }, 800);
+        return;
+      }
       setImage(result.assets[0]);
       console.log(result.assets[0].uri); // Çekilen resmin URI'si
       setchoose(false);
@@ -182,13 +224,9 @@ export default function UploadAdsPicture() {
                       />
                     ) : (
                       <View style={styles.NonImageContent}>
-                        <View
-                          style={styles.addPictureContainer}
-                        >
+                        <View style={styles.addPictureContainer}>
                           <Icon name="plus" color={"#EA2C2E"} size={20} />
-                          <Text
-                            style={styles.adsPictureContainerText}
-                          >
+                          <Text style={styles.adsPictureContainerText}>
                             Reklam Görseli Ekle
                           </Text>
                         </View>
@@ -199,7 +237,12 @@ export default function UploadAdsPicture() {
                       <Text style={[styles.textInUploadBtn, { fontSize: 16 }]}>
                         Maximum Mağaza Görseli Sayısına Ulaştınız
                       </Text>
-                      <Text style={[styles.textInUploadBtn,{ fontSize: 13, textAlign: "center" ,}]}>
+                      <Text
+                        style={[
+                          styles.textInUploadBtn,
+                          { fontSize: 13, textAlign: "center" },
+                        ]}
+                      >
                         En fazla 4 adet banner ekleyebilirsiniz ekleyebilmek
                         için görseli silnizi
                       </Text>
@@ -228,11 +271,7 @@ export default function UploadAdsPicture() {
                         <ActivityIndicator color="white" />
                       </View>
                     ) : (
-                      <Text
-                        style={styles.UploadBtnText}
-                      >
-                        Ekle
-                      </Text>
+                      <Text style={styles.UploadBtnText}>Ekle</Text>
                     )}
                   </TouchableOpacity>
                 </View>
@@ -289,9 +328,7 @@ export default function UploadAdsPicture() {
           >
             <View style={[styles.modalContent2, { paddingBottom: 10 }]}>
               <View style={{ paddingTop: 10, alignItems: "center" }}>
-                <TouchableOpacity
-                  style={styles.modalTopBtn}
-                ></TouchableOpacity>
+                <TouchableOpacity style={styles.modalTopBtn}></TouchableOpacity>
               </View>
               <View style={{ padding: 20, gap: 35, marginBottom: 10 }}>
                 <TouchableOpacity
@@ -407,26 +444,26 @@ const styles = StyleSheet.create({
     paddingRight: 10,
     gap: 10,
   },
-  addPictureContainer:{
+  addPictureContainer: {
     flexDirection: "row",
     alignItems: "center",
     gap: 8,
   },
-  adsPictureContainerText:{
+  adsPictureContainerText: {
     fontSize: 14,
     color: "#EA2C2E",
     fontWeight: "600",
   },
-  UploadBtnText:{
+  UploadBtnText: {
     textAlign: "center",
     fontSize: 14,
     color: "white",
     fontWeight: "600",
   },
-  modalTopBtn:{
+  modalTopBtn: {
     width: "15%",
     backgroundColor: "#c2c4c6",
     padding: 4,
     borderRadius: 50,
-  }
+  },
 });

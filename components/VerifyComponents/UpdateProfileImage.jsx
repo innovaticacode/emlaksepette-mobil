@@ -22,6 +22,7 @@ import {
 } from "react-native-alert-notification";
 import axios from "axios";
 import NextAndPrevButton from "./NextAndPrevButton";
+import { checkFileSize } from "../../utils";
 const UpdateProfileImage = ({ nextStep, prevStep }) => {
   const [currentColor, setCurrentColor] = useState(null);
   const [choose, setchoose] = useState(false);
@@ -46,6 +47,25 @@ const UpdateProfileImage = ({ nextStep, prevStep }) => {
     });
 
     if (!result.canceled) {
+      const imageUri = result.assets[0].uri;
+
+      // Dosya boyutunu kontrol et
+      const isFileSizeValid = await checkFileSize(imageUri);
+      if (!isFileSizeValid) {
+        setchoose(false);
+        setTimeout(() => {
+          Dialog.show({
+            type: ALERT_TYPE.WARNING,
+            title: "Uyarı",
+            textBody: "Seçtiğiniz fotoğraf 5 mb den yüksek olamaz",
+            button: "Tamam",
+            onHide: () => {
+              setchoose(true);
+            },
+          });
+        }, 800);
+        return;
+      }
       setImage(result.assets[0]); // Seçilen fotoğrafı state'e kaydediyoruz
       UploadProfile(result.assets[0]);
       setchoose(false); // Modal'ı kapatıyoruz
@@ -60,6 +80,25 @@ const UpdateProfileImage = ({ nextStep, prevStep }) => {
     });
 
     if (!result.canceled) {
+      const imageUri = result.assets[0].uri;
+
+      // Dosya boyutunu kontrol et
+      const isFileSizeValid = await checkFileSize(imageUri);
+      if (!isFileSizeValid) {
+        setchoose(false);
+        setTimeout(() => {
+          Dialog.show({
+            type: ALERT_TYPE.WARNING,
+            title: "Uyarı",
+            textBody: "Çektiğiniz fotoğraf 5 mb den yüksek olamaz",
+            button: "Tamam",
+            onHide: () => {
+              setchoose(true);
+            },
+          });
+        }, 800);
+        return;
+      }
       setImage(result.assets[0]); // Çekilen fotoğrafı state'e kaydediyoruz
       UploadProfile(result.assets[0]);
       setchoose(false); // Modal'ı kapatıyoruz
@@ -152,7 +191,7 @@ const UpdateProfileImage = ({ nextStep, prevStep }) => {
         };
 
         const response = await axios.post(
-          `https://private.emlaksepette.com/api/change-profile-value-by-column-name`,
+          `${apiUrl}change-profile-value-by-column-name`,
           payload, // JSON verisi doğrudan gönderiliyor
           {
             headers: {
