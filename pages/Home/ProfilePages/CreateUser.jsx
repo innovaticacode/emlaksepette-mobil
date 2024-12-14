@@ -35,6 +35,7 @@ import { ActivityIndicator } from "react-native-paper";
 import CreateUserType from "./CreateUserType";
 import { parse } from "date-fns";
 import { apiUrl } from "../../../components/methods/apiRequest";
+import { checkFileSize } from "../../../utils";
 export default function CreateUser() {
   const route = useRoute();
   const navigation = useNavigation();
@@ -259,28 +260,27 @@ export default function CreateUser() {
     });
 
     if (!result.canceled) {
-      setImage(result.assets[0]); // Seçilen fotoğrafı state'e kaydediyoruz
-      setchoose(false); // Modal'ı kapatıyoruz
-      const ImageSize = result.assets[0].fileSize;
-      const fileSizeInMB = ImageSize / (1024 * 1024); // Byte'dan MB'ye çevir
+      const imageUri = result.assets[0].uri;
 
-      // Dosya boyutunu yukarı yuvarlayarak tam sayı olarak al
-      const roundedSizeInMB = Math.ceil(fileSizeInMB);
-      setfileSize(roundedSizeInMB);
-
-      if (fileSize > 2) {
+      // Dosya boyutunu kontrol et
+      const isFileSizeValid = await checkFileSize(imageUri);
+      if (!isFileSizeValid) {
+        setchoose(false);
         setTimeout(() => {
           Dialog.show({
             type: ALERT_TYPE.WARNING,
-            title: "Başarılı",
-            textBody: `Yüklemeye çalıştığınız dosya 2 MB'yi aşıyor. Lütfen boyutu 2 MB'den küçük bir dosya seçin.`,
+            title: "Uyarı",
+            textBody: "Seçtiğiniz fotoğraf 5 mb den yüksek olamaz",
             button: "Tamam",
             onHide: () => {
-              setImage(null);
+              setchoose(true);
             },
           });
-        }, 300);
+        }, 800);
+        return;
       }
+      setImage(result.assets[0]); // Seçilen fotoğrafı state'e kaydediyoruz
+      setchoose(false); // Modal'ı kapatıyoruz
     }
   };
 
@@ -292,28 +292,27 @@ export default function CreateUser() {
     });
 
     if (!result.canceled) {
-      setImage(result.assets[0]); // Çekilen fotoğrafı state'e kaydediyoruz
-      setchoose(false); // Modal'ı kapatıyoruz
+      const imageUri = result.assets[0].uri;
 
-      const ImageSize = result.assets[0].fileSize;
-      const fileSizeInMB = ImageSize / (1024 * 1024); // Byte'dan MB'ye çevir
-
-      // Dosya boyutunu yukarı yuvarlayarak tam sayı olarak al
-      const roundedSizeInMB = Math.ceil(fileSizeInMB);
-      setfileSize(roundedSizeInMB);
-      if (fileSize > 2) {
+      // Dosya boyutunu kontrol et
+      const isFileSizeValid = await checkFileSize(imageUri);
+      if (!isFileSizeValid) {
+        setchoose(false);
         setTimeout(() => {
           Dialog.show({
             type: ALERT_TYPE.WARNING,
             title: "Uyarı",
-            textBody: `Yüksek çözünürlüklü fotoğrafların boyutu 2 MB'yi aşabilir. Lütfen boyutu 2 MB'den küçük bir dosya seçin.`,
+            textBody: "Çektiğiniz fotoğraf 5 mb den yüksek olamaz",
             button: "Tamam",
             onHide: () => {
-              setImage(null);
+              setchoose(true);
             },
           });
-        }, 1000);
+        }, 800);
+        return;
       }
+      setImage(result.assets[0]); // Çekilen fotoğrafı state'e kaydediyoruz
+      setchoose(false); // Modal'ı kapatıyoruz
     }
   };
 

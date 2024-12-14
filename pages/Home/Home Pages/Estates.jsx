@@ -15,12 +15,13 @@ import Housing from "../../../src/assets/images/Konut.png";
 import { frontEndUriBase } from "../../../components/methods/apiRequest";
 import RealtorPost from "../../../components/Card/RealtorCard/RealtorPost";
 import { UsePaginatedData } from "../../../hooks";
+import { useSelector } from "react-redux";
 
 const Estates = ({ index }) => {
   const navigation = useNavigation();
   const [loading, setLoading] = useState(false);
   const apiData = [{ key: "step1_slug", value: "konut" }];
-
+  const banners = useSelector((state) => state?.banners?.banners);
   const { data, hooksLoading, error, loadMore, setSkip } = UsePaginatedData(
     "real-estates",
     10,
@@ -63,7 +64,10 @@ const Estates = ({ index }) => {
     return (
       <>
         <View style={{ paddingHorizontal: 0 }}>
-          <Image source={Housing} style={{ width: "100%", height: 120 }} />
+          <Image
+            source={{ uri: banners?.konut }}
+            style={{ width: "100%", height: 120 }}
+          />
         </View>
 
         <View style={styles.header}>

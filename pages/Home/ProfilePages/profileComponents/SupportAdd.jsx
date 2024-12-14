@@ -35,6 +35,7 @@ import { useNavigation } from "@react-navigation/native";
 import AwesomeAlert from "react-native-awesome-alerts";
 import FontAwesome5Icon from "react-native-vector-icons/FontAwesome5";
 import { apiUrl } from "../../../../components/methods/apiRequest";
+import { checkFileSize } from "../../../../utils";
 
 export default function SupportAdd() {
   const [name, setName] = useState("");
@@ -173,6 +174,25 @@ export default function SupportAdd() {
     });
 
     if (!result.canceled) {
+      const imageUri = result.assets[0].uri;
+
+      // Dosya boyutunu kontrol et
+      const isFileSizeValid = await checkFileSize(imageUri);
+      if (!isFileSizeValid) {
+        setchoose(false);
+        setTimeout(() => {
+          Dialog.show({
+            type: ALERT_TYPE.WARNING,
+            title: "Uyarı",
+            textBody: "Çektiğiniz fotoğraf 5 mb den yüksek olamaz",
+            button: "Tamam",
+            onHide: () => {
+              setchoose(true);
+            },
+          });
+        }, 800);
+        return;
+      }
       // Seçilen resmin uri'si ile ilgili form verisini güncelleme
       setImage([...image, result.assets[0]]);
       setchoose(false);
@@ -198,6 +218,25 @@ export default function SupportAdd() {
     });
 
     if (!result.canceled) {
+      const imageUri = result.assets[0].uri;
+
+      // Dosya boyutunu kontrol et
+      const isFileSizeValid = await checkFileSize(imageUri);
+      if (!isFileSizeValid) {
+        setchoose(false);
+        setTimeout(() => {
+          Dialog.show({
+            type: ALERT_TYPE.WARNING,
+            title: "Uyarı",
+            textBody: "Çektiğiniz fotoğraf 5 mb den yüksek olamaz",
+            button: "Tamam",
+            onHide: () => {
+              setchoose(true);
+            },
+          });
+        }, 800);
+        return;
+      }
       setImage([...image, result.assets[0]]);
       setchoose(false);
     }

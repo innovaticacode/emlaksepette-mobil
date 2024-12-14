@@ -26,6 +26,8 @@ import Modal from "react-native-modal";
 import { useNavigation } from "@react-navigation/native";
 import FirstHome from "./FirstHome";
 import { apiUrl } from "../../components/methods/apiRequest";
+import { useDispatch, useSelector } from "react-redux";
+import { setBanners } from "../../store/slices/Banner/BannerSlice";
 
 const { width, height } = Dimensions.get("window");
 
@@ -184,6 +186,25 @@ export default function HomePage2() {
     setIndex(index);
     settab(index);
   };
+  const dispatch = useDispatch();
+
+  const getBanners = async () => {
+    try {
+      const response = await axios.get(apiUrl + "get-banner-images");
+
+      dispatch(
+        setBanners({
+          banners: response.data,
+        })
+      );
+    } catch (error) {
+      console.log(error);
+    } finally {
+    }
+  };
+  React.useEffect(() => {
+    getBanners();
+  }, []);
 
   return (
     <SafeAreaView

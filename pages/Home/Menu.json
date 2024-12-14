@@ -62,7 +62,7 @@
       },
       {
         "text": "Sattıklarım",
-        "key": "disabled_ShowCartOrders",
+        "key": "ShowCartOrders",
         "url": "Sell",
         "activePath": "/hesabim/sattiklarim"
       }
@@ -189,19 +189,10 @@
     "id": "EditProfile",
     "label": "Hesabım & Yardım",
     "icon": "account-edit",
-    "text": "Profili Güncelle",
+    "text": "Hesabımı Yönet",
     "key": "EditProfile",
     "url": "UpdateProfile",
     "activePath": "/hesabim/profil/duzenleme"
-  },
-  {
-    "id": "ChangePassword",
-    "label": "Hesabım & Yardım",
-    "icon": "lock",
-    "text": "Şifreyi Değiştir",
-    "key": "ChangePassword",
-    "url": "ChangePas",
-    "activePath": "/hesabim/sifre/guncelleme"
   },
 
   {

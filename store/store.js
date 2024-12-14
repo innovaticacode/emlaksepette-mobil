@@ -3,6 +3,7 @@ import NotificationsSlice from "./slices/Notifications/NotificationsSlice";
 import MenuSlice from "./slices/Menu/MenuSlice";
 import FavoritesSlice from "./slices/Favorites/FavoritesSlice";
 import SummarySlice from "./slices/Summary/Summary";
+import BannerSlice from "./slices/Banner/BannerSlice";
 import FilterProjectSlice from "./slices/FilterProject/FilterProjectSlice";
 import BasketSlice from "./slices/Basket/BasketSlice";
 
@@ -29,6 +30,7 @@ export const store = configureStore({
     summary: SummarySlice,
     favorites: FavoritesSlice,
     mapFilters: FilterProjectSlice,
+    banners: BannerSlice,
     basket: BasketSlice,
   },
   middleware: (getDefaultMiddleware) =>

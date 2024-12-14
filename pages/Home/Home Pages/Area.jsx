@@ -16,10 +16,11 @@ import Land from "../../../src/assets/images/Arsa.png";
 import { frontEndUriBase } from "../../../components/methods/apiRequest";
 import RealtorPost from "../../../components/Card/RealtorCard/RealtorPost";
 import { UsePaginatedData } from "../../../hooks";
+import { useSelector } from "react-redux";
 
 const Area = ({ index }) => {
   const navigation = useNavigation();
-
+  const banners = useSelector((state) => state?.banners?.banners);
   const [loading, setLoading] = useState(false);
 
   const apiData = [{ key: "step1_slug", value: "arsa" }];
@@ -61,7 +62,7 @@ const Area = ({ index }) => {
       <>
         <View style={{ paddingHorizontal: 0 }}>
           <Image
-            source={Land}
+            source={{ uri: banners.arsa }}
             style={{
               width: "auto",
               height: 120,

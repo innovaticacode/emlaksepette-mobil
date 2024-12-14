@@ -16,6 +16,7 @@ import bannerSRC from "../../../src/assets/images/is_yeri.png";
 import { frontEndUriBase } from "../../../components/methods/apiRequest";
 import RealtorPost from "../../../components/Card/RealtorCard/RealtorPost";
 import { UsePaginatedData } from "../../../hooks";
+import { useSelector } from "react-redux";
 
 const Shop = ({ index }) => {
   const navigation = useNavigation();
@@ -26,7 +27,7 @@ const Shop = ({ index }) => {
     10,
     apiData
   );
-
+  const banners = useSelector((state) => state?.banners?.banners);
   useFocusEffect(
     useCallback(() => {
       if (index === 3 && data.length === 0) {
@@ -59,7 +60,7 @@ const Shop = ({ index }) => {
       <>
         <View style={{ marginBottom: 20 }}>
           <Image
-            source={bannerSRC}
+            source={{ uri: banners?.is_yeri }}
             style={{
               width: "auto",
               height: 120,

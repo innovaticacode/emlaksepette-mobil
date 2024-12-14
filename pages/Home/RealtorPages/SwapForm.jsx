@@ -35,6 +35,7 @@ import {
 } from "../../../components/methods/apiRequest";
 import mime from "mime";
 import { CheckBox } from "react-native-elements";
+import { checkFileSize } from "../../../utils";
 
 const HomeInfo = ({ ımage, user, No, price, title, type }) => {
   return (
@@ -604,6 +605,25 @@ export default function SwapForm({ openModal, color }) {
     console.log(result);
 
     if (!result.canceled) {
+      const imageUri = result.assets[0].uri;
+
+      // Dosya boyutunu kontrol et
+      const isFileSizeValid = await checkFileSize(imageUri);
+      if (!isFileSizeValid) {
+        setchoose(false);
+        setTimeout(() => {
+          Dialog.show({
+            type: ALERT_TYPE.WARNING,
+            title: "Uyarı",
+            textBody: "Seçtiğiniz fotoğraf 5 mb den yüksek olamaz",
+            button: "Tamam",
+            onHide: () => {
+              setchoose(true);
+            },
+          });
+        }, 800);
+        return;
+      }
       setImage(result.assets[0]);
       setchoose(false);
       setPdfFile(null);
@@ -632,6 +652,25 @@ export default function SwapForm({ openModal, color }) {
     console.log(result);
 
     if (!result.canceled) {
+      const imageUri = result.assets[0].uri;
+
+      // Dosya boyutunu kontrol et
+      const isFileSizeValid = await checkFileSize(imageUri);
+      if (!isFileSizeValid) {
+        setchoose(false);
+        setTimeout(() => {
+          Dialog.show({
+            type: ALERT_TYPE.WARNING,
+            title: "Uyarı",
+            textBody: "Çektiğiniz fotoğraf 5 mb den yüksek olamaz",
+            button: "Tamam",
+            onHide: () => {
+              setchoose(true);
+            },
+          });
+        }, 800);
+        return;
+      }
       setImage(result.assets[0]);
       setchoose(false);
       setPdfFile(null);
@@ -652,6 +691,25 @@ export default function SwapForm({ openModal, color }) {
       });
 
       if (!result.canceled) {
+        const imageUri = result?.assets[0]?.uri;
+
+        // Dosya boyutunu kontrol et
+        const isFileSizeValid = await checkFileSize(imageUri);
+        if (!isFileSizeValid) {
+          setchoose(false);
+          setTimeout(() => {
+            Dialog.show({
+              type: ALERT_TYPE.WARNING,
+              title: "Uyarı",
+              textBody: "Çektiğiniz fotoğraf 5 mb den yüksek olamaz",
+              button: "Tamam",
+              onHide: () => {
+                setchoose(true);
+              },
+            });
+          }, 800);
+          return;
+        }
         setPdfFile(result);
         setSelectedDocumentName(result.name);
         console.log("Seçilen PDF Dosyasının URI'si:", result.uri);

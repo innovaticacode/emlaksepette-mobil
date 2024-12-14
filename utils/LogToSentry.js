@@ -1,4 +1,5 @@
 import * as Sentry from "@sentry/react-native";
+import { Platform } from "react-native";
 
 export const LogToSentry = (error, context = {}) => {
   const defaultContext = {

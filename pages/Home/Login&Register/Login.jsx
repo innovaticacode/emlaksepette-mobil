@@ -70,8 +70,8 @@ export default function Login({ navigation }) {
   };
 
   const handleTextInputChange = (text) => {
- const filteredValue = sanitizeEmail(text);
-  setEmail(filteredValue);
+    const filteredValue = sanitizeEmail(text);
+    setEmail(filteredValue);
   };
 
   useEffect(() => {
@@ -91,13 +91,16 @@ export default function Login({ navigation }) {
             "PhoneVerify",
             JSON.stringify(res.data.phone_verification_status)
           );
-          // if (res.data.phone_verification_status==0) {
-          //   navigation.navigate('VerifyScreen')
-          // }
-          setUser(res.data); // Kullanıcı durumunu günceller
-          navigation.goBack(); // Modalı kapatır ve bir önceki sayfaya döner
-          dispatch(setShoppingProfile({ isShoppingProfile: false }));
-          navigation.replace("Drawer", { screen: "Home" });
+          if (res.data.phone_verification_status == 0) {
+            setUser(res.data); // Kullanıcı durumunu günceller
+            navigation.goBack();
+            navigation.navigate("PhoneVerify");
+          } else {
+            setUser(res.data); // Kullanıcı durumunu günceller
+            navigation.goBack(); // Modalı kapatır ve bir önceki sayfaya döner
+            dispatch(setShoppingProfile({ isShoppingProfile: false }));
+            navigation.replace("Drawer", { screen: "Home" });
+          }
         } else {
           // setshowMailSendAlert(true);
           setStatus(false);

@@ -16,11 +16,12 @@ import PrefabrikBanner from "../../../src/assets/images/prefabrik.png";
 import { frontEndUriBase } from "../../../components/methods/apiRequest";
 import RealtorPost from "../../../components/Card/RealtorCard/RealtorPost";
 import { UsePaginatedData } from "../../../hooks";
+import { useSelector } from "react-redux";
 
 const Prefabrik = ({ index }) => {
   const navigation = useNavigation();
   const [loading, setLoading] = useState(false);
-
+  const banners = useSelector((state) => state?.banners?.banners);
   const apiData = [{ key: "step1_slug", value: "prefabrik-yapilar" }];
   const { data, hooksLoading, error, loadMore, setSkip } = UsePaginatedData(
     "real-estates",
@@ -94,7 +95,7 @@ const Prefabrik = ({ index }) => {
       <View>
         <View style={{ paddingHorizontal: 0 }}>
           <Image
-            source={PrefabrikBanner}
+            source={{ uri: banners?.prefabrik_yapilar }}
             style={{ width: "100%", height: 120 }}
             resizeMode="cover"
           />

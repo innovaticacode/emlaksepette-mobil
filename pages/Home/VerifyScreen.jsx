@@ -9,15 +9,25 @@ import {
 } from "react-native";
 import StepIndicator from "react-native-step-indicator";
 import Verification from "./ProfilePages/Verification";
-import VerifyDocument from "./VerifyDocument";
+import VerifyDocument from "../../components/VerifyComponents/VerifyDocument";
 import { getValueFor } from "../../components/methods/user";
 import axios from "axios";
 import { useIsFocused, useNavigation } from "@react-navigation/native";
 import { ActivityIndicator } from "react-native-paper";
 import * as SecureStore from "expo-secure-store";
 import { apiUrl } from "../../components/methods/apiRequest";
-const labels = ["Telefon Doğrulama", "Belge Doğrulama"];
-const labels2 = ["Telefon Doğrulama"];
+import UpdateProfileImage from "../../components/VerifyComponents/UpdateProfileImage";
+import UpdateShopInfo from "../../components/VerifyComponents/UpdateShopInfo";
+import SuccessRegistered from "../../components/VerifyComponents/SuccessRegistered";
+import UpdateAdress from "../../components/VerifyComponents/UpdateAdress";
+const labels = [
+  "Mağaza Profili Oluştur",
+  "Adres Bilgisi",
+  "Profil Fotoğrafı Güncelle",
+  "Belgeler",
+  "Başarılı",
+];
+const labels2 = ["Adres Bilgisi", "Profil Fotoğrafı Güncelle", "Başarılı"];
 const customStyles = {
   stepIndicatorSize: 30,
   currentStepIndicatorSize: 40,
@@ -44,6 +54,7 @@ const customStyles = {
 
 const VerifyScreen = () => {
   const [currentPosition, setCurrentPosition] = useState(0);
+  const [visibleSteps, setVisibleSteps] = useState(3);
   const [verifyStatu, setverifyStatu] = useState(null);
   const [namFromGetUser, setnamFromGetUser] = useState({});
   const [user, setuser] = useState({});
@@ -52,6 +63,7 @@ const VerifyScreen = () => {
     getValueFor("PhoneVerify", setverifyStatu);
   }, []);
   const [loading, setloading] = useState(false);
+
   const GetUserInfo = async () => {
     setloading(true);
     try {
@@ -77,7 +89,7 @@ const VerifyScreen = () => {
 
   useEffect(() => {
     if (namFromGetUser.phone_verification_status == 1) {
-      setCurrentPosition(1);
+      setCurrentPosition(namFromGetUser?.first_register_step + 1);
     } else {
       setCurrentPosition(0);
     }
@@ -89,22 +101,32 @@ const VerifyScreen = () => {
   //   }
 
   // }, [currentPosition])
-  console.log(namFromGetUser.phone_verification_status + "telefodfdfn");
+
   const renderStepContent = () => {
     if (namFromGetUser.type == 1) {
       switch (currentPosition) {
         case 0:
-          return <Verification nextStep={nextStep} prevStep={prevStep} />;
-
+          return <UpdateProfileImage nextStep={nextStep} prevStep={prevStep} />;
+        case 1:
+          return <UpdateAdress nextStep={nextStep} prevStep={prevStep} />;
+        case 2:
+          return <SuccessRegistered nextStep={nextStep} prevStep={prevStep} />;
         default:
           return null;
       }
     } else {
       switch (currentPosition) {
         case 0:
-          return <Verification nextStep={nextStep} prevStep={prevStep} />;
+          return <UpdateShopInfo nextStep={nextStep} prevStep={prevStep} />;
+
         case 1:
+          return <UpdateAdress nextStep={nextStep} prevStep={prevStep} />;
+        case 2:
+          return <UpdateProfileImage nextStep={nextStep} prevStep={prevStep} />;
+        case 3:
           return <VerifyDocument nextStep={nextStep} prevStep={prevStep} />;
+        case 4:
+          return <SuccessRegistered nextStep={nextStep} prevStep={prevStep} />;
 
         default:
           return null;
@@ -193,7 +215,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#FCFCFC",
-    paddingTop: 10,
+    paddingTop: 30,
   },
   content: {
     flex: 1,

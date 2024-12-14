@@ -38,6 +38,7 @@ import Modal from "react-native-modal";
 import AwesomeAlert from "react-native-awesome-alerts";
 import ActionSheet from "react-native-actionsheet";
 import ImageViewing from "react-native-image-viewing";
+import { checkFileSize } from "../../utils";
 
 export default function AddComment() {
   const [data, setData] = useState({});
@@ -111,7 +112,23 @@ export default function AddComment() {
       return;
     }
 
-    if (!result.canceled && result.assets && result.assets.length > 0) {
+    if (!result?.canceled && result?.assets && result?.assets?.length > 0) {
+      const imageUri = result?.assets[0].uri;
+
+      // Dosya boyutunu kontrol et
+      const isFileSizeValid = await checkFileSize(imageUri);
+      if (!isFileSizeValid) {
+        setTimeout(() => {
+          Dialog.show({
+            type: ALERT_TYPE.WARNING,
+            title: "Uyarı",
+            textBody: "Seçtiğiniz fotoğraf 5 mb den yüksek olamaz",
+            button: "Tamam",
+            onHide: () => {},
+          });
+        }, 800);
+        return;
+      }
       const uri = result.assets[0].uri;
       const newImages = [...image];
 
@@ -450,7 +467,7 @@ export default function AddComment() {
                             onLongPress={() => showActionSheet(index)}
                             onPress={() => handleImagePress(index)}
                             style={[
-                              style.input,
+                              style.Input,
                               {
                                 width: 90,
                                 height: 90,
