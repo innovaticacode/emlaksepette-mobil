@@ -174,7 +174,7 @@ export const style = StyleSheet.create({
   },
   info: {
     flexDirection: "column",
-    width:'70%',
+    width: "70%",
     justifyContent: "flex-start",
     paddingHorizontal: 6,
     gap: 10,
@@ -239,6 +239,7 @@ export const style = StyleSheet.create({
     gap: 16,
     marginTop: 52,
   },
+  // start
   greenCardBody: {
     width: "100%",
     backgroundColor: "#DCF1E6",
@@ -311,5 +312,82 @@ export const style = StyleSheet.create({
     shadowOpacity: 0.62, // Gölgenin opaklığı
     shadowRadius: 3.84, // Gölge bulanıklık yarıçapı
     elevation: 5, // Android için gölge efekti
+  },
+  modalApprove: {
+    justifyContent: "center",
+    alignItems: "center",
+    margin: 0,
+  },
+  approveContainer: {
+    backgroundColor: "#f4f4f4",
+    padding: 20,
+    height: "auto",
+    borderRadius: 20,
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginHorizontal: 20,
+  },
+  headApprove: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    width: "100%",
+  },
+  approveTitle: {
+    textAlign: "center",
+    fontSize: 16,
+    fontWeight: "700",
+  },
+  approveContent: {
+    textAlign: "center",
+    fontSize: 14,
+    fontWeight: "bold",
+    marginBottom: 10,
+  },
+  approveInfo: {
+    textAlign: "center",
+    fontSize: 14,
+    fontWeight: "500",
+    marginBottom: 10,
+    color: "#ea2b2e",
+  },
+  approveBtn: {
+    backgroundColor: "#34BC79",
+    padding: 12,
+    borderRadius: 5,
+    marginTop: 10,
+  },
+  rejectInput: {
+    borderWidth: 1,
+    borderColor: "#e6e6e6",
+    borderRadius: 5,
+    padding: 10,
+  },
+  rejectBtnModal: {
+    backgroundColor: "#D9D9D9",
+    padding: 12,
+    borderRadius: 5,
+    marginTop: 10,
+  },
+  rejectFile: {
+    borderWidth: 1,
+    borderColor: "#e6e6e6",
+    borderRadius: 10,
+    padding: 10,
+    width: "30%",
+    justifyContent: "center",
+  },
+  fileTxt: {
+    textAlign: "center",
+    color: "#606060",
+    fontSize: 12,
+  },
+  rejectModalBody: {
+    backgroundColor: "#f4f4f4",
+    padding: 20,
+    height: "auto",
+    minHeight: "40%",
+    borderRadius: 20,
+    justifyContent: "space-between",
+    marginHorizontal: 20,
   },
 });

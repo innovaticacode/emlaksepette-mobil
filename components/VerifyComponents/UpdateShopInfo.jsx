@@ -192,20 +192,6 @@ export default function UpdateShopInfo({ nextStep, prevStep }) {
 
   const checkNextStep = () => {
     switch (true) {
-      case !website:
-        setcontrolForNextStep(true);
-        setTimeout(() => {
-          setmessage("Websitenizi daha sonra güncelleyebilirsiniz");
-        }, 100);
-        break;
-      case !selectedDate:
-        setcontrolForNextStep(true);
-        setTimeout(() => {
-          setmessage(
-            "Kaç Yıldır Sektördesiniz sorusunu daha sonrada güncelleyebilirsin"
-          );
-        }, 100);
-        break;
       case !workstyleDay || !selectedDays:
         setTimeout(() => {
           Dialog.show({

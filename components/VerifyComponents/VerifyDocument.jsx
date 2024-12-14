@@ -23,6 +23,7 @@ import {
   AlertNotificationRoot,
   Dialog,
 } from "react-native-alert-notification";
+import { checkFileSize } from "../../utils";
 export default function VerifyDocument({ nextStep, prevStep }) {
   const [FormDatas, setFormDatas] = useState({
     approve_website: null,
@@ -62,6 +63,25 @@ export default function VerifyDocument({ nextStep, prevStep }) {
 
     if (!result.canceled) {
       // Seçilen resmin uri'si ile ilgili form verisini güncelleme
+      const imageUri = result.assets[0].uri;
+
+      // Dosya boyutunu kontrol et
+      const isFileSizeValid = await checkFileSize(imageUri);
+      if (!isFileSizeValid) {
+        setchoose(false);
+        setTimeout(() => {
+          Dialog.show({
+            type: ALERT_TYPE.WARNING,
+            title: "Uyarı",
+            textBody: "Seçtiğiniz fotoğraf 5 mb den yüksek olamaz",
+            button: "Tamam",
+            onHide: () => {
+              setchoose(true);
+            },
+          });
+        }, 800);
+        return;
+      }
       setData(key, result.assets[0]);
       console.log("seçilen Dosya", key);
 
@@ -88,6 +108,25 @@ export default function VerifyDocument({ nextStep, prevStep }) {
     console.log(result);
 
     if (!result.canceled) {
+      const imageUri = result.assets[0].uri;
+
+      // Dosya boyutunu kontrol et
+      const isFileSizeValid = await checkFileSize(imageUri);
+      if (!isFileSizeValid) {
+        setchoose(false);
+        setTimeout(() => {
+          Dialog.show({
+            type: ALERT_TYPE.WARNING,
+            title: "Uyarı",
+            textBody: "Çektiğiniz fotoğraf 5 mb den yüksek olamaz",
+            button: "Tamam",
+            onHide: () => {
+              setchoose(true);
+            },
+          });
+        }, 800);
+        return;
+      }
       setData(key, result.assets[0]);
       setchoose(false);
       console.log("seçilen Dosya", key);
@@ -122,6 +161,25 @@ export default function VerifyDocument({ nextStep, prevStep }) {
         );
 
         if (!result.canceled && result.assets && result.assets.length > 0) {
+          const imageUri = result.assets[0].uri;
+
+          // Dosya boyutunu kontrol et
+          const isFileSizeValid = checkFileSize(imageUri);
+          if (!isFileSizeValid) {
+            setchoose(false);
+            setTimeout(() => {
+              Dialog.show({
+                type: ALERT_TYPE.WARNING,
+                title: "Uyarı",
+                textBody: "Seçtiğiniz dosya 5 mb den yüksek olamaz",
+                button: "Tamam",
+                onHide: () => {
+                  setchoose(true);
+                },
+              });
+            }, 800);
+            return;
+          }
           const pdfAsset = result.assets[0];
           setPdfFile(pdfAsset);
 

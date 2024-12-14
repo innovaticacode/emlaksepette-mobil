@@ -49,6 +49,7 @@ import {
   formatPhoneNumberNew,
 } from "../../../utils/FormatPhoneNumber";
 import { areaData } from "../../helper";
+import { checkFileSize } from "../../../utils";
 import ImageViewing from "react-native-image-viewing";
 import { CheckBox } from "react-native-elements";
 export default function UpgradeProfile() {
@@ -177,7 +178,7 @@ export default function UpgradeProfile() {
           setPhoneData(response?.data); // Gelen veriyi state'e aktar
           setLoading(false); // Yükleme tamam
         } catch (error) {
-          setError("Bir hata oluştu");
+          // setError("Bir hata oluştu");
           setLoading(false);
         }
       }
@@ -264,6 +265,25 @@ export default function UpgradeProfile() {
     });
 
     if (!result.canceled) {
+      const imageUri = result.assets[0].uri;
+
+      // Dosya boyutunu kontrol et
+      const isFileSizeValid = await checkFileSize(imageUri);
+      if (!isFileSizeValid) {
+        setchoose(false);
+        setTimeout(() => {
+          Dialog.show({
+            type: ALERT_TYPE.WARNING,
+            title: "Uyarı",
+            textBody: "Çektiğiniz fotoğraf 5 mb den yüksek olamaz",
+            button: "Tamam",
+            onHide: () => {
+              setchoose(true);
+            },
+          });
+        }, 800);
+        return;
+      }
       setImage(result.assets[0]); // Seçilen fotoğrafı state'e kaydediyoruz
       setchoose(false); // Modal'ı kapatıyoruz
     }
@@ -280,6 +300,25 @@ export default function UpgradeProfile() {
       console.log("Camera Result:", result);
 
       if (!result.canceled && result.assets && result.assets.length > 0) {
+        const imageUri = result.assets[0].uri;
+
+        // Dosya boyutunu kontrol et
+        const isFileSizeValid = await checkFileSize(imageUri);
+        if (!isFileSizeValid) {
+          setchoose(false);
+          setTimeout(() => {
+            Dialog.show({
+              type: ALERT_TYPE.WARNING,
+              title: "Uyarı",
+              textBody: "Çektiğiniz fotoğraf 5 mb den yüksek olamaz",
+              button: "Tamam",
+              onHide: () => {
+                setchoose(true);
+              },
+            });
+          }, 800);
+          return;
+        }
         const photo = result.assets[0];
         console.log("Selected Photo Details:", {
           uri: photo.uri,
@@ -474,13 +513,13 @@ export default function UpgradeProfile() {
     setLoading(true);
     try {
       if (user.access_token) {
-        const userInfo = await axios.get(`${apiUrl}user`, {
+        const userInfo = await axios.get(`${apiUrl}users/${user.id}`, {
           headers: {
             Authorization: `Bearer ${user.access_token}`,
           },
         });
 
-        setnamFromGetUser(userInfo?.data);
+        setnamFromGetUser(userInfo?.data?.user);
       }
     } catch (error) {
       console.error("Kullanıcı verileri güncellenirken hata oluştu:", error);
@@ -715,7 +754,6 @@ export default function UpgradeProfile() {
     const data = new FormData();
     data.append("mobile_phone", formData.mobile_phone);
     data.append("new_mobile_phone", formData.new_mobile_phone);
-    data.append("change_reason", formData.change_reason);
 
     if (file) {
       data.append("verify_document", {
@@ -745,7 +783,6 @@ export default function UpgradeProfile() {
     } catch (error) {
       handleApiError(error);
     }
-
   };
 
   const handleApiError = (error) => {
@@ -956,7 +993,7 @@ export default function UpgradeProfile() {
                   </View>
                 </View>
 
-                {tab == 0 && (
+                {(tab == 0 || tab == 4) && (
                   <TouchableOpacity
                     onPress={() => {
                       setchoose(true);
@@ -1039,32 +1076,26 @@ export default function UpgradeProfile() {
             </View>
 
             <View style={{ width: "100%", alignItems: "center" }}>
-              <View style={styles.mesg}>
-                {tab == 2 && phoneData?.does_exist ? (
-                  <View style={styles.messageBox}>
-                    <Text style={styles.messageText}>
-                      Telefon Güncelleme işlemi yaptınız, onay bekliyorsunuz.
-                    </Text>
-                  </View>
-                ) : null}
-              </View>
-              <View style={styles.mesg}>
-                {tab == 0 && user.type == 2 && personalChange === true ? (
-                  <View style={styles.messageBox}>
-                    <Text style={styles.messageText}>
-                      Profilinizi Güncelleme işlemi yaptınız, onay
-                      bekliyorsunuz.
-                    </Text>
-                  </View>
-                ) : tab == 0 && user.type == 1 && personalChange === true ? (
-                  <View style={styles.messageBox}>
-                    <Text style={styles.messageText}>
-                      Kişisel Bilgilerinizi Güncelleme işlemi yaptınız, onay
-                      bekliyorsunuz.
-                    </Text>
-                  </View>
-                ) : null}
-              </View>
+              {tab == 0 && user.type == 2 && personalChange === true && (
+                <View style={styles.mesg}>
+                  {tab == 0 && user.type == 2 && personalChange === true ? (
+                    <View style={styles.messageBox}>
+                      <Text style={styles.messageText}>
+                        Profilinizi Güncelleme işlemi yaptınız, onay
+                        bekliyorsunuz.
+                      </Text>
+                    </View>
+                  ) : tab == 0 && user.type == 1 && personalChange === true ? (
+                    <View style={styles.messageBox}>
+                      <Text style={styles.messageText}>
+                        Kişisel Bilgilerinizi Güncelleme işlemi yaptınız, onay
+                        bekliyorsunuz.
+                      </Text>
+                    </View>
+                  ) : null}
+                </View>
+              )}
+
               <View style={{ width: "90%", gap: 25 }}>
                 {Forms.map((item, i) => {
                   if (
@@ -1133,8 +1164,7 @@ export default function UpgradeProfile() {
                                   item.key === "iban" ||
                                   item.key === "phone" ||
                                   item.key === "taxNumber" ||
-                                  item.key === "idNumber" ||
-                                  item.key === "new_mobile_phone"
+                                  item.key === "idNumber"
                                     ? "number-pad"
                                     : "default"
                                 }
@@ -1223,182 +1253,6 @@ export default function UpgradeProfile() {
                     );
                   }
                 })}
-
-                {tab == 2 && (
-                  <>
-                    <View style={[styles.card, { gap: 10 }]}>
-                      <TouchableOpacity
-                        onPress={() => {
-                          setchooseFile(true);
-                        }}
-                      >
-                        <View
-                          style={{
-                            width: "100%",
-                            height: 150,
-                            borderWidth: 1,
-                            borderStyle: "dashed",
-                            borderColor: "#F27B7D",
-                            alignItems: "center",
-                            justifyContent: "center",
-                            borderRadius: 9,
-                          }}
-                        >
-                          {file && !isLoading ? (
-                            <View style={{ width: "100%", height: "100%" }}>
-                              <Image
-                                source={{ uri: file }}
-                                style={{ width: "100%", height: "100%" }}
-                                borderRadius={9}
-                              />
-                            </View>
-                          ) : (
-                            <View
-                              style={{
-                                alignItems: "center",
-                                backgroundColor: "#FDEAEA",
-                                width: "100%",
-                                height: "100%",
-                                justifyContent: "center",
-                              }}
-                            >
-                              <Feather
-                                name="cloud-upload-outline"
-                                size={60}
-                                color={"#EA2B2E"}
-                              />
-                              <Text style={{ color: "#EA2B2E", fontSize: 13 }}>
-                                Dosyanızı buraya yükleyiniz
-                              </Text>
-                            </View>
-                          )}
-                        </View>
-                      </TouchableOpacity>
-                      {isLoading && (
-                        <View style={{ width: "100%" }}>
-                          <Progress.Bar
-                            color="#FDEAEA"
-                            height={20}
-                            progress={progress}
-                            width={null}
-                            style={{ flex: 1 }}
-                            animated={true}
-                            indeterminate={false}
-                            indeterminateAnimationDuration={1000}
-                          />
-                          <View
-                            style={{
-                              position: "absolute",
-                              right: 10,
-                              justifyContent: "center",
-                              top: 3,
-                            }}
-                          >
-                            <View
-                              style={{
-                                flexDirection: "row",
-                                gap: 10,
-                                alignItems: "center",
-                                justifyContent: "space-between",
-                                width: "100%",
-                              }}
-                            >
-                              <View style={{ paddingLeft: 30 }}>
-                                <Text style={{ color: "#333", fontSize: 10 }}>
-                                  Belge Yükleniyor...
-                                </Text>
-                              </View>
-                              <View
-                                style={{
-                                  flexDirection: "row",
-                                  gap: 5,
-                                  alignItems: "center",
-                                }}
-                              >
-                                <Text
-                                  style={{
-                                    fontSize: 11,
-                                    color: "#333",
-                                    textAlign: "center",
-                                  }}
-                                >
-                                  {Math.round(progress * 100)}%
-                                </Text>
-                                <TouchableOpacity
-                                  style={{}}
-                                  hitSlop={{
-                                    top: 10,
-                                    bottom: 10,
-                                    left: 10,
-                                    right: 10,
-                                  }}
-                                >
-                                  <Icon name="close" size={17} color={"#333"} />
-                                </TouchableOpacity>
-                              </View>
-                            </View>
-                          </View>
-                        </View>
-                      )}
-                    </View>
-                    <Collapse onToggle={() => setopenAccor(!openAccor)}>
-                      <CollapseHeader>
-                        <View
-                          style={[
-                            styles.card,
-                            {
-                              padding: 0,
-                              flexDirection: "row",
-                              justifyContent: "space-between",
-                              paddingVertical: 10,
-                            },
-                          ]}
-                        >
-                          <Text style={{ color: "#333" }}>
-                            Yüklemeniz Gereken Belge Örneği
-                          </Text>
-                          <Arrow
-                            name={openAccor ? "arrow-down" : "arrow-right"}
-                            size={15}
-                            color={"grey"}
-                          />
-                        </View>
-                      </CollapseHeader>
-                      <CollapseBody style={{}}>
-                        <View
-                          style={[
-                            styles.card,
-                            {
-                              gap: 15,
-                              paddingHorizontal: 4,
-                              paddingVertical: 8,
-                              alignItems: "center",
-                            },
-                          ]}
-                        >
-                          <TouchableOpacity
-                            onPress={() => setIsImageVisible(true)}
-                          >
-                            <View style={{ width: 250, height: 200 }}>
-                              <Image
-                                source={{
-                                  uri: `${frontEndUriBase}images/phone-update-image/phonefile.jpg`,
-                                }}
-                                style={{ width: "100%", height: "100%" }}
-                              />
-                            </View>
-                          </TouchableOpacity>
-                        </View>
-                      </CollapseBody>
-                    </Collapse>
-                    <ImageView
-                      images={images}
-                      imageIndex={0}
-                      visible={isImageVisible}
-                      onRequestClose={() => setIsImageVisible(false)}
-                    />
-                  </>
-                )}
               </View>
             </View>
             {tab == 5 && (

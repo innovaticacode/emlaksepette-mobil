@@ -10,10 +10,10 @@ export const Forms = [
   {
     key: "iban",
     label: "IBAN Numarası",
-    label2: "IBAN Numarası",
+
     tab: [0],
     type: "input",
-    isType: ["1"],
+    isType: ["2"],
   },
   {
     key: "idNumber",
@@ -80,15 +80,7 @@ export const Forms = [
     placeholder: "5********",
     maxlength: 15,
   },
-  {
-    key: "change_reason",
-    label: "Değiştirme Sebebi",
-    label2: "Değiştirme Sebebi",
-    tab: [2],
-    type: "input",
-    maxlength: 50,
-    multinine: true,
-  },
+
   { key: "year", label: "Kaç Yıldır Sektördesiniz", tab: 2, type: "input" },
 
   { key: "password", label: "Mevcut Şifre", tab: [3], type: "input" },

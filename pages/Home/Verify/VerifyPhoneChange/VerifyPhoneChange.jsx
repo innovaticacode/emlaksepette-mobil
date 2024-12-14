@@ -44,15 +44,14 @@ const VerifyPhoneChange = ({ route }) => {
     } else if (seconds === 0) {
       clearInterval(interval);
       setIsActive(false);
-     Dialog.show({
+      Dialog.show({
         type: ALERT_TYPE.DANGER,
-          title: "Başarısız",
-          textBody: "Zaman aşımına uğradı",
-          button: "Tamam",
-          onHide: () => {
+        title: "Başarısız",
+        textBody: "Zaman aşımına uğradı",
+        button: "Tamam",
+        onHide: () => {
           navigation.navigate("UpdateProfile");
-        }
-        
+        },
       });
     }
 
@@ -97,18 +96,24 @@ const VerifyPhoneChange = ({ route }) => {
         }
       );
       if (response.data.success) {
-       Dialog.show({
-        type: ALERT_TYPE.SUCCESS,
+        Dialog.show({
+          type: ALERT_TYPE.SUCCESS,
           title: "Başarılı",
           textBody: "Başarıyla güncellediniz.",
           button: "Tamam",
           onHide: () => {
-          navigation.navigate("UpdateProfile");
-        }
-        
-      });
+            navigation.navigate("UpdateProfile");
+          },
+        });
       } else {
-        alert("Doğrulama başarısız!");
+        if (response?.data?.error) {
+        }
+        Dialog.show({
+          type: ALERT_TYPE.DANGER,
+          title: "Hata",
+          textBody: `${response?.data?.error} eğer hata almaya devam ederseniz destek talep bölümünden bize ulaşabilirsiniz`,
+          button: "Tamam",
+        });
       }
     } catch (error) {
       console.error("error", error);
@@ -173,19 +178,17 @@ const VerifyPhoneChange = ({ route }) => {
             ))}
           </View>
           <View style={styles.actionButtons}>
-   
-              <TouchableOpacity
-                disabled={codes.length !== 6 || codes.includes("")}
-                onPress={() => sendPostRequest()}
-                style={[styles.submitButton]}
-              >
-                {loading ? (
-                  <ActivityIndicator color="white" />
-                ) : (
-                  <Text style={styles.buttonText}>Onayla</Text>
-                )}
-              </TouchableOpacity>
-            
+            <TouchableOpacity
+              disabled={codes.length !== 6 || codes.includes("")}
+              onPress={() => sendPostRequest()}
+              style={[styles.submitButton]}
+            >
+              {loading ? (
+                <ActivityIndicator color="white" />
+              ) : (
+                <Text style={styles.buttonText}>Onayla</Text>
+              )}
+            </TouchableOpacity>
           </View>
         </View>
       </SafeAreaView>
