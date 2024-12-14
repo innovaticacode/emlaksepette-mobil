@@ -28,4 +28,5 @@ export {
   MySwapInfoBottom,
   WhiteOrRedButtons,
   SalePointCard,
+  FranchiseForm,
 };
