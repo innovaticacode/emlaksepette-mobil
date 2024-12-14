@@ -108,9 +108,9 @@ export default function CreditCardScreen({
                 }}
               ></View>
             </View>
-            <View>
+            {/* <View>
               <Icon name="cc-visa" size={50} color={"white"} />
-            </View>
+            </View> */}
           </View>
           <View style={{ width: "100%", padding: 5 }}>
             <Text
