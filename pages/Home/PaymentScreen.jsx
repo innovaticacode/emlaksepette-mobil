@@ -709,15 +709,9 @@ export default function PaymentScreen() {
           >
             <View style={styles.image}>
               <Image
-                source={
-                  type?.type === "project"
-                    ? {
-                        uri: `${frontEndUriBase}project_housing_images/${project["image[]"]}`,
-                      }
-                    : {
-                        uri: `${frontEndUriBase}housing_images/${parsed.image}`,
-                      }
-                }
+                source={{
+                  uri: Cart.image,
+                }}
                 style={{ width: "100%", height: "100%" }}
               />
             </View>

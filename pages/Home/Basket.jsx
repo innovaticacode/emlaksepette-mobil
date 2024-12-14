@@ -129,7 +129,6 @@ export default function Basket() {
     if (user?.access_token) {
       fetchData();
     }
-    console.log("CART------------->", Cart);
   }, [isFocused, user]);
   const [parsedshare, setparsedshare] = useState("");
 
