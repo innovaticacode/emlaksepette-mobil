@@ -335,14 +335,12 @@ export default function PaymentScreen() {
       scrollPosition = inputPositions["year"];
     }
 
-    sendPaymentRequest();
-
     console.log("tempErrors", tempErrors);
     scrollViewRef.current?.scrollToPosition(0, scrollPositionsTemp[0], true);
     setErrors(tempErrors);
-    // if (tempErrors.length == 0) {
-    //   setPaymentModalShow(true);
-    // }
+    if (tempErrors.length == 0) {
+      sendPaymentRequest();
+    }
   };
 
   {
