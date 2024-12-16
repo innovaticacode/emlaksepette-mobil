@@ -119,45 +119,6 @@ export default function RealtorAdvertPost({ Onpress, housing }) {
           </Text>
         )}
       </View>
-      {/* <View style={{flexDirection:'row',backgroundColor:'green'}}>
-            <View style={{gap:6}}>
-               
-      
-                  
-                   
-            </View>
-            <View style={{backgroundColor:'red',width:90,height:80}}>
-
-</View>
-            </View> */}
-
-      {/* 
-            <View style={{padding:5}}>
-                <View style={{gap:10}}>
-                    <Text style={{fontSize:15,fontWeight:'600',color:'#333'}} numberOfLines={1}>{housing.housing_title}</Text>
-                    <Text style={{fontSize:11,color:'grey',fontWeight:'600'}}>İlan Bitiş Tarihi: 1 Tem 2024 13:18</Text>
-                </View>
-                <View style={{paddingTop:10,gap:7}}>
-                <View style={{flexDirection:'row',alignItems:'center',gap:6}}>
-                        <Icon name='eye' color={'grey'} size={16}/>
-                        <Text style={{color:'grey',fontSize:12}}>100 Gösterim</Text>
-                </View>
-                <View style={{flexDirection:'row',alignItems:'center',gap:6}}>
-                        <Icon name='star' color={'grey'} size={15}/>
-                        <Text style={{color:'grey',fontSize:12}}>100 Favori</Text>
-                </View>
-                <View style={{flexDirection:'row',alignItems:'center',gap:6}}>
-                        <Icon name='bookmark' color={'grey'} size={13}/>
-                        <Text style={{color:'grey',fontSize:12}}>100 Koleksiyona Ekleme</Text>
-                </View>
-                <View style={{paddingTop:5}}>
-                {status==0 &&  <Text style={{bottom:5,fontSize:13,color:'#B81900',fontWeight:'500'}}>Pasif</Text> }
-                   {status==1 &&    <Text style={{bottom:5,fontSize:13,color:'#27B006'}}>Yayında</Text>}
-                   {status==2 &&  <Text style={{bottom:5,fontSize:13,color:'#E57809'}}>Admin Onayı Bekliyor</Text> }
-                   {status==3 && <Text style={{bottom:5,fontSize:13,color:'#B81900',fontWeight:'500'}}>Reddedildi</Text>  }
-                </View>
-                </View>
-            </View> */}
     </View>
   );
 }
