@@ -2,7 +2,7 @@ import axios from "axios";
 import { getValueFor } from "./user";
 export const apiUrl = process.env.EXPO_PUBLIC_API_URL;
 export const frontEndUri = process.env.EXPO_PUBLIC_API_URL;
-export const frontEndUriBase = process.env.EXPO_PUBLIC_FRONTEND_URI_BASE;
+export const frontEndUriBase = process.env.EXPO_PUBLIC_FRONTEND_URI;
 
 export const apiRequestGet = (url) => {
   return axios.get(apiUrl + url);
