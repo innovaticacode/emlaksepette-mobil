@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useMemo } from "react";
+import React, { useState, useCallback, useMemo, useEffect } from "react";
 import {
   View,
   Text,
@@ -20,7 +20,7 @@ import { useSelector } from "react-redux";
 
 const BookHouse = ({ index }) => {
   const navigation = useNavigation();
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const banners = useSelector((state) => state?.banners?.banners);
   const apiData = [{ key: "step2_slug", value: "gunluk-kiralik" }];
   const { data, hooksLoading, error, loadMore, setSkip } = UsePaginatedData(
@@ -41,6 +41,11 @@ const BookHouse = ({ index }) => {
     await setSkip(0);
     setLoading(false);
   };
+  useEffect(() => {
+    if (data && data.length > 0) {
+      setLoading(false); // Data yüklendiğinde loading state'i false yap
+    }
+  }, [data]);
 
   const renderFooter = () => {
     if (!hooksLoading) return null;

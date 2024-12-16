@@ -42,6 +42,12 @@ const Shop = ({ index }) => {
     setLoading(false);
   };
 
+  useEffect(() => {
+    if (data && data.length > 0) {
+      setLoading(false); // Data yüklendiğinde loading state'i false yap
+    }
+  }, [data]);
+
   const renderFooter = () => {
     if (!hooksLoading) return null;
     return (

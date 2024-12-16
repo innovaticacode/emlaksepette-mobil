@@ -94,7 +94,7 @@ const HomePage = (props) => {
     <AlertNotificationRoot>
       {loadingProjects && loadingSliders ? (
         <View style={styles.loadingContainer}>
-          <ActivityIndicator />
+          <ActivityIndicator color="#333" size={"large"} />
         </View>
       ) : (
         <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
