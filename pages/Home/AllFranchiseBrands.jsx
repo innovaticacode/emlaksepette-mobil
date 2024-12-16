@@ -1,6 +1,13 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { View, Image, Text, FlatList, StyleSheet } from "react-native";
+import {
+  View,
+  Image,
+  Text,
+  FlatList,
+  StyleSheet,
+  TouchableOpacity,
+} from "react-native";
 import { apiUrl, frontEndUriBase } from "../../components/methods/apiRequest";
 import { useNavigation } from "@react-navigation/native";
 import Ionicons from "@expo/vector-icons/Ionicons";
@@ -34,7 +41,13 @@ const AllFranchiseBrands = () => {
         renderItem={({ item }) => (
           <>
             <View style={styles.area}>
-              <View style={styles.body}>
+              <TouchableOpacity
+                style={styles.body}
+                activeOpacity={0.7}
+                onPress={() => {
+                  navigation.navigate("Profile", { id: item?.user_id });
+                }}
+              >
                 <View style={{ alignItems: "center" }}>
                   <Image
                     source={{ uri: `${frontEndUriBase}/logos/${item.logo}` }}
@@ -68,7 +81,7 @@ const AllFranchiseBrands = () => {
                     }}
                   />
                 </View>
-              </View>
+              </TouchableOpacity>
             </View>
           </>
         )}
@@ -84,6 +97,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFF",
     flex: 1,
     paddingHorizontal: 10,
+    paddingBottom: 25,
   },
   area: {
     flex: 1,
