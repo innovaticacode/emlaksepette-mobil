@@ -72,7 +72,7 @@ export default function PaymentScreen() {
   const [paymentModalShow, setPaymentModalShow] = useState(false);
   const [errors, setErrors] = useState([]);
   const scrollViewRef = useRef();
-  const socket = io(socketIO);
+
   const [inputPositions, setInputPositions] = useState({}); // Her input'un pozisyonunu tutacak
   const [approximatelyTop, setApproximatelyTop] = useState(0);
   const [approximatelyInputHeight, setApproximatelyInputHeight] = useState(0);
@@ -129,68 +129,45 @@ export default function PaymentScreen() {
     }));
   };
 
-  const paymentFailedShow = () => {
-    setTimeout(() => {
-      Dialog.show(
-        {
-          type: ALERT_TYPE.DANGER,
-          title: "Hata",
-          textBody: "Ödeme esnasında bir hata oluştu",
-          button: "Tamam",
-        },
-        1000
-      );
-    });
-  };
-
-  // payments başarılı olursa
+  const socketRef = useRef(null);
   useEffect(() => {
-    function onConnect() {
-      console.log("Socket connected!");
-    }
+    socketRef.current = io(socketIO, {
+      transports: ["polling", "websocket"],
+      reconnection: true,
+      reconnectionAttempts: 10,
+      reconnectionDelay: 5000,
+      timeout: 20000,
+    });
 
-    function onDisconnect() {
-      console.log("Socket disconnected!");
-    }
+    socketRef.current.on("result-api-payment-cart", (data) => {
+      paymentCheck(data);
+    });
 
-    function paymentCheck(value) {
-      console.log("Payment result received:", value); // Gelen ödeme sonucu loglanır
-      setPaymentModalShow(false);
-
-      if (value?.status) {
-        console.log("Payment successful, navigating to PaymentSuccess screen.");
-        nav.navigate("PaymentSuccess", {
-          title: "SİPARİŞ İÇİN TEŞEKKÜRLER!",
-          message: "Siparişiniz başarıyla oluşturuldu.",
-          primaryButtonText: "Siparişlerim",
-          secondaryButtonText: "Ana Sayfa",
-          icon: "check-circle", // İkonu belirt
-          onContinue: () => nav.navigate("Settings"), // Ayarlar ekranına git
-          onGoHome: () => nav.navigate("Home"), // Ana sayfaya git
-        });
-      } else {
-        console.log("Payment failed, showing error toast.");
-        Toast.show({
-          type: ALERT_TYPE.DANGER,
-          title: "Hata",
-          textBody: "Ödeme işlemi esnasında bir hata oluştu",
-        });
-      }
-    }
-
-    // Socket olayları
-    socket.on("connect", onConnect());
-    socket.on("disconnect", onDisconnect());
-    socket.on("result-api-payment-cart", paymentCheck());
-
-    // Temizlik
     return () => {
-      console.log("Cleaning up socket listeners.");
-      socket.off("connect", onConnect);
-      socket.off("disconnect", onDisconnect);
-      socket.off("result-api-payment-cart", paymentCheck);
+      socketRef.current.disconnect();
     };
-  }, [nav]);
+  }, []);
+
+  const paymentCheck = (value) => {
+    if (!value?.status) {
+      setPaymentModalShow(false);
+      console.log("Payment failed!");
+      Dialog.show({
+        type: ALERT_TYPE.DANGER,
+        title: "Hata",
+        textBody: "Ödeme işlemi sırasında bir hata oluştu.",
+        button: "Tamam",
+      });
+    } else {
+      nav.navigate("PaymentSuccess", {
+        title: "SİPARİŞ İÇİN TEŞEKKÜRLER!",
+        message: "Siparişiniz başarıyla oluşturuldu.",
+        primaryButtonText: "Siparişlerim",
+        secondaryButtonText: "Ana Sayfa",
+        icon: "check-circle",
+      });
+    }
+  };
 
   useEffect(() => {
     if (user?.name) {

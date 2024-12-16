@@ -24,8 +24,18 @@ const PaymentSuccessScreen = ({ route, navigation }) => {
         icon={icon}
         primaryButtonText={primaryButtonText}
         secondaryButtonText={secondaryButtonText}
-        onContinue={onContinue}
-        onGoHome={onGoHome}
+        onContinue={
+          onContinue ||
+          (() => {
+            navigation.replace("Taked");
+          })
+        }
+        onGoHome={
+          onGoHome ||
+          (() => {
+            navigation.navigate("Home");
+          })
+        }
       />
     </View>
   );
