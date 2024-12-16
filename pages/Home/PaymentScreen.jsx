@@ -72,6 +72,7 @@ export default function PaymentScreen() {
   const [paymentModalShow, setPaymentModalShow] = useState(false);
   const [errors, setErrors] = useState([]);
   const scrollViewRef = useRef();
+  const [btnLoading, setBtnLoading] = useState(false);
 
   const [inputPositions, setInputPositions] = useState({}); // Her input'un pozisyonunu tutacak
   const [approximatelyTop, setApproximatelyTop] = useState(0);
@@ -457,6 +458,7 @@ export default function PaymentScreen() {
    */
 
   const sendPaymentRequest = async () => {
+    setBtnLoading(true);
     const paymentData = {
       key: "order_key_app",
       payable_amount: route.params.deposit,
@@ -491,6 +493,8 @@ export default function PaymentScreen() {
         error.response?.data || error.message
       );
       throw error;
+    } finally {
+      setBtnLoading(false);
     }
   };
 
@@ -587,28 +591,32 @@ export default function PaymentScreen() {
           });
         } else {
           if (tempErrors.length == 0) {
+            setBtnLoading(true);
             payEft({
               bank_id: selectedBank,
               pdf: pdfFile,
               payableAmount: route.params.deposit,
             })
               .then((res) => {
-                console.log("res", res);
                 if (res.status == 200) {
                   nav.navigate("PaymentSuccess", {
                     title: "SİPARİŞ İÇİN TEŞEKKÜRLER!",
                     message: "Siparişiniz başarıyla oluşturuldu.",
                     primaryButtonText: "Siparişlerim",
                     secondaryButtonText: "Ana Sayfa",
-                    icon: "check-circle", // İkonu belirt
-                    onContinue: () => nav.navigate("Settings"), // Ayarlar ekranına git
-                    onGoHome: () => nav.navigate("Home"), // Ana sayfaya git
+                    icon: "check-circle",
                   });
                 }
               })
               .catch((err) => {
-                console.log("err", err);
+                Dialog.show({
+                  type: ALERT_TYPE.DANGER,
+                  title: "Hata",
+                  textBody: "Ödeme işlemi sırasında bir hata oluştu.",
+                  button: "Tamam",
+                });
               });
+            setBtnLoading(false);
           }
         }
       }
@@ -1529,6 +1537,7 @@ export default function PaymentScreen() {
             errors={errors}
             getError={getError}
             CompeletePayment={completeCreditCardPay}
+            loading={btnLoading}
           />
         )}
         {tabs == 1 && (

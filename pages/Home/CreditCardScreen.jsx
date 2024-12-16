@@ -10,12 +10,14 @@ import RNPickerSelect from "react-native-picker-select";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { Platform } from "react-native";
 import AbsoluteErrorInput from "../../components/custom_inputs/AbsoluteErrorInput";
+import { ActivityIndicator } from "react-native-paper";
 export default function CreditCardScreen({
   getError,
   CompeletePayment,
   creditCartData,
   setCreditCartData,
   errors,
+  loading = false,
 }) {
   const months = [
     { label: "Ocak", value: 1 },
@@ -408,6 +410,7 @@ export default function CreditCardScreen({
       </View>
       <View style={{ padding: 10, paddingTop: 20 }}>
         <TouchableOpacity
+          disabled={loading}
           style={{
             flexDirection: "row",
             alignItems: "center",
@@ -416,13 +419,20 @@ export default function CreditCardScreen({
             justifyContent: "center",
             gap: 15,
             borderRadius: 5,
+            opacity: loading ? 0.7 : 1,
           }}
           onPress={() => {
             CompeletePayment();
           }}
         >
-          <Icon name="credit-card-alt" color={"white"} />
-          <Text style={{ color: "white" }}>Ödemeyi Tamamla</Text>
+          {loading ? (
+            <ActivityIndicator color="white" size={"small"} />
+          ) : (
+            <>
+              <Icon name="credit-card-alt" color={"white"} />
+              <Text style={{ color: "white" }}>Ödemeyi Tamamla</Text>
+            </>
+          )}
         </TouchableOpacity>
       </View>
     </View>

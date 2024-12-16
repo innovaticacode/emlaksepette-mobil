@@ -12,13 +12,15 @@ import * as Clipboard from "expo-clipboard";
 import { useNavigation } from "@react-navigation/native";
 import * as FileSystem from "expo-file-system";
 import * as IntentLauncher from "expo-intent-launcher";
+import { ActivityIndicator } from "react-native-paper";
 export default function EftPay({
   onPress,
   selectedDocumentName,
   url,
   onHandlePayment,
   selectedBank,
-  setSelectedBank
+  setSelectedBank,
+  loading = false,
 }) {
   const navigation = useNavigation();
   const [selectedIban, setselectedIban] = useState(false);
@@ -59,7 +61,7 @@ export default function EftPay({
         </Text>
       </View>
       <View style={{ alignItems: "center", gap: 10 }}>
-        <TouchableOpacity
+        {/* <TouchableOpacity
           style={{
             width: 300,
             height: 150,
@@ -90,7 +92,7 @@ export default function EftPay({
             source={require("../../src/assets/images/Garanti.png")}
             resizeMode="contain"
           />
-        </TouchableOpacity>
+        </TouchableOpacity> */}
 
         <TouchableOpacity
           style={{
@@ -217,6 +219,7 @@ export default function EftPay({
 
       <View style={{ padding: 10, paddingTop: 20 }}>
         <TouchableOpacity
+          disabled={loading}
           style={{
             flexDirection: "row",
             alignItems: "center",
@@ -225,10 +228,15 @@ export default function EftPay({
             justifyContent: "center",
             gap: 15,
             borderRadius: 5,
+            opacity: loading ? 0.7 : 1,
           }}
           onPress={onHandlePayment}
         >
-          <Text style={{ color: "white" }}>Ödemeyi Tamamla</Text>
+          {loading ? (
+            <ActivityIndicator color="white" size={"small"} />
+          ) : (
+            <Text style={{ color: "white" }}>Ödemeyi Tamamla</Text>
+          )}
         </TouchableOpacity>
       </View>
     </View>

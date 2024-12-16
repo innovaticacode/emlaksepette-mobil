@@ -27,7 +27,7 @@ const PaymentSuccessScreen = ({ route, navigation }) => {
         onContinue={
           onContinue ||
           (() => {
-            navigation.replace("Taked");
+            navigation.navigate("Taked");
           })
         }
         onGoHome={
