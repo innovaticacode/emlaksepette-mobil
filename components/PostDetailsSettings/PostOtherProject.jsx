@@ -21,10 +21,6 @@ export default function OtherHomeInProject({
   getLastItemCount,
   openFormModal,
 }) {
-  const [tabs, setTabs] = useState(0);
-  const [rooms, setRooms] = useState([]);
-  const Home = [];
-
   return (
     <SafeAreaView>
       <View style={{ paddingLeft: 10, paddingRight: 10 }}>

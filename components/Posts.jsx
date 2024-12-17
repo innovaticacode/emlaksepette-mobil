@@ -72,8 +72,6 @@ export default function Posts({
   const [bookmark, setBookmark] = useState("bookmark-o");
   const roomData = data.projectHousingsList[roomOrder] || {};
   const [user, setUser] = useState({});
-
-  const [modalVisible, setModalVisible] = useState(false);
   const [selectedRoom, setSelectedRoom] = useState(null);
 
   const openAlert = (room) => {
@@ -84,8 +82,6 @@ export default function Posts({
   const closeAlert = () => {
     setShowAlert(false);
   };
-
-  const [neightboord, setNeightboord] = useState(false);
 
   const saveData = async (
     title,
@@ -254,7 +250,6 @@ export default function Posts({
   const [alertForSign, setalertForSign] = useState(false);
   const [alertForFavorite, setalertForFavorite] = useState(false);
   const [cartIsNull, setcartIsNull] = useState(false);
-  const [AddCartShow, setAddCartShow] = useState(false);
 
   const handlePress = () => {
     // openFormModal(roomOrder);

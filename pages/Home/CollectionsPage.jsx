@@ -337,8 +337,7 @@ export default function CollectionsPage() {
     useState(false);
   const [modalForSelectedCollection, setmodalForSelectedCollection] =
     useState(false);
-  const [RemoveSelectedCollectionsModal, setRemoveSelectedCollectionsModal] =
-    useState(false);
+
   const [refreshing, setRefreshing] = useState(false);
   const onRefresh = async () => {
     setRefreshing(true);

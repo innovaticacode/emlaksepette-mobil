@@ -165,9 +165,7 @@ const CustomTabBar = ({
 export default function HomePage2() {
   const navigation = useNavigation();
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-  const toggleDrawer = () => {
-    // setIsDrawerOpen(!isDrawerOpen);
-  };
+
   const layout = useWindowDimensions();
   const [tab, settab] = React.useState(0);
   const [index, setIndex] = React.useState(0);

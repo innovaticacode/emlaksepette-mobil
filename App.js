@@ -227,9 +227,6 @@ const DrawerNavigator = () => {
 
 const StackScreenNavigator = () => {
   const [İsLoggedIn, setİsLoggedIn] = useState(false);
-  const [ShowOnBoard, setShowOnBoard] = useState(true);
-  const [showBackIcon, setshowBackIcon] = useState(false);
-  const [showWelcome, setShowWelcome] = useState(true);
 
   const [housingTypes, setHousingTypes] = useState([]);
   const [selectedTypes, setSelectedTypes] = useState([]);

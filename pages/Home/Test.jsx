@@ -37,8 +37,6 @@ export default function Test() {
     getValueFor("user", setuser);
   }, []);
 
-  const [index, setindex] = useState(0);
-  const [tab, settab] = useState(0);
   return (
     <AlertNotificationRoot>
       <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>

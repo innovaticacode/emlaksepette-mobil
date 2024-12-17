@@ -54,7 +54,7 @@ const customStyles = {
 
 const VerifyScreen = () => {
   const [currentPosition, setCurrentPosition] = useState(0);
-  const [visibleSteps, setVisibleSteps] = useState(3);
+
   const [verifyStatu, setverifyStatu] = useState(null);
   const [namFromGetUser, setnamFromGetUser] = useState({});
   const [user, setuser] = useState({});

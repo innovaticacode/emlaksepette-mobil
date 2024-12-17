@@ -505,8 +505,7 @@ export default function AllRealtorAdverts() {
       isDrawerOpen: !prevState.isDrawerOpen,
     }));
   };
-  const [index, setindex] = useState(0);
-  const [tab, settab] = useState(0);
+
   const [user, setuser] = useState({});
   useEffect(() => {
     getValueFor("user", setuser);

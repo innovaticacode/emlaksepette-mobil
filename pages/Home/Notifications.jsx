@@ -46,8 +46,6 @@ export default function Notifications() {
     (state) => state.notifications.notificationsCount
   );
 
-  const [notifiContent, setNotifiContent] = useState([]);
-
   useEffect(() => {
     getValueFor("user", setUser);
   }, []);

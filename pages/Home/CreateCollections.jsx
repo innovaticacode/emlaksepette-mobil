@@ -140,8 +140,7 @@ export default function CreateCollections() {
         console.error("Error:", error);
       });
   };
-  const [showAlert, setshowAlert] = useState(false);
-  const [showDeleteAlert, setshowDeleteAlert] = useState(false);
+
   const addSelectedCollection = (id, name) => {
     const collectionData = {
       collection_name: name,

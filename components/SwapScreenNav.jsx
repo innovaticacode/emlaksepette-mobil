@@ -41,9 +41,6 @@ const SwapScreenNav = () => {
   const [titleid, setTitleId] = useState("");
   const [offerid, setOfferId] = useState("");
 
-  const [createdid, setCreatedId] = useState("");
-  const [selectedroomId, setselectedroomId] = useState();
-
   const [formVisible, setFormVisible] = useState(false);
   console.log(projectId);
   const [user, setUser] = useState({});

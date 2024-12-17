@@ -55,9 +55,6 @@ export default function UpdateShopInfo({ nextStep, prevStep }) {
     );
   };
 
-  const richText = useRef(null);
-  const [prevBioText, setprevBioText] = useState("");
-  const [year, setyear] = useState(null);
   const [website, setwebsite] = useState(null);
   const [about, setabout] = useState(null);
   const [selectedDate, setSelectedDate] = useState(null);

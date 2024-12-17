@@ -83,7 +83,7 @@ export default function Company() {
   const [modalVisible2, setModalVisible2] = useState(false);
   const [modalVisible3, setModalVisible3] = useState(false);
   const [Deals, setDeals] = useState("");
-  const [passControl, setpassControl] = useState(false);
+
   const [showLengthAlert, setShowLengthAlert] = useState(false);
   const [showUpperAlert, setShowUpperAlert] = useState(false);
   const [showSymbolAlert, setShowSymbolAlert] = useState(false);

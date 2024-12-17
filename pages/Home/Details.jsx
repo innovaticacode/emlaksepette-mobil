@@ -87,12 +87,12 @@ export default function Details({ navigation }) {
   const [selectedroomId, setselectedroomId] = useState();
   const [isVisible, setIsVisible] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [index, setindex] = useState(0);
-  const [tab, settab] = useState(0);
+
   const [AlertForSign, setAlertForSign] = useState(false);
   const [comments, setcomments] = useState([]);
   const [galleries, setGalleries] = useState([]);
   const route = useRoute();
+  5;
   let debounceTimeout;
   const { slug, ProjectId, ımage } = route.params;
 

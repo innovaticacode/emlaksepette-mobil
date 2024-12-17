@@ -48,7 +48,7 @@ export default function Favorites() {
   const [loading, setLoading] = useState(false);
   const [RemoveSelectedCollectionsModal, setRemoveSelectedCollectionsModal] =
     useState(false);
-  const [modalVisible, setModalVisible] = useState(false);
+
   const [searchText, setSearchText] = useState("");
   const [filteredFavorites, setFilteredFavorites] = useState([]);
 
@@ -450,7 +450,6 @@ export default function Favorites() {
     return columnValue + " " + additional;
   };
 
-  const [selectedSortOption, setSelectedSortOption] = useState(null);
   // console.log(user.access_token)
   // Sıralama fonksiyonu
   const sortFavorites = (value) => {

@@ -104,17 +104,6 @@ export default function PostDetail() {
   const changeTab = (tabs) => {
     setTabs(tabs);
   };
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-
-  const toggleDrawer = () => {
-    setIsDrawerOpen(!isDrawerOpen);
-  };
-  const ToggleSheet = () => {
-    setIsOpenSheet(!IsOpenSheet);
-  };
-  const ToggleColSheet = () => {
-    setColectionSheet(!ColectionSheet);
-  };
 
   const [ProjectHomeData, setProjectHomeData] = useState({
     project: {
@@ -685,8 +674,7 @@ export default function PostDetail() {
     }
   };
   const { width, height } = Dimensions.get("window");
-  const [tab, settab] = useState(0);
-  const [index, setindex] = useState(0);
+
   const onShare = async () => {
     try {
       const result = await Share.share({

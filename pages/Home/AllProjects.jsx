@@ -496,8 +496,7 @@ export default function AllProjects() {
       isDrawerOpen: !prevState.isDrawerOpen,
     }));
   };
-  const [index, setindex] = useState(0);
-  const [tab, settab] = useState(0);
+
   const [showViewModal, setshowViewModal] = useState(false);
   const [selectedView, setselectedView] = useState(0);
   const [chekView, setchekView] = useState(false);

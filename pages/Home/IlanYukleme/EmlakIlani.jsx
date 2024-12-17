@@ -14,7 +14,7 @@ export default function Emlak() {
   const { name } = route.params;
   const [step, setStep] = useState(1);
   const [loadingModal, setLoadingModal] = useState(false);
-  const [loading, setLoading] = useState(0);
+
   const [housingTypes, setHousingTypes] = useState([]);
   const [selectedTypes, setSelectedTypes] = useState([]);
   const [projectData, setProjectData] = useState({});
@@ -30,7 +30,6 @@ export default function Emlak() {
     },
   ]);
 
-  const [roomCount, setRoomCount] = useState(1);
   const [allErrors, setAllErrors] = useState([]);
   const [selectedBlock, setSelectedBlock] = useState(0);
   const [selectedRoom, setSelectedRoom] = useState(0);
@@ -139,7 +138,7 @@ export default function Emlak() {
                     } else {
                       if (
                         !blocks[selectedBlock].rooms[selectedRoom][
-                        formDataHousing.name
+                          formDataHousing.name
                         ]
                       ) {
                         if (!boolCheck) {
@@ -174,9 +173,9 @@ export default function Emlak() {
                   if (haveBlocks) {
                     anotherBlockErrorsTemp.push(
                       blocks[blockIndex].name +
-                      " bloğunun " +
-                      (i + 1) +
-                      " nolu konutunun verilerini doldurunuz"
+                        " bloğunun " +
+                        (i + 1) +
+                        " nolu konutunun verilerini doldurunuz"
                     );
                   } else {
                     anotherBlockErrorsTemp.push(
@@ -361,7 +360,7 @@ export default function Emlak() {
                 } else {
                   if (
                     !blocks[selectedBlock].rooms[selectedRoom][
-                    formDataHousing.name
+                      formDataHousing.name
                     ]
                   ) {
                     tempErrors.push(formDataHousing.name.replace("[]", ""));

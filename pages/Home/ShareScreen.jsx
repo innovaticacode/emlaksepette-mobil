@@ -27,8 +27,7 @@ export default function ShareScreen() {
   useEffect(() => {
     getValueFor("user", setuser);
   }, []);
-  const [index, setindex] = useState(0);
-  const [tab, settab] = useState(0);
+
   return (
     <SafeAreaView style={{ backgroundColor: "white", flex: 1 }}>
       <View

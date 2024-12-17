@@ -190,8 +190,6 @@ export default function Basket() {
     return `${month}, ${day} ${year}`;
   };
 
-  const [shareCounter, setshareCounter] = useState(1);
-
   const [message, setmessage] = useState({});
   const [counter, setcounter] = useState(1);
   const UpdateCart = async () => {
@@ -316,8 +314,7 @@ export default function Basket() {
   };
 
   const nav = useNavigation();
-  const [index, setindex] = useState(0);
-  const [tab, settab] = useState(0);
+
   /*   console.log(CartLength);
    */
   const [paymentMethod, setPaymentMethod] = useState("");

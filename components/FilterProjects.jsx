@@ -4,7 +4,6 @@ import SortModal from "./SortModal";
 
 // tamamlanmadı ihtiyaç olursa filter için kullanılabilir
 const FilterProjects = () => {
-  const [cityItems, setCityItems] = useState();
   const [state, setState] = useState({
     loading: true,
     isDrawerOpen: false,

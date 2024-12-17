@@ -10,9 +10,6 @@ import { getValueFor } from "./methods/user";
 import { apiUrl, frontEndUriBase } from "./methods/apiRequest";
 
 export default function SliderBarForFeature() {
-  const [loading, setloading] = useState(false);
-  const [featuredStores, setFeaturedStores] = useState([]);
-
   const capitalizeFirstLetter = (text) => {
     return text.charAt(0).toUpperCase() + text.slice(1);
   };

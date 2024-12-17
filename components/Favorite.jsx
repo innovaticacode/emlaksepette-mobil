@@ -14,7 +14,7 @@ import { Platform } from "react-native";
 
 export default function Favorite() {
   const [modalVisible, setModalVisible] = useState(false);
-  const handlepress = () => {};
+
   return (
     <View style={{ padding: 10, backgroundColor: "white" }}>
       <View style={styles.containerPost}>

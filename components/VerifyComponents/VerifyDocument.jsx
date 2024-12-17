@@ -151,7 +151,7 @@ export default function VerifyDocument({ nextStep, prevStep }) {
   const [selectedDocumentName, setSelectedDocumentName] = useState(null);
 
   const [pdfFile, setPdfFile] = useState(null);
-  const [selectedPdfUrl, setselectedPdfUrl] = useState(null);
+
   const pickDocument = async (key) => {
     DocumentPicker.getDocumentAsync({ type: "application/pdf" })
       .then((result) => {

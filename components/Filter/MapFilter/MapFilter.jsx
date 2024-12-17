@@ -46,7 +46,6 @@ export default function MapFilter({
   const [county, setcounty] = useState([]);
   const [neigbourhod, setneigbourhod] = useState(null);
   const [countiesFilter, setcountiesFilter] = useState([]);
-  const [checkedNeighbourhoods, setCheckedNeighbourhoods] = useState({});
 
   // İlçe ID ve mahalle ID'yi alarak yalnızca birini seçili yapar
 

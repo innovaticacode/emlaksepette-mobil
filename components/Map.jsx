@@ -1,5 +1,5 @@
 import { View, Text, Button, TouchableOpacity } from "react-native";
-import { React, useEffect, useState } from "react";
+import { React } from "react";
 import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
 
 import openMap from "react-native-open-maps";

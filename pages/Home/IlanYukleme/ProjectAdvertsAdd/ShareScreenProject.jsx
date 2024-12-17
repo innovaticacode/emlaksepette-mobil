@@ -23,7 +23,7 @@ export default function ShareScreenProject({}) {
   const [modalVisible, setModalVisible] = useState(false);
   const [text, setText] = useState("");
   const [checked, setChecked] = useState(false);
-  const toggleCheckbox = () => setChecked(!checked);
+
   const handleTextChange = (newText) => {
     setText(newText);
   };

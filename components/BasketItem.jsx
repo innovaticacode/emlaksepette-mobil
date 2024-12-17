@@ -43,7 +43,6 @@ export default function BasketItem({
   const route = useRoute();
   const navigation = useNavigation();
 
-  const [chechked, setchechked] = useState(false);
   // Ürün sayısı
   // Toplam fiyat
 
