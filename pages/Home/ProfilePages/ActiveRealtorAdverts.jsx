@@ -29,7 +29,7 @@ export default function ActiveRealtorAdverts({ index }) {
   const [skip, setSkip] = useState(0);
   const [loading, setloading] = useState(true);
   const [housingRecords, sethousingRecords] = useState([]);
-const [totalAdvert,setTotalAdvert] = useState("");
+  const [totalAdvert, setTotalAdvert] = useState("");
   const [sort, setsort] = useState(null);
   useEffect(() => {
     getValueFor("user", setUser);
@@ -81,8 +81,7 @@ const [totalAdvert,setTotalAdvert] = useState("");
   const handleEndReached = () => {
     // Sayfa sonuna geldiğinde skip değerini arttırıyoruz
 
-      setSkip((prevSkip) => prevSkip + take);
-    
+    setSkip((prevSkip) => prevSkip + take);
   };
   const [EditModalVisible, setEditModalVisible] = useState(false);
   const [SortLıstModal, setSortLıstModal] = useState(false);
@@ -377,6 +376,23 @@ const [totalAdvert,setTotalAdvert] = useState("");
                     Resimler
                   </Text>
                 </TouchableOpacity>
+                {/*
+                  <TouchableOpacity
+                  style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                    gap: 10,
+                  }}
+                >
+                  <Icon4 name="handshake" size={21} color={"#333"} />
+                  <Text
+                    style={{ fontSize: 14, color: "#333", fontWeight: "700" }}
+                  >
+                    Pazarlık Teklifleri (0)
+                  </Text>
+                </TouchableOpacity>
+
+                  */}
               </View>
             </View>
           </Modal>

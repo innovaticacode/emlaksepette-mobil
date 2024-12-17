@@ -40,14 +40,14 @@ import {
 import { Forms } from "../../../components/ProfileUpgradeComponents/formshelper";
 import ImageView from "react-native-image-viewing";
 import {
+  formatPhoneNumber,
+  formatPhoneNumberNew,
+} from "../../../utils/FormatPhoneNumber";
+import {
   apiRequestPostWithBearer,
   apiUrl,
   frontEndUriBase,
 } from "../../../components/methods/apiRequest";
-import {
-  formatPhoneNumber,
-  formatPhoneNumberNew,
-} from "../../../utils/FormatPhoneNumber";
 import { areaData } from "../../helper";
 import { checkFileSize } from "../../../utils";
 import ImageViewing from "react-native-image-viewing";

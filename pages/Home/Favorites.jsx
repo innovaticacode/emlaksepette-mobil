@@ -436,8 +436,8 @@ export default function Favorites() {
       (housing) =>
         housing.room_order === favorite?.housing_id &&
         housing.name ===
-        favorite?.project?.list_item_values[`column${columnIndex}_name`] +
-        "[]" &&
+          favorite?.project?.list_item_values[`column${columnIndex}_name`] +
+            "[]" &&
         housing.project_id === favorite?.project?.id
     );
 

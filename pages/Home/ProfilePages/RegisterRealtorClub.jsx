@@ -126,8 +126,6 @@ export default function RegisterRealtorClub({ setİsLoggedIn }) {
     setTcNo(user.id_);
   }, [user]);
 
-
-
   const [StatusMessage, setStatusMessage] = useState(false);
   const [succesRegister, setsuccesRegister] = useState(false);
   const [ErrorMEssage, setErrorMEssage] = useState("");
@@ -210,14 +208,11 @@ export default function RegisterRealtorClub({ setİsLoggedIn }) {
     setloading(true);
     try {
       if (user?.access_token && user) {
-        const userInfo = await axios.get(
-          apiUrl + "users/" + user?.id,
-          {
-            headers: {
-              Authorization: `Bearer ${user.access_token}`,
-            },
-          }
-        );
+        const userInfo = await axios.get(apiUrl + "users/" + user?.id, {
+          headers: {
+            Authorization: `Bearer ${user.access_token}`,
+          },
+        });
 
         setnamFromGetUser(userInfo.data.user);
       }
@@ -266,34 +261,32 @@ export default function RegisterRealtorClub({ setİsLoggedIn }) {
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
       <View style={styles.container}>
         <View style={styles.header}>
-          {
-            namFromGetUser?.has_club == 1 && (
-              <View style={{ gap: 10 }}>
-                <Text style={styles.headerText}>
-                  Emlak Sepette | Emlak Kulüp Başvurunuz Onaylandı
-                </Text>
-                <View
+          {namFromGetUser?.has_club == 1 && (
+            <View style={{ gap: 10 }}>
+              <Text style={styles.headerText}>
+                Emlak Sepette | Emlak Kulüp Başvurunuz Onaylandı
+              </Text>
+              <View
+                style={{
+                  borderTopWidth: 1,
+                  borderColor: "#ebebeb",
+                  paddingTop: 20,
+                }}
+              >
+                <Text
                   style={{
-                    borderTopWidth: 1,
-                    borderColor: "#ebebeb",
-                    paddingTop: 20,
+                    color: "green",
+                    fontSize: 16,
+                    fontWeight: "500",
+                    textAlign: "center",
                   }}
                 >
-                  <Text
-                    style={{
-                      color: "green",
-                      fontSize: 16,
-                      fontWeight: "500",
-                      textAlign: "center",
-                    }}
-                  >
-                    Üyelik başvurunuz onaylandı. Bilgileriniz onaylandı ve
-                    hesabınız aktif edildi.
-                  </Text>
-                </View>
+                  Üyelik başvurunuz onaylandı. Bilgileriniz onaylandı ve
+                  hesabınız aktif edildi.
+                </Text>
               </View>
-            )
-          }
+            </View>
+          )}
           {namFromGetUser?.has_club == 0 && (
             <>
               <Text style={styles.headerText}>

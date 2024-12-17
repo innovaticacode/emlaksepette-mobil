@@ -9,9 +9,10 @@ import React, { useState, useEffect } from "react";
 import ProjectPost from "../../../components/ProjectPost";
 import ProjectBottomSheetFilter from "../../../components/ProjectBottomSheetFilter";
 import axios from "axios";
-import { apiUrl, frontEndUriBase } from "../../../components/methods/apiRequest";
-
-
+import {
+  apiUrl,
+  frontEndUriBase,
+} from "../../../components/methods/apiRequest";
 
 export default function ProjectAdverts(props) {
   const { data, isVisible, setIsVisible, id } = props;
@@ -105,7 +106,10 @@ export default function ProjectAdverts(props) {
               key={item.id}
               project={item}
               caption={item?.project_title}
-              ımage={`${frontEndUriBase}${item?.image.replace("public/", "storage/")}`}
+              ımage={`${frontEndUriBase}${item?.image.replace(
+                "public/",
+                "storage/"
+              )}`}
               location={item?.city?.title}
               city={item?.county?.ilce_title}
               ProjectNo={item?.id}

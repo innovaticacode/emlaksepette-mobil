@@ -633,7 +633,7 @@ export default function PostDetail() {
     } else {
       setShow(true);
     }
-  }
+  };
   return (
     <>
       <AlertNotificationRoot>
@@ -662,16 +662,60 @@ export default function PostDetail() {
                   paddingBottom: width > 400 ? 15 : 7,
                 }}
               >
-                {
-                  (!data?.housing?.sold || data?.housing?.sold > 1)
-                    ?
-                    <>
-                      {
-                        data?.housing?.user?.id == user?.id ?
-                          <TouchableOpacity
+                {!data?.housing?.sold || data?.housing?.sold > 1 ? (
+                  <>
+                    {data?.housing?.user?.id == user?.id ? (
+                      <TouchableOpacity
+                        style={{
+                          backgroundColor: "#008001",
+                          width: "100%",
+                          padding: 12,
+                          borderRadius: 5,
+                        }}
+                      >
+                        <Text
+                          style={{
+                            textAlign: "center",
+                            color: "#ffffff",
+                            fontWeight: "700",
+                          }}
+                        >
+                          İlanı Düzenle
+                        </Text>
+                      </TouchableOpacity>
+                    ) : (
+                      <>
+                        <TouchableOpacity
+                          style={{
+                            width: "45%",
+                            backgroundColor: "#EA2B2E",
+                            padding: 12,
+                            borderRadius: 8,
+                          }}
+                          onPress={handleOpenPhone}
+                        >
+                          <Text
                             style={{
-                              backgroundColor: "#008001",
-                              width: "100%",
+                              fontSize: 14,
+                              color: "white",
+                              fontWeight: "600",
+                              textAlign: "center",
+                            }}
+                          >
+                            Ara
+                          </Text>
+                        </TouchableOpacity>
+                        {data?.housing?.step1_slug == "mustakil-tatil" &&
+                        data?.housing?.step2_slug == "gunluk-kiralik" ? (
+                          <TouchableOpacity
+                            onPress={() => {
+                              navigation.navigate("CreateReservation", {
+                                data: data,
+                              });
+                            }}
+                            style={{
+                              backgroundColor: "#EB2B2E",
+                              width: "45%",
                               padding: 12,
                               borderRadius: 5,
                             }}
@@ -683,121 +727,84 @@ export default function PostDetail() {
                                 fontWeight: "700",
                               }}
                             >
-                              İlanı Düzenle
+                              Rezervasyon Yap
                             </Text>
-                          </TouchableOpacity> :
-                          <>
-                            <TouchableOpacity
+                          </TouchableOpacity>
+                        ) : (
+                          <TouchableOpacity
+                            onPress={() => {
+                              if (user.access_token) {
+                                setModalForAddToCart(true);
+                              } else {
+                                setAlertForAddToCard(true);
+                              }
+                            }}
+                            style={{
+                              backgroundColor: "#EA2B2E",
+                              width: "45%",
+                              padding: 12,
+                              borderRadius: 5,
+                            }}
+                          >
+                            <Text
                               style={{
-                                width: "45%",
-                                backgroundColor: "#EA2B2E",
-                                padding: 12,
-                                borderRadius: 8,
+                                textAlign: "center",
+                                color: "#ffffff",
+                                fontWeight: "700",
                               }}
-                              onPress={handleOpenPhone}
                             >
-                              <Text
-                                style={{
-                                  fontSize: 14,
-                                  color: "white",
-                                  fontWeight: "600",
-                                  textAlign: "center",
-                                }}
-                              >
-                                Ara
-                              </Text>
-                            </TouchableOpacity>
-                            {
-                              data?.housing?.step1_slug == "mustakil-tatil" &&
-                                data?.housing?.step2_slug == "gunluk-kiralik" ? (
-                                <TouchableOpacity
-                                  onPress={() => {
-                                    navigation.navigate("CreateReservation", {
-                                      data: data,
-                                    });
-                                  }}
-                                  style={{
-                                    backgroundColor: "#EB2B2E",
-                                    width: "45%",
-                                    padding: 12,
-                                    borderRadius: 5,
-                                  }}
-                                >
-                                  <Text
-                                    style={{
-                                      textAlign: "center",
-                                      color: "#ffffff",
-                                      fontWeight: "700",
-                                    }}
-                                  >
-                                    Rezervasyon Yap
-                                  </Text>
-                                </TouchableOpacity>
-                              ) : (
-                                <TouchableOpacity
-                                  onPress={() => {
-                                    if (user.access_token) {
-                                      setModalForAddToCart(true);
-                                    } else {
-                                      setAlertForAddToCard(true);
-                                    }
-                                  }}
-                                  style={{
-                                    backgroundColor: "#EA2B2E",
-                                    width: "45%",
-                                    padding: 12,
-                                    borderRadius: 5,
-                                  }}
-                                >
-                                  <Text
-                                    style={{
-                                      textAlign: "center",
-                                      color: "#ffffff",
-                                      fontWeight: "700",
-                                    }}
-                                  >
-                                    Sepete Ekle
-                                  </Text>
-                                </TouchableOpacity>
-                              )
-                            }
-                          </>
-                      }
-
-                    </>
-                    :
-                    data?.housing?.sold == 1 ? (
-                      <View
-                        style={[{ backgroundColor: "#000000", width: '100%', padding: 15, borderRadius: 10 }]}
-                      >
-                        <Text
-                          style={{
-                            color: "white",
-                            fontWeight: "600",
-                            textAlign: 'center',
-                            fontSize: 14,
-                          }}
-                        >
-                          Satıldı
-                        </Text>
-                      </View>
-                    ) : (
-                      <View
-                        style={[{ backgroundColor: "#373737", width: '100%', padding: 15, borderRadius: 10 }]}
-                      >
-                        <Text
-                          style={{
-                            color: "white",
-                            fontWeight: "600",
-                            textAlign: 'center',
-                            fontSize: 14,
-                          }}
-                        >
-                          Rezerve Edildi
-                        </Text>
-                      </View>
-                    )
-                }
+                              Sepete Ekle
+                            </Text>
+                          </TouchableOpacity>
+                        )}
+                      </>
+                    )}
+                  </>
+                ) : data?.housing?.sold == 1 ? (
+                  <View
+                    style={[
+                      {
+                        backgroundColor: "#000000",
+                        width: "100%",
+                        padding: 15,
+                        borderRadius: 10,
+                      },
+                    ]}
+                  >
+                    <Text
+                      style={{
+                        color: "white",
+                        fontWeight: "600",
+                        textAlign: "center",
+                        fontSize: 14,
+                      }}
+                    >
+                      Satıldı
+                    </Text>
+                  </View>
+                ) : (
+                  <View
+                    style={[
+                      {
+                        backgroundColor: "#373737",
+                        width: "100%",
+                        padding: 15,
+                        borderRadius: 10,
+                      },
+                    ]}
+                  >
+                    <Text
+                      style={{
+                        color: "white",
+                        fontWeight: "600",
+                        textAlign: "center",
+                        fontSize: 14,
+                      }}
+                    >
+                      Rezerve Edildi
+                    </Text>
+                  </View>
+                )}
                 {/* {data?.housing?.user?.id == user?.id || data?.housing?.sold ? (
                   <></>
                 ) : (
@@ -934,7 +941,6 @@ export default function PostDetail() {
                   </View>
                 )} */}
               </View>
-
             </View>
             <View
               style={{
@@ -1112,8 +1118,9 @@ export default function PostDetail() {
                     >
                       <Image
                         source={{
-                          uri: `${frontEndUriBase}housing_images/${item.split("/")[item.split("/").length - 1]
-                            }`,
+                          uri: `${frontEndUriBase}housing_images/${
+                            item.split("/")[item.split("/").length - 1]
+                          }`,
                         }}
                         style={{ width: "100%", height: "100%" }}
                       />
@@ -1133,9 +1140,11 @@ export default function PostDetail() {
                   }}
                   onImageIndexChange={handleImageIndexChange}
                   FooterComponent={({ imageIndex }) => (
-                    <View style={{
-                      marginBottom: 50,
-                    }}>
+                    <View
+                      style={{
+                        marginBottom: 50,
+                      }}
+                    >
                       <Text style={styles.fulViewImgText}>
                         {imageIndex + 1} / {images.length}
                       </Text>
@@ -1214,20 +1223,20 @@ export default function PostDetail() {
                                   "price"
                                 ]
                                   ? JSON.parse(data.housing.housing_type_data)[
-                                  "price"
-                                  ]
+                                      "price"
+                                    ]
                                   : JSON.parse(data.housing.housing_type_data)[
-                                  "daily_rent"
-                                  ]
+                                      "daily_rent"
+                                    ]
                               )}{" "}
                               ₺{" "}
                               {JSON.parse(data.housing.housing_type_data)[
                                 "daily_rent"
                               ] && (
-                                  <Text style={{ color: "#EA2A28" }}>
-                                    / Gecelik
-                                  </Text>
-                                )}
+                                <Text style={{ color: "#EA2A28" }}>
+                                  / Gecelik
+                                </Text>
+                              )}
                             </Text>
                           )}
                       </View>
@@ -1238,7 +1247,8 @@ export default function PostDetail() {
                 {data.housing &&
                   data.housing.housing_type_data &&
                   JSON.parse(data.housing.housing_type_data)["swap"] ==
-                  "Evet" && (!data?.housing?.sold || data?.housing?.sold > 1) && (
+                    "Evet" &&
+                  (!data?.housing?.sold || data?.housing?.sold > 1) && (
                     <View>
                       <TouchableOpacity
                         style={styles.swapContainer}
@@ -1368,7 +1378,7 @@ export default function PostDetail() {
                             }}
                           >
                             {user.type == 2 &&
-                              user.corporate_type == "Emlak Ofisi"
+                            user.corporate_type == "Emlak Ofisi"
                               ? "Portföye Ekle"
                               : "Koleksiyona Ekle"}
                           </Text>
@@ -1380,7 +1390,7 @@ export default function PostDetail() {
                             }}
                           >
                             {user.type == 2 &&
-                              user.corporate_type == "Emlak Ofisi"
+                            user.corporate_type == "Emlak Ofisi"
                               ? "Konutu portföylerinden birine ekleyebilir veya yeni bir portföy oluşturabilirsin"
                               : "Konutu koleksiyonlarından birine ekleyebilir veya yeni bir koleksiyon oluşturabilirsin"}
                           </Text>
@@ -1482,7 +1492,7 @@ export default function PostDetail() {
                                     }}
                                   >
                                     {user.type == 2 &&
-                                      user.corporate_type == "Emlak Ofisi"
+                                    user.corporate_type == "Emlak Ofisi"
                                       ? "Portföyünüze konut ekleyebilmeniz için giriş yapmanız gerekmektedir"
                                       : "Koleksiyonunuza konut ekleyebilmeniz için giriş yapmanız gerekmektedir"}
                                   </Text>
@@ -1536,7 +1546,7 @@ export default function PostDetail() {
                                     }}
                                   >
                                     {user.type == 2 &&
-                                      user.corporate_type == "Emlak Ofisi"
+                                    user.corporate_type == "Emlak Ofisi"
                                       ? "Portföyünüze konut ekleyebilmeniz için Emlak Kulüp üyesi olmanız gerekmektedir"
                                       : "Koleksiyonunuza konut ekleyebilmeniz için Emlak Kulüp üyesi olmanız gerekmektedir"}
                                   </Text>
@@ -1587,7 +1597,7 @@ export default function PostDetail() {
                                     }}
                                   >
                                     {user.type == 2 &&
-                                      user.corporate_type == "Emlak Ofisi"
+                                    user.corporate_type == "Emlak Ofisi"
                                       ? "Portföyünüze konut ekleyebilmeniz için Emlak Kulüp üyesi olmanız gerekmektedir"
                                       : "Koleksiyonunuza konut ekleyebilmeniz için Emlak Kulüp üyesi olmanız gerekmektedir"}
                                   </Text>
@@ -1618,7 +1628,7 @@ export default function PostDetail() {
                                     }}
                                   >
                                     {user.type == 2 &&
-                                      user.corporate_type == "Emlak Ofisi"
+                                    user.corporate_type == "Emlak Ofisi"
                                       ? "Portföyünüze konut ekleyebilmeniz için Emlak Kulüp üyesi olmanız gerekmektedir"
                                       : "Koleksiyonunuza konut ekleyebilmeniz için Emlak Kulüp üyesi olmanız gerekmektedir"}
                                   </Text>
@@ -1855,7 +1865,7 @@ export default function PostDetail() {
                             }}
                           >
                             {user.type == 2 &&
-                              user.corporate_type == "Emlak Ofisi"
+                            user.corporate_type == "Emlak Ofisi"
                               ? "Portföy Oluştur"
                               : "Koleksiyon Oluştur"}
                           </Text>
@@ -1876,7 +1886,7 @@ export default function PostDetail() {
                           }}
                         >
                           {user.type == 2 &&
-                            user.corporate_type == "Emlak Ofisi"
+                          user.corporate_type == "Emlak Ofisi"
                             ? "Portföy İsmi"
                             : "Koleksiyon İsmi"}
                         </Text>
@@ -1907,7 +1917,7 @@ export default function PostDetail() {
                             }}
                           >
                             {user.type == 2 &&
-                              user.corporate_type == "Emlak Ofisi"
+                            user.corporate_type == "Emlak Ofisi"
                               ? "Portföy Oluştur"
                               : "Koleksiyon Oluştur"}
                           </Text>
@@ -2418,5 +2428,5 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
     borderRadius: 5,
-  }
+  },
 });

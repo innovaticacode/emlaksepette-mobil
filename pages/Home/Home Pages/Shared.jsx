@@ -22,7 +22,7 @@ const PAGE_SIZE = 10;
 
 const Shared = ({ index }) => {
   const navigation = useNavigation();
- 
+
   const [featuredEstates, setFeaturedEstates] = useState([]);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
@@ -40,9 +40,7 @@ const Shared = ({ index }) => {
     console.log(config);
     try {
       const response = await axios.get(
-        `${apiUrl}real-estates?page=${
-          reset ? 1 : page
-        }&limit=${PAGE_SIZE}`,
+        `${apiUrl}real-estates?page=${reset ? 1 : page}&limit=${PAGE_SIZE}`,
         config
       );
       const newEstates = response.data;

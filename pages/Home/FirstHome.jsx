@@ -32,6 +32,9 @@ import SliderBarForFeature from "../../components/SliderBarForFeature";
 import RealtorCardHome from "../../components/Card/RealtorCardHomePage/RealtorCardHome";
 import RealtorPost from "../../components/Card/RealtorCard/RealtorPost";
 import { UsePaginatedData } from "../../hooks";
+import { setBasketItem } from "../../store/slices/Basket/BasketSlice";
+import BasketItem from "../../components/BasketItem";
+import { useDispatch } from "react-redux";
 
 const FirstHome = (props) => {
   const { index } = props;
@@ -127,6 +130,32 @@ const FirstHome = (props) => {
   useEffect(() => {
     fetchFeaturedSliders();
   }, []);
+
+  const dispatch = useDispatch();
+
+  const fetchBasket = async () => {
+    try {
+      const response = await axios.get(`${apiUrl}institutional/my-cart`, {
+        headers: {
+          Authorization: `Bearer ${user?.access_token}`,
+        },
+      });
+
+      dispatch(
+        setBasketItem({
+          basketItem: response?.data?.cart?.item,
+        })
+      );
+    } catch (error) {
+      console.error("Error fetching basket:", error);
+    }
+  };
+
+  useEffect(() => {
+    if (user?.access_token) {
+      fetchBasket();
+    }
+  }, [user]);
 
   useEffect(() => {
     const interval = setInterval(() => {

@@ -42,7 +42,7 @@ export default function CreateUserType() {
     try {
       if (user.access_token) {
         const response = await axios.get(
-          apiUrl+"institutional/roles/create",
+          apiUrl + "institutional/roles/create",
           {
             headers: {
               Authorization: `Bearer ${user.access_token}`,
@@ -111,7 +111,7 @@ export default function CreateUserType() {
       });
 
       const response = await axios.post(
-        apiUrl+"institutional/roles",
+        apiUrl + "institutional/roles",
         formData, // formData kullanın
         {
           headers: {

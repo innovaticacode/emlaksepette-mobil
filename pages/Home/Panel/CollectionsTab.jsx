@@ -37,7 +37,10 @@ import CollectionsItem from "../ProfilePages/profileComponents/CollectionsItem";
 import RegisterRealtorClub from "../ProfilePages/RegisterRealtorClub";
 import { getValueFor } from "../../../components/methods/user";
 import NoDataScreen from "../../../components/NoDataScreen";
-import { apiUrl, frontEndUriBase } from "../../../components/methods/apiRequest";
+import {
+  apiUrl,
+  frontEndUriBase,
+} from "../../../components/methods/apiRequest";
 
 export default function CollectionsTab() {
   const navigation = useNavigation();
@@ -173,14 +176,11 @@ export default function CollectionsTab() {
       setloading(true);
 
       if (user.access_token) {
-        const response = await axios.get(
-          apiUrl+"client/collections",
-          {
-            headers: {
-              Authorization: `Bearer ${user?.access_token}`,
-            },
-          }
-        );
+        const response = await axios.get(apiUrl + "client/collections", {
+          headers: {
+            Authorization: `Bearer ${user?.access_token}`,
+          },
+        });
         setProjectItems(response?.data?.items);
         setcollections(response?.data?.collections);
         setcollectionsRecods(response?.data?.collections);
@@ -211,14 +211,11 @@ export default function CollectionsTab() {
     try {
       let formData = new FormData();
       formData.append();
-      const response = await axios.delete(
-        `${apiUrl}collection/${id}/delete`,
-        {
-          headers: {
-            Authorization: `Bearer ${user?.access_token}`,
-          },
-        }
-      );
+      const response = await axios.delete(`${apiUrl}collection/${id}/delete`, {
+        headers: {
+          Authorization: `Bearer ${user?.access_token}`,
+        },
+      });
 
       closeSheet();
 
@@ -363,14 +360,11 @@ export default function CollectionsTab() {
     setloading(true);
     try {
       if (user?.access_token && user) {
-        const userInfo = await axios.get(
-          apiUrl+"users/" + user?.id,
-          {
-            headers: {
-              Authorization: `Bearer ${user.access_token}`,
-            },
-          }
-        );
+        const userInfo = await axios.get(apiUrl + "users/" + user?.id, {
+          headers: {
+            Authorization: `Bearer ${user.access_token}`,
+          },
+        });
         const userData = userInfo?.data?.user;
         setnamFromGetUser(userData);
       }

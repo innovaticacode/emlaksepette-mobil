@@ -38,8 +38,7 @@ export default function SelledRealtorAdverts() {
   const [sort, setsort] = useState(null);
   const [totalAdvert, setTotalAdvert] = useState("");
 
-  const fetchHousings = async (sort,take,skip) => {
-
+  const fetchHousings = async (sort, take, skip) => {
     try {
       const res = await axios({
         method: "get",

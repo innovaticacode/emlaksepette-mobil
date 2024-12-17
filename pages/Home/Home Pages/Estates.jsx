@@ -57,6 +57,11 @@ const Estates = ({ index }) => {
           size="small"
           color="#333"
         />
+        <ActivityIndicator
+          style={{ marginVertical: 16 }}
+          size="small"
+          color="#333"
+        />
       </View>
     );
   };
