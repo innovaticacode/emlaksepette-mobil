@@ -293,32 +293,37 @@ export default function Notifications() {
                     </View>
                   </View>
                   <>
-                    <AwesomeAlert
-                      show={readShowAlert}
-                      showProgress={false}
-                      titleStyle={styles.alertTitle}
-                      title={
-                        "Tüm bildirimleri okundu olarak işaretlemek istediğinize emin misiniz?"
-                      }
-                      messageStyle={{ textAlign: "center" }}
-                      closeOnTouchOutside={true}
-                      closeOnHardwareBackPress={false}
-                      showCancelButton={true}
-                      showConfirmButton={true}
-                      cancelText="Hayır"
-                      confirmText="Evet"
-                      cancelButtonColor="#ce4d63"
-                      confirmButtonColor="#1d8027"
-                      onCancelPressed={() => {
-                        setReadShowAlert(false);
-                      }}
-                      onConfirmPressed={() => {
-                        allRead();
-                        setReadShowAlert(false);
-                      }}
-                      confirmButtonTextStyle={styles.alertMargin}
-                      cancelButtonTextStyle={styles.alertMargin}
-                    />
+                    {readShowAlert && (
+                      <AwesomeAlert
+                        show={readShowAlert}
+                        showProgress={false}
+                        animationIn="none"
+                        animationOut="none"
+                        titleStyle={styles.alertTitle}
+                        title={
+                          "Tüm bildirimleri okundu olarak işaretlemek istediğinize emin misiniz?"
+                        }
+                        messageStyle={{ textAlign: "center" }}
+                        closeOnTouchOutside={true}
+                        closeOnHardwareBackPress={false}
+                        showCancelButton={true}
+                        showConfirmButton={true}
+                        cancelText="Hayır"
+                        confirmText="Evet"
+                        cancelButtonColor="#ce4d63"
+                        confirmButtonColor="#1d8027"
+                        onCancelPressed={() => {
+                          setReadShowAlert(false);
+                        }}
+                        onConfirmPressed={() => {
+                          allRead();
+                          setReadShowAlert(false);
+                        }}
+                        confirmButtonTextStyle={styles.alertMargin}
+                        cancelButtonTextStyle={styles.alertMargin}
+                      />
+                    )}
+
                     <>
                       <FlatList
                         data={notifications}
@@ -353,56 +358,64 @@ export default function Notifications() {
                         }
                       />
                     </>
-                    <AwesomeAlert
-                      show={deleteAlertForNotification}
-                      showProgress={false}
-                      titleStyle={styles.alertTitle}
-                      title={
-                        "Tüm bildirimleri silmek istediğinize emin misiniz?"
-                      }
-                      messageStyle={{ textAlign: "center" }}
-                      closeOnTouchOutside={true}
-                      closeOnHardwareBackPress={false}
-                      showCancelButton={true}
-                      showConfirmButton={true}
-                      cancelText="Hayır"
-                      confirmText="Evet"
-                      cancelButtonColor="#ce4d63"
-                      confirmButtonColor="#1d8027"
-                      onCancelPressed={() => {
-                        setdeleteAlertForNotification(false);
-                      }}
-                      onConfirmPressed={() => {
-                        deleteRequestWithToken();
-                      }}
-                      confirmButtonTextStyle={styles.alertMargin}
-                      cancelButtonTextStyle={styles.alertMargin}
-                    />
+                    {deleteAlertForNotification && (
+                      <AwesomeAlert
+                        show={deleteAlertForNotification}
+                        showProgress={false}
+                        animationIn="none"
+                        animationOut="none"
+                        titleStyle={styles.alertTitle}
+                        title={
+                          "Tüm bildirimleri silmek istediğinize emin misiniz?"
+                        }
+                        messageStyle={{ textAlign: "center" }}
+                        closeOnTouchOutside={true}
+                        closeOnHardwareBackPress={false}
+                        showCancelButton={true}
+                        showConfirmButton={true}
+                        cancelText="Hayır"
+                        confirmText="Evet"
+                        cancelButtonColor="#ce4d63"
+                        confirmButtonColor="#1d8027"
+                        onCancelPressed={() => {
+                          setdeleteAlertForNotification(false);
+                        }}
+                        onConfirmPressed={() => {
+                          deleteRequestWithToken();
+                        }}
+                        confirmButtonTextStyle={styles.alertMargin}
+                        cancelButtonTextStyle={styles.alertMargin}
+                      />
+                    )}
 
-                    <AwesomeAlert
-                      show={alertFordeleteNotificate}
-                      showProgress={false}
-                      titleStyle={styles.alertTitle}
-                      title={"Bildirimi silmek istediğinize eminmisiniz?"}
-                      messageStyle={{ textAlign: "center" }}
-                      closeOnTouchOutside={true}
-                      closeOnHardwareBackPress={false}
-                      showCancelButton={true}
-                      showConfirmButton={true}
-                      cancelText="Hayır"
-                      confirmText="Evet"
-                      cancelButtonColor="#ce4d63"
-                      confirmButtonColor="#1d8027"
-                      onCancelPressed={() => {
-                        setalertFordeleteNotificate(false);
-                      }}
-                      onConfirmPressed={() => {
-                        deleteNotificate();
-                        setalertFordeleteNotificate(false);
-                      }}
-                      confirmButtonTextStyle={styles.alertMargin}
-                      cancelButtonTextStyle={styles.alertMargin}
-                    />
+                    {alertFordeleteNotificate && (
+                      <AwesomeAlert
+                        show={alertFordeleteNotificate}
+                        showProgress={false}
+                        animationIn="none"
+                        animationOut="none"
+                        titleStyle={styles.alertTitle}
+                        title={"Bildirimi silmek istediğinize eminmisiniz?"}
+                        messageStyle={{ textAlign: "center" }}
+                        closeOnTouchOutside={true}
+                        closeOnHardwareBackPress={false}
+                        showCancelButton={true}
+                        showConfirmButton={true}
+                        cancelText="Hayır"
+                        confirmText="Evet"
+                        cancelButtonColor="#ce4d63"
+                        confirmButtonColor="#1d8027"
+                        onCancelPressed={() => {
+                          setalertFordeleteNotificate(false);
+                        }}
+                        onConfirmPressed={() => {
+                          deleteNotificate();
+                          setalertFordeleteNotificate(false);
+                        }}
+                        confirmButtonTextStyle={styles.alertMargin}
+                        cancelButtonTextStyle={styles.alertMargin}
+                      />
+                    )}
                   </>
                 </>
               )}
