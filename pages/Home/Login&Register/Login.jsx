@@ -424,7 +424,7 @@ export default function Login({ navigation }) {
                             width: "40%",
                           }}
                         />
-                        <Text style={{ color: "#666666" }}>veya</Text>
+                        {/* <Text style={{ color: "#666666" }}>veya</Text> */}
                         <View
                           style={{
                             backgroundColor: "#E7EBEE",
@@ -435,7 +435,7 @@ export default function Login({ navigation }) {
                         />
                       </View>
 
-                      <View
+                      {/* <View
                         style={{
                           flexDirection: "row",
                           justifyContent: "space-around",
@@ -462,11 +462,11 @@ export default function Login({ navigation }) {
                             Google
                           </Text>
                         </TouchableOpacity>
-                      </View>
+                      </View> */}
                     </View>
                   </KeyboardAvoidingView>
 
-                  <View style={{}}>
+                  {/* <View style={{}}>
                     <View style={{ width: "95%", justifyContent: "center" }}>
                       <Text
                         style={{
@@ -492,7 +492,7 @@ export default function Login({ navigation }) {
                         'ni kabul etmiş sayılırsınız.
                       </Text>
                     </View>
-                  </View>
+                  </View> */}
                 </View>
               </View>
 
