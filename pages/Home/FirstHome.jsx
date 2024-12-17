@@ -21,18 +21,13 @@ import ProjectButton from "../../components/ProjectButton";
 import FranchiseBanner from "../../components/FranchiseBanner";
 
 import SliderTourismRent from "./SliderTourismRent";
-import {
-  apiUrl,
-  frontEndUri,
-  frontEndUriBase,
-} from "../../components/methods/apiRequest";
+import { apiUrl, frontEndUriBase } from "../../components/methods/apiRequest";
 import Arrow from "react-native-vector-icons/SimpleLineIcons";
 import SliderBarForFeature from "../../components/SliderBarForFeature";
 import RealtorCardHome from "../../components/Card/RealtorCardHomePage/RealtorCardHome";
 
 import { UsePaginatedData } from "../../hooks";
 import { setBasketItem } from "../../store/slices/Basket/BasketSlice";
-import BasketItem from "../../components/BasketItem";
 import { useDispatch } from "react-redux";
 
 const FirstHome = (props) => {
