@@ -32,6 +32,7 @@ export default function EftPay({
     setshowPaymentAccountName(true);
     Clipboard.setStringAsync(Iban);
   };
+  const ziraatIban = "TR 7200 0100 2099 9785 8794 5002";
 
   const openPdf = async () => {
     if (url) {
@@ -103,7 +104,7 @@ export default function EftPay({
             borderColor: "red",
           }}
           onPress={() => {
-            IbanControl("TR16 0001 0020 9997 7967 8350 01");
+            IbanControl(ziraatIban);
             setSelectedBank(5);
             setshowCopyAlert2(true);
             setTimeout(() => {
