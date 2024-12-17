@@ -5,7 +5,7 @@ import {
   TouchableOpacity,
   Platform,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { ImageBackground } from "react-native";
 import Icon from "react-native-vector-icons/Entypo";
 import * as Clipboard from "expo-clipboard";
@@ -13,6 +13,8 @@ import { useNavigation } from "@react-navigation/native";
 import * as FileSystem from "expo-file-system";
 import * as IntentLauncher from "expo-intent-launcher";
 import { ActivityIndicator } from "react-native-paper";
+import axios from "axios";
+import { apiUrl } from "../../components/methods/apiRequest";
 export default function EftPay({
   onPress,
   selectedDocumentName,
@@ -32,7 +34,16 @@ export default function EftPay({
     setshowPaymentAccountName(true);
     Clipboard.setStringAsync(Iban);
   };
-  const ziraatIban = "TR 7200 0100 2099 9785 8794 5002";
+  const [iban, setIban] = useState({});
+
+  const handleFetchIban = async () => {
+    const response = await axios.get(apiUrl + "get-iban");
+    setIban(response.data.iban);
+  };
+
+  useEffect(() => {
+    handleFetchIban();
+  }, []);
 
   const openPdf = async () => {
     if (url) {
@@ -104,7 +115,7 @@ export default function EftPay({
             borderColor: "red",
           }}
           onPress={() => {
-            IbanControl(ziraatIban);
+            IbanControl(iban);
             setSelectedBank(5);
             setshowCopyAlert2(true);
             setTimeout(() => {
