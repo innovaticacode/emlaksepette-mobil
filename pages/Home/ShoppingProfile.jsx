@@ -40,6 +40,7 @@ import { Skeleton } from "@rneui/themed";
 
 import { setShoppingProfile } from "../../store/slices/Menu/MenuSlice";
 import { apiUrl, frontEndUriBase } from "../../components/methods/apiRequest";
+import { ActivityIndicator } from "react-native-paper";
 
 export default function ShoppingProfile() {
   const [checkImage, setCheckImage] = useState(null);
