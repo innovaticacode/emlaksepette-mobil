@@ -19,7 +19,7 @@ import { useSelector } from "react-redux";
 
 const Estates = ({ index }) => {
   const navigation = useNavigation();
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const apiData = [{ key: "step1_slug", value: "konut" }];
   const banners = useSelector((state) => state?.banners?.banners);
   const { data, hooksLoading, error, loadMore, setSkip } = UsePaginatedData(
@@ -41,6 +41,12 @@ const Estates = ({ index }) => {
     await setSkip(0);
     setLoading(false);
   };
+
+  useEffect(() => {
+    if (data && data.length > 0) {
+      setLoading(false); // Data yüklendiğinde loading state'i false yap
+    }
+  }, [data]);
 
   const renderFooter = () => {
     if (!hooksLoading) return null;

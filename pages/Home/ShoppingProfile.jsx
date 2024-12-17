@@ -302,397 +302,404 @@ export default function ShoppingProfile() {
   return (
     <>
       {loading ? (
-        <View style={{ flex: 1, paddingTop: 60, marginLeft: 10 }}>
-          {/* Profil alanı için Skeleton */}
-          <View style={{ marginLeft: 20 }}>
-            <View
-              style={{
-                alignItems: "center",
-                marginBottom: 20,
-                flexDirection: "row",
-              }}
-            >
-              {/* Profil fotoğrafı için Skeleton */}
-              <Skeleton
-                circle
-                width={60}
-                height={60}
-                skeletonStyle={{ backgroundColor: "#dbdbdb" }}
-                style={{ backgroundColor: "#ced4da", marginBottom: 10 }}
-              />
-              {/* İsim için Skeleton */}
-              <View style={{ flexDirection: "column", marginLeft: 10 }}>
-                <Skeleton
-                  width={150}
-                  height={20}
-                  skeletonStyle={{ backgroundColor: "#dbdbdb" }}
-                  style={{ backgroundColor: "#ced4da", marginBottom: 5 }}
-                />
-                {/* Kurumsal tip için Skeleton */}
-                <Skeleton
-                  width={100}
-                  height={15}
-                  skeletonStyle={{ backgroundColor: "#dbdbdb" }}
-                  style={{ backgroundColor: "#ced4da" }}
-                />
-              </View>
-            </View>
-          </View>
+        // <View style={{ flex: 1, paddingTop: 60, marginLeft: 10 }}>
+        //   {/* Profil alanı için Skeleton */}
+        //   <View style={{ marginLeft: 20 }}>
+        //     <View
+        //       style={{
+        //         alignItems: "center",
+        //         marginBottom: 20,
+        //         flexDirection: "row",
+        //       }}
+        //     >
+        //       {/* Profil fotoğrafı için Skeleton */}
+        //       <Skeleton
+        //         circle
+        //         width={60}
+        //         height={60}
+        //         skeletonStyle={{ backgroundColor: "#dbdbdb" }}
+        //         style={{ backgroundColor: "#ced4da", marginBottom: 10 }}
+        //       />
+        //       {/* İsim için Skeleton */}
+        //       <View style={{ flexDirection: "column", marginLeft: 10 }}>
+        //         <Skeleton
+        //           width={150}
+        //           height={20}
+        //           skeletonStyle={{ backgroundColor: "#dbdbdb" }}
+        //           style={{ backgroundColor: "#ced4da", marginBottom: 5 }}
+        //         />
+        //         {/* Kurumsal tip için Skeleton */}
+        //         <Skeleton
+        //           width={100}
+        //           height={15}
+        //           skeletonStyle={{ backgroundColor: "#dbdbdb" }}
+        //           style={{ backgroundColor: "#ced4da" }}
+        //         />
+        //       </View>
+        //     </View>
+        //   </View>
 
-          <View
-            style={{
-              alignItems: "center",
-              marginBottom: 20,
-              marginTop: 30,
-              flexDirection: "row",
-            }}
-          >
-            {/* Profil fotoğrafı için Skeleton */}
-            <Skeleton
-              circle
-              width={40}
-              height={40}
-              skeletonStyle={{ backgroundColor: "#dbdbdb" }}
-              style={{ backgroundColor: "#ced4da", marginBottom: 10 }}
-            />
-            {/* İsim için Skeleton */}
-            <View style={{ flexDirection: "column", marginLeft: 10 }}>
-              <Skeleton
-                width={100}
-                height={15}
-                skeletonStyle={{ backgroundColor: "#dbdbdb" }}
-                style={{ backgroundColor: "#ced4da", marginBottom: 5 }}
-              />
-              {/* Kurumsal tip için Skeleton */}
-              <Skeleton
-                width={150}
-                height={10}
-                skeletonStyle={{ backgroundColor: "#dbdbdb" }}
-                style={{ backgroundColor: "#ced4da" }}
-              />
-            </View>
-          </View>
-          <View
-            style={{
-              alignItems: "center",
-              marginBottom: 20,
-              flexDirection: "row",
-            }}
-          >
-            {/* Profil fotoğrafı için Skeleton */}
-            <Skeleton
-              circle
-              width={40}
-              height={40}
-              skeletonStyle={{ backgroundColor: "#dbdbdb" }}
-              style={{ backgroundColor: "#ced4da", marginBottom: 10 }}
-            />
-            {/* İsim için Skeleton */}
-            <View style={{ flexDirection: "column", marginLeft: 10 }}>
-              <Skeleton
-                width={100}
-                height={15}
-                skeletonStyle={{ backgroundColor: "#dbdbdb" }}
-                style={{ backgroundColor: "#ced4da", marginBottom: 5 }}
-              />
-              {/* Kurumsal tip için Skeleton */}
-              <Skeleton
-                width={150}
-                height={10}
-                skeletonStyle={{ backgroundColor: "#dbdbdb" }}
-                style={{ backgroundColor: "#ced4da" }}
-              />
-            </View>
-          </View>
-          <View
-            style={{
-              alignItems: "center",
-              marginBottom: 20,
-              flexDirection: "row",
-            }}
-          >
-            {/* Profil fotoğrafı için Skeleton */}
-            <Skeleton
-              circle
-              width={40}
-              height={40}
-              skeletonStyle={{ backgroundColor: "#dbdbdb" }}
-              style={{ backgroundColor: "#ced4da", marginBottom: 10 }}
-            />
-            {/* İsim için Skeleton */}
-            <View style={{ flexDirection: "column", marginLeft: 10 }}>
-              <Skeleton
-                width={100}
-                height={15}
-                skeletonStyle={{ backgroundColor: "#dbdbdb" }}
-                style={{ backgroundColor: "#ced4da", marginBottom: 5 }}
-              />
-              {/* Kurumsal tip için Skeleton */}
-              <Skeleton
-                width={150}
-                height={10}
-                skeletonStyle={{ backgroundColor: "#dbdbdb" }}
-                style={{ backgroundColor: "#ced4da" }}
-              />
-            </View>
-          </View>
-          <View
-            style={{
-              alignItems: "center",
-              marginBottom: 20,
-              flexDirection: "row",
-            }}
-          >
-            {/* Profil fotoğrafı için Skeleton */}
-            <Skeleton
-              circle
-              width={40}
-              height={40}
-              skeletonStyle={{ backgroundColor: "#dbdbdb" }}
-              style={{ backgroundColor: "#ced4da", marginBottom: 10 }}
-            />
-            {/* İsim için Skeleton */}
-            <View style={{ flexDirection: "column", marginLeft: 10 }}>
-              <Skeleton
-                width={160}
-                height={15}
-                skeletonStyle={{ backgroundColor: "#dbdbdb" }}
-                style={{ backgroundColor: "#ced4da", marginBottom: 5 }}
-              />
-              {/* Kurumsal tip için Skeleton */}
-              <Skeleton
-                width={100}
-                height={10}
-                skeletonStyle={{ backgroundColor: "#dbdbdb" }}
-                style={{ backgroundColor: "#ced4da" }}
-              />
-            </View>
-          </View>
-          <View
-            style={{
-              alignItems: "center",
-              marginBottom: 20,
-              flexDirection: "row",
-            }}
-          >
-            {/* Profil fotoğrafı için Skeleton */}
-            <Skeleton
-              circle
-              width={40}
-              height={40}
-              skeletonStyle={{ backgroundColor: "#dbdbdb" }}
-              style={{ backgroundColor: "#ced4da", marginBottom: 10 }}
-            />
-            {/* İsim için Skeleton */}
-            <View style={{ flexDirection: "column", marginLeft: 10 }}>
-              <Skeleton
-                width={160}
-                height={15}
-                skeletonStyle={{ backgroundColor: "#dbdbdb" }}
-                style={{ backgroundColor: "#ced4da", marginBottom: 5 }}
-              />
-              {/* Kurumsal tip için Skeleton */}
-              <Skeleton
-                width={100}
-                height={10}
-                skeletonStyle={{ backgroundColor: "#dbdbdb" }}
-                style={{ backgroundColor: "#ced4da" }}
-              />
-            </View>
-          </View>
-          <View
-            style={{
-              alignItems: "center",
-              marginBottom: 20,
-              flexDirection: "row",
-            }}
-          >
-            {/* Profil fotoğrafı için Skeleton */}
-            <Skeleton
-              circle
-              width={40}
-              height={40}
-              skeletonStyle={{ backgroundColor: "#dbdbdb" }}
-              style={{ backgroundColor: "#ced4da", marginBottom: 10 }}
-            />
-            {/* İsim için Skeleton */}
-            <View style={{ flexDirection: "column", marginLeft: 10 }}>
-              <Skeleton
-                width={160}
-                height={15}
-                skeletonStyle={{ backgroundColor: "#dbdbdb" }}
-                style={{ backgroundColor: "#ced4da", marginBottom: 5 }}
-              />
-              {/* Kurumsal tip için Skeleton */}
-              <Skeleton
-                width={100}
-                height={10}
-                skeletonStyle={{ backgroundColor: "#dbdbdb" }}
-                style={{ backgroundColor: "#ced4da" }}
-              />
-            </View>
-          </View>
-          <View
-            style={{
-              alignItems: "center",
-              marginBottom: 20,
-              flexDirection: "row",
-            }}
-          >
-            {/* Profil fotoğrafı için Skeleton */}
-            <Skeleton
-              circle
-              width={40}
-              height={40}
-              skeletonStyle={{ backgroundColor: "#dbdbdb" }}
-              style={{ backgroundColor: "#ced4da", marginBottom: 10 }}
-            />
-            {/* İsim için Skeleton */}
-            <View style={{ flexDirection: "column", marginLeft: 10 }}>
-              <Skeleton
-                width={160}
-                height={15}
-                skeletonStyle={{ backgroundColor: "#dbdbdb" }}
-                style={{ backgroundColor: "#ced4da", marginBottom: 5 }}
-              />
-              {/* Kurumsal tip için Skeleton */}
-              <Skeleton
-                width={100}
-                height={10}
-                skeletonStyle={{ backgroundColor: "#dbdbdb" }}
-                style={{ backgroundColor: "#ced4da" }}
-              />
-            </View>
-          </View>
-          <View
-            style={{
-              alignItems: "center",
-              marginBottom: 20,
-              flexDirection: "row",
-            }}
-          >
-            {/* Profil fotoğrafı için Skeleton */}
-            <Skeleton
-              circle
-              width={40}
-              height={40}
-              skeletonStyle={{ backgroundColor: "#dbdbdb" }}
-              style={{ backgroundColor: "#ced4da", marginBottom: 10 }}
-            />
-            {/* İsim için Skeleton */}
-            <View style={{ flexDirection: "column", marginLeft: 10 }}>
-              <Skeleton
-                width={160}
-                height={15}
-                skeletonStyle={{ backgroundColor: "#dbdbdb" }}
-                style={{ backgroundColor: "#ced4da", marginBottom: 5 }}
-              />
-              {/* Kurumsal tip için Skeleton */}
-              <Skeleton
-                width={100}
-                height={10}
-                skeletonStyle={{ backgroundColor: "#dbdbdb" }}
-                style={{ backgroundColor: "#ced4da" }}
-              />
-            </View>
-          </View>
-          <View
-            style={{
-              alignItems: "center",
-              marginBottom: 20,
-              flexDirection: "row",
-            }}
-          >
-            {/* Profil fotoğrafı için Skeleton */}
-            <Skeleton
-              circle
-              width={40}
-              height={40}
-              skeletonStyle={{ backgroundColor: "#dbdbdb" }}
-              style={{ backgroundColor: "#ced4da", marginBottom: 10 }}
-            />
-            {/* İsim için Skeleton */}
-            <View style={{ flexDirection: "column", marginLeft: 10 }}>
-              <Skeleton
-                width={160}
-                height={15}
-                skeletonStyle={{ backgroundColor: "#dbdbdb" }}
-                style={{ backgroundColor: "#ced4da", marginBottom: 5 }}
-              />
-              {/* Kurumsal tip için Skeleton */}
-              <Skeleton
-                width={100}
-                height={10}
-                skeletonStyle={{ backgroundColor: "#dbdbdb" }}
-                style={{ backgroundColor: "#ced4da" }}
-              />
-            </View>
-          </View>
-          <View
-            style={{
-              alignItems: "center",
-              marginBottom: 20,
-              flexDirection: "row",
-            }}
-          >
-            {/* Profil fotoğrafı için Skeleton */}
-            <Skeleton
-              circle
-              width={40}
-              height={40}
-              skeletonStyle={{ backgroundColor: "#dbdbdb" }}
-              style={{ backgroundColor: "#ced4da", marginBottom: 10 }}
-            />
-            {/* İsim için Skeleton */}
-            <View style={{ flexDirection: "column", marginLeft: 10 }}>
-              <Skeleton
-                width={160}
-                height={15}
-                skeletonStyle={{ backgroundColor: "#dbdbdb" }}
-                style={{ backgroundColor: "#ced4da", marginBottom: 5 }}
-              />
-              {/* Kurumsal tip için Skeleton */}
-              <Skeleton
-                width={100}
-                height={10}
-                skeletonStyle={{ backgroundColor: "#dbdbdb" }}
-                style={{ backgroundColor: "#ced4da" }}
-              />
-            </View>
-          </View>
-          <View
-            style={{
-              alignItems: "center",
-              marginBottom: 20,
-              flexDirection: "row",
-            }}
-          >
-            {/* Profil fotoğrafı için Skeleton */}
-            <Skeleton
-              circle
-              width={40}
-              height={40}
-              skeletonStyle={{ backgroundColor: "#dbdbdb" }}
-              style={{ backgroundColor: "#ced4da", marginBottom: 10 }}
-            />
-            {/* İsim için Skeleton */}
-            <View style={{ flexDirection: "column", marginLeft: 10 }}>
-              <Skeleton
-                width={160}
-                height={15}
-                skeletonStyle={{ backgroundColor: "#dbdbdb" }}
-                style={{ backgroundColor: "#ced4da", marginBottom: 5 }}
-              />
-              {/* Kurumsal tip için Skeleton */}
-              <Skeleton
-                width={100}
-                height={10}
-                skeletonStyle={{ backgroundColor: "#dbdbdb" }}
-                style={{ backgroundColor: "#ced4da" }}
-              />
-            </View>
-          </View>
-        </View>
+        //   <View
+        //     style={{
+        //       alignItems: "center",
+        //       marginBottom: 20,
+        //       marginTop: 30,
+        //       flexDirection: "row",
+        //     }}
+        //   >
+        //     {/* Profil fotoğrafı için Skeleton */}
+        //     <Skeleton
+        //       circle
+        //       width={40}
+        //       height={40}
+        //       skeletonStyle={{ backgroundColor: "#dbdbdb" }}
+        //       style={{ backgroundColor: "#ced4da", marginBottom: 10 }}
+        //     />
+        //     {/* İsim için Skeleton */}
+        //     <View style={{ flexDirection: "column", marginLeft: 10 }}>
+        //       <Skeleton
+        //         width={100}
+        //         height={15}
+        //         skeletonStyle={{ backgroundColor: "#dbdbdb" }}
+        //         style={{ backgroundColor: "#ced4da", marginBottom: 5 }}
+        //       />
+        //       {/* Kurumsal tip için Skeleton */}
+        //       <Skeleton
+        //         width={150}
+        //         height={10}
+        //         skeletonStyle={{ backgroundColor: "#dbdbdb" }}
+        //         style={{ backgroundColor: "#ced4da" }}
+        //       />
+        //     </View>
+        //   </View>
+        //   <View
+        //     style={{
+        //       alignItems: "center",
+        //       marginBottom: 20,
+        //       flexDirection: "row",
+        //     }}
+        //   >
+        //     {/* Profil fotoğrafı için Skeleton */}
+        //     <Skeleton
+        //       circle
+        //       width={40}
+        //       height={40}
+        //       skeletonStyle={{ backgroundColor: "#dbdbdb" }}
+        //       style={{ backgroundColor: "#ced4da", marginBottom: 10 }}
+        //     />
+        //     {/* İsim için Skeleton */}
+        //     <View style={{ flexDirection: "column", marginLeft: 10 }}>
+        //       <Skeleton
+        //         width={100}
+        //         height={15}
+        //         skeletonStyle={{ backgroundColor: "#dbdbdb" }}
+        //         style={{ backgroundColor: "#ced4da", marginBottom: 5 }}
+        //       />
+        //       {/* Kurumsal tip için Skeleton */}
+        //       <Skeleton
+        //         width={150}
+        //         height={10}
+        //         skeletonStyle={{ backgroundColor: "#dbdbdb" }}
+        //         style={{ backgroundColor: "#ced4da" }}
+        //       />
+        //     </View>
+        //   </View>
+        //   <View
+        //     style={{
+        //       alignItems: "center",
+        //       marginBottom: 20,
+        //       flexDirection: "row",
+        //     }}
+        //   >
+        //     {/* Profil fotoğrafı için Skeleton */}
+        //     <Skeleton
+        //       circle
+        //       width={40}
+        //       height={40}
+        //       skeletonStyle={{ backgroundColor: "#dbdbdb" }}
+        //       style={{ backgroundColor: "#ced4da", marginBottom: 10 }}
+        //     />
+        //     {/* İsim için Skeleton */}
+        //     <View style={{ flexDirection: "column", marginLeft: 10 }}>
+        //       <Skeleton
+        //         width={100}
+        //         height={15}
+        //         skeletonStyle={{ backgroundColor: "#dbdbdb" }}
+        //         style={{ backgroundColor: "#ced4da", marginBottom: 5 }}
+        //       />
+        //       {/* Kurumsal tip için Skeleton */}
+        //       <Skeleton
+        //         width={150}
+        //         height={10}
+        //         skeletonStyle={{ backgroundColor: "#dbdbdb" }}
+        //         style={{ backgroundColor: "#ced4da" }}
+        //       />
+        //     </View>
+        //   </View>
+        //   <View
+        //     style={{
+        //       alignItems: "center",
+        //       marginBottom: 20,
+        //       flexDirection: "row",
+        //     }}
+        //   >
+        //     {/* Profil fotoğrafı için Skeleton */}
+        //     <Skeleton
+        //       circle
+        //       width={40}
+        //       height={40}
+        //       skeletonStyle={{ backgroundColor: "#dbdbdb" }}
+        //       style={{ backgroundColor: "#ced4da", marginBottom: 10 }}
+        //     />
+        //     {/* İsim için Skeleton */}
+        //     <View style={{ flexDirection: "column", marginLeft: 10 }}>
+        //       <Skeleton
+        //         width={160}
+        //         height={15}
+        //         skeletonStyle={{ backgroundColor: "#dbdbdb" }}
+        //         style={{ backgroundColor: "#ced4da", marginBottom: 5 }}
+        //       />
+        //       {/* Kurumsal tip için Skeleton */}
+        //       <Skeleton
+        //         width={100}
+        //         height={10}
+        //         skeletonStyle={{ backgroundColor: "#dbdbdb" }}
+        //         style={{ backgroundColor: "#ced4da" }}
+        //       />
+        //     </View>
+        //   </View>
+        //   <View
+        //     style={{
+        //       alignItems: "center",
+        //       marginBottom: 20,
+        //       flexDirection: "row",
+        //     }}
+        //   >
+        //     {/* Profil fotoğrafı için Skeleton */}
+        //     <Skeleton
+        //       circle
+        //       width={40}
+        //       height={40}
+        //       skeletonStyle={{ backgroundColor: "#dbdbdb" }}
+        //       style={{ backgroundColor: "#ced4da", marginBottom: 10 }}
+        //     />
+        //     {/* İsim için Skeleton */}
+        //     <View style={{ flexDirection: "column", marginLeft: 10 }}>
+        //       <Skeleton
+        //         width={160}
+        //         height={15}
+        //         skeletonStyle={{ backgroundColor: "#dbdbdb" }}
+        //         style={{ backgroundColor: "#ced4da", marginBottom: 5 }}
+        //       />
+        //       {/* Kurumsal tip için Skeleton */}
+        //       <Skeleton
+        //         width={100}
+        //         height={10}
+        //         skeletonStyle={{ backgroundColor: "#dbdbdb" }}
+        //         style={{ backgroundColor: "#ced4da" }}
+        //       />
+        //     </View>
+        //   </View>
+        //   <View
+        //     style={{
+        //       alignItems: "center",
+        //       marginBottom: 20,
+        //       flexDirection: "row",
+        //     }}
+        //   >
+        //     {/* Profil fotoğrafı için Skeleton */}
+        //     <Skeleton
+        //       circle
+        //       width={40}
+        //       height={40}
+        //       skeletonStyle={{ backgroundColor: "#dbdbdb" }}
+        //       style={{ backgroundColor: "#ced4da", marginBottom: 10 }}
+        //     />
+        //     {/* İsim için Skeleton */}
+        //     <View style={{ flexDirection: "column", marginLeft: 10 }}>
+        //       <Skeleton
+        //         width={160}
+        //         height={15}
+        //         skeletonStyle={{ backgroundColor: "#dbdbdb" }}
+        //         style={{ backgroundColor: "#ced4da", marginBottom: 5 }}
+        //       />
+        //       {/* Kurumsal tip için Skeleton */}
+        //       <Skeleton
+        //         width={100}
+        //         height={10}
+        //         skeletonStyle={{ backgroundColor: "#dbdbdb" }}
+        //         style={{ backgroundColor: "#ced4da" }}
+        //       />
+        //     </View>
+        //   </View>
+        //   <View
+        //     style={{
+        //       alignItems: "center",
+        //       marginBottom: 20,
+        //       flexDirection: "row",
+        //     }}
+        //   >
+        //     {/* Profil fotoğrafı için Skeleton */}
+        //     <Skeleton
+        //       circle
+        //       width={40}
+        //       height={40}
+        //       skeletonStyle={{ backgroundColor: "#dbdbdb" }}
+        //       style={{ backgroundColor: "#ced4da", marginBottom: 10 }}
+        //     />
+        //     {/* İsim için Skeleton */}
+        //     <View style={{ flexDirection: "column", marginLeft: 10 }}>
+        //       <Skeleton
+        //         width={160}
+        //         height={15}
+        //         skeletonStyle={{ backgroundColor: "#dbdbdb" }}
+        //         style={{ backgroundColor: "#ced4da", marginBottom: 5 }}
+        //       />
+        //       {/* Kurumsal tip için Skeleton */}
+        //       <Skeleton
+        //         width={100}
+        //         height={10}
+        //         skeletonStyle={{ backgroundColor: "#dbdbdb" }}
+        //         style={{ backgroundColor: "#ced4da" }}
+        //       />
+        //     </View>
+        //   </View>
+        //   <View
+        //     style={{
+        //       alignItems: "center",
+        //       marginBottom: 20,
+        //       flexDirection: "row",
+        //     }}
+        //   >
+        //     {/* Profil fotoğrafı için Skeleton */}
+        //     <Skeleton
+        //       circle
+        //       width={40}
+        //       height={40}
+        //       skeletonStyle={{ backgroundColor: "#dbdbdb" }}
+        //       style={{ backgroundColor: "#ced4da", marginBottom: 10 }}
+        //     />
+        //     {/* İsim için Skeleton */}
+        //     <View style={{ flexDirection: "column", marginLeft: 10 }}>
+        //       <Skeleton
+        //         width={160}
+        //         height={15}
+        //         skeletonStyle={{ backgroundColor: "#dbdbdb" }}
+        //         style={{ backgroundColor: "#ced4da", marginBottom: 5 }}
+        //       />
+        //       {/* Kurumsal tip için Skeleton */}
+        //       <Skeleton
+        //         width={100}
+        //         height={10}
+        //         skeletonStyle={{ backgroundColor: "#dbdbdb" }}
+        //         style={{ backgroundColor: "#ced4da" }}
+        //       />
+        //     </View>
+        //   </View>
+        //   <View
+        //     style={{
+        //       alignItems: "center",
+        //       marginBottom: 20,
+        //       flexDirection: "row",
+        //     }}
+        //   >
+        //     {/* Profil fotoğrafı için Skeleton */}
+        //     <Skeleton
+        //       circle
+        //       width={40}
+        //       height={40}
+        //       skeletonStyle={{ backgroundColor: "#dbdbdb" }}
+        //       style={{ backgroundColor: "#ced4da", marginBottom: 10 }}
+        //     />
+        //     {/* İsim için Skeleton */}
+        //     <View style={{ flexDirection: "column", marginLeft: 10 }}>
+        //       <Skeleton
+        //         width={160}
+        //         height={15}
+        //         skeletonStyle={{ backgroundColor: "#dbdbdb" }}
+        //         style={{ backgroundColor: "#ced4da", marginBottom: 5 }}
+        //       />
+        //       {/* Kurumsal tip için Skeleton */}
+        //       <Skeleton
+        //         width={100}
+        //         height={10}
+        //         skeletonStyle={{ backgroundColor: "#dbdbdb" }}
+        //         style={{ backgroundColor: "#ced4da" }}
+        //       />
+        //     </View>
+        //   </View>
+        //   <View
+        //     style={{
+        //       alignItems: "center",
+        //       marginBottom: 20,
+        //       flexDirection: "row",
+        //     }}
+        //   >
+        //     {/* Profil fotoğrafı için Skeleton */}
+        //     <Skeleton
+        //       circle
+        //       width={40}
+        //       height={40}
+        //       skeletonStyle={{ backgroundColor: "#dbdbdb" }}
+        //       style={{ backgroundColor: "#ced4da", marginBottom: 10 }}
+        //     />
+        //     {/* İsim için Skeleton */}
+        //     <View style={{ flexDirection: "column", marginLeft: 10 }}>
+        //       <Skeleton
+        //         width={160}
+        //         height={15}
+        //         skeletonStyle={{ backgroundColor: "#dbdbdb" }}
+        //         style={{ backgroundColor: "#ced4da", marginBottom: 5 }}
+        //       />
+        //       {/* Kurumsal tip için Skeleton */}
+        //       <Skeleton
+        //         width={100}
+        //         height={10}
+        //         skeletonStyle={{ backgroundColor: "#dbdbdb" }}
+        //         style={{ backgroundColor: "#ced4da" }}
+        //       />
+        //     </View>
+        //   </View>
+        //   <View
+        //     style={{
+        //       alignItems: "center",
+        //       marginBottom: 20,
+        //       flexDirection: "row",
+        //     }}
+        //   >
+        //     {/* Profil fotoğrafı için Skeleton */}
+        //     <Skeleton
+        //       circle
+        //       width={40}
+        //       height={40}
+        //       skeletonStyle={{ backgroundColor: "#dbdbdb" }}
+        //       style={{ backgroundColor: "#ced4da", marginBottom: 10 }}
+        //     />
+        //     {/* İsim için Skeleton */}
+        //     <View style={{ flexDirection: "column", marginLeft: 10 }}>
+        //       <Skeleton
+        //         width={160}
+        //         height={15}
+        //         skeletonStyle={{ backgroundColor: "#dbdbdb" }}
+        //         style={{ backgroundColor: "#ced4da", marginBottom: 5 }}
+        //       />
+        //       {/* Kurumsal tip için Skeleton */}
+        //       <Skeleton
+        //         width={100}
+        //         height={10}
+        //         skeletonStyle={{ backgroundColor: "#dbdbdb" }}
+        //         style={{ backgroundColor: "#ced4da" }}
+        //       />
+        //     </View>
+        //   </View>
+        // </View>
+        <>
+          <ActivityIndicator
+            color="#333"
+            size="large"
+            style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+          />
+        </>
       ) : (
         <View style={style.container}>
           <View style={style.header}>

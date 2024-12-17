@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useMemo } from "react";
 import {
   StyleSheet,
   Text,
@@ -282,6 +282,40 @@ const FirstHome = (props) => {
     fetchFeaturedStoresEstate();
   }, []);
 
+  const createMemoizedDataSets = (dataSets) => {
+    return Object.fromEntries(
+      Object.entries(dataSets).map(([key, value]) => [
+        key,
+        useMemo(() => (value && value.length > 0 ? value : null), [value]),
+      ])
+    );
+  };
+  const dataSets = {
+    renderFranchiseSection: franchise,
+    renderFeaturedProjects: featuredProjects,
+    checkFeaturedStores: featuredStores,
+    checkSellAdvertData: sellAdvert,
+    checkRentAdvert: rentAdvert,
+    checkSellDevren: sellDevren,
+    checkTourismRent: tourismRent,
+    checkDailyRental: dailyRental,
+    checkCreatorBrands: creatorBrands,
+    checkBungalov: Bungalov,
+  };
+  const memoizedData = createMemoizedDataSets(dataSets);
+  const {
+    renderFranchiseSection,
+    renderFeaturedProjects,
+    checkFeaturedStores,
+    checkSellAdvertData,
+    checkRentAdvert,
+    checkSellDevren,
+    checkTourismRent,
+    checkDailyRental,
+    checkCreatorBrands,
+    checkBungalov,
+  } = memoizedData;
+
   return (
     <AlertNotificationRoot>
       {loadingBrands || loadingProjects || loadingSliders ? (
@@ -387,130 +421,145 @@ const FirstHome = (props) => {
                 textColor={"#CF2C2F"}
               />
             </ScrollView>
-            <View style={styles.sliderBarContainer}>
-              <Text style={styles.sliderBarTitle}>
-                Öne Çıkan İnşaat Markaları
-              </Text>
-              <SliderBar loading={loadingProjects} />
-            </View>
-            <View style={styles.featuredProjectsContainer}>
-              <View style={styles.slide1}>
-                <View style={{ gap: 0, paddingTop: 0 }}>
-                  <FlatList
-                    data={featuredProjects}
-                    renderItem={({ item, index }) => (
-                      <View
-                        style={{
-                          width: "100%",
-                        }}
-                      >
-                        <ProjectPost
-                          key={index}
-                          project={item}
-                          caption={item.project_title}
-                          ımage={`${frontEndUriBase}/${item.image.replace(
-                            "public/",
-                            "storage/"
-                          )}`}
-                          user={item.user}
-                          location={item.city.title}
-                          city={item.county.ilce_title}
-                          ProjectNo={item.id}
-                          // acıklama={item.description
-                          //   .replace(/<\/?[^>]+(>|$)/g, "")
-                          //   .replace(/&nbsp;/g, " ")}
-                          ProfilImage={`${frontEndUriBase}/storage/profile_images/${item.user.profile_image}`}
-                          loading={loadingProjects}
+            <>
+              {renderFeaturedProjects && (
+                <>
+                  <View style={styles.sliderBarContainer}>
+                    <Text style={styles.sliderBarTitle}>
+                      Öne Çıkan İnşaat Markaları
+                    </Text>
+                    <SliderBar loading={loadingProjects} />
+                  </View>
+                  <View style={styles.featuredProjectsContainer}>
+                    <View style={styles.slide1}>
+                      <View style={{ gap: 0, paddingTop: 0 }}>
+                        <FlatList
+                          data={featuredProjects}
+                          renderItem={({ item, index }) => (
+                            <View
+                              style={{
+                                width: "100%",
+                              }}
+                            >
+                              <ProjectPost
+                                key={index}
+                                project={item}
+                                caption={item.project_title}
+                                ımage={`${frontEndUriBase}/${item.image.replace(
+                                  "public/",
+                                  "storage/"
+                                )}`}
+                                user={item.user}
+                                location={item.city.title}
+                                city={item.county.ilce_title}
+                                ProjectNo={item.id}
+                                ProfilImage={`${frontEndUriBase}/storage/profile_images/${item.user.profile_image}`}
+                                loading={loadingProjects}
+                              />
+                            </View>
+                          )}
+                          ListHeaderComponent={
+                            <View style={{ gap: 9 }}>
+                              <View style={styles.featuredProjectsHeader}>
+                                <Text style={styles.featuredProjectsTitle}>
+                                  Öne Çıkan Projeler
+                                </Text>
+                                <TouchableOpacity
+                                  style={styles.allProjectsButton}
+                                  onPress={navigateToAllProjects}
+                                >
+                                  <Text style={styles.allProjectsButtonText}>
+                                    Tümünü Gör
+                                  </Text>
+                                  <Arrow name="arrow-right" color={"#EA2C2E"} />
+                                </TouchableOpacity>
+                              </View>
+                            </View>
+                          }
+                          scrollEnabled={false}
                         />
                       </View>
-                    )}
-                    ListHeaderComponent={
-                      <View style={{ gap: 9 }}>
-                        <View style={styles.featuredProjectsHeader}>
-                          <Text style={styles.featuredProjectsTitle}>
-                            Öne Çıkan Projeler
-                          </Text>
-                          <TouchableOpacity
-                            style={styles.allProjectsButton}
-                            onPress={navigateToAllProjects}
-                          >
-                            <Text style={styles.allProjectsButtonText}>
-                              Tümünü Gör
-                            </Text>
-                            <Arrow name="arrow-right" color={"#EA2C2E"} />
-                          </TouchableOpacity>
-                        </View>
-                      </View>
+                    </View>
+                  </View>
+                </>
+              )}
+            </>
+
+            <>
+              {renderFranchiseSection && (
+                <>
+                  <View
+                    style={{
+                      width: "100%",
+                      height: "auto",
+                    }}
+                  >
+                    <View style={styles.featuredProjectsHeader}>
+                      <Text style={styles.featuredProjectsTitle}>
+                        Franchise Markaları
+                      </Text>
+                      <TouchableOpacity
+                        style={styles.allProjectsButton}
+                        onPress={() =>
+                          navigation.navigate("AllFranchiseBrands")
+                        }
+                      >
+                        <Text style={styles.allProjectsButtonText}>
+                          Tümünü Gör
+                        </Text>
+                      </TouchableOpacity>
+                      <Arrow name="arrow-right" color={"#EA2C2E"} />
+                    </View>
+                    <View>
+                      <FlatList
+                        data={franchise}
+                        horizontal={true}
+                        nestedScrollEnabled={true}
+                        showsHorizontalScrollIndicator={false}
+                        keyExtractor={(item, index) => index.toString()}
+                        renderItem={({ item, index }) => (
+                          <FranchiseBanner
+                            key={index}
+                            image={`${frontEndUriBase}/logos/${item.logo}`}
+                            text={item.title}
+                            onPress={() =>
+                              navigation.navigate("Profile", {
+                                id: item?.user_id,
+                              })
+                            }
+                          />
+                        )}
+                      />
+                    </View>
+                  </View>
+                </>
+              )}
+            </>
+            {/* bottom area */}
+            {checkFeaturedStores && (
+              <View>
+                <View style={styles.featuredProjectsHeader}>
+                  <Text style={styles.featuredProjectsTitle}>
+                    Öne Çıkan Gayrimenkul Ofisleri
+                  </Text>
+                  <TouchableOpacity
+                    style={styles.allProjectsButton}
+                    onPress={() =>
+                      navigation.navigate("AllTourismRent", {
+                        brandName: "emlak-ofisi",
+                      })
                     }
-                    scrollEnabled={false}
-                  />
+                  >
+                    <Text style={styles.allProjectsButtonText}>Tümünü Gör</Text>
+                  </TouchableOpacity>
+                  <Arrow name="arrow-right" color={"#EA2C2E"} />
+                </View>
+
+                <View style={{ paddingTop: 5, paddingBottom: 5 }}>
+                  <SliderTourismRent data={featuredStores} />
                 </View>
               </View>
-            </View>
-
-            <View
-              style={{
-                width: "100%",
-                height: "auto",
-              }}
-            >
-              <View style={styles.featuredProjectsHeader}>
-                <Text style={styles.featuredProjectsTitle}>
-                  Franchise Markaları
-                </Text>
-                <TouchableOpacity
-                  style={styles.allProjectsButton}
-                  onPress={() => navigation.navigate("AllFranchiseBrands")}
-                >
-                  <Text style={styles.allProjectsButtonText}>Tümünü Gör</Text>
-                </TouchableOpacity>
-                <Arrow name="arrow-right" color={"#EA2C2E"} />
-              </View>
-              <View>
-                <FlatList
-                  data={franchise}
-                  horizontal={true}
-                  nestedScrollEnabled={true}
-                  showsHorizontalScrollIndicator={false}
-                  keyExtractor={(item, index) => index.toString()}
-                  renderItem={({ item, index }) => (
-                    <FranchiseBanner
-                      key={index}
-                      image={`${frontEndUriBase}/logos/${item.logo}`}
-                      text={item.title}
-                      onPress={() =>
-                        navigation.navigate("Profile", {
-                          id: item?.user_id,
-                        })
-                      }
-                    />
-                  )}
-                />
-              </View>
-            </View>
-            {/* bottom area */}
-            <View>
-              <View style={styles.featuredProjectsHeader}>
-                <Text style={styles.featuredProjectsTitle}>
-                  Öne Çıkan Gayrimenkul Ofisleri
-                </Text>
-                <TouchableOpacity
-                  style={styles.allProjectsButton}
-                  onPress={() =>
-                    navigation.navigate("AllTourismRent", {
-                      brandName: "emlak-ofisi",
-                    })
-                  }
-                >
-                  <Text style={styles.allProjectsButtonText}>Tümünü Gör</Text>
-                </TouchableOpacity>
-                <Arrow name="arrow-right" color={"#EA2C2E"} />
-              </View>
-
-              <View style={{ paddingTop: 5, paddingBottom: 5 }}>
-                <SliderTourismRent data={featuredStores} />
-              </View>
-            </View>
+            )}
 
             <ScrollView
               horizontal={true}
@@ -591,278 +640,299 @@ const FirstHome = (props) => {
             <View style={styles.seperator} />
 
             <React.Fragment>
-              <View>
-                <View style={styles.featuredProjectsHeader}>
-                  <Text style={styles.featuredProjectsTitle}>
-                    Satılık İlanlar
-                  </Text>
-                  <TouchableOpacity
-                    style={styles.allProjectsButton}
-                    onPress={() =>
-                      navigation.navigate("AllRealtorAdverts", {
-                        name: "Emlak İlanları",
-                        slug: "emlak-ilanlari",
-                        data: sellAdvert,
-                        count: sellAdvert.length,
-                        type: "konut",
-                        optional: null,
-                        title: null,
-                        check: null,
-                        city: null,
-                        county: null,
-                        hood: null,
-                      })
-                    }
-                  >
-                    <Text style={styles.allProjectsButtonText}>Tümünü Gör</Text>
-                  </TouchableOpacity>
-                  <Arrow name="arrow-right" color={"#EA2C2E"} />
+              {checkSellAdvertData && (
+                <View>
+                  <View style={styles.featuredProjectsHeader}>
+                    <Text style={styles.featuredProjectsTitle}>
+                      Satılık İlanlar
+                    </Text>
+                    <TouchableOpacity
+                      style={styles.allProjectsButton}
+                      onPress={() =>
+                        navigation.navigate("AllRealtorAdverts", {
+                          name: "Emlak İlanları",
+                          slug: "emlak-ilanlari",
+                          data: sellAdvert,
+                          count: sellAdvert.length,
+                          type: "konut",
+                          optional: null,
+                          title: null,
+                          check: null,
+                          city: null,
+                          county: null,
+                          hood: null,
+                        })
+                      }
+                    >
+                      <Text style={styles.allProjectsButtonText}>
+                        Tümünü Gör
+                      </Text>
+                    </TouchableOpacity>
+                    <Arrow name="arrow-right" color={"#EA2C2E"} />
+                  </View>
+                  <FlatList
+                    data={sellAdvert}
+                    contentContainerStyle={{ gap: 5, padding: 5 }}
+                    horizontal={true}
+                    showsHorizontalScrollIndicator={false}
+                    keyExtractor={(item, index) => index.toString()}
+                    renderItem={({ item, index }) => (
+                      <RealtorCardHome
+                        housing={item}
+                        title={item.housing_title}
+                        HouseId={item.id}
+                        price={
+                          item.step2_slug == "gunluk-kiralik"
+                            ? JSON.parse(item.housing_type_data)["daily_rent"]
+                            : JSON.parse(item.housing_type_data)["price"]
+                        }
+                        location={`${item.city_title} / ${item.county_title}`} // Combine location
+                        image={`${frontEndUriBase}/housing_images/${
+                          JSON.parse(item.housing_type_data)?.image ?? ""
+                        }`} // Safely access image
+                        column1_name={`${
+                          JSON.parse(item.housing_type_data)?.[
+                            item.column1_name
+                          ] ?? ""
+                        }`} // Safely access column1_name
+                        column1_additional={item.column1_additional}
+                        column2_name={`${
+                          JSON.parse(item.housing_type_data)?.[
+                            item.column2_name
+                          ] ?? ""
+                        }`} // Safely access column2_name
+                        column2_additional={item.column2_additional}
+                        openSharing={
+                          JSON.parse(item.housing_type_data)["open_sharing1"]
+                        }
+                        column3_name={`${
+                          JSON.parse(item.housing_type_data)?.[
+                            item.column3_name
+                          ] ?? ""
+                        }`} // Safely access column3_name
+                        column3_additional={item.column3_additional}
+                        column4_name={`${
+                          JSON.parse(item.housing_type_data)?.[
+                            item.column4_name
+                          ] ?? ""
+                        }`} // Safely access column4_name
+                        column4_additional={item.column4_additional}
+                        dailyRent={false}
+                        sold={item.sold}
+                      />
+                    )}
+                  />
                 </View>
-                <FlatList
-                  data={sellAdvert}
-                  contentContainerStyle={{ gap: 5, padding: 5 }}
-                  horizontal={true}
-                  showsHorizontalScrollIndicator={false}
-                  keyExtractor={(item, index) => index.toString()}
-                  renderItem={({ item, index }) => (
-                    <RealtorCardHome
-                      housing={item}
-                      title={item.housing_title}
-                      HouseId={item.id}
-                      price={
-                        item.step2_slug == "gunluk-kiralik"
-                          ? JSON.parse(item.housing_type_data)["daily_rent"]
-                          : JSON.parse(item.housing_type_data)["price"]
-                      }
-                      location={`${item.city_title} / ${item.county_title}`} // Combine location
-                      image={`${frontEndUriBase}/housing_images/${
-                        JSON.parse(item.housing_type_data)?.image ?? ""
-                      }`} // Safely access image
-                      column1_name={`${
-                        JSON.parse(item.housing_type_data)?.[
-                          item.column1_name
-                        ] ?? ""
-                      }`} // Safely access column1_name
-                      column1_additional={item.column1_additional}
-                      column2_name={`${
-                        JSON.parse(item.housing_type_data)?.[
-                          item.column2_name
-                        ] ?? ""
-                      }`} // Safely access column2_name
-                      column2_additional={item.column2_additional}
-                      openSharing={
-                        JSON.parse(item.housing_type_data)["open_sharing1"]
-                      }
-                      column3_name={`${
-                        JSON.parse(item.housing_type_data)?.[
-                          item.column3_name
-                        ] ?? ""
-                      }`} // Safely access column3_name
-                      column3_additional={item.column3_additional}
-                      column4_name={`${
-                        JSON.parse(item.housing_type_data)?.[
-                          item.column4_name
-                        ] ?? ""
-                      }`} // Safely access column4_name
-                      column4_additional={item.column4_additional}
-                      dailyRent={false}
-                      sold={item.sold}
-                    />
-                  )}
-                />
-              </View>
+              )}
             </React.Fragment>
 
             <React.Fragment>
-              <View style={styles.seperator} />
-              <View>
-                <View style={styles.featuredProjectsHeader}>
-                  <Text style={styles.featuredProjectsTitle}>
-                    Kiralık İlanlar
-                  </Text>
-                  <TouchableOpacity
-                    style={styles.allProjectsButton}
-                    onPress={() =>
-                      navigation.navigate("AllRealtorAdverts", {
-                        name: "Emlak İlanları",
-                        slug: "emlak-ilanlari",
-                        data: sellAdvert,
-                        count: sellAdvert.length,
-                        type: "konut",
-                        optional: null,
-                        title: null,
-                        check: null,
-                        city: null,
-                        county: null,
-                        hood: null,
-                      })
-                    }
-                  >
-                    <Text style={styles.allProjectsButtonText}>Tümünü Gör</Text>
-                  </TouchableOpacity>
-                  <Arrow name="arrow-right" color={"#EA2C2E"} />
-                </View>
-                <FlatList
-                  data={rentAdvert}
-                  contentContainerStyle={{ gap: 5, padding: 5 }}
-                  horizontal={true}
-                  showsHorizontalScrollIndicator={false}
-                  keyExtractor={(item, index) => index.toString()}
-                  renderItem={({ item, index }) => (
-                    <RealtorCardHome
-                      housing={item}
-                      title={item.housing_title}
-                      HouseId={item.id}
-                      price={
-                        item.step2_slug == "gunluk-kiralik"
-                          ? JSON.parse(item.housing_type_data)["daily_rent"]
-                          : JSON.parse(item.housing_type_data)["price"]
-                      }
-                      location={`${item.city_title} / ${item.county_title}`} // Combine location
-                      image={`${frontEndUriBase}/housing_images/${
-                        JSON.parse(item.housing_type_data)?.image ?? ""
-                      }`} // Safely access image
-                      column1_name={`${
-                        JSON.parse(item.housing_type_data)?.[
-                          item.column1_name
-                        ] ?? ""
-                      }`} // Safely access column1_name
-                      column1_additional={item.column1_additional}
-                      column2_name={`${
-                        JSON.parse(item.housing_type_data)?.[
-                          item.column2_name
-                        ] ?? ""
-                      }`} // Safely access column2_name
-                      column2_additional={item.column2_additional}
-                      openSharing={
-                        JSON.parse(item.housing_type_data)["open_sharing1"]
-                      }
-                      column3_name={`${
-                        JSON.parse(item.housing_type_data)?.[
-                          item.column3_name
-                        ] ?? ""
-                      }`} // Safely access column3_name
-                      column3_additional={item.column3_additional}
-                      column4_name={`${
-                        JSON.parse(item.housing_type_data)?.[
-                          item.column4_name
-                        ] ?? ""
-                      }`} // Safely access column4_name
-                      column4_additional={item.column4_additional}
-                      dailyRent={false}
-                      sold={item.sold}
+              {checkRentAdvert && (
+                <>
+                  <View style={styles.seperator} />
+                  <View>
+                    <View style={styles.featuredProjectsHeader}>
+                      <Text style={styles.featuredProjectsTitle}>
+                        Kiralık İlanlar
+                      </Text>
+                      <TouchableOpacity
+                        style={styles.allProjectsButton}
+                        onPress={() =>
+                          navigation.navigate("AllRealtorAdverts", {
+                            name: "Emlak İlanları",
+                            slug: "emlak-ilanlari",
+                            data: sellAdvert,
+                            count: sellAdvert.length,
+                            type: "konut",
+                            optional: null,
+                            title: null,
+                            check: null,
+                            city: null,
+                            county: null,
+                            hood: null,
+                          })
+                        }
+                      >
+                        <Text style={styles.allProjectsButtonText}>
+                          Tümünü Gör
+                        </Text>
+                      </TouchableOpacity>
+                      <Arrow name="arrow-right" color={"#EA2C2E"} />
+                    </View>
+                    <FlatList
+                      data={rentAdvert}
+                      contentContainerStyle={{ gap: 5, padding: 5 }}
+                      horizontal={true}
+                      showsHorizontalScrollIndicator={false}
+                      keyExtractor={(item, index) => index.toString()}
+                      renderItem={({ item, index }) => (
+                        <RealtorCardHome
+                          housing={item}
+                          title={item.housing_title}
+                          HouseId={item.id}
+                          price={
+                            item.step2_slug == "gunluk-kiralik"
+                              ? JSON.parse(item.housing_type_data)["daily_rent"]
+                              : JSON.parse(item.housing_type_data)["price"]
+                          }
+                          location={`${item.city_title} / ${item.county_title}`} // Combine location
+                          image={`${frontEndUriBase}/housing_images/${
+                            JSON.parse(item.housing_type_data)?.image ?? ""
+                          }`} // Safely access image
+                          column1_name={`${
+                            JSON.parse(item.housing_type_data)?.[
+                              item.column1_name
+                            ] ?? ""
+                          }`} // Safely access column1_name
+                          column1_additional={item.column1_additional}
+                          column2_name={`${
+                            JSON.parse(item.housing_type_data)?.[
+                              item.column2_name
+                            ] ?? ""
+                          }`} // Safely access column2_name
+                          column2_additional={item.column2_additional}
+                          openSharing={
+                            JSON.parse(item.housing_type_data)["open_sharing1"]
+                          }
+                          column3_name={`${
+                            JSON.parse(item.housing_type_data)?.[
+                              item.column3_name
+                            ] ?? ""
+                          }`} // Safely access column3_name
+                          column3_additional={item.column3_additional}
+                          column4_name={`${
+                            JSON.parse(item.housing_type_data)?.[
+                              item.column4_name
+                            ] ?? ""
+                          }`} // Safely access column4_name
+                          column4_additional={item.column4_additional}
+                          dailyRent={false}
+                          sold={item.sold}
+                        />
+                      )}
                     />
-                  )}
-                />
-              </View>
+                  </View>
+                </>
+              )}
             </React.Fragment>
 
             <React.Fragment>
-              <View style={styles.seperator} />
-              <View>
-                <View style={styles.featuredProjectsHeader}>
-                  <Text style={styles.featuredProjectsTitle}>
-                    Devren Satılık İlanlar
-                  </Text>
-                  <TouchableOpacity
-                    style={styles.allProjectsButton}
-                    onPress={() =>
-                      navigation.navigate("AllRealtorAdverts", {
-                        name: "Emlak İlanları",
-                        slug: "emlak-ilanlari",
-                        data: sellAdvert,
-                        count: sellAdvert.length,
-                        type: "konut",
-                        optional: null,
-                        title: null,
-                        check: null,
-                        city: null,
-                        county: null,
-                        hood: null,
-                      })
-                    }
-                  >
-                    <Text style={styles.allProjectsButtonText}>Tümünü Gör</Text>
-                  </TouchableOpacity>
-                  <Arrow name="arrow-right" color={"#EA2C2E"} />
-                </View>
-                <FlatList
-                  data={sellDevren}
-                  contentContainerStyle={{ gap: 5, padding: 5 }}
-                  horizontal={true}
-                  showsHorizontalScrollIndicator={false}
-                  keyExtractor={(item, index) => index.toString()}
-                  renderItem={({ item, index }) => (
-                    <RealtorCardHome
-                      housing={item}
-                      title={item.housing_title}
-                      HouseId={item.id}
-                      price={
-                        item.step2_slug == "gunluk-kiralik"
-                          ? JSON.parse(item.housing_type_data)["daily_rent"]
-                          : JSON.parse(item.housing_type_data)["price"]
-                      }
-                      location={`${item.city_title} / ${item.county_title}`} // Combine location
-                      image={`${frontEndUriBase}/housing_images/${
-                        JSON.parse(item.housing_type_data)?.image ?? ""
-                      }`} // Safely access image
-                      column1_name={`${
-                        JSON.parse(item.housing_type_data)?.[
-                          item.column1_name
-                        ] ?? ""
-                      }`} // Safely access column1_name
-                      column1_additional={item.column1_additional}
-                      column2_name={`${
-                        JSON.parse(item.housing_type_data)?.[
-                          item.column2_name
-                        ] ?? ""
-                      }`} // Safely access column2_name
-                      column2_additional={item.column2_additional}
-                      openSharing={
-                        JSON.parse(item.housing_type_data)["open_sharing1"]
-                      }
-                      column3_name={`${
-                        JSON.parse(item.housing_type_data)?.[
-                          item.column3_name
-                        ] ?? ""
-                      }`} // Safely access column3_name
-                      column3_additional={item.column3_additional}
-                      column4_name={`${
-                        JSON.parse(item.housing_type_data)?.[
-                          item.column4_name
-                        ] ?? ""
-                      }`} // Safely access column4_name
-                      column4_additional={item.column4_additional}
-                      dailyRent={false}
-                      sold={item.sold}
+              {checkSellDevren && (
+                <>
+                  <View style={styles.seperator} />
+                  <View>
+                    <View style={styles.featuredProjectsHeader}>
+                      <Text style={styles.featuredProjectsTitle}>
+                        Devren Satılık İlanlar
+                      </Text>
+                      <TouchableOpacity
+                        style={styles.allProjectsButton}
+                        onPress={() =>
+                          navigation.navigate("AllRealtorAdverts", {
+                            name: "Emlak İlanları",
+                            slug: "emlak-ilanlari",
+                            data: sellAdvert,
+                            count: sellAdvert.length,
+                            type: "konut",
+                            optional: null,
+                            title: null,
+                            check: null,
+                            city: null,
+                            county: null,
+                            hood: null,
+                          })
+                        }
+                      >
+                        <Text style={styles.allProjectsButtonText}>
+                          Tümünü Gör
+                        </Text>
+                      </TouchableOpacity>
+                      <Arrow name="arrow-right" color={"#EA2C2E"} />
+                    </View>
+                    <FlatList
+                      data={sellDevren}
+                      contentContainerStyle={{ gap: 5, padding: 5 }}
+                      horizontal={true}
+                      showsHorizontalScrollIndicator={false}
+                      keyExtractor={(item, index) => index.toString()}
+                      renderItem={({ item, index }) => (
+                        <RealtorCardHome
+                          housing={item}
+                          title={item.housing_title}
+                          HouseId={item.id}
+                          price={
+                            item.step2_slug == "gunluk-kiralik"
+                              ? JSON.parse(item.housing_type_data)["daily_rent"]
+                              : JSON.parse(item.housing_type_data)["price"]
+                          }
+                          location={`${item.city_title} / ${item.county_title}`} // Combine location
+                          image={`${frontEndUriBase}/housing_images/${
+                            JSON.parse(item.housing_type_data)?.image ?? ""
+                          }`} // Safely access image
+                          column1_name={`${
+                            JSON.parse(item.housing_type_data)?.[
+                              item.column1_name
+                            ] ?? ""
+                          }`} // Safely access column1_name
+                          column1_additional={item.column1_additional}
+                          column2_name={`${
+                            JSON.parse(item.housing_type_data)?.[
+                              item.column2_name
+                            ] ?? ""
+                          }`} // Safely access column2_name
+                          column2_additional={item.column2_additional}
+                          openSharing={
+                            JSON.parse(item.housing_type_data)["open_sharing1"]
+                          }
+                          column3_name={`${
+                            JSON.parse(item.housing_type_data)?.[
+                              item.column3_name
+                            ] ?? ""
+                          }`} // Safely access column3_name
+                          column3_additional={item.column3_additional}
+                          column4_name={`${
+                            JSON.parse(item.housing_type_data)?.[
+                              item.column4_name
+                            ] ?? ""
+                          }`} // Safely access column4_name
+                          column4_additional={item.column4_additional}
+                          dailyRent={false}
+                          sold={item.sold}
+                        />
+                      )}
                     />
-                  )}
-                />
-              </View>
+                  </View>
+                </>
+              )}
             </React.Fragment>
 
-            <View>
-              <View style={styles.featuredProjectsHeader}>
-                <Text style={styles.featuredProjectsTitle}>
-                  Turizm Amaçlı Kiralama Markaları
-                </Text>
-                <TouchableOpacity
-                  style={styles.allProjectsButton}
-                  onPress={() =>
-                    navigation.navigate("AllTourismRent", {
-                      brandName: "turizm-amacli-kiralama",
-                    })
-                  }
-                >
-                  <Text style={styles.allProjectsButtonText}>Tümünü Gör</Text>
-                </TouchableOpacity>
-                <Arrow name="arrow-right" color={"#EA2C2E"} />
-              </View>
-              <>
-                <SliderTourismRent data={tourismRent} />
-              </>
-            </View>
-
+            <React.Fragment>
+              {checkTourismRent && (
+                <>
+                  <View style={styles.featuredProjectsHeader}>
+                    <Text style={styles.featuredProjectsTitle}>
+                      Turizm Amaçlı Kiralama Markaları
+                    </Text>
+                    <TouchableOpacity
+                      style={styles.allProjectsButton}
+                      onPress={() =>
+                        navigation.navigate("AllTourismRent", {
+                          brandName: "turizm-amacli-kiralama",
+                        })
+                      }
+                    >
+                      <Text style={styles.allProjectsButtonText}>
+                        Tümünü Gör
+                      </Text>
+                    </TouchableOpacity>
+                    <Arrow name="arrow-right" color={"#EA2C2E"} />
+                  </View>
+                  <>
+                    <SliderTourismRent data={tourismRent} />
+                  </>
+                </>
+              )}
+            </React.Fragment>
             <ScrollView
               horizontal={true}
               contentContainerStyle={{ gap: 10 }}
@@ -934,100 +1004,121 @@ const FirstHome = (props) => {
               }}
             />
 
-            <View style={styles.featuredProjectsHeader}>
-              <Text style={styles.featuredProjectsTitle}>
-                Günlük Kiralık İlanlar
-              </Text>
-              <TouchableOpacity
-                style={styles.allProjectsButton}
-                onPress={() =>
-                  navigation.navigate("AllRealtorAdverts", {
-                    name: "Emlak İlanları",
-                    slug: "emlak-ilanlari",
-                    data: dailyRental,
-                    count: dailyRental.length,
-                    type: "mustakil-tatil",
-                    optional: null,
-                    title: null,
-                    check: null,
-                    city: null,
-                    county: null,
-                    hood: null,
-                  })
-                }
-              >
-                <Text style={styles.allProjectsButtonText}>Tümünü Gör</Text>
-              </TouchableOpacity>
-              <Arrow name="arrow-right" color={"#EA2C2E"} />
-            </View>
+            <React.Fragment>
+              {checkDailyRental && (
+                <>
+                  <View style={styles.featuredProjectsHeader}>
+                    <Text style={styles.featuredProjectsTitle}>
+                      Günlük Kiralık İlanlar
+                    </Text>
+                    <TouchableOpacity
+                      style={styles.allProjectsButton}
+                      onPress={() =>
+                        navigation.navigate("AllRealtorAdverts", {
+                          name: "Emlak İlanları",
+                          slug: "emlak-ilanlari",
+                          data: dailyRental,
+                          count: dailyRental.length,
+                          type: "mustakil-tatil",
+                          optional: null,
+                          title: null,
+                          check: null,
+                          city: null,
+                          county: null,
+                          hood: null,
+                        })
+                      }
+                    >
+                      <Text style={styles.allProjectsButtonText}>
+                        Tümünü Gör
+                      </Text>
+                    </TouchableOpacity>
+                    <Arrow name="arrow-right" color={"#EA2C2E"} />
+                  </View>
+                  <View>
+                    <React.Fragment>
+                      <FlatList
+                        data={dailyRental}
+                        contentContainerStyle={{ gap: 5, padding: 5 }}
+                        keyExtractor={(item, index) => index.toString()}
+                        horizontal={true}
+                        showsHorizontalScrollIndicator={false}
+                        renderItem={({ item, index }) => (
+                          <RealtorCardHome
+                            openSharing={
+                              JSON.parse(item.housing_type_data)[
+                                "open_sharing1"
+                              ]
+                            }
+                            HouseId={item.id}
+                            price={
+                              item.step2_slug == "gunluk-kiralik"
+                                ? JSON.parse(item.housing_type_data)[
+                                    "daily_rent"
+                                  ]
+                                : JSON.parse(item.housing_type_data)["price"]
+                            }
+                            housing={item}
+                            title={item.housing_title}
+                            location={
+                              item.city_title + " / " + item.county_title
+                            }
+                            image={`${frontEndUriBase}/housing_images/${
+                              JSON.parse(item.housing_type_data).image
+                            }`}
+                            column1_additional={item.column1_additional}
+                            column1_name={
+                              JSON.parse(item.housing_type_data)[
+                                item.column1_name
+                              ]
+                                ? JSON.parse(item.housing_type_data)[
+                                    item.column1_name
+                                  ]
+                                : ""
+                            }
+                            column2_name={
+                              JSON.parse(item.housing_type_data)[
+                                item.column2_name
+                              ]
+                                ? JSON.parse(item.housing_type_data)[
+                                    item.column2_name
+                                  ]
+                                : ""
+                            }
+                            column2_additional={item.column2_additional}
+                            column3_name={
+                              JSON.parse(item.housing_type_data)[
+                                item.column3_name
+                              ]
+                                ? JSON.parse(item.housing_type_data)[
+                                    item.column3_name
+                                  ]
+                                : ""
+                            }
+                            column3_additional={item.column3_additional}
+                            column4_name={
+                              JSON.parse(item.housing_type_data)[
+                                item.column4_name
+                              ]
+                                ? JSON.parse(item.housing_type_data)[
+                                    item.column4_name
+                                  ]
+                                : ""
+                            }
+                            column4_additional={item.column4_additional}
+                            bookmarkStatus={true}
+                            dailyRent={false}
+                            isFavorite={item.is_favorite}
+                          />
+                        )}
+                      />
 
-            <View>
-              <React.Fragment>
-                <FlatList
-                  data={dailyRental}
-                  contentContainerStyle={{ gap: 5, padding: 5 }}
-                  keyExtractor={(item, index) => index.toString()}
-                  horizontal={true}
-                  showsHorizontalScrollIndicator={false}
-                  renderItem={({ item, index }) => (
-                    <RealtorCardHome
-                      openSharing={
-                        JSON.parse(item.housing_type_data)["open_sharing1"]
-                      }
-                      HouseId={item.id}
-                      price={
-                        item.step2_slug == "gunluk-kiralik"
-                          ? JSON.parse(item.housing_type_data)["daily_rent"]
-                          : JSON.parse(item.housing_type_data)["price"]
-                      }
-                      housing={item}
-                      title={item.housing_title}
-                      location={item.city_title + " / " + item.county_title}
-                      image={`${frontEndUriBase}/housing_images/${
-                        JSON.parse(item.housing_type_data).image
-                      }`}
-                      column1_additional={item.column1_additional}
-                      column1_name={
-                        JSON.parse(item.housing_type_data)[item.column1_name]
-                          ? JSON.parse(item.housing_type_data)[
-                              item.column1_name
-                            ]
-                          : ""
-                      }
-                      column2_name={
-                        JSON.parse(item.housing_type_data)[item.column2_name]
-                          ? JSON.parse(item.housing_type_data)[
-                              item.column2_name
-                            ]
-                          : ""
-                      }
-                      column2_additional={item.column2_additional}
-                      column3_name={
-                        JSON.parse(item.housing_type_data)[item.column3_name]
-                          ? JSON.parse(item.housing_type_data)[
-                              item.column3_name
-                            ]
-                          : ""
-                      }
-                      column3_additional={item.column3_additional}
-                      column4_name={
-                        JSON.parse(item.housing_type_data)[item.column4_name]
-                          ? JSON.parse(item.housing_type_data)[
-                              item.column4_name
-                            ]
-                          : ""
-                      }
-                      column4_additional={item.column4_additional}
-                      bookmarkStatus={true}
-                      dailyRent={false}
-                      isFavorite={item.is_favorite}
-                    />
-                  )}
-                />
-
-                <View style={styles.seperator} />
-              </React.Fragment>
-            </View>
+                      <View style={styles.seperator} />
+                    </React.Fragment>
+                  </View>
+                </>
+              )}
+            </React.Fragment>
 
             <View>
               <View style={{ width: "100%", height: 90 }}>
@@ -1039,99 +1130,123 @@ const FirstHome = (props) => {
               </View>
             </View>
 
-            <View style={[styles.featuredProjectsHeader, { paddingTop: 9 }]}>
-              <Text style={styles.featuredProjectsTitle}>
-                Öne Çıkan Üretici Markaları
-              </Text>
-              <TouchableOpacity
-                style={styles.allProjectsButton}
-                onPress={() => navigation.navigate("AllFeaturedRealEstate")}
-              >
-                <Text style={styles.allProjectsButtonText}>Tümünü Gör</Text>
-              </TouchableOpacity>
-              <Arrow name="arrow-right" color={"#EA2C2E"} />
-            </View>
+            <React.Fragment>
+              {checkCreatorBrands && (
+                <>
+                  <View
+                    style={[styles.featuredProjectsHeader, { paddingTop: 9 }]}
+                  >
+                    <Text style={styles.featuredProjectsTitle}>
+                      Öne Çıkan Üretici Markaları
+                    </Text>
+                    <TouchableOpacity
+                      style={styles.allProjectsButton}
+                      onPress={() =>
+                        navigation.navigate("AllFeaturedRealEstate")
+                      }
+                    >
+                      <Text style={styles.allProjectsButtonText}>
+                        Tümünü Gör
+                      </Text>
+                    </TouchableOpacity>
+                    <Arrow name="arrow-right" color={"#EA2C2E"} />
+                  </View>
 
-            <View style={{ paddingTop: 5, paddingBottom: 5 }}>
-              <SliderTourismRent data={creatorBrands} />
-            </View>
+                  <View style={{ paddingTop: 5, paddingBottom: 5 }}>
+                    <SliderTourismRent data={creatorBrands} />
+                  </View>
+                </>
+              )}
+            </React.Fragment>
 
-            <View>
-              <View style={styles.featuredProjectsHeader}>
-                <Text style={styles.featuredProjectsTitle}>
-                  Bungalov İlanları
-                </Text>
-                <TouchableOpacity
-                  style={styles.allProjectsButton}
-                  onPress={() =>
-                    navigation.navigate("AllRealtorAdverts", {
-                      name: "Emlak İlanları",
-                      slug: "emlak-ilanlari",
-                      data: sellAdvert,
-                      count: sellAdvert.length,
-                      type: "konut",
-                      optional: null,
-                      title: null,
-                      check: null,
-                      city: null,
-                      county: null,
-                      hood: null,
-                    })
-                  }
-                >
-                  <Text style={styles.allProjectsButtonText}>Tümünü Gör</Text>
-                </TouchableOpacity>
-                <Arrow name="arrow-right" color={"#EA2C2E"} />
-              </View>
-              <FlatList
-                data={Bungalov}
-                contentContainerStyle={{ gap: 5, padding: 5 }}
-                horizontal={true}
-                showsHorizontalScrollIndicator={false}
-                keyExtractor={(item, index) => index.toString()}
-                renderItem={({ item, index }) => (
-                  <RealtorCardHome
-                    housing={item}
-                    title={item.housing_title}
-                    HouseId={item.id}
-                    price={
-                      item.step2_slug == "gunluk-kiralik"
-                        ? JSON.parse(item.housing_type_data)["daily_rent"]
-                        : JSON.parse(item.housing_type_data)["price"]
-                    }
-                    location={`${item.city_title} / ${item.county_title}`} // Combine location
-                    image={`${frontEndUriBase}/housing_images/${
-                      JSON.parse(item.housing_type_data)?.image ?? ""
-                    }`} // Safely access image
-                    column1_name={`${
-                      JSON.parse(item.housing_type_data)?.[item.column1_name] ??
-                      ""
-                    }`} // Safely access column1_name
-                    column1_additional={item.column1_additional}
-                    column2_name={`${
-                      JSON.parse(item.housing_type_data)?.[item.column2_name] ??
-                      ""
-                    }`} // Safely access column2_name
-                    column2_additional={item.column2_additional}
-                    openSharing={
-                      JSON.parse(item.housing_type_data)["open_sharing1"]
-                    }
-                    column3_name={`${
-                      JSON.parse(item.housing_type_data)?.[item.column3_name] ??
-                      ""
-                    }`} // Safely access column3_name
-                    column3_additional={item.column3_additional}
-                    column4_name={`${
-                      JSON.parse(item.housing_type_data)?.[item.column4_name] ??
-                      ""
-                    }`} // Safely access column4_name
-                    column4_additional={item.column4_additional}
-                    dailyRent={false}
-                    sold={item.sold}
-                  />
-                )}
-              />
-            </View>
+            <React.Fragment>
+              {checkBungalov && (
+                <>
+                  <View>
+                    <View style={styles.featuredProjectsHeader}>
+                      <Text style={styles.featuredProjectsTitle}>
+                        Bungalov İlanları
+                      </Text>
+                      <TouchableOpacity
+                        style={styles.allProjectsButton}
+                        onPress={() =>
+                          navigation.navigate("AllRealtorAdverts", {
+                            name: "Emlak İlanları",
+                            slug: "emlak-ilanlari",
+                            data: sellAdvert,
+                            count: sellAdvert.length,
+                            type: "konut",
+                            optional: null,
+                            title: null,
+                            check: null,
+                            city: null,
+                            county: null,
+                            hood: null,
+                          })
+                        }
+                      >
+                        <Text style={styles.allProjectsButtonText}>
+                          Tümünü Gör
+                        </Text>
+                      </TouchableOpacity>
+                      <Arrow name="arrow-right" color={"#EA2C2E"} />
+                    </View>
+                    <FlatList
+                      data={Bungalov}
+                      contentContainerStyle={{ gap: 5, padding: 5 }}
+                      horizontal={true}
+                      showsHorizontalScrollIndicator={false}
+                      keyExtractor={(item, index) => index.toString()}
+                      renderItem={({ item, index }) => (
+                        <RealtorCardHome
+                          housing={item}
+                          title={item.housing_title}
+                          HouseId={item.id}
+                          price={
+                            item.step2_slug == "gunluk-kiralik"
+                              ? JSON.parse(item.housing_type_data)["daily_rent"]
+                              : JSON.parse(item.housing_type_data)["price"]
+                          }
+                          location={`${item.city_title} / ${item.county_title}`} // Combine location
+                          image={`${frontEndUriBase}/housing_images/${
+                            JSON.parse(item.housing_type_data)?.image ?? ""
+                          }`} // Safely access image
+                          column1_name={`${
+                            JSON.parse(item.housing_type_data)?.[
+                              item.column1_name
+                            ] ?? ""
+                          }`} // Safely access column1_name
+                          column1_additional={item.column1_additional}
+                          column2_name={`${
+                            JSON.parse(item.housing_type_data)?.[
+                              item.column2_name
+                            ] ?? ""
+                          }`} // Safely access column2_name
+                          column2_additional={item.column2_additional}
+                          openSharing={
+                            JSON.parse(item.housing_type_data)["open_sharing1"]
+                          }
+                          column3_name={`${
+                            JSON.parse(item.housing_type_data)?.[
+                              item.column3_name
+                            ] ?? ""
+                          }`} // Safely access column3_name
+                          column3_additional={item.column3_additional}
+                          column4_name={`${
+                            JSON.parse(item.housing_type_data)?.[
+                              item.column4_name
+                            ] ?? ""
+                          }`} // Safely access column4_name
+                          column4_additional={item.column4_additional}
+                          dailyRent={false}
+                          sold={item.sold}
+                        />
+                      )}
+                    />
+                  </View>
+                </>
+              )}
+            </React.Fragment>
           </ScrollView>
         </SafeAreaView>
       )}
