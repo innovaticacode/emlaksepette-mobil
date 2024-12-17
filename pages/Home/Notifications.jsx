@@ -3,7 +3,6 @@ import {
   Text,
   StyleSheet,
   TouchableOpacity,
-  Alert,
   FlatList,
 } from "react-native";
 import React, { useEffect, useState } from "react";
@@ -20,6 +19,7 @@ import { apiUrl } from "../../components/methods/apiRequest";
 import { useDispatch, useSelector } from "react-redux";
 import { setNotificationsRedux } from "../../store/slices/Notifications/NotificationsSlice";
 import NoDataScreen from "../../components/NoDataScreen";
+import { ALERT_TYPE, Dialog } from "react-native-alert-notification";
 
 export default function Notifications() {
   const dispatch = useDispatch();
@@ -129,7 +129,7 @@ export default function Notifications() {
           },
         }
       );
-      await fetchNotifications();
+      fetchNotifications();
 
       return setShowDeletedAlert({
         show: true,
@@ -137,7 +137,12 @@ export default function Notifications() {
         success: true,
       });
     } catch (error) {
-      Alert.alert("Hata", "Silme işlemi başarısız oldu!");
+      Dialog.show({
+        type: ALERT_TYPE.DANGER,
+        title: "Hata",
+        textBody: "Silme işlemi başarısız oldu!",
+        button: "Tamam",
+      });
     } finally {
       setLoading(false);
     }
@@ -173,12 +178,22 @@ export default function Notifications() {
         });
       } else {
         setalertFordeleteNotificate(false);
-        Alert.alert("Başarısız", response.data.message);
+        Dialog.show({
+          type: ALERT_TYPE.DANGER,
+          title: "Hata",
+          textBody: response.data.message,
+          button: "Tamam",
+        });
       }
 
       setalertFordeleteNotificate(false);
     } catch (error) {
-      Alert.alert("Hata", "Silme işlemi başarısız oldu!");
+      Dialog.show({
+        type: ALERT_TYPE.DANGER,
+        title: "Hata",
+        textBody: "Silme işlemi başarısız oldu!",
+        button: "Tamam",
+      });
     } finally {
       setLoading(false);
     }
@@ -216,36 +231,22 @@ export default function Notifications() {
   };
 
   const deletedAlert = () => {
-    return (
-      <AwesomeAlert
-        show={showDeletedAlert.show === true}
-        showProgress={false}
-        titleStyle={styles.alertTitle}
-        title={showDeletedAlert.message}
-        messageStyle={{ textAlign: "center" }}
-        closeOnTouchOutside={true}
-        closeOnHardwareBackPress={false}
-        showCancelButton={false}
-        showConfirmButton={true}
-        confirmText="Tamam"
-        confirmButtonColor={showDeletedAlert.success ? "#1d8027" : "#ce4d63"}
-        onConfirmPressed={() => {
-          setShowDeletedAlert({
-            ...showDeletedAlert,
-            show: false,
-          });
-          setTimeout(() => {
-            setShowDeletedAlert({
-              show: false,
-              message: "",
-              success: false,
-            });
-          }, 300);
-        }}
-        confirmButtonTextStyle={styles.alertMargin}
-        cancelButtonTextStyle={styles.alertMargin}
-      />
-    );
+    if (!showDeletedAlert.show) {
+      return false;
+    }
+    return Dialog.show({
+      type: showDeletedAlert.success ? ALERT_TYPE.SUCCESS : ALERT_TYPE.DANGER,
+      title: showDeletedAlert.message,
+      button: "Tamam",
+      onPressButton: () => {
+        setShowDeletedAlert({
+          show: false,
+          message: "",
+          success: false,
+        });
+        Dialog.hide();
+      },
+    });
   };
 
   return (
