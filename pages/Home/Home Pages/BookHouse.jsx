@@ -28,6 +28,7 @@ const BookHouse = ({ index }) => {
     10,
     apiData
   );
+
   useFocusEffect(
     useCallback(() => {
       if (index === 6 && data.length === 0) {
@@ -40,12 +41,18 @@ const BookHouse = ({ index }) => {
     setLoading(true);
     await setSkip(0);
     setLoading(false);
+    setLoading(false);
   };
 
   const renderFooter = () => {
     if (!hooksLoading) return null;
     return (
       <View style={{ height: 100 }}>
+        <ActivityIndicator
+          style={{ marginVertical: 16 }}
+          size="small"
+          color="#333"
+        />
         <ActivityIndicator
           style={{ marginVertical: 16 }}
           size="small"

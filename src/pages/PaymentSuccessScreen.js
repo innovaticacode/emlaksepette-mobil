@@ -1,12 +1,20 @@
 // PaymentSuccessScreen.js
-import React from 'react';
-import { View, StyleSheet } from 'react-native';
-import PaymentSuccess from '../components/PaymentSuccess';
-import { MaterialCommunityIcons } from '@expo/vector-icons'; // İkonlar için
+import React from "react";
+import { View, StyleSheet } from "react-native";
+import PaymentSuccess from "../components/PaymentSuccess";
+import { MaterialCommunityIcons } from "@expo/vector-icons"; // İkonlar için
 
 const PaymentSuccessScreen = ({ route, navigation }) => {
   // Dinamik parametreleri route üzerinden al
-  const { title, message, primaryButtonText, secondaryButtonText, icon, onContinue, onGoHome } = route.params;
+  const {
+    title,
+    message,
+    primaryButtonText,
+    secondaryButtonText,
+    icon,
+    onContinue,
+    onGoHome,
+  } = route.params;
 
   return (
     <View style={styles.container}>
@@ -16,8 +24,18 @@ const PaymentSuccessScreen = ({ route, navigation }) => {
         icon={icon}
         primaryButtonText={primaryButtonText}
         secondaryButtonText={secondaryButtonText}
-        onContinue={onContinue}
-        onGoHome={onGoHome}
+        onContinue={
+          onContinue ||
+          (() => {
+            navigation.navigate("Taked");
+          })
+        }
+        onGoHome={
+          onGoHome ||
+          (() => {
+            navigation.navigate("Home");
+          })
+        }
       />
     </View>
   );
@@ -26,9 +44,9 @@ const PaymentSuccessScreen = ({ route, navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#fff',
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#fff",
   },
 });
 

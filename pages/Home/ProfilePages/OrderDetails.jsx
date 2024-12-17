@@ -312,6 +312,7 @@ export default function OrderDetails({ item }) {
   const createdAt = new Date(Detail?.created_at).toLocaleDateString("tr-TR", {
     year: "numeric",
     month: "long",
+    month: "long",
     day: "numeric",
   });
 

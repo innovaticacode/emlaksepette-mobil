@@ -15,9 +15,15 @@ import BackIcon from "react-native-vector-icons/AntDesign";
 import { useNavigation } from "@react-navigation/native";
 import axios from "axios";
 import { getValueFor } from "./methods/user";
-import { apiUrl, frontEndUriBase } from "./methods/apiRequest";
+import {
+  apiRequestPostWithBearer,
+  apiUrl,
+  frontEndUriBase,
+} from "./methods/apiRequest";
 import { useDispatch, useSelector } from "react-redux";
 import { setNotificationsRedux } from "../store/slices/Notifications/NotificationsSlice";
+import { setUser } from "../store/user/UserSlice";
+import { registerForPushNotificationsAsync } from "../services/registerForPushNotificationsAsync";
 import * as Device from "expo-device";
 
 export default function Header({ showBack }) {
@@ -26,7 +32,6 @@ export default function Header({ showBack }) {
 
   const dispatch = useDispatch();
   const navigation = useNavigation();
-  const [user, setuser] = useState({});
 
   const scheme = useColorScheme();
   const headerStyle = {
@@ -39,9 +44,26 @@ export default function Header({ showBack }) {
     (state) => state.notifications.notificationsCount
   );
 
+  const user = useSelector((state) => state.user);
+
+  const [token, setToken] = useState("");
+
   useEffect(() => {
-    getValueFor("user", setuser);
-  }, []);
+    registerForPushNotificationsAsync()
+      .then((token) => {
+        setToken(token);
+        if (!user?.push_token) {
+          apiRequestPostWithBearer("set_token", {
+            token: token,
+          });
+        } else {
+          console.log(user?.token, "tokeni-var");
+        }
+      })
+      .catch((err) => {
+        console.log(err, "qqq");
+      });
+  }, [token]);
 
   const getNotifications = async () => {
     try {

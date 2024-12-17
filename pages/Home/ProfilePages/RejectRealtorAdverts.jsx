@@ -82,7 +82,6 @@ export default function RejectRealtorAdverts() {
   useEffect(() => {
     fetchDisabledHousings(sort, take, skip);
     console.log(user?.acces_token + "aswww");
-
   }, [user, sort, skip]);
 
   const [selectedIndex, setIndex] = React.useState(null);
