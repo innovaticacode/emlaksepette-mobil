@@ -32,7 +32,7 @@ export default function Header({ showBack }) {
 
   const dispatch = useDispatch();
   const navigation = useNavigation();
-
+  const [user, setUser] = useState({});
   const scheme = useColorScheme();
   const headerStyle = {
     backgroundColor: scheme === "dark" ? "#000" : "#fff",
@@ -44,7 +44,9 @@ export default function Header({ showBack }) {
     (state) => state.notifications.notificationsCount
   );
 
-  const user = useSelector((state) => state.user);
+  useEffect(() => {
+    getValueFor("user", setUser);
+  }, []);
 
   const [token, setToken] = useState("");
 
@@ -82,7 +84,6 @@ export default function Header({ showBack }) {
           },
           headers: { Authorization: `Bearer ${user.access_token}` },
         });
-
         return dispatch(
           setNotificationsRedux({
             notificationsCount: response.data.total_unread_notifications,
