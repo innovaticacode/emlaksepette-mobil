@@ -26,18 +26,10 @@ import Modal from "react-native-modal";
 import { useNavigation } from "@react-navigation/native";
 import FirstHome from "./FirstHome";
 import { apiUrl } from "../../components/methods/apiRequest";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { setBanners } from "../../store/slices/Banner/BannerSlice";
 
-const { width, height } = Dimensions.get("window");
-
-const FirstRoute = () => (
-  <View style={{ flex: 1, backgroundColor: "#ff4081" }} />
-);
-
-const SecondRoute = () => (
-  <View style={{ flex: 1, backgroundColor: "#673ab7" }} />
-);
+const { width } = Dimensions.get("window");
 
 const renderScene = ({ route, index }) => {
   switch (route.key) {
