@@ -7,7 +7,7 @@ import {
 } from "react-native";
 import React from "react";
 import Icon from "react-native-vector-icons/MaterialIcons";
-import Icon2 from "react-native-vector-icons/Feather";
+
 import { useNavigation } from "@react-navigation/native";
 
 export default function CategoryAdverts({
@@ -29,7 +29,9 @@ export default function CategoryAdverts({
             gap: 10,
           }}
         >
-          <Text style={{ fontSize: 15, fontWeight: "bold" }}>{text} {title == "Projeler" ?  title : null}</Text>
+          <Text style={{ fontSize: 15, fontWeight: "bold" }}>
+            {text} {title == "Projeler" ? title : null}
+          </Text>
         </View>
         <View style={{ flex: 0.7 / 2, alignItems: "flex-end" }}>
           <Icon name="arrow-forward-ios" size={16} color={"#bebebe"} />

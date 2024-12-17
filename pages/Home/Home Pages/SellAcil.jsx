@@ -12,19 +12,22 @@ import {
 
 import axios from "axios";
 import { ActivityIndicator } from "react-native-paper";
-import Modal from "react-native-modal";
+
 import { getValueFor } from "../../../components/methods/user";
 import { useNavigation } from "@react-navigation/native";
-import Icon from "react-native-vector-icons/AntDesign";
+
 import { AlertNotificationRoot } from "react-native-alert-notification";
 import bannerSRC from "../../../src/assets/images/AcilAlSatBanner350x120px.png";
-import { apiUrl, frontEndUriBase } from "../../../components/methods/apiRequest";
+import {
+  apiUrl,
+  frontEndUriBase,
+} from "../../../components/methods/apiRequest";
 import RealtorPost from "../../../components/Card/RealtorCard/RealtorPost";
 const PAGE_SIZE = 10;
 
 const SellAcil = ({ index }) => {
   const navigation = useNavigation();
-  
+
   const [featuredEstates, setFeaturedEstates] = useState([]);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
@@ -42,8 +45,7 @@ const SellAcil = ({ index }) => {
     };
     try {
       const response = await axios.get(
-        `${apiUrl}real-estates?page=${reset ? 1 : page
-        }&limit=${PAGE_SIZE}`,
+        `${apiUrl}real-estates?page=${reset ? 1 : page}&limit=${PAGE_SIZE}`,
         config
       );
       const newEstates = response.data;
@@ -194,8 +196,9 @@ const SellAcil = ({ index }) => {
                     title={item.housing_title}
                     loading={loading}
                     location={item.city_title + " / " + item.county_title}
-                    image={`${frontEndUriBase}housing_images/${JSON.parse(item.housing_type_data).image
-                      }`}
+                    image={`${frontEndUriBase}housing_images/${
+                      JSON.parse(item.housing_type_data).image
+                    }`}
                     column1_additional={item.column1_additional}
                     column1_name={
                       JSON.parse(item.housing_type_data)[item.column1_name]

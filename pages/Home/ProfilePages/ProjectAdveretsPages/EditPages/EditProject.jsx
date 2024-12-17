@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import React, { useEffect, useRef, useState } from "react";
 import ArrowRightIcon from "react-native-vector-icons/AntDesign";
-import HomeIcon from "react-native-vector-icons/Entypo";
+
 import BuildingIcon from "react-native-vector-icons/FontAwesome";
 import WidthIcon from "react-native-vector-icons/SimpleLineIcons";
 import LocationIcon from "react-native-vector-icons/MaterialIcons";
@@ -100,9 +100,7 @@ export default function EditProject() {
   useEffect(() => {
     const fetchCities = async () => {
       try {
-        const response = await axios.get(
-          apiUrl+"cities"
-        );
+        const response = await axios.get(apiUrl + "cities");
         setCities(response.data.data);
       } catch (error) {
         console.error("Hata:", error);
@@ -115,9 +113,7 @@ export default function EditProject() {
 
   const fetchCounties = async (cityId) => {
     try {
-      const response = await axios.get(
-        `${apiUrl}counties/${cityId}`
-      );
+      const response = await axios.get(`${apiUrl}counties/${cityId}`);
       setCounties(response.data.data);
     } catch (error) {
       console.error("Hata:", error);
@@ -127,9 +123,7 @@ export default function EditProject() {
 
   const fetchNeighborhoods = async (countyId) => {
     try {
-      const response = await axios.get(
-        `${apiUrl}neighborhoods/${countyId}`
-      );
+      const response = await axios.get(`${apiUrl}neighborhoods/${countyId}`);
       setNeighborhoods(response.data.data);
     } catch (error) {
       console.error("Hata:", error);

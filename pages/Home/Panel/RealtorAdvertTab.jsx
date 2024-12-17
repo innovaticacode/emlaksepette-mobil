@@ -11,21 +11,10 @@ import {
   TextInput,
 } from "react-native";
 import { TabView, SceneMap } from "react-native-tab-view";
-
-import axios from "axios";
-import { useState } from "react";
-
-import { useNavigation } from "@react-navigation/native";
-
 import GraphicForRealtor from "./RealtorAdvertTabPages/GraphicForRealtor";
 import BalanceForRealtor from "./RealtorAdvertTabPages/BalanceForRealtor";
 import PendingBalance from "./RealtorAdvertTabPages/PendingBalance";
 import RejectBalance from "./RealtorAdvertTabPages/RejectBalance";
-import { apiRequestGetWithBearer } from "../../../components/methods/apiRequest";
-import { useEffect } from "react";
-
-
-
 
 const CustomTabBar = ({
   navigationState,
@@ -107,13 +96,10 @@ const CustomTabBar = ({
 };
 
 export default function RealtorAdvertTab() {
- 
-
   const renderScene = ({ route, index }) => {
-  
     switch (route.key) {
       case "first":
-        return <GraphicForRealtor index={index}  />;
+        return <GraphicForRealtor index={index} />;
       case "second":
         return <BalanceForRealtor index={index} />;
       case "shop":
@@ -136,17 +122,14 @@ export default function RealtorAdvertTab() {
   const indexChange = (index) => {
     setIndex(index);
     settab(index);
-   
   };
 
- 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#F6F6F6" }}>
-
       <TabView
-        navigationState={{ index, routes, }}
+        navigationState={{ index, routes }}
         renderScene={({ route, jumpTo }) =>
-          renderScene({ route, jumpTo, index  })
+          renderScene({ route, jumpTo, index })
         }
         onIndexChange={indexChange}
         initialLayout={{ width: layout.width }}

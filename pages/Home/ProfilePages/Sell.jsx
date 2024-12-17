@@ -14,10 +14,9 @@ import Icon2 from "react-native-vector-icons/MaterialCommunityIcons";
 import { getValueFor } from "../../../components/methods/user";
 import axios from "axios";
 import Order from "./profileComponents/Order";
-import Modal from "react-native-modal";
+
 import { Platform } from "react-native";
-import { Stack } from "@react-native-material/core";
-import { CheckBox } from "react-native-elements";
+
 import NoDataScreen from "../../../components/NoDataScreen";
 import { RadioFilter } from "../../../components";
 import { apiUrl } from "../../../components/methods/apiRequest";
@@ -46,14 +45,11 @@ export default function Sell() {
       setLoading(true);
       try {
         if (user?.access_token) {
-          const response = await axios.get(
-            apiUrl+"institutional/get_solds",
-            {
-              headers: {
-                Authorization: `Bearer ${user.access_token}`,
-              },
-            }
-          );
+          const response = await axios.get(apiUrl + "institutional/get_solds", {
+            headers: {
+              Authorization: `Bearer ${user.access_token}`,
+            },
+          });
           setProducts(response.data.solds);
         }
       } catch (error) {

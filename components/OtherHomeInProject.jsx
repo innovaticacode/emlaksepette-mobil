@@ -6,13 +6,10 @@ import {
   TouchableOpacity,
   ScrollView,
   FlatList,
- 
 } from "react-native";
 import { React, useCallback, useEffect, useState } from "react";
-import Ablok from "./Bloks/Ablok";
-import Bblok from "./Bloks/Bblok";
 import Posts from "./Posts";
-import { apiRequestGet } from "./methods/apiRequest";
+
 import { Platform } from "react-native";
 import { getValueFor } from "./methods/user";
 import { ActivityIndicator } from "react-native-paper";
@@ -35,7 +32,7 @@ export default function OtherHomeInProject({
   lastBlockItemCount,
   setLastBlockItemCount,
   setPage,
-  setPaymentModalShowOrder
+  setPaymentModalShowOrder,
 }) {
   const [user, setUser] = useState({});
   useEffect(() => {
@@ -51,7 +48,9 @@ export default function OtherHomeInProject({
 
   const renderFooter = () => {
     if (!isLoading) return null;
-    return <ActivityIndicator size="small" color={"#333"} style={styles.loading} />;
+    return (
+      <ActivityIndicator size="small" color={"#333"} style={styles.loading} />
+    );
   };
 
   const renderItem = ({ item, index }) => {
@@ -62,7 +61,7 @@ export default function OtherHomeInProject({
     const previousBlockHousingCount = 0;
     const isUserSame = sold && user ? sold.user_id === user?.id : false;
     const projectDiscountAmount = getDiscountAmount(data.project, index);
-    if(data.projectHousingsList[index + 1]){
+    if (data.projectHousingsList[index + 1]) {
       return (
         <Posts
           key={index}
@@ -77,11 +76,20 @@ export default function OtherHomeInProject({
           openFormModal={OpenFormModal}
           offSaleCheck={false}
           price={data.projectHousingsList[index + 1]["price[]"]}
-          formattedDiscountedPrice={data.projectHousingsList[index + 1]["price[]"] - data.projectDiscountAmount}
-          shareSale={data.projectHousingsList[index + 1]["share_sale[]"] ?? null}
-          numberOfShare={data.projectHousingsList[index + 1]["number_of_shares[]"] ?? null}
-          shareSaleEmpty={!data.projectHousingsList[index + 1]["share_sale[]"] || data.projectHousingsList[index + 1]["share_sale[]"] === "[]"}
-          
+          formattedDiscountedPrice={
+            data.projectHousingsList[index + 1]["price[]"] -
+            data.projectDiscountAmount
+          }
+          shareSale={
+            data.projectHousingsList[index + 1]["share_sale[]"] ?? null
+          }
+          numberOfShare={
+            data.projectHousingsList[index + 1]["number_of_shares[]"] ?? null
+          }
+          shareSaleEmpty={
+            !data.projectHousingsList[index + 1]["share_sale[]"] ||
+            data.projectHousingsList[index + 1]["share_sale[]"] === "[]"
+          }
           sumCartOrderQt={data.sumCartOrderQt}
           openModal={openModal}
           bookmarkStatus={true}
@@ -100,65 +108,66 @@ export default function OtherHomeInProject({
   return (
     <SafeAreaView>
       <View>
-       
         <View style={styles.container}>
-          {data.project.have_blocks !==0 &&data?.project?.blocks&&
-           <ScrollView
-           horizontal={true}
-           showsHorizontalScrollIndicator={false}
-           contentContainerStyle={{
-             flexGrow: 1,
-             backgroundColor: "#ebebeb",
-             padding: 3,
-             gap: 10,
-             display:'flex'
-           }}
-           bounces={false}
-         >
-           { data?.project?.blocks?.map((block, blockIndex) => (
-             <TouchableOpacity
-               key={blockIndex}
-               onPress={() => {
-                //  setPaymentModalShowOrder(null);
-                 setSelectedBlock(blockIndex);
-                 var lastBlockItemCountTemp = 0;
-                 for(var i = 0; i < blockIndex; i++){
-                   lastBlockItemCountTemp += data.project.blocks[i].housing_count;
-                 }
-                 setLastBlockItemCount(lastBlockItemCountTemp);
-                 getBlockItems(blockIndex);
-                 setSelectedTab(blockIndex);
-                 setPage(0);
-               }}
-               style={[
-                 styles.blockBtn,
-                 {
-                   borderBottomWidth: selectedBlock === blockIndex ? 1 : 0,
-                 },
-               ]}
-             >
-               <Text
-                 style={{
-                   fontWeight: selectedBlock === blockIndex ? "700" : "normal",
-                   color: "#333",
-                 }}
-               >
-                 {block.block_name}
-               </Text>
-             </TouchableOpacity>
-           ))}
-
-           </ScrollView> }
-         
+          {data.project.have_blocks !== 0 && data?.project?.blocks && (
+            <ScrollView
+              horizontal={true}
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={{
+                flexGrow: 1,
+                backgroundColor: "#ebebeb",
+                padding: 3,
+                gap: 10,
+                display: "flex",
+              }}
+              bounces={false}
+            >
+              {data?.project?.blocks?.map((block, blockIndex) => (
+                <TouchableOpacity
+                  key={blockIndex}
+                  onPress={() => {
+                    //  setPaymentModalShowOrder(null);
+                    setSelectedBlock(blockIndex);
+                    var lastBlockItemCountTemp = 0;
+                    for (var i = 0; i < blockIndex; i++) {
+                      lastBlockItemCountTemp +=
+                        data.project.blocks[i].housing_count;
+                    }
+                    setLastBlockItemCount(lastBlockItemCountTemp);
+                    getBlockItems(blockIndex);
+                    setSelectedTab(blockIndex);
+                    setPage(0);
+                  }}
+                  style={[
+                    styles.blockBtn,
+                    {
+                      borderBottomWidth: selectedBlock === blockIndex ? 1 : 0,
+                    },
+                  ]}
+                >
+                  <Text
+                    style={{
+                      fontWeight:
+                        selectedBlock === blockIndex ? "700" : "normal",
+                      color: "#333",
+                    }}
+                  >
+                    {block.block_name}
+                  </Text>
+                </TouchableOpacity>
+              ))}
+            </ScrollView>
+          )}
 
           <FlatList
-            data={Array.from({ length: Math.min(data.project.room_count, itemCount) })}
+            data={Array.from({
+              length: Math.min(data.project.room_count, itemCount),
+            })}
             keyExtractor={(item, index) => index.toString()}
             renderItem={renderItem}
             onEndReachedThreshold={0.1}
             ListFooterComponent={renderFooter}
           />
-
         </View>
       </View>
     </SafeAreaView>
@@ -168,7 +177,7 @@ const styles = StyleSheet.create({
   container: {
     padding: 5,
     top: 0,
-    
+
     backgroundColor: "#FFFFFF",
 
     marginTop: 0,
@@ -208,6 +217,6 @@ const styles = StyleSheet.create({
   },
   loading: {
     padding: 10,
-    color : 'red'
+    color: "red",
   },
 });

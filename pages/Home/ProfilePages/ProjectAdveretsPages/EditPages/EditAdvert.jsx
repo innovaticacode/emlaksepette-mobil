@@ -7,8 +7,7 @@ import {
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import { CheckBox } from "@rneui/themed";
-import Advert from "./EditComponents/Advert";
-import { Table, Row, Rows } from "react-native-table-component";
+
 import Icon from "react-native-vector-icons/AntDesign";
 import { useRoute } from "@react-navigation/native";
 import { getValueFor } from "../../../../../components/methods/user";

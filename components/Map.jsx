@@ -1,7 +1,7 @@
 import { View, Text, Button, TouchableOpacity } from "react-native";
 import { React, useEffect, useState } from "react";
 import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
-import * as Location from "expo-location";
+
 import openMap from "react-native-open-maps";
 export default function Map({ mapData }) {
   var locationCoords = mapData.project.location.split(",");
@@ -36,10 +36,9 @@ export default function Map({ mapData }) {
       </TouchableOpacity>
 
       <MapView
-      
-      region={{
+        region={{
           latitude: parseFloat(locationCoords[0]),
-          longitude:parseFloat(locationCoords[1]),
+          longitude: parseFloat(locationCoords[1]),
 
           latitudeDelta: 0.0922,
           longitudeDelta: 0.0421,

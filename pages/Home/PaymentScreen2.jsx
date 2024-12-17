@@ -18,8 +18,6 @@ import EftPay from "./EftPay";
 import Modal from "react-native-modal";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import * as DocumentPicker from "expo-document-picker";
-import * as SecureStore from "expo-secure-store";
-import { addDotEveryThreeDigits } from "../../components/methods/merhod";
 
 import { Platform } from "react-native";
 import { apiRequestGet, apiUrl } from "../../components/methods/apiRequest";

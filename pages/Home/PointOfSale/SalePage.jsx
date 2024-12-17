@@ -161,7 +161,7 @@ const SalePage = () => {
     try {
       if (user?.access_token) {
         const response = await axios.post(
-          apiUrl+"sales-points",
+          apiUrl + "sales-points",
           formDataToSend,
           {
             headers: {
@@ -222,9 +222,7 @@ const SalePage = () => {
   useEffect(() => {
     const fetchTaxOfficeCity = async () => {
       try {
-        const response = await axios.get(
-          apiUrl+"get-tax-offices"
-        );
+        const response = await axios.get(apiUrl + "get-tax-offices");
         setTaxOfficesCities(response.data);
       } catch (error) {
         console.error("Hata:", error);
@@ -236,9 +234,7 @@ const SalePage = () => {
 
   const fetchTaxOffice = async (value) => {
     try {
-      const response = await axios.get(
-        `${apiUrl}get-tax-office/${value}`
-      );
+      const response = await axios.get(`${apiUrl}get-tax-office/${value}`);
       setTaxOffice(response.data);
     } catch (error) {
       console.error("Hata:", error);
@@ -248,9 +244,7 @@ const SalePage = () => {
   useEffect(() => {
     const fetchCities = async () => {
       try {
-        const response = await axios.get(
-          apiUrl+"cities"
-        );
+        const response = await axios.get(apiUrl + "cities");
         setCities(response.data.data);
       } catch (error) {
         console.error("Hata:", error);
@@ -270,12 +264,9 @@ const SalePage = () => {
 
   const fetchStores = async (selectedCorporateType) => {
     try {
-      const response = await axios.get(
-        `${apiUrl}fetch-stores`,
-        {
-          params: { corporate_type: selectedCorporateType }, // Send the corporate type as a query parameter
-        }
-      );
+      const response = await axios.get(`${apiUrl}fetch-stores`, {
+        params: { corporate_type: selectedCorporateType }, // Send the corporate type as a query parameter
+      });
       const storesFormatted = response.data.stores.map((store) => ({
         label: store.name, // Assuming the API returns store names in 'name'
         value: store.id, // Assuming the API returns store IDs in 'id'
@@ -309,9 +300,7 @@ const SalePage = () => {
 
   const fetchCounties = async (value) => {
     try {
-      const response = await axios.get(
-        `${apiUrl}counties/${value}`
-      );
+      const response = await axios.get(`${apiUrl}counties/${value}`);
       setCounties(response.data.data);
       setSelectedCounty(null); // Seçili ilçe sıfırla
     } catch (error) {

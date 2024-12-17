@@ -2,6 +2,13 @@ import { removeHtmlTags } from "./HtmlToRegex";
 import { formatDate } from "./FormatDate";
 import { LogToSentry } from "./LogToSentry";
 import { formatedPrice } from "./FormatedPrice";
-
-export { removeHtmlTags, formatDate, formatedPrice, LogToSentry };
-
+import { sanitizeEmail } from "./FormatEmail";
+import { checkFileSize } from "./fileSizeChecker";
+export {
+  removeHtmlTags,
+  formatDate,
+  formatedPrice,
+  LogToSentry,
+  sanitizeEmail,
+  checkFileSize,
+};

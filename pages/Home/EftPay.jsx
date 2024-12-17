@@ -5,26 +5,27 @@ import {
   TouchableOpacity,
   Platform,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { ImageBackground } from "react-native";
 import Icon from "react-native-vector-icons/Entypo";
 import * as Clipboard from "expo-clipboard";
 import { useNavigation } from "@react-navigation/native";
 import * as FileSystem from "expo-file-system";
 import * as IntentLauncher from "expo-intent-launcher";
+import { ActivityIndicator } from "react-native-paper";
+import axios from "axios";
+import { apiUrl } from "../../components/methods/apiRequest";
 export default function EftPay({
   onPress,
   selectedDocumentName,
-  pdfUri,
   url,
-  checked,
-  checked2,
-  pickDocument,
   onHandlePayment,
+  selectedBank,
+  setSelectedBank,
+  loading = false,
 }) {
   const navigation = useNavigation();
   const [selectedIban, setselectedIban] = useState(false);
-  const [selectedBank, setselectedBank] = useState(0);
   const [showCopyAlert, setshowCopyAlert] = useState(false);
   const [showCopyAlert2, setshowCopyAlert2] = useState(false);
   const [showPaymentAccountName, setshowPaymentAccountName] = useState(false);
@@ -33,8 +34,16 @@ export default function EftPay({
     setshowPaymentAccountName(true);
     Clipboard.setStringAsync(Iban);
   };
+  const [iban, setIban] = useState({});
 
-  console.log(onPress);
+  const handleFetchIban = async () => {
+    const response = await axios.get(apiUrl + "get-iban");
+    setIban(response.data.iban);
+  };
+
+  useEffect(() => {
+    handleFetchIban();
+  }, []);
 
   const openPdf = async () => {
     if (url) {
@@ -64,17 +73,17 @@ export default function EftPay({
         </Text>
       </View>
       <View style={{ alignItems: "center", gap: 10 }}>
-        <TouchableOpacity
+        {/* <TouchableOpacity
           style={{
             width: 300,
             height: 150,
-            borderWidth: selectedBank == 1 ? 1 : 0,
+            borderWidth: selectedBank == 2 ? 1 : 0,
             padding: 10,
             borderColor: "red",
           }}
           onPress={() => {
             IbanControl("TR45 0006 2000 7030 0006 2959 64");
-            setselectedBank(1);
+            setSelectedBank(2);
             setshowCopyAlert(true);
             setTimeout(() => {
               setshowCopyAlert(false);
@@ -95,19 +104,19 @@ export default function EftPay({
             source={require("../../src/assets/images/Garanti.png")}
             resizeMode="contain"
           />
-        </TouchableOpacity>
+        </TouchableOpacity> */}
 
         <TouchableOpacity
           style={{
             width: 300,
             height: 150,
             padding: 10,
-            borderWidth: selectedBank == 2 ? 1 : 0,
+            borderWidth: selectedBank == 5 ? 1 : 0,
             borderColor: "red",
           }}
           onPress={() => {
-            IbanControl("TR16 0001 0020 9997 7967 8350 01");
-            setselectedBank(2);
+            IbanControl(iban);
+            setSelectedBank(5);
             setshowCopyAlert2(true);
             setTimeout(() => {
               setshowCopyAlert2(false);
@@ -222,6 +231,7 @@ export default function EftPay({
 
       <View style={{ padding: 10, paddingTop: 20 }}>
         <TouchableOpacity
+          disabled={loading}
           style={{
             flexDirection: "row",
             alignItems: "center",
@@ -230,11 +240,15 @@ export default function EftPay({
             justifyContent: "center",
             gap: 15,
             borderRadius: 5,
+            opacity: loading ? 0.7 : 1,
           }}
           onPress={onHandlePayment}
-          disabled={!checked || !checked2} // Checkbox'ların kontrolü
         >
-          <Text style={{ color: "white" }}>Ödemeyi Tamamla</Text>
+          {loading ? (
+            <ActivityIndicator color="white" size={"small"} />
+          ) : (
+            <Text style={{ color: "white" }}>Ödemeyi Tamamla</Text>
+          )}
         </TouchableOpacity>
       </View>
     </View>

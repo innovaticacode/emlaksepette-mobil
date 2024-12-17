@@ -28,17 +28,21 @@ import Map from "../../components/Map";
 import { Icon } from "react-native-elements";
 import OtherHomeInProject from "../../components/OtherHomeInProject";
 import FloorPlan from "../../components/FloorPlan";
-import Information from "../../components/Information";
+
 import LinkIcon from "react-native-vector-icons/Entypo";
 import { useRoute } from "@react-navigation/native";
-import Header from "../../components/Header";
+
 import Modal from "react-native-modal";
 import SliderMenuDetails from "../../components/SliderMenuDetails";
-import { apiRequestGet, apiUrl, frontEndUriBase } from "../../components/methods/apiRequest";
+import {
+  apiRequestGet,
+  apiUrl,
+  frontEndUriBase,
+} from "../../components/methods/apiRequest";
 import AddCollection from "../../components/AddCollection";
 import { getValueFor } from "../../components/methods/user";
 import axios from "axios";
-import DrawerMenu from "../../components/Menu/DrawerMenu/DrawerMenu";
+
 import { ActivityIndicator } from "react-native-paper";
 import AwesomeAlert from "react-native-awesome-alerts";
 import CommentForProject from "../../components/CommentForProject";
@@ -46,7 +50,6 @@ import ImageViewing from "react-native-image-viewing";
 import TextAlertModal from "../../components/TextAlertModal";
 
 export default function Details({ navigation }) {
-
   const [ColectionSheet, setColectionSheet] = useState(false);
   const [selectedTab, setSelectedTab] = useState(0);
   const [page, setPage] = useState(0);
@@ -75,7 +78,7 @@ export default function Details({ navigation }) {
   const [addCollection, setaddCollection] = useState(false);
   const [newCollectionNameCreate, setnewCollectionNameCreate] = useState("");
   const translateY = useRef(new Animated.Value(400)).current;
-  const [SeeAlertModal, setSeeAlertModal] = useState(false)
+  const [SeeAlertModal, setSeeAlertModal] = useState(false);
   const [selectedHouse, setselectedHouse] = useState(0);
   const [collections, setcollections] = useState([]);
   const [selectedCollectionName, setselectedCollectionName] = useState("");
@@ -88,7 +91,6 @@ export default function Details({ navigation }) {
   const [tab, settab] = useState(0);
   const [AlertForSign, setAlertForSign] = useState(false);
   const [comments, setcomments] = useState([]);
-  const [galleries, setGalleries] = useState([]);
   const route = useRoute();
   let debounceTimeout;
   const { slug, ProjectId, ımage } = route.params;
@@ -140,14 +142,11 @@ export default function Details({ navigation }) {
   const GetUserInfo = async () => {
     try {
       if (user?.access_token && user) {
-        const userInfo = await axios.get(
-          `${apiUrl}users/` + user?.id,
-          {
-            headers: {
-              Authorization: `Bearer ${user.access_token}`,
-            },
-          }
-        );
+        const userInfo = await axios.get(`${apiUrl}users/` + user?.id, {
+          headers: {
+            Authorization: `Bearer ${user.access_token}`,
+          },
+        });
         const userData = userInfo?.data?.user;
         setnamFromGetUser(userData);
       }
@@ -167,11 +166,10 @@ export default function Details({ navigation }) {
         setData(res?.data);
         setloadingDetails(true);
         GetUserInfo();
-      }).finally(() => {
-        setloadingDetails(false)
-
       })
-
+      .finally(() => {
+        setloadingDetails(false);
+      });
   }, [ProjectId, user]);
 
   const getLastItemCount = () => {
@@ -191,11 +189,11 @@ export default function Details({ navigation }) {
     setItemCount(10);
     apiRequestGet(
       "project_housings/" +
-      ProjectId +
-      "?start=" +
-      lastBlockItemsCount +
-      "&end=" +
-      (lastBlockItemsCount + 10)
+        ProjectId +
+        "?start=" +
+        lastBlockItemsCount +
+        "&end=" +
+        (lastBlockItemsCount + 10)
     ).then((res) => {
       setData({
         ...data,
@@ -211,14 +209,14 @@ export default function Details({ navigation }) {
       if (page * 10 < data.project.blocks[selectedTab].housing_count) {
         apiRequestGet(
           "project_housings/" +
-          ProjectId +
-          "?start=" +
-          (parseInt(lastBlockItemCount) + parseInt(page * 10)) +
-          "&end=" +
-          ((page + 1) * 10 > data.project.blocks[selectedTab].housing_count
-            ? parseInt(lastBlockItemCount) +
-            parseInt(data.project.blocks[selectedTab].housing_count)
-            : parseInt(lastBlockItemCount) + parseInt((page + 1) * 10))
+            ProjectId +
+            "?start=" +
+            (parseInt(lastBlockItemCount) + parseInt(page * 10)) +
+            "&end=" +
+            ((page + 1) * 10 > data.project.blocks[selectedTab].housing_count
+              ? parseInt(lastBlockItemCount) +
+                parseInt(data.project.blocks[selectedTab].housing_count)
+              : parseInt(lastBlockItemCount) + parseInt((page + 1) * 10))
         ).then((res) => {
           // console.log(res);
           setData({
@@ -241,11 +239,11 @@ export default function Details({ navigation }) {
         setIsLoading(true);
         apiRequestGet(
           "project_housings/" +
-          ProjectId +
-          "?start=" +
-          page * 10 +
-          "&end=" +
-          (page + 1) * 10
+            ProjectId +
+            "?start=" +
+            page * 10 +
+            "&end=" +
+            (page + 1) * 10
         ).then((res) => {
           setData({
             ...data,
@@ -275,16 +273,12 @@ export default function Details({ navigation }) {
     };
 
     axios
-      .post(
-        `${apiUrl}remove_item_on_collection`,
-        collectionData,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${user.access_token}`,
-          },
-        }
-      )
+      .post(`${apiUrl}remove_item_on_collection`, collectionData, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${user.access_token}`,
+        },
+      })
       .then((response) => {
         setColectionSheet(false);
         setTimeout(() => {
@@ -358,14 +352,11 @@ export default function Details({ navigation }) {
   const fetchData = async () => {
     try {
       if (user.access_token) {
-        const response = await axios.get(
-          apiUrl + "client/collections",
-          {
-            headers: {
-              Authorization: `Bearer ${user.access_token}`,
-            },
-          }
-        );
+        const response = await axios.get(apiUrl + "client/collections", {
+          headers: {
+            Authorization: `Bearer ${user.access_token}`,
+          },
+        });
 
         setcollections(response?.data.collections);
       }
@@ -422,16 +413,12 @@ export default function Details({ navigation }) {
     };
 
     axios
-      .post(
-        apiUrl + "add/collection",
-        collectionData,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${user.access_token}`,
-          },
-        }
-      )
+      .post(apiUrl + "add/collection", collectionData, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${user.access_token}`,
+        },
+      })
       .then((response) => {
         fetchData();
         setaddCollection(false);
@@ -536,12 +523,264 @@ export default function Details({ navigation }) {
     setModalForAddToCart(true);
   };
 
+  const addToCardPaymentModal = async () => {
+    const formData = new FormData();
+    formData.append("id", paymentModalShowOrder);
+    formData.append(
+      "isShare",
+      data.projectHousingsList[paymentModalShowOrder]["share_sale[]"]
+    );
+    formData.append(
+      "numbershare",
+      data.projectHousingsList[paymentModalShowOrder]["number_of_shares[]"]
+    );
+    formData.append("qt", 1);
+    formData.append("type", "project");
+    formData.append("clear_cart", "no");
+    formData.append("project", data.project.id);
+    try {
+      if (user?.access_token) {
+        const response = await axios.post(
+          apiUrl + "institutional/add_to_cart",
+          formData,
+          {
+            headers: {
+              Authorization: `Bearer ${user?.access_token}`,
+            },
+          }
+        );
+
+        navigation.navigate("Sepetim");
+      } else {
+        setModalVisible(false);
+        setTimeout(() => {
+          setAlertForSign(true);
+        }, 400);
+      }
+    } catch (error) {
+      console.error("post isteği olmadı", error);
+    }
+  };
+  const [userid, setUserId] = useState("");
+  const [storeid, setStoreId] = useState("");
+  const [projectid, setProjectId] = useState("");
+  const [roomid, setRoomId] = useState("");
+  const [emailid, setEmailId] = useState("");
+  const [nameid, setNameId] = useState("");
+
+  const [phoneid, setPhoneId] = useState("");
+
+  const [titleid, setTitleId] = useState("");
+  const [offerid, setOfferId] = useState("");
+
+  const [createdid, setCreatedId] = useState("");
   const getRoomID = (id) => {
     setselectedroomId(id);
   };
+  const postData = async () => {
+    try {
+      var formData = new FormData();
+
+      formData.append("userid", user.id);
+      formData.append("projectUserId", data.project.user.id);
+      formData.append("projectId", data.project.id);
+      formData.append("roomId", selectedroomId);
+      formData.append("name", nameid);
+      formData.append("phone", phoneid);
+      formData.append("email", emailid);
+      formData.append("city_id", city);
+      formData.append("county_id", county);
+      formData.append("title", titleid);
+      formData.append("offer_description", offerid);
+
+      const response = await axios.post(
+        apiUrl + "institutional/give_offer",
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${user.access_token}`,
+            "Content-Type": "multipart/form-data", // İçerik tipini belirtmek
+          },
+        }
+      );
+      setFormVisible(false);
+      Dialog.show({
+        type: ALERT_TYPE.SUCCESS,
+        title: "Başarılı",
+        textBody:
+          "Başvurunuz gönderildi. 1-2 iş günü içerisinde haber verilecektir.",
+        button: "Tamam",
+      });
+
+      // color("#d4edda");
+      setNameId("");
+      setPhoneId("");
+      setEmailId("");
+      setcity("");
+      setcounty("");
+      setTitleId("");
+      setOfferId("");
+    } catch (error) {
+      if (error.response) {
+        // Sunucudan gelen hata yanıtı
+        console.error("Sunucu Hatası:", error.response.data);
+        console.error("Hata Kodu:", error.response.status);
+      } else if (error.request) {
+        // İstek yapıldı, ancak cevap alınamadı
+        console.error("Sunucudan cevap alınamadı:", error.request);
+      } else {
+        // İstek ayarları sırasında bir hata oluştu
+        console.error("İstek Ayar Hatası:", error.message);
+      }
+      console.error("Post isteği başarısız:", error);
+    }
+  };
+  const [city, setcity] = useState("");
+  const [county, setcounty] = useState("");
+  const fetchCity = async () => {
+    try {
+      const response = await axios.get(apiUrl + "cities");
+      return response.data;
+    } catch (error) {
+      console.error("Hata:", error);
+      throw error;
+    }
+  };
+
+  const [citites, setCities] = useState([]);
+  useEffect(() => {
+    fetchCity()
+      .then((citites) => setCities(citites.data))
+      .catch((error) =>
+        console.error("Veri alınırken bir hata oluştu:", error)
+      );
+  }, []);
+
+  const [counties, setcounties] = useState([]);
+  const fetchDataCounty = async (value) => {
+    try {
+      const response = await axios.get(apiUrl + `counties/${value}`);
+      return response.data;
+    } catch (error) {
+      console.error("Hata:", error);
+      throw error;
+    }
+  };
+
+  const onChangeCity = (value) => {
+    setcity(value);
+    if (value) {
+      fetchDataCounty(value)
+        .then((county) => setcounties(county.data))
+        .catch((error) =>
+          console.error("Veri alınırken bir hata oluştu:", error)
+        );
+    } else {
+      setcounties([]);
+    }
+  };
+
+  const { width, height } = Dimensions.get("window");
+  const [errorStatu, seterrorStatu] = useState(0);
+  const [errorMessage, seterrorMessage] = useState("");
+  const formatPhoneNumber = (value) => {
+    // Sadece rakamları al
+    const cleaned = ("" + value).replace(/\D/g, "");
+
+    // 0 ile başlıyorsa, ilk karakteri çıkar
+    const cleanedWithoutLeadingZero = cleaned.startsWith("0")
+      ? cleaned.substring(1)
+      : cleaned;
+
+    let formattedNumber = "";
+
+    for (let i = 0; i < cleanedWithoutLeadingZero.length; i++) {
+      if (i === 0) formattedNumber += "(";
+      if (i === 3) formattedNumber += ") ";
+      if (i === 6 || i === 8) formattedNumber += " ";
+      formattedNumber += cleanedWithoutLeadingZero[i];
+    }
+
+    return formattedNumber;
+  };
+  const handlePhoneNumberChange = (value) => {
+    const formattedPhoneNumber = formatPhoneNumber(value);
+    setPhoneId(formattedPhoneNumber);
+  };
+  const GiveOffer = () => {
+    switch (true) {
+      case !nameid:
+        seterrorStatu(1);
+        seterrorMessage("İsim Alanı Boş Bırakılmaz");
+
+        setTimeout(() => {
+          seterrorStatu(0);
+        }, 5000);
+        break;
+      case !phoneid:
+        seterrorStatu(2);
+        seterrorMessage("Telefon Alanı Boş Bırakılmaz");
+
+        setTimeout(() => {
+          seterrorStatu(0);
+        }, 5000);
+        break;
+      case phoneid.length < 10:
+        seterrorStatu(2);
+        seterrorMessage("Geçerli bir telefon numarası giriniz");
+
+        setTimeout(() => {
+          seterrorStatu(0);
+        }, 5000);
+        break;
+      case !titleid:
+        seterrorStatu(3);
+        seterrorMessage("Meslek Alanı Boş Bırakılmaz");
+
+        setTimeout(() => {
+          seterrorStatu(0);
+        }, 5000);
+        break;
+      case !city:
+        seterrorStatu(4);
+        seterrorMessage("Şehir Seçiniz ");
+
+        setTimeout(() => {
+          seterrorStatu(0);
+        }, 5000);
+        break;
+      case !county:
+        seterrorStatu(5);
+        seterrorMessage("İlçe Seçniz");
+
+        setTimeout(() => {
+          seterrorStatu(0);
+        }, 5000);
+        break;
+      case !emailid:
+        seterrorStatu(6);
+        seterrorMessage("Mail Alanı Boş Bırakılmaz");
+
+        setTimeout(() => {
+          seterrorStatu(0);
+        }, 5000);
+        break;
+      case !offerid:
+        seterrorStatu(7);
+        seterrorMessage("Açıklama alanı boş bırakılamaz");
+
+        setTimeout(() => {
+          seterrorStatu(0);
+        }, 5000);
+        break;
+      default:
+        postData();
+    }
+  };
+  const [galleries, setGalleries] = useState([]);
 
   useEffect(() => {
-    if (data?.project?.image && data.project.images) {
+    if (data.project.image && data.project.images) {
       // data.project.image'i uygun formata dönüştürün
       const imageObject = { image: data?.project?.image };
 
@@ -635,19 +874,61 @@ export default function Details({ navigation }) {
             <ActivityIndicator size={"large"} color="#333" />
           ) : (
             <>
-
-
-              <View style={{ position: 'absolute', width: '100%', bottom: 35, padding: 4, zIndex: 1, flexDirection: 'row', justifyContent: 'space-around' }}>
-                <TouchableOpacity style={{ width: '45%', backgroundColor: '#EA2B2E', padding: 12, borderRadius: 8 }} onPress={handleOpenPhone}>
-                  <Text style={{ fontSize: 14, color: 'white', fontWeight: '600', textAlign: 'center' }} >Ara</Text>
+              <View
+                style={{
+                  position: "absolute",
+                  width: "100%",
+                  bottom: 35,
+                  padding: 4,
+                  zIndex: 1,
+                  flexDirection: "row",
+                  justifyContent: "space-around",
+                }}
+              >
+                <TouchableOpacity
+                  style={{
+                    width: "45%",
+                    backgroundColor: "#EA2B2E",
+                    padding: 12,
+                    borderRadius: 8,
+                  }}
+                  onPress={handleOpenPhone}
+                >
+                  <Text
+                    style={{
+                      fontSize: 14,
+                      color: "white",
+                      fontWeight: "600",
+                      textAlign: "center",
+                    }}
+                  >
+                    Ara
+                  </Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={{ width: '45%', backgroundColor: '#EA2B2E', padding: 12, borderRadius: 8 }} onPress={() => {
-                  navigation.navigate("Profile", {
-                    name: "",
-                    id: data?.project?.user?.id,
-                  })
-                }}>
-                  <Text style={{ fontSize: 14, color: 'white', fontWeight: '600', textAlign: 'center' }}>Satış Noktalarını Gör</Text>
+                <TouchableOpacity
+                  style={{
+                    width: "45%",
+                    backgroundColor: "#EA2B2E",
+                    padding: 12,
+                    borderRadius: 8,
+                  }}
+                  onPress={() => {
+                    navigation.navigate("Profile", {
+                      name: "",
+                      id: data?.project?.user?.id,
+                    });
+                  }}
+                >
+                  <Text
+                    style={{
+                      fontSize: 14,
+                      color: "white",
+                      fontWeight: "600",
+                      textAlign: "center",
+                    }}
+                  >
+                    Satış Noktalarını Gör
+                  </Text>
                 </TouchableOpacity>
               </View>
               <View
@@ -737,7 +1018,6 @@ export default function Details({ navigation }) {
                 </TouchableOpacity>
               </View>
 
-
               <ScrollView
                 ref={scrollViewRef}
                 contentContainerStyle={{ paddingBottom: 80 }}
@@ -779,7 +1059,6 @@ export default function Details({ navigation }) {
                   }
                 }}
               >
-
                 <View style={{ height: 250 }}>
                   <View style={styles.pagination}>
                     <View
@@ -803,7 +1082,6 @@ export default function Details({ navigation }) {
                         <Icon2 name="sharealt" size={18} />
                       </View>
                     </TouchableOpacity>
-
                   </View>
                   <View style={styles.clubRateContainer}>
                     {user &&
@@ -859,34 +1137,49 @@ export default function Details({ navigation }) {
                     onImageIndexChange={handleImageIndexChange}
                     FooterComponent={({ imageIndex }) => (
                       <View style={{ marginBottom: 50 }}>
-                        <Text style={{
-                          color: "#FFF",
-                          fontSize: 12,
-                          textAlign: "center",
-                          fontWeight: "500",
-                        }}>
+                        <Text
+                          style={{
+                            color: "#FFF",
+                            fontSize: 12,
+                            textAlign: "center",
+                            fontWeight: "500",
+                          }}
+                        >
                           {imageIndex + 1} / {images.length}
                         </Text>
                       </View>
                     )}
                   />
                 </View>
-                {
-                  user.corporate_type !== 'Emlak Ofisi' &&
-                  <TouchableOpacity style={{ padding: 5, flexDirection: 'row', alignItems: 'center', gap: 5 }} onPress={() => {
-                    navigation.navigate("Profile", {
-                      name: "",
-                      id: data?.project?.user?.id,
-                    })
-                  }}>
-                    <Text style={{ fontSize: 13, color: '#ED3135', fontWeight: '600' }}>Satış Noktalarında Alırsanız %2 İndirim</Text>
-                    <Icon2 name="arrowright" size={17} color={'#ED3135'} />
+                {user.corporate_type !== "Emlak Ofisi" && (
+                  <TouchableOpacity
+                    style={{
+                      padding: 5,
+                      flexDirection: "row",
+                      alignItems: "center",
+                      gap: 5,
+                    }}
+                    onPress={() => {
+                      navigation.navigate("Profile", {
+                        name: "",
+                        id: data?.project?.user?.id,
+                      });
+                    }}
+                  >
+                    <Text
+                      style={{
+                        fontSize: 13,
+                        color: "#ED3135",
+                        fontWeight: "600",
+                      }}
+                    >
+                      Satış Noktalarında Alırsanız %2 İndirim
+                    </Text>
+                    <Icon2 name="arrowright" size={17} color={"#ED3135"} />
                   </TouchableOpacity>
-                }
+                )}
 
-                <View
-                  style={styles.CaptionPriceAndSlider}
-                >
+                <View style={styles.CaptionPriceAndSlider}>
                   {totalRate != 0 && (
                     <View
                       style={{
@@ -910,11 +1203,10 @@ export default function Details({ navigation }) {
                       <Icon2 name="star" color={"gold"} />
                     </View>
                   )}
-                  <View style={{ width: '100%' }}>
-                    <View style={{ gap: 5, width: '70%' }}>
+                  <View style={{ width: "100%" }}>
+                    <View style={{ gap: 5, width: "70%" }}>
                       <Text
                         style={{
-
                           fontSize: 11,
                           color: "#333",
                           fontWeight: "600",
@@ -926,16 +1218,16 @@ export default function Details({ navigation }) {
                       </Text>
                       <Text
                         style={{
-
                           fontSize: 16,
                           color: "#333",
                           fontWeight: "600",
                         }}
                       >
-                        {data?.project?.project_title?.toLocaleUpperCase('tr-TR')}
+                        {data?.project?.project_title?.toLocaleUpperCase(
+                          "tr-TR"
+                        )}
                       </Text>
                     </View>
-
                   </View>
 
                   <View>
@@ -945,7 +1237,6 @@ export default function Details({ navigation }) {
                       changeTab={changeTab}
                     />
                   </View>
-
                 </View>
                 {/* {
                   data?.isShareLink?.length!==0 &&
@@ -968,11 +1259,35 @@ export default function Details({ navigation }) {
                 } */}
 
                 <View style={{ marginTop: 5 }}>
-                  <View style={{ paddingLeft: 5, paddingRight: 5, paddingBottom: 5 }}>
-                    <TouchableOpacity style={{ borderWidth: 1, borderColor: '#EA2B2E', padding: 5, borderRadius: 6, backgroundColor: 'white' }} onPress={() => {
-                      setSeeAlertModal(true)
-                    }}>
-                      <Text style={{ textAlign: 'center', fontSize: 13, color: '#EA2B2E', fontWeight: '600' }}>Bilgilendirme!</Text>
+                  <View
+                    style={{
+                      paddingLeft: 5,
+                      paddingRight: 5,
+                      paddingBottom: 5,
+                    }}
+                  >
+                    <TouchableOpacity
+                      style={{
+                        borderWidth: 1,
+                        borderColor: "#EA2B2E",
+                        padding: 5,
+                        borderRadius: 6,
+                        backgroundColor: "white",
+                      }}
+                      onPress={() => {
+                        setSeeAlertModal(true);
+                      }}
+                    >
+                      <Text
+                        style={{
+                          textAlign: "center",
+                          fontSize: 13,
+                          color: "#EA2B2E",
+                          fontWeight: "600",
+                        }}
+                      >
+                        Bilgilendirme!
+                      </Text>
                     </TouchableOpacity>
                   </View>
                   {tabs == 0 && (
@@ -994,7 +1309,6 @@ export default function Details({ navigation }) {
                       setLastBlockItemCount={setLastBlockItemCount}
                       lastBlockItemCount={lastBlockItemCount}
                       setPage={setPage}
-
                     />
                   )}
                   <View>{tabs == 1 && <Caption data={data} />}</View>
@@ -1005,7 +1319,6 @@ export default function Details({ navigation }) {
                   {tabs == 4 && (
                     <CommentForProject projectId={data?.project?.id} />
                   )}
-
                 </View>
 
                 <Modal
@@ -1038,7 +1351,7 @@ export default function Details({ navigation }) {
                           }}
                         >
                           {user.type == 2 &&
-                            user.corporate_type == "Emlak Ofisi"
+                          user.corporate_type == "Emlak Ofisi"
                             ? "Portföye Ekle"
                             : "Koleksiyona Ekle"}
                         </Text>
@@ -1050,7 +1363,7 @@ export default function Details({ navigation }) {
                           }}
                         >
                           {user.type == 2 &&
-                            user.corporate_type == "Emlak Ofisi"
+                          user.corporate_type == "Emlak Ofisi"
                             ? "Konutu portföylerinden birine ekleyebilir veya yeni bir portföy oluşturabilirsin"
                             : "Konutu koleksiyonlarından birine ekleyebilir veya yeni bir koleksiyon oluşturabilirsin"}
                         </Text>
@@ -1094,7 +1407,7 @@ export default function Details({ navigation }) {
                                       }}
                                     >
                                       {user.type == 2 &&
-                                        user.corporate_type == "Emlak Ofisi"
+                                      user.corporate_type == "Emlak Ofisi"
                                         ? "Portföyünüze konut ekleyebilmeniz emlak kulüp üyesi olmaız gerekmektedir"
                                         : "Koleksiyonunuza konut ekleyebilmeniz emlak kulüp üyesi olmaız gerekmektedir"}
                                     </Text>
@@ -1125,7 +1438,7 @@ export default function Details({ navigation }) {
                                     }}
                                   >
                                     {user.type == 2 &&
-                                      user.corporate_type == "Emlak Ofisi"
+                                    user.corporate_type == "Emlak Ofisi"
                                       ? "Portföyünüze konut ekleyebilmeniz emlak kulüp üyesi olmaız gerekmektedir"
                                       : "Koleksiyonunuza konut ekleyebilmeniz emlak kulüp üyesi olmaız gerekmektedir"}
                                   </Text>
@@ -1176,7 +1489,7 @@ export default function Details({ navigation }) {
                                       }}
                                     >
                                       {user.type == 2 &&
-                                        user.corporate_type == "Emlak Ofisi"
+                                      user.corporate_type == "Emlak Ofisi"
                                         ? "Portföyünüze konut ekleyebilmeniz emlak kulüp üyesi olmaız gerekmektedir"
                                         : "Koleksiyonunuza konut ekleyebilmeniz emlak kulüp üyesi olmaız gerekmektedir"}
                                     </Text>
@@ -1291,7 +1604,7 @@ export default function Details({ navigation }) {
                                   }}
                                 >
                                   {user.type == 2 &&
-                                    user.corporate_type == "Emlak Ofisi"
+                                  user.corporate_type == "Emlak Ofisi"
                                     ? "Portföyünüze konut ekleyebilmeniz Giriş yapmanız gerekmektedir."
                                     : "Koleksiyonunuza konut ekleyebilmeniz Giriş yapmanız gerekmektedir."}
                                 </Text>
@@ -1387,7 +1700,7 @@ export default function Details({ navigation }) {
                               }}
                             >
                               {user.type == 2 &&
-                                user.corporate_type == "Emlak Ofisi"
+                              user.corporate_type == "Emlak Ofisi"
                                 ? "Portföy Oluştur"
                                 : "Koleksiyon Oluştur"}
                             </Text>
@@ -1408,7 +1721,7 @@ export default function Details({ navigation }) {
                             }}
                           >
                             {user.type == 2 &&
-                              user.corporate_type == "Emlak Ofisi"
+                            user.corporate_type == "Emlak Ofisi"
                               ? "Portföy İsmi"
                               : "Koleksiyon İsmi"}
                           </Text>
@@ -1437,7 +1750,7 @@ export default function Details({ navigation }) {
                               }}
                             >
                               {user.type == 2 &&
-                                user.corporate_type == "Emlak Ofisi"
+                              user.corporate_type == "Emlak Ofisi"
                                 ? "Portföy Oluştur"
                                 : "Koleksiyon Oluştur"}
                             </Text>
@@ -1462,7 +1775,9 @@ export default function Details({ navigation }) {
               textAlign: "center",
               margin: 5,
             }}
-            title={"Sepetinize ürün ekleyebilmek için giriş yapmanız gerekmektedir."}
+            title={
+              "Sepetinize ürün ekleyebilmek için giriş yapmanız gerekmektedir."
+            }
             messageStyle={{ textAlign: "center" }}
             closeOnTouchOutside={true}
             closeOnHardwareBackPress={false}
@@ -1708,7 +2023,6 @@ const styles = StyleSheet.create({
         elevation: 5,
       },
     }),
-
   },
   modalBackground: {
     flex: 1,
@@ -1721,8 +2035,6 @@ const styles = StyleSheet.create({
 
     backgroundColor: "white",
     borderRadius: 6,
-
-
   },
   modalTitle: {
     fontSize: 18,
@@ -1733,7 +2045,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginBottom: 20,
   },
-
 });
 const pickerSelectStyles = StyleSheet.create({
   inputIOS: {
@@ -1755,5 +2066,5 @@ const pickerSelectStyles = StyleSheet.create({
     fontSize: 12,
     textAlign: "center",
     fontWeight: "500",
-  }
+  },
 });

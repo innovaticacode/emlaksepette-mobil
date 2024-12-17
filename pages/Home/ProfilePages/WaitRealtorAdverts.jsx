@@ -5,6 +5,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   TextInput,
+  FlatList,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import axios from "axios";
@@ -15,7 +16,7 @@ import MaterialIcon from "react-native-vector-icons/MaterialCommunityIcons";
 import { useNavigation } from "@react-navigation/native";
 import { Platform } from "react-native";
 import Icon3 from "react-native-vector-icons/MaterialIcons";
-import Icon4 from "react-native-vector-icons/FontAwesome5";
+
 import { ActivityIndicator } from "react-native-paper";
 import { Stack } from "@react-native-material/core";
 import { CheckBox } from "react-native-elements";
@@ -28,8 +29,10 @@ export default function WaitRealtorAdverts({ index }) {
   useEffect(() => {
     getValueFor("user", setUser);
   }, []);
-  const [start, setStart] = useState(0);
   const [take, setTake] = useState(10);
+  const [skip, setSkip] = useState(0);
+  const [sort, setsort] = useState(null);
+  const [totalAdverts, setTotalAdverts] = useState("");
   const [selectedProject, setSelectedProject] = useState(null);
   const [EditModalVisible, setEditModalVisible] = useState(false);
   const openSheet = (id) => {
@@ -38,18 +41,33 @@ export default function WaitRealtorAdverts({ index }) {
   };
   const [loading, setloading] = useState(false);
   const [housingRecords, sethousingRecords] = useState([]);
-  const fetchPendingHousings = async (sort) => {
-    setloading(true);
+  const fetchPendingHousings = async (sort, take, skip) => {
     try {
-      const res = await axios.get(
-        apiUrl + "get_my_housings?orderByHousings=" +
-        sort,
-        {
-          headers: { Authorization: "Bearer " + user.access_token },
-        }
-      );
-      sethousings(res.data.pendingHousingTypes);
-      sethousingRecords(res.data.pendingHousingTypes);
+      const res = await axios({
+        method: "get",
+        url: `${apiUrl}get_my_housings`,
+        headers: {
+          Authorization: `Bearer ${user?.access_token}`,
+          "Content-Type": "application/json",
+        },
+        params: {
+          orderByHousings: sort,
+          take: take,
+          skip: skip,
+          data: {
+            status: 2,
+          },
+        },
+      });
+      setTotalAdverts(res?.data?.total_count);
+      if (skip === 0) {
+        sethousings(res?.data?.pendingHousingTypes);
+      } else {
+        sethousings((prevHousing) => [
+          ...prevHousing,
+          ...res?.data?.pendingHousingTypes,
+        ]);
+      }
     } catch (e) {
       console.log(e + " hata");
     } finally {
@@ -58,8 +76,14 @@ export default function WaitRealtorAdverts({ index }) {
   };
 
   useEffect(() => {
-    fetchPendingHousings();
-  }, [user]);
+    if (user?.access_token) {
+      fetchPendingHousings(sort, take, skip);
+    }
+  }, [user, sort, skip]);
+
+  const handleEndReached = () => {
+    setSkip((prevSkip) => prevSkip + take);
+  };
 
   const [selectedIndex, setIndex] = React.useState(null);
   const [SortLıstModal, setSortLıstModal] = useState(false);
@@ -67,7 +91,7 @@ export default function WaitRealtorAdverts({ index }) {
     setIndex(index);
     setTimeout(() => {
       setSortLıstModal(false);
-      fetchPendingHousings(sort);
+      fetchPendingHousings(sort, take, 0);
     }, 600);
   };
   const [searchValue, setsearchValue] = useState("");
@@ -76,10 +100,10 @@ export default function WaitRealtorAdverts({ index }) {
     setsearchValue(value);
     const filteredData = value
       ? housings.filter((item) =>
-        item?.housing_title.toLowerCase().includes(value.toLowerCase())
-      )
+          item?.housing_title.toLowerCase().includes(value.toLowerCase())
+        )
       : housings;
-    sethousingRecords(filteredData);
+    sethousings(filteredData);
   };
   return (
     <>
@@ -95,7 +119,7 @@ export default function WaitRealtorAdverts({ index }) {
           <ActivityIndicator size={"large"} color="#333" />
         </View>
       ) : (
-        <ScrollView stickyHeaderIndices={[0]}>
+        <View>
           <View
             style={{
               paddingTop: 6,
@@ -111,7 +135,7 @@ export default function WaitRealtorAdverts({ index }) {
                 fontWeight: "600",
               }}
             >
-              Onay Bekleyen İlanlar ({housings?.length})
+              Onay Bekleyen İlanlar ({totalAdverts})
             </Text>
           </View>
           <View
@@ -143,15 +167,49 @@ export default function WaitRealtorAdverts({ index }) {
               <MaterialIcon name="swap-vertical" size={23} color={"#333"} />
             </TouchableOpacity>
           </View>
-          <View style={{ gap: 10, paddingTop: 10 }}>
-            {housingRecords.map((item, index) => (
-              <RealtorAdvertPost
-                key={index}
-                housing={item}
-                Onpress={openSheet}
+          <View style={{ gap: 10, paddingTop: 10, alignItems: "center" }}>
+            {loading ? (
+              <Text>Yükleniyor...</Text>
+            ) : housings.length === 0 ? (
+              <Text>Onay Bekleyen İlanınız Bulunmamaktadır.</Text>
+            ) : (
+              <FlatList
+                data={housings}
+                renderItem={({ item, index }) => (
+                  <RealtorAdvertPost
+                    key={index}
+                    housing={item}
+                    Onpress={openSheet}
+                  />
+                )}
+                keyExtractor={(item, index) => index.toString()}
+                onEndReached={handleEndReached}
+                onEndReachedThreshold={0.5}
               />
-            ))}
+            )}
           </View>
+
+          {loading ? (
+            <Text>Yükleniyor...</Text>
+          ) : housings.length === 0 ? (
+            <Text>Onay Bekleyen İlanınız Bulunmamaktadır.</Text>
+          ) : (
+            <FlatList
+              contentContainerStyle={{ gap: 5, paddingBottom: 100 }}
+              data={housings}
+              renderItem={({ item, index }) => (
+                <RealtorAdvertPost
+                  key={index}
+                  housing={item}
+                  Onpress={openSheet}
+                />
+              )}
+              keyExtractor={(item, index) => index.toString()}
+              onEndReached={handleEndReached}
+              onEndReachedThreshold={0.5}
+            />
+          )}
+
           <Modal
             isVisible={SortLıstModal}
             onBackdropPress={() => setSortLıstModal(false)}
@@ -341,7 +399,7 @@ export default function WaitRealtorAdverts({ index }) {
               </View>
             </View>
           </Modal>
-        </ScrollView>
+        </View>
       )}
     </>
   );

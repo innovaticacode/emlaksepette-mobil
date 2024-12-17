@@ -14,7 +14,7 @@ import { TabView } from "react-native-tab-view";
 import HomePage from "./HomePage";
 import axios from "axios";
 import { useState } from "react";
-import { DrawerMenu } from "../../components";
+
 import Estates from "./Home Pages/Estates";
 import Shop from "./Home Pages/Shop";
 import Area from "./Home Pages/Area";
@@ -26,6 +26,8 @@ import Modal from "react-native-modal";
 import { useNavigation } from "@react-navigation/native";
 import FirstHome from "./FirstHome";
 import { apiUrl } from "../../components/methods/apiRequest";
+import { useDispatch, useSelector } from "react-redux";
+import { setBanners } from "../../store/slices/Banner/BannerSlice";
 
 const { width, height } = Dimensions.get("window");
 
@@ -76,9 +78,7 @@ const CustomTabBar = ({
   React.useEffect(() => {
     const fetchMenuItems = async () => {
       try {
-        const response = await axios.get(
-          apiUrl + "menu-list"
-        );
+        const response = await axios.get(apiUrl + "menu-list");
         setMenuItems(response.data);
         setMenuItems([{ text: "Anasayfa" }, ...response.data.slice(0, -1)]);
       } catch (error) {
@@ -186,6 +186,25 @@ export default function HomePage2() {
     setIndex(index);
     settab(index);
   };
+  const dispatch = useDispatch();
+
+  const getBanners = async () => {
+    try {
+      const response = await axios.get(apiUrl + "get-banner-images");
+
+      dispatch(
+        setBanners({
+          banners: response.data,
+        })
+      );
+    } catch (error) {
+      console.log(error);
+    } finally {
+    }
+  };
+  React.useEffect(() => {
+    getBanners();
+  }, []);
 
   return (
     <SafeAreaView
@@ -200,7 +219,7 @@ export default function HomePage2() {
         animationOut="bounceOutLeft"
         style={styles.modal}
         swipeDirection={["left"]}
-      // onSwipeComplete={() => setIsDrawerOpen(false)}
+        // onSwipeComplete={() => setIsDrawerOpen(false)}
       >
         {/* <View style={styles.modalContent}>
           <DrawerMenu setIsDrawerOpen={setIsDrawerOpen} />

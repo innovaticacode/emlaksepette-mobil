@@ -9,12 +9,10 @@ import {
   Platform,
 } from "react-native";
 import React, { useState, useEffect } from "react";
-import { BarChart, StackedBarChart } from "react-native-chart-kit";
-import CollectionGraphicComponent from "./CollectionGraphicComponent";
+
 import { CheckBox } from "react-native-elements";
 import { Stack } from "@react-native-material/core";
 import Modal from "react-native-modal";
-import Svg, { Circle } from "react-native-svg";
 
 export default function CollectionsGraphic() {
   const [selectedIndex, setIndex] = useState(null);

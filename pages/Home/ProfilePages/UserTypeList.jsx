@@ -10,7 +10,7 @@ import {
 import React, { useState, useEffect } from "react";
 import Users from "./profileComponents/Users";
 import { getValueFor } from "../../../components/methods/user";
-import Modal from "react-native-modal";
+
 import axios from "axios";
 import Icon from "react-native-vector-icons/FontAwesome";
 import Icon2 from "react-native-vector-icons/FontAwesome6";
@@ -35,14 +35,11 @@ export default function UserTypeList() {
     setloading(true);
     try {
       if (user.access_token) {
-        const response = await axios.get(
-          apiUrl+"institutional/roles",
-          {
-            headers: {
-              Authorization: `Bearer ${user?.access_token}`,
-            },
-          }
-        );
+        const response = await axios.get(apiUrl + "institutional/roles", {
+          headers: {
+            Authorization: `Bearer ${user?.access_token}`,
+          },
+        });
         setuserList(response?.data.roles);
       }
     } catch (error) {
@@ -144,22 +141,18 @@ export default function UserTypeList() {
       role_ids: SelectedUserIDS,
     };
     try {
-      const response = await axios.delete(
-        apiUrl+"institutional/rol-users",
-        {
-          data: data,
-          headers: {
-            Authorization: `Bearer ${user.access_token}`,
-          },
-        }
-      );
-    
-    
+      const response = await axios.delete(apiUrl + "institutional/rol-users", {
+        data: data,
+        headers: {
+          Authorization: `Bearer ${user.access_token}`,
+        },
+      });
+
       console.log("deleted");
-      if (response.status === 200 |response.status === 201) {
+      if ((response.status === 200) | (response.status === 201)) {
         setSelectedUserIDS([]);
-        setisChoosed(false)
-        setisShowDeleteButon(false)
+        setisChoosed(false);
+        setisShowDeleteButon(false);
         setTimeout(() => {
           console.log("dialog");
           Dialog.show({
@@ -169,17 +162,11 @@ export default function UserTypeList() {
             button: "Tamam",
             onHide: () => {
               fetchData();
-             
-              
             },
           });
           console.log("load");
           setloading(false);
-         
-       
         }, 2000);
-     
-       
       }
     } catch (error) {
       console.error("Error making DELETE request:", error);
@@ -196,15 +183,12 @@ export default function UserTypeList() {
       role_ids: UsersId,
     };
     try {
-      const response = await axios.delete(
-        apiUrl+"institutional/rol-users",
-        {
-          data: data,
-          headers: {
-            Authorization: `Bearer ${user.access_token}`,
-          },
-        }
-      );
+      const response = await axios.delete(apiUrl + "institutional/rol-users", {
+        data: data,
+        headers: {
+          Authorization: `Bearer ${user.access_token}`,
+        },
+      });
       console.log("deleted");
       if (response.status === 200) {
         setTimeout(() => {
@@ -413,7 +397,6 @@ export default function UserTypeList() {
               setTimeout(() => {
                 deleteAllUsers();
               }, 100);
-             
             }}
             confirmButtonTextStyle={{ marginLeft: 20, marginRight: 20 }}
             cancelButtonTextStyle={{ marginLeft: 20, marginRight: 20 }}
@@ -471,11 +454,10 @@ export default function UserTypeList() {
               setdeleteUserModal(false);
             }}
             onConfirmPressed={() => {
-              setdeleteUserModal(false)
+              setdeleteUserModal(false);
               setTimeout(() => {
                 deleteSelectedUserType();
               }, 100);
-           
             }}
             confirmButtonTextStyle={{ marginLeft: 20, marginRight: 20 }}
             cancelButtonTextStyle={{ marginLeft: 20, marginRight: 20 }}
@@ -488,7 +470,6 @@ export default function UserTypeList() {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: "#f5f5f7",
-  
   },
   noCommentsText: {
     fontSize: 18,

@@ -79,9 +79,9 @@ export default function NeigbourhoodCard({
                 {status === 1
                   ? formatPhoneNumber(NeigBourHoodInfo.mobile_phone)
                   : `${formatPhoneNumber(NeigBourHoodInfo.mobile_phone).slice(
-                    0,
-                    5
-                  )}******`}
+                      0,
+                      5
+                    )}******`}
               </Text>
             </View>
             <View style={{ gap: 1 }}>
@@ -90,8 +90,8 @@ export default function NeigbourhoodCard({
                 {NeigBourHoodInfo &&
                   project &&
                   JSON.parse(project)["item"]["title"] +
-                  " " +
-                  JSON.parse(project)["item"]["housing"]}{" "}
+                    " " +
+                    JSON.parse(project)["item"]["housing"]}{" "}
                 {""}No'lu İlan{" "}
               </Text>
             </View>
@@ -118,7 +118,7 @@ export default function NeigbourhoodCard({
               navigation.navigate("PostDetails", {
                 HomeId: JSON.parse(project)?.item?.housing,
                 projectId: projectInfo?.id,
-              })
+              });
             }}
             style={styles.seeAdvertButton}
           >

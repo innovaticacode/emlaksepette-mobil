@@ -34,18 +34,14 @@ import {
 } from "react-native-alert-notification";
 import { useDispatch } from "react-redux";
 import { setShoppingProfile } from "../../../store/slices/Menu/MenuSlice";
+import { sanitizeEmail } from "../../../utils";
 
 export default function Login({ navigation }) {
   const route = useRoute();
   const dispatch = useDispatch();
   const [status, setStatus] = useState(false);
   const [statusMessage, setStatusMessage] = useState(false);
-  const [showLengthAlert, setShowLengthAlert] = useState(false);
-  const [showUpperAlert, setShowUpperAlert] = useState(false);
-  const [showSymbolAlert, setShowSymbolAlert] = useState(false);
-  const [showNumberAlert, setShowNumberAlert] = useState(false);
-  const [textfull, settextfull] = useState(false);
-  const [submitDisabled, setsubmitDisabled] = useState(false);
+
   const [eye, seteye] = useState("eye-off-sharp");
   const [Show, setShow] = useState(false);
   const [checked, setChecked] = useState(false);
@@ -69,7 +65,8 @@ export default function Login({ navigation }) {
   };
 
   const handleTextInputChange = (text) => {
-    setEmail(text);
+    const filteredValue = sanitizeEmail(text);
+    setEmail(filteredValue);
   };
 
   useEffect(() => {
@@ -89,13 +86,16 @@ export default function Login({ navigation }) {
             "PhoneVerify",
             JSON.stringify(res.data.phone_verification_status)
           );
-          // if (res.data.phone_verification_status==0) {
-          //   navigation.navigate('VerifyScreen')
-          // }
-          setUser(res.data); // Kullanıcı durumunu günceller
-          navigation.goBack(); // Modalı kapatır ve bir önceki sayfaya döner
-          dispatch(setShoppingProfile({ isShoppingProfile: false }));
-          navigation.replace("Drawer", { screen: "Home" });
+          if (res.data.phone_verification_status == 0) {
+            setUser(res.data); // Kullanıcı durumunu günceller
+            navigation.goBack();
+            navigation.navigate("PhoneVerify");
+          } else {
+            setUser(res.data); // Kullanıcı durumunu günceller
+            navigation.goBack(); // Modalı kapatır ve bir önceki sayfaya döner
+            dispatch(setShoppingProfile({ isShoppingProfile: false }));
+            navigation.replace("Drawer", { screen: "Home" });
+          }
         } else {
           // setshowMailSendAlert(true);
           setStatus(false);
@@ -419,7 +419,7 @@ export default function Login({ navigation }) {
                             width: "40%",
                           }}
                         />
-                        <Text style={{ color: "#666666" }}>veya</Text>
+                        {/* <Text style={{ color: "#666666" }}>veya</Text> */}
                         <View
                           style={{
                             backgroundColor: "#E7EBEE",
@@ -430,7 +430,7 @@ export default function Login({ navigation }) {
                         />
                       </View>
 
-                      <View
+                      {/* <View
                         style={{
                           flexDirection: "row",
                           justifyContent: "space-around",
@@ -457,11 +457,11 @@ export default function Login({ navigation }) {
                             Google
                           </Text>
                         </TouchableOpacity>
-                      </View>
+                      </View> */}
                     </View>
                   </KeyboardAvoidingView>
 
-                  <View style={{}}>
+                  {/* <View style={{}}>
                     <View style={{ width: "95%", justifyContent: "center" }}>
                       <Text
                         style={{
@@ -487,7 +487,7 @@ export default function Login({ navigation }) {
                         'ni kabul etmiş sayılırsınız.
                       </Text>
                     </View>
-                  </View>
+                  </View> */}
                 </View>
               </View>
 

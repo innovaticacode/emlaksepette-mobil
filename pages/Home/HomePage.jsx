@@ -16,15 +16,14 @@ import ProjectPost from "../../components/ProjectPost";
 import { getValueFor } from "../../components/methods/user";
 import { AlertNotificationRoot } from "react-native-alert-notification";
 import { ActivityIndicator } from "react-native-paper";
-import bannerSRC from "../../src/assets/images/project-banner.png";
+
 import { useNavigation } from "@react-navigation/native";
 import { apiUrl, frontEndUriBase } from "../../components/methods/apiRequest";
-
-
+import { useSelector } from "react-redux";
 
 const HomePage = (props) => {
   const { index } = props;
-
+  const banners = useSelector((state) => state?.banners?.banners);
   const navigation = useNavigation();
   // Fetch featured sliders
   const fetchFeaturedSliders = async () => {
@@ -41,9 +40,8 @@ const HomePage = (props) => {
     }
   };
   useEffect(() => {
-    fetchFeaturedSliders()
-  }, [user])
-  
+    fetchFeaturedSliders();
+  }, [user]);
 
   // State for featured projects
   const [loadingProjects, setLoadingProjects] = useState(false);
@@ -54,7 +52,7 @@ const HomePage = (props) => {
     try {
       setLoadingProjects(true);
       const response = await axios.get(`${apiUrl}featured-projects`);
-      setFeaturedProjects(response.data.data);
+      setFeaturedProjects(response.data);
     } catch (error) {
       console.log("Error fetching featured projects:", error);
     } finally {
@@ -73,7 +71,6 @@ const HomePage = (props) => {
   const pagerViewRef = useRef(null);
 
   useEffect(() => {
-    
     const interval = setInterval(() => {
       pagerViewRef.current?.setPage(
         currentPage === featuredSliders.length - 1 ? 0 : currentPage + 1
@@ -97,7 +94,7 @@ const HomePage = (props) => {
     <AlertNotificationRoot>
       {loadingProjects && loadingSliders ? (
         <View style={styles.loadingContainer}>
-          <ActivityIndicator />
+          <ActivityIndicator color="#333" size={"large"} />
         </View>
       ) : (
         <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
@@ -105,7 +102,7 @@ const HomePage = (props) => {
             <ScrollView contentContainerStyle={styles.scrollViewContent}>
               <View>
                 <Image
-                  source={bannerSRC}
+                  source={{ uri: banners?.tum_projeler }}
                   alt="project"
                   style={styles.bannerImage}
                   resizeMode="cover"

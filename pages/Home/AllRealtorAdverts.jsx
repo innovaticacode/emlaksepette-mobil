@@ -9,28 +9,24 @@ import {
   FlatList,
   Dimensions,
 } from "react-native";
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useRoute, useNavigation } from "@react-navigation/native";
-import Header from "../../components/Header";
 import Modal from "react-native-modal";
 import axios from "axios";
 import { Platform } from "react-native";
 import { ActivityIndicator, Switch, TextInput } from "react-native-paper";
 import FontAwesome5Icon from "react-native-vector-icons/FontAwesome5";
-import { RxDropdownMenu } from "react-icons/rx";
 import RNPickerSelect from "react-native-picker-select";
-import { RefreshControl } from "react-native-gesture-handler";
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
+
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
 import { getValueFor } from "../../components/methods/user";
 
 import SortModal from "../../components/SortModal";
-import { Image } from "react-native-svg";
-import { DrawerMenu } from "../../components";
 import { apiUrl, frontEndUriBase } from "../../components/methods/apiRequest";
 import RealtorPost from "../../components/Card/RealtorCard/RealtorPost";
 import ViewFilter from "../../components/Filter/ViewFilter/ViewFilter";
-import FilterRealtor from '../../assets/filterRealtor.svg'
+import FilterRealtor from "../../assets/filterRealtor.svg";
 export default function AllRealtorAdverts() {
   const [cityItems, setCityItems] = useState();
   const [state, setState] = useState({
@@ -106,14 +102,12 @@ export default function AllRealtorAdverts() {
     return intValue.toLocaleString("tr-TR");
   };
 
-  
   const route = useRoute();
   const navigation = useNavigation();
   const { params } = route;
 
   useEffect(() => {
     if (params.href) {
-      
       const relativeUrl = params.href.replace(`${frontEndUriBase}kategori`, "");
       let urlSegments = relativeUrl.split("/").filter((segment) => segment);
 
@@ -250,7 +244,6 @@ export default function AllRealtorAdverts() {
         .catch((error) =>
           console.error("Veri alınırken bir hata oluştu:", error)
         );
-      
     } else {
       setState((prevState) => ({ ...prevState, neighborhoods: [] }));
     }
@@ -293,23 +286,70 @@ export default function AllRealtorAdverts() {
   };
 
   const handleSortChange = (value) => {
-    setSelectedSortOption(value);
+    // Önce sıralama durumunu güncelle
     setState((prevState) => ({
       ...prevState,
-      searchStatus: "Sıralanıyor...",
+      searchStatus: "Sıralanıyor...", // Durumu güncelle
+      secondhandHousings: [], // Önceki verileri sıfırla
     }));
 
-    fetchFilteredProjects(buildApiUrl(params), {
-      ...filterData, // Son filtreleme verilerini kullan
-      sortValue: value,
-    });
+    // Sıralama seçeneğini güncelle
+    setSelectedSortOption(value);
+
+    // Skip değerini sıfırla
+    setSkip(0);
+
+    // Yeni sıralama verisiyle API çağrısını yap
+    fetchFilteredProjects(
+      buildApiUrl(params),
+      { ...filterData, sortValue: value },
+      true
+    );
   };
 
-  const fetchFilteredProjects = async (apiUrlFilter, filterData) => {
+  const take = 10;
+  const [skip, setSkip] = useState(0);
+  const [isLoadingMore, setIsLoadingMore] = useState(false); // Yeni veri yükleme durumunu kontrol etmek için
+  const [totalCounts, setTotalCounts] = useState(0);
+
+  const handleLoadMore = async () => {
+    if (isLoadingMore || state.secondhandHousings.length >= totalCounts) {
+      console.log("Yükleme durumu:", isLoadingMore);
+      return;
+    }
+    setIsLoadingMore(true); // Yeni veri yükleme işlemi başlıyor
+    setSkip((prevSkip) => prevSkip + take);
+    await fetchFilteredProjects(buildApiUrl(params), filterData, false);
+    setIsLoadingMore(false); // Yeni veri yükleme işlemi tamamlandı
+  };
+
+  const fetchFilteredProjects = async (
+    apiUrlFilter,
+    filterData,
+    isInitialLoad = false
+  ) => {
     try {
+      if (!isInitialLoad) {
+        setIsLoadingMore(true); // Daha fazla veri yükleme işlemi başlıyor
+      }
+
       console.log(filterData);
-      const response = await axios.get(apiUrlFilter, { params: filterData });
+      console.log("take", take);
+      console.log("skip", skip);
+
+      const response = await axios.get(apiUrlFilter, {
+        params: {
+          ...filterData,
+          take: take,
+          skip: skip,
+        },
+      });
+
       const data = response.data;
+
+      if (!isInitialLoad) {
+        setTotalCounts(data?.total_count);
+      }
 
       const newState = {
         neighborhoodTitle: data.neighborhoodTitle,
@@ -337,7 +377,6 @@ export default function AllRealtorAdverts() {
         slugName: data.slugName,
         housingTypeParent: data.housingTypeParent,
         housingType: data.housingType,
-        secondhandHousings: data.secondhandHousings,
         housingStatuses: data.housingStatuses,
         cities: data.cities,
         titleParam: data.title,
@@ -347,18 +386,31 @@ export default function AllRealtorAdverts() {
         projects: data.projects,
       };
 
-      if (data.secondhandHousings?.length == 0) {
+      // Eğer sonuçlar boşsa durum mesajını güncelle
+      if (data.secondhandHousings?.length == 0 && isInitialLoad) {
         newState.searchStatus = "Sonuç bulunamadı";
       }
 
+      // Yeni verileri mevcut verilere ekle veya ilk yükleme için mevcut verileri değiştir
       setState((prevState) => ({
         ...prevState,
         ...newState,
+        secondhandHousings: isInitialLoad
+          ? data.secondhandHousings // İlk yükleme sırasında eski veriler temizlenir
+          : [...prevState.secondhandHousings, ...data.secondhandHousings], // Sayfalama sırasında eski verilere ekleme yapılır
       }));
+
+      if (!isInitialLoad) {
+        setIsLoadingMore(false); // Daha fazla veri yüklendi
+      }
     } catch (error) {
       console.error(error);
+      if (!isInitialLoad) {
+        setIsLoadingMore(false); // Hata durumunda da yükleme tamamlanır
+      }
     }
   };
+
   const handleCheckboxChange = (filterName, value) => {
     setState((prevState) => {
       // Seçilenleri tutacak yeni bir nesne oluşturuyoruz
@@ -459,21 +511,20 @@ export default function AllRealtorAdverts() {
   useEffect(() => {
     getValueFor("user", setuser);
   }, []);
- const [showViewModal, setshowViewModal] = useState(false)
- const [selectedView, setselectedView] = useState(0)
- const [chekView, setchekView] = useState(false)
- const handleRadio = (index, sort) => {
-  setselectedView(index);
-if (index==1) {
-  setchekView(true)
-}else{
-  setchekView(false)
-}
-  setTimeout(() => {
-    setshowViewModal(false);
-  
-  }, 400);
-};
+  const [showViewModal, setshowViewModal] = useState(false);
+  const [selectedView, setselectedView] = useState(0);
+  const [chekView, setchekView] = useState(false);
+  const handleRadio = (index, sort) => {
+    setselectedView(index);
+    if (index == 1) {
+      setchekView(true);
+    } else {
+      setchekView(false);
+    }
+    setTimeout(() => {
+      setshowViewModal(false);
+    }, 400);
+  };
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
@@ -500,17 +551,22 @@ if (index==1) {
         </View> */}
       </Modal>
 
-      <View style={{ flexDirection: "row",justifyContent:'space-around',borderBottomWidth:1,borderColor:'#7C7C7C'}}>
+      <View
+        style={{
+          flexDirection: "row",
+          justifyContent: "space-around",
+          borderBottomWidth: 1,
+          borderColor: "#7C7C7C",
+        }}
+      >
         <TouchableOpacity
           style={styles.btn}
           onPress={() =>
             setState((prevState) => ({ ...prevState, modalVisible: true }))
           }
-        > 
-          <FilterRealtor/>
-          <Text style={styles.btnText}>
-            Filtrele
-          </Text>
+        >
+          <FilterRealtor />
+          <Text style={styles.btnText}>Filtrele</Text>
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() =>
@@ -522,10 +578,8 @@ if (index==1) {
             borderLeftWidth: 1,
           }}
         >
-            <Icon name="swap-vertical" size={18} color={'#7C7C7C'}/>
-          <Text style={styles.btnText}>
-            Sırala
-          </Text>
+          <Icon name="swap-vertical" size={18} color={"#7C7C7C"} />
+          <Text style={styles.btnText}>Sırala</Text>
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() =>
@@ -534,17 +588,20 @@ if (index==1) {
           }
           style={{
             ...styles.btn,
-           borderRightWidth:0
-           
+            borderRightWidth: 0,
           }}
         >
-          <Icon name="format-list-bulleted" size={18} color={'#7C7C7C'}/>
-          <Text style={styles.btnText}>
-           Görünüm
-          </Text>
+          <Icon name="format-list-bulleted" size={18} color={"#7C7C7C"} />
+          <Text style={styles.btnText}>Görünüm</Text>
         </TouchableOpacity>
       </View>
-      <ViewFilter selectedView={selectedView} showViewModal={showViewModal} setshowViewModal={setshowViewModal} handleRadio={handleRadio} show={2}/>
+      <ViewFilter
+        selectedView={selectedView}
+        showViewModal={showViewModal}
+        setshowViewModal={setshowViewModal}
+        handleRadio={handleRadio}
+        show={2}
+      />
       <SortModal
         isVisible={state.sortModalVisible}
         onClose={() =>
@@ -572,6 +629,8 @@ if (index==1) {
 
             <FlatList
               data={state.secondhandHousings}
+              onEndReached={handleLoadMore}
+              onEndReachedThreshold={0.5}
               renderItem={({ item }) => (
                 <RealtorPost
                   GetId={GetIdForCart}
@@ -618,7 +677,7 @@ if (index==1) {
                   sold={item.sold}
                 />
               )}
-              keyExtractor={(item) => item.id.toString()}
+              keyExtractor={(item, index) => `${item.id}-${index}`}
               ListEmptyComponent={
                 <View
                   style={{
@@ -635,22 +694,20 @@ if (index==1) {
                   </Text>
                 </View>
               }
+              ListFooterComponent={
+                isLoadingMore && (
+                  <View style={{ padding: 20, alignItems: "center" }}>
+                    <ActivityIndicator size="small" color="#000" />
+                  </View>
+                )
+              }
             />
           </>
         )}
         <TouchableOpacity onPress={() => navigation.navigate("MapWiew")}>
           <View style={{ position: "relative", flex: 1 }}>
-            <View style={{ position: "absolute", bottom: 10, right: 10 }}>
-              <View
-                style={{
-                  backgroundColor: "red",
-                  width: 80,
-                  height: 80,
-                  borderRadius: 50,
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              >
+            <View style={styles.MapIconContainer}>
+              <View style={styles.MapIcon}>
                 <ImageBackground
                   resizeMode="contain"
                   style={{ width: "100%", height: "100%", borderRadius: 50 }}
@@ -1247,19 +1304,19 @@ const styles = StyleSheet.create({
     fontSize: 20,
   },
   btn: {
-    width:'33%',
-    borderRightWidth:1,
-    borderColor:'#7C7C7C',
-    flexDirection:'row',
-    gap:5,
+    width: "33%",
+    borderRightWidth: 1,
+    borderColor: "#7C7C7C",
+    flexDirection: "row",
+    gap: 5,
     padding: 12,
     justifyContent: "center",
     alignItems: "center",
   },
-  btnText:{
-    color:'#7C7C7C',
-    fontSize:14,
-    fontWeight:'600'
+  btnText: {
+    color: "#7C7C7C",
+    fontSize: 14,
+    fontWeight: "600",
   },
   switchInner: {
     width: 16,
@@ -1437,6 +1494,19 @@ const styles = StyleSheet.create({
     backgroundColor: "#fefefe",
     padding: 20,
     borderRadius: 5,
+  },
+  MapIcon: {
+    backgroundColor: "red",
+    width: 80,
+    height: 80,
+    borderRadius: 50,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  MapIconContainer: {
+    position: "absolute",
+    bottom: 22,
+    right: 10,
   },
 });
 

@@ -11,7 +11,7 @@ import {
 } from "react-native";
 import { React, useState, useRef } from "react";
 import EyeIcon from "react-native-vector-icons/Ionicons";
-import { CheckBox } from "@rneui/themed";
+
 import Modal from "react-native-modal";
 import MailCheck from "react-native-vector-icons/MaterialCommunityIcons";
 import axios from "axios";
@@ -19,12 +19,9 @@ import HTML from "react-native-render-html";
 import { useNavigation } from "@react-navigation/native";
 import FontAwesome5Icon from "react-native-vector-icons/FontAwesome5";
 import { ActivityIndicator } from "react-native-paper";
-import {
-  AlertNotificationRoot,
-  Dialog,
-  ALERT_TYPE,
-} from "react-native-alert-notification";
+
 import { apiUrl } from "../../../components/methods/apiRequest";
+import { sanitizeEmail } from "../../../utils";
 export default function Personal({ type }) {
   const navigation = useNavigation();
   const [eye, seteye] = useState("eye-off-sharp");
@@ -75,6 +72,11 @@ export default function Personal({ type }) {
       [key]: value,
     }));
   };
+  const handleEpostaChange = (value) => {
+    const filteredValue = sanitizeEmail(value);
+    setePosta(filteredValue);
+  };
+
   const postData = async () => {
     setIsloading(true);
     try {
@@ -90,16 +92,11 @@ export default function Personal({ type }) {
         "check-e": checked3,
       };
 
-      const response = await axios.post(
-
-        apiUrl+"register",
-        data,
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      const response = await axios.post(apiUrl + "register", data, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
 
       if (response.data.status == true) {
         {
@@ -370,7 +367,7 @@ export default function Personal({ type }) {
                 },
               ]}
               value={ePosta}
-              onChangeText={(value) => setePosta(value)}
+              onChangeText={handleEpostaChange}
               placeholder="E-Posta Adresi"
               autoCapitalize="none" // İlk harfin büyük olmasını engeller
             />

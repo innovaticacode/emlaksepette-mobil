@@ -54,7 +54,7 @@ export default function AddCommentForProject() {
   const [rating, setRating] = useState(0);
   const [rate, setrate] = useState(0);
   const [checkedForm, setCheckedForm] = React.useState(false);
-  
+
   const [user, setUser] = useState({});
   const [loadingForPost, setloadingForPost] = useState(false);
   const [comment, setcomment] = useState("");
@@ -115,7 +115,11 @@ export default function AddCommentForProject() {
       const uri = result.assets[0].uri;
       const newImages = [...image];
 
-      if (selectedIndexx !== null && selectedIndexx >= 0 && selectedIndexx < 3) {
+      if (
+        selectedIndexx !== null &&
+        selectedIndexx >= 0 &&
+        selectedIndexx < 3
+      ) {
         newImages[selectedIndexx] = uri;
       } else {
         if (newImages.length >= 3) {
@@ -202,7 +206,6 @@ export default function AddCommentForProject() {
       setloadingForPost(false);
     }
   };
-
 
   useEffect(() => {
     fetchDataDeal();

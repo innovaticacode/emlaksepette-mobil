@@ -9,11 +9,13 @@ import {
   ActivityIndicator,
   ImageBackground,
 } from "react-native";
-import { ALERT_TYPE, Dialog, AlertNotificationRoot } from "react-native-alert-notification";
+import {
+  ALERT_TYPE,
+  Dialog,
+  AlertNotificationRoot,
+} from "react-native-alert-notification";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { apiUrl, frontEndUriBase } from "../../components/methods/apiRequest";
-
-
 
 const AllFeaturedRealEstate = (prosp) => {
   const { navigation } = prosp;
@@ -66,7 +68,9 @@ const AllFeaturedRealEstate = (prosp) => {
               <View style={styles.area}>
                 <TouchableOpacity
                   style={styles.touchableArea} // touchable alanı burada kontrol ediyoruz
-                  onPress={() => navigation.navigate("Profile", { id: item.id })}
+                  onPress={() =>
+                    navigation.navigate("Profile", { id: item.id })
+                  }
                 >
                   <View style={styles.imageArea}>
                     <ImageBackground

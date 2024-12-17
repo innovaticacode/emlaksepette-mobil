@@ -10,15 +10,11 @@ import {
 } from "react-native";
 import { Platform } from "react-native";
 
-import Icon from "react-native-vector-icons/AntDesign";
-import Header from "../../components/Header";
 import { useState, useEffect } from "react";
-import Modal from "react-native-modal";
-import Categories from "../../components/Categories";
-import Search from "./Search";
+
 import { useNavigation } from "@react-navigation/native";
 import { getValueFor } from "../../components/methods/user";
-import { DrawerMenu } from "../../components";
+
 export default function ShareScreen() {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
@@ -50,7 +46,7 @@ export default function ShareScreen() {
       <Image
         source={require("../../src/assets/images/ilan_ekle_gorsel.png")}
         style={styles.image}
-        resizeMode='contain'
+        resizeMode="contain"
       />
 
       <Text style={styles.title}>

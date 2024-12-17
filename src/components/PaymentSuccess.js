@@ -1,14 +1,14 @@
-import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import React from "react";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
-const PaymentSuccess = ({ 
-  title = "", 
-  message = "", 
-  primaryButtonText = "", 
+const PaymentSuccess = ({
+  title = "",
+  message = "",
+  primaryButtonText = "",
   secondaryButtonText = "",
-  onContinue, 
-  onGoHome 
+  onContinue,
+  onGoHome,
 }) => {
   return (
     <View style={styles.container}>
@@ -38,9 +38,9 @@ const PaymentSuccess = ({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#fff',
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#fff",
     padding: 20,
   },
   icon: {
@@ -48,25 +48,25 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 24,
-    fontWeight: 'bold',
-    color: '#4BB543',
+    fontWeight: "bold",
+    color: "#4BB543",
     marginBottom: 20,
   },
   message: {
     fontSize: 16,
-    color: '#6c757d',
-    textAlign: 'center',
+    color: "#6c757d",
+    textAlign: "center",
     marginBottom: 40,
     paddingHorizontal: 20,
   },
   buttonContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    width: '100%',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    width: "100%",
     paddingHorizontal: 20,
   },
   primaryButton: {
-    backgroundColor: '#EA2B2E',
+    backgroundColor: "#EA2B2E",
     paddingVertical: 15,
     paddingHorizontal: 30,
     borderRadius: 30,
@@ -74,17 +74,17 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   secondaryButton: {
-    backgroundColor: '#6c757d',
+    backgroundColor: "#6c757d",
     paddingVertical: 15,
     paddingHorizontal: 30,
     borderRadius: 30,
     flex: 1,
   },
   buttonText: {
-    color: '#fff',
-    fontSize: 18,
-    fontWeight: 'bold',
-    textAlign: 'center',
+    color: "#fff",
+    fontSize: 16,
+    fontWeight: "bold",
+    textAlign: "center",
   },
 });
 

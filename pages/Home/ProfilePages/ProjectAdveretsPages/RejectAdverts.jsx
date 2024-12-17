@@ -9,9 +9,12 @@ import {
 import { useState, useRef, useEffect } from "react";
 import ProjectAdvertPost from "../profileComponents/ProjectAdvertPost";
 import Modal from "react-native-modal";
-import Icon from "react-native-vector-icons/AntDesign";
+
 import MaterialIcon from "react-native-vector-icons/MaterialCommunityIcons";
-import { apiRequestGetWithBearer, apiUrl } from "../../../../components/methods/apiRequest";
+import {
+  apiRequestGetWithBearer,
+  apiUrl,
+} from "../../../../components/methods/apiRequest";
 import axios from "axios";
 import { getValueFor } from "../../../../components/methods/user";
 import { useNavigation } from "@react-navigation/native";
@@ -20,8 +23,7 @@ import { TextInput } from "react-native";
 import { CheckBox } from "react-native-elements";
 import { Stack } from "@react-native-material/core";
 import Icon3 from "react-native-vector-icons/MaterialIcons";
-import Icon4 from "react-native-vector-icons/FontAwesome5";
-import { ActivityIndicator } from "react-native-paper";
+
 export default function ActiveAdverts({}) {
   const navigation = useNavigation();
   const translateY = useRef(new Animated.Value(400)).current;
@@ -43,10 +45,7 @@ export default function ActiveAdverts({}) {
   const fetchProjects = async () => {
     try {
       const response = await axios.get(
-        apiUrl+"get_my_projects?status=3&start=" +
-          start +
-          "&take=" +
-          take,
+        apiUrl + "get_my_projects?status=3&start=" + start + "&take=" + take,
         {
           headers: { Authorization: "Bearer " + user.access_token },
         }

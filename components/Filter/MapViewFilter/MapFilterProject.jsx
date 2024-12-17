@@ -10,11 +10,14 @@ import {
   Image,
   TouchableWithoutFeedback,
 } from "react-native";
-import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
+import MapView, {
+  Marker,
+  PROVIDER_DEFAULT,
+  PROVIDER_GOOGLE,
+} from "react-native-maps";
 import { apiUrl, frontEndUriBase } from "../../methods/apiRequest";
 import { useDispatch, useSelector } from "react-redux";
-import Basket from "../../../assets/basket.svg";
-import RNPickerSelect from "react-native-picker-select";
+
 import Icon from "react-native-vector-icons/FontAwesome5";
 import { useNavigation } from "@react-navigation/native";
 import { ActivityIndicator } from "react-native-paper";
@@ -26,7 +29,9 @@ import {
 } from "../../../store/slices/FilterProject/FilterProjectSlice";
 import { addDotEveryThreeDigits } from "../../methods/merhod";
 import MapFilter from "../MapFilter/MapFilter";
-
+import AwesomeAlert from "react-native-awesome-alerts";
+import ArrowIcon from "react-native-vector-icons/MaterialIcons";
+import openMap from "react-native-open-maps";
 const MapFilterProject = () => {
   const [selectedMarker, setSelectedMarker] = useState(null);
   const [markers, setMarkers] = useState([]);
@@ -34,32 +39,50 @@ const MapFilterProject = () => {
   const location = useSelector((state) => state?.mapFilters?.location);
   const dispatch = useDispatch();
   const [filterMarker, setfilterMarker] = useState([]);
-
+  const [skip, setskip] = useState(0);
+  const [take, settake] = useState(10);
   const [filterLatiude, setfilterLatiude] = useState(null);
   const [filterLongitude, setfilterLongitude] = useState(null);
-  const [loading, setloading] = useState(false);
-  const GetProjectsInfo = (city, county, neighbourhood) => {
+  const [loading, setloading] = useState(true);
+  const [emptyFilterMarkerAlert, setemptyFilterMarkerAlert] = useState(false);
+  const GetProjectsInfo = (city, county, neighbourhood, skip, take) => {
     setloading(true);
+
     axios
-      .get(apiUrl + "featured-projects")
+      .get(apiUrl + "featured-projects", {
+        params: {
+          skip, // Başlangıç noktası
+          take, // Kaç veri alınacak
+        },
+      })
       .then((res) => {
-        const data = res?.data?.data;
+        const data = res?.data;
+        if (data.length === 0 || data.length < take) {
+          setskip(0);
+        } else {
+          const advertFiter = data.filter((item) => {
+            // Şehir, ilçe ve mahalleye göre filtreleme koşulları
+            const matchCity = city ? item.city_id === city : true;
+            const matchCounty =
+              Array.isArray(county) && county.length > 0
+                ? Array.isArray(county)
+                  ? county.includes(item.county_id)
+                  : true
+                : true;
+            const matchNeighbourhood =
+              Array.isArray(neighbourhood) && neighbourhood.length > 0
+                ? Array.isArray(neighbourhood)
+                  ? neighbourhood.includes(item.neighbourhood_id)
+                  : true
+                : true;
 
-        const advertFiter = data.filter((item) => {
-          // Şehir, ilçe ve mahalleye göre filtreleme koşulları
-          const matchCity = city ? item.city_id === city : true;
-          const matchCounty = (Array.isArray(county) && county.length<0) ? Array.isArray(county)
-            ? county.includes(item.county_id)
-            : true:true
-          const matchNeighbourhood =(Array.isArray(neighbourhood) && neighbourhood.length<0) ? Array.isArray(neighbourhood)
-            ? neighbourhood.includes(item.neighbourhood_id)
-            : true:true
+            return matchCity && matchCounty && matchNeighbourhood;
+          });
 
-          return matchCity && matchCounty && matchNeighbourhood;
-        });
+          setfilterMarker(advertFiter);
+          setMarkers(data);
+        }
 
-        setfilterMarker(advertFiter);
-        setMarkers(data);
         console.log("Çalıştı");
       })
 
@@ -68,22 +91,38 @@ const MapFilterProject = () => {
       })
       .finally(() => {
         setloading(false);
+        setTimeout(() => {
+          if (filterMarker?.length == 0) {
+            setemptyFilterMarkerAlert(true);
+          }
+        }, 200);
       });
   };
   useEffect(() => {
-    GetProjectsInfo(location.city, location.county, location.neigbourhood);
-  }, []);
+    GetProjectsInfo(
+      location.city,
+      location.county,
+      location.neigbourhood,
+      skip,
+      take
+    );
+  }, [skip]);
   useEffect(() => {
     setfilterLatiude(filterMarker[0]?.location.split(",")[0]);
     setfilterLongitude(filterMarker[0]?.location.split(",")[1]);
     //r  onChangeCity(location.city)
   }, [GetProjectsInfo]);
 
-  const openGoogleMaps = (latitude, longitude) => {
-    const url = `https://www.google.com/maps/dir/?api=1&destination=${latitude},${longitude}&travelmode=driving`;
-    Linking.openURL(url).catch((err) =>
-      console.error("Google Maps açılırken hata oluştu:", err)
-    );
+  const openGoogleMaps = (latitude, longitude, city, county) => {
+    if (latitude && longitude) {
+      openMap({
+        latitude: parseFloat(latitude),
+        longitude: parseFloat(longitude),
+        query: city + "/" + county,
+      });
+    } else {
+      Alert.alert("Hata", "Konum bilgisi bulunamadı.");
+    }
   };
 
   useEffect(() => {
@@ -98,6 +137,7 @@ const MapFilterProject = () => {
   const [isVisible, setisVisible] = useState(false);
   const [isVisible2, setisVisible2] = useState(false);
   const [isVisible3, setisVisible3] = useState(false);
+
   return (
     <View style={styles.container}>
       {loading ? (
@@ -128,8 +168,8 @@ const MapFilterProject = () => {
               <MapView
                 style={styles.map}
                 initialRegion={{
-                  latitude: filterLatiude,
-                  longitude: filterLongitude,
+                  latitude: parseFloat(filterLatiude),
+                  longitude: parseFloat(filterLongitude),
                   latitudeDelta: 1,
                   longitudeDelta: 2,
                 }}
@@ -192,7 +232,54 @@ const MapFilterProject = () => {
                 ))}
               </MapView>
             ) : (
-              <ActivityIndicator />
+              <>
+                <AwesomeAlert
+                  show={emptyFilterMarkerAlert}
+                  showProgress={false}
+                  titleStyle={{
+                    color: "#333",
+                    fontSize: 13,
+                    fontWeight: "700",
+                    textAlign: "center",
+                    margin: 5,
+                  }}
+                  title={"Seçtiğiniz konumda ilan bulunmamaktadır"}
+                  messageStyle={{ textAlign: "center" }}
+                  message={`Tekrar filtrelemek istermisiniz?`}
+                  closeOnTouchOutside={false}
+                  closeOnHardwareBackPress={false}
+                  showCancelButton={true}
+                  showConfirmButton={true}
+                  cancelText="Sıfırla"
+                  confirmText="Tekrar Filtrele"
+                  cancelButtonColor="#EA2C2E"
+                  confirmButtonColor="#1d8027"
+                  onCancelPressed={() => {
+                    setemptyFilterMarkerAlert(false);
+                    setTimeout(() => {
+                      dispatch(clearLocation());
+                      GetProjectsInfo();
+                    }, 100);
+                  }}
+                  onConfirmPressed={() => {
+                    setemptyFilterMarkerAlert(false);
+                    setTimeout(() => {
+                      setisVisible(true);
+                    }, 100);
+                  }}
+                />
+                <MapView
+                  style={styles.map}
+                  initialRegion={{
+                    latitude: 39.925533,
+                    longitude: 32.866287,
+                    latitudeDelta: 16,
+                    longitudeDelta: 16,
+                  }}
+                  showsUserLocation={true}
+                  showsMyLocationButton={true}
+                ></MapView>
+              </>
             )
           ) : (
             <MapView
@@ -283,58 +370,64 @@ const MapFilterProject = () => {
                         }, 500);
                       }}
                     >
-                      <Image
-                        source={{
-                          uri: `${frontEndUriBase}/${selectedMarker.image.replace(
-                            "public/",
-                            "storage/"
-                          )}`,
-                        }} // Modal'da resmi gösteriyoruz
-                        style={styles.modalImage}
-                        borderRadius={10}
-                      />
-                      <View
-                        style={{
-                          gap: 5,
-                          flexDirection: "column",
-                          justifyContent: "space-between",
-                        }}
-                      >
-                        <View style={{ gap: 5 }}>
-                          <Text style={styles.header} numberOfLines={2}>
-                            {selectedMarker.project_title}
-                          </Text>
-                          <Text style={styles.modalDescription}>
-                            {selectedMarker?.city?.title} /{" "}
-                            {selectedMarker?.county?.ilce_title}
-                          </Text>
-                          <Text style={styles.modalDescription}>
-                            Proje Konut Sayısı {selectedMarker?.room_count}
-                          </Text>
+                      <View style={styles.advertContainer}>
+                        <View style={{ width: "30%" }}>
+                          <Image
+                            source={{
+                              uri: `${frontEndUriBase}/${selectedMarker.image.replace(
+                                "public/",
+                                "storage/"
+                              )}`,
+                            }} // Modal'da resmi gösteriyoruz
+                            style={styles.modalImage}
+                            borderRadius={10}
+                          />
                         </View>
-
-                        <View>
-                          <Text
-                            style={[
-                              styles.modalDescription,
-                              { color: "#EA2C2E", fontSize: 15 },
-                            ]}
+                        <View style={styles.advertContent}>
+                          <View
+                            style={{
+                              gap: 7,
+                              height: "100%",
+                              justifyContent: "space-between",
+                            }}
                           >
-                            Min:
-                            {addDotEveryThreeDigits(selectedMarker?.min_price)}₺
-                            - Max:
-                            {addDotEveryThreeDigits(selectedMarker?.max_price)}
-                          </Text>
+                            <View style={{ gap: 2 }}>
+                              <View>
+                                <Text style={styles.header} numberOfLines={2}>
+                                  {selectedMarker?.project_title}
+                                </Text>
+                              </View>
+                              <View style={{ gap: 5 }}>
+                                <Text style={styles.modalDescription}>
+                                  {selectedMarker?.city?.title} /{" "}
+                                  {selectedMarker?.county?.ilce_title}
+                                </Text>
+                                <Text style={styles.modalDescription}>
+                                  Proje Konut Sayısı{" "}
+                                  {selectedMarker?.room_count}
+                                </Text>
+                              </View>
+                            </View>
+                            <View>
+                              <Text
+                                style={[
+                                  styles.modalDescription,
+                                  { color: "#EA2C2E", fontSize: 15 },
+                                ]}
+                              >
+                                Min:
+                                {addDotEveryThreeDigits(
+                                  selectedMarker?.min_price
+                                )}
+                                ₺ - Max:
+                                {addDotEveryThreeDigits(
+                                  selectedMarker?.max_price
+                                )}
+                              </Text>
+                            </View>
+                          </View>
                         </View>
                       </View>
-                      {/* <View style={styles.textContainer}>
-                    <Text style={styles.modalTitle}>
-                      {selectedMarker.project_title}
-                    </Text>
-                    <Text style={styles.modalDescription}>
-                      {selectedMarker?.city?.title} / {selectedMarker?.county?.ilce_title} 
-                    </Text>
-                  </View> */}
                     </TouchableOpacity>
                     <View style={styles.buttonContainer}>
                       <TouchableOpacity
@@ -350,7 +443,9 @@ const MapFilterProject = () => {
                         onPress={() => {
                           openGoogleMaps(
                             parseFloat(selectedMarker.location.split(",")[0]),
-                            parseFloat(selectedMarker.location.split(",")[1])
+                            parseFloat(selectedMarker.location.split(",")[1]),
+                            selectedMarker?.city?.title,
+                            selectedMarker?.county?.ilce_title
                           );
                         }}
                       >
@@ -384,6 +479,73 @@ const MapFilterProject = () => {
           )}
         </>
       )}
+      <View style={styles.paginationPlace}>
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+            padding: 10,
+          }}
+        >
+          <View style={{ flexDirection: "row", alignItems: "center" }}>
+            <TouchableOpacity
+              disabled={skip === 0}
+              onPress={() => {
+                setskip((prevSkip) => Math.max(prevSkip - take, 0));
+              }}
+            >
+              <ArrowIcon
+                name="arrow-back-ios"
+                size={25}
+                color={"#333"}
+                style={{ opacity: skip == 0 ? 0.5 : 1 }}
+              />
+            </TouchableOpacity>
+            {skip > 0 && (
+              <Text style={{ color: "#333", fontSize: 12, fontWeight: "600" }}>
+                {skip - take} - {skip}
+              </Text>
+            )}
+          </View>
+
+          <View style={{ gap: 5 }}>
+            <Text
+              style={{
+                color: "#333",
+                fontSize: 15,
+                fontWeight: "500",
+                textAlign: "center",
+              }}
+            >
+              Seçilen Konuma Göre
+            </Text>
+            <Text
+              style={{
+                color: "#333",
+                fontWeight: "700",
+                fontSize: 14,
+                textAlign: "center",
+              }}
+            >
+              {skip} - {skip + 10}
+            </Text>
+          </View>
+
+          <View style={{ flexDirection: "row", alignItems: "center", gap: 5 }}>
+            <Text style={{ color: "#333", fontSize: 12, fontWeight: "600" }}>
+              {skip + 11} - {skip + 20}
+            </Text>
+
+            <TouchableOpacity
+              onPress={() => {
+                setskip((prevSkip) => prevSkip + take);
+              }}
+            >
+              <ArrowIcon name="arrow-forward-ios" size={25} color={"#333"} />
+            </TouchableOpacity>
+          </View>
+        </View>
+      </View>
     </View>
   );
 };
@@ -413,7 +575,7 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     padding: 20,
-
+    width: "100%",
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
@@ -429,8 +591,8 @@ const styles = StyleSheet.create({
     marginBottom: 25,
   },
   modalImage: {
-    width: 100,
-    height: 100,
+    width: 110,
+    height: 110,
     marginRight: 10,
   },
   textContainer: {},
@@ -519,6 +681,24 @@ const styles = StyleSheet.create({
     borderRightColor: "transparent",
     borderTopColor: "red",
     marginTop: -1,
+  },
+  paginationPlace: {
+    backgroundColor: "#fff",
+    position: "absolute",
+    zIndex: 1,
+    paddingBottom: 35,
+    bottom: 0,
+    width: "100%",
+  },
+  advertContainer: {
+    width: "100%",
+    flexDirection: "row",
+  },
+  advertContent: {
+    width: "70%",
+
+    height: "100%",
+    justifyContent: "space-between",
   },
 });
 const pickerSelectStyles = StyleSheet.create({

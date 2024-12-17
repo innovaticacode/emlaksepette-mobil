@@ -19,7 +19,7 @@ const MapWiew = () => {
 
   useEffect(() => {
     axios
-      .get(apiUrl+"real-estates")
+      .get(apiUrl + "real-estates")
       .then((res) => {
         setMarkers(res.data);
       })
@@ -48,7 +48,7 @@ const MapWiew = () => {
         showsUserLocation={true}
         showsMyLocationButton={true}
       >
-        {markers.map((marker,_i) => (
+        {markers.map((marker, _i) => (
           <Marker
             key={_i}
             coordinate={{

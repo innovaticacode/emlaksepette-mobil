@@ -7,10 +7,10 @@ import {
   TouchableOpacity,
 } from "react-native";
 import React from "react";
-import { Platform } from "react-native";
+
 import Icon from "react-native-vector-icons/AntDesign";
 import Icon2 from "react-native-vector-icons/FontAwesome5";
-import Icon3 from "react-native-vector-icons/FontAwesome5";
+
 import Arrow from "react-native-vector-icons/SimpleLineIcons";
 
 import { useSelector } from "react-redux";
@@ -59,29 +59,28 @@ export default function GraphicForRealtor() {
       color: "#34B55E",
       textColor: "#00D21A",
       amount: approvedTotal,
-      IconContainerColor:'#5AD481',
-      Icon:'lira-sign',
-      IconStatus:0
+      IconContainerColor: "#5AD481",
+      Icon: "lira-sign",
+      IconStatus: 0,
     },
     {
-        text: "Reddedilen Kazancım",
-        color: "#EA2B2E",
-        textColor: "#EA2C2E",
-        amount: RejectedTotal,
-          IconContainerColor:'#F85154',
-          Icon:'close',
-          IconStatus:1
-      },
+      text: "Reddedilen Kazancım",
+      color: "#EA2B2E",
+      textColor: "#EA2C2E",
+      amount: RejectedTotal,
+      IconContainerColor: "#F85154",
+      Icon: "close",
+      IconStatus: 1,
+    },
     {
       text: "Onay Bekleyen Kazancım",
       color: "#FC8F00",
       textColor: "#FF9908",
       amount: PendingTotal,
-      IconContainerColor:'#FFCA7D',
-      Icon:'clock',
-      IconStatus:2
-    }
-  
+      IconContainerColor: "#FFCA7D",
+      Icon: "clock",
+      IconStatus: 2,
+    },
   ];
 
   return (
@@ -116,7 +115,7 @@ export default function GraphicForRealtor() {
           <Text style={{ color: "#000000", fontWeight: "400", fontSize: 14 }}>
             Toplam Satış
           </Text>
-          <Text style={{ color: "#34B55E", fontWeight: "700", fontSize: 16, }}>
+          <Text style={{ color: "#34B55E", fontWeight: "700", fontSize: 16 }}>
             {addDotEveryThreeDigits(TotalSale)} ₺
           </Text>
         </View>
@@ -139,7 +138,11 @@ export default function GraphicForRealtor() {
               <Icon name="calendar" size={20} color={"#888888"} />
             </View>
             <View>
-              <Text style={{ color: "#606060", fontSize: 13 ,fontWeight:'600'}}>Son 1 Ay</Text>
+              <Text
+                style={{ color: "#606060", fontSize: 13, fontWeight: "600" }}
+              >
+                Son 1 Ay
+              </Text>
             </View>
           </View>
           <View>
@@ -149,7 +152,14 @@ export default function GraphicForRealtor() {
       </View>
       <View style={styles.StatisticCard}>
         {SaleCards.map((item, index) => (
-         <PanelComponent header={item.text} backGroundColor={item.color} IconStatus={item.IconStatus} IconName={item.Icon} IconContainerColor={item.IconContainerColor} Balance={item.amount} />
+          <PanelComponent
+            header={item.text}
+            backGroundColor={item.color}
+            IconStatus={item.IconStatus}
+            IconName={item.Icon}
+            IconContainerColor={item.IconContainerColor}
+            Balance={item.amount}
+          />
         ))}
       </View>
       <View
@@ -223,19 +233,19 @@ const styles = StyleSheet.create({
     borderColor: "#e6e6e6",
   },
   card2: {
-      flexDirection:'row'
-      },
+    flexDirection: "row",
+  },
   StatisticCard: {
     gap: 10,
   },
-  IconContainer:{
-        backgroundColor:'transparent',
-        borderRightColor:'#F6F6F6',
-        borderTopRightRadius:12,
-        borderBottomRightRadius:12,
-        borderRightWidth:5,
-        alignItems:'center',
-        justifyContent:'center',
-        width:'20%'
-  }
+  IconContainer: {
+    backgroundColor: "transparent",
+    borderRightColor: "#F6F6F6",
+    borderTopRightRadius: 12,
+    borderBottomRightRadius: 12,
+    borderRightWidth: 5,
+    alignItems: "center",
+    justifyContent: "center",
+    width: "20%",
+  },
 });

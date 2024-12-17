@@ -14,17 +14,17 @@ import {
 import { useState, useRef, useEffect } from "react";
 import Modal from "react-native-modal";
 import ShareIcon from "react-native-vector-icons/Entypo";
-import DeleteIcon from "react-native-vector-icons/MaterialIcons";
+
 import PencilIcon from "react-native-vector-icons/FontAwesome5";
 import Icon from "react-native-vector-icons/FontAwesome";
-import Heart from "react-native-vector-icons/AntDesign";
+
 import IconMessenger from "react-native-vector-icons/Fontisto";
 import IconSms from "react-native-vector-icons/Feather";
 import * as Clipboard from "expo-clipboard";
 import { Platform } from "react-native";
-import { SearchBar } from "@rneui/themed";
+
 import axios from "axios";
-import Icon2 from "react-native-vector-icons/MaterialCommunityIcons";
+
 import Icon3 from "react-native-vector-icons/MaterialIcons";
 import CollectionsItem from "./ProfilePages/profileComponents/CollectionsItem";
 import { getValueFor } from "../../components/methods/user";
@@ -151,14 +151,11 @@ export default function CollectionsPage() {
   const GetUserInfo = async () => {
     try {
       if (user?.access_token && user) {
-        const userInfo = await axios.get(
-          `${apiUrl}users/` + user?.id,
-          {
-            headers: {
-              Authorization: `Bearer ${user.access_token}`,
-            },
-          }
-        );
+        const userInfo = await axios.get(`${apiUrl}users/` + user?.id, {
+          headers: {
+            Authorization: `Bearer ${user.access_token}`,
+          },
+        });
         const userData = userInfo?.data?.user;
         setnamFromGetUser(userData);
       }
@@ -175,14 +172,11 @@ export default function CollectionsPage() {
       setloading(true);
 
       if (user?.access_token) {
-        const response = await axios.get(
-          `${apiUrl}client/collections`,
-          {
-            headers: {
-              Authorization: `Bearer ${user?.access_token}`,
-            },
-          }
-        );
+        const response = await axios.get(`${apiUrl}client/collections`, {
+          headers: {
+            Authorization: `Bearer ${user?.access_token}`,
+          },
+        });
         setProjectItems(response?.data?.items);
         setcollections(response?.data?.collections);
         GetUserInfo();
@@ -206,14 +200,11 @@ export default function CollectionsPage() {
     try {
       let formData = new FormData();
       formData.append();
-      const response = await axios.delete(
-        `${apiUrl}collection/${id}/delete`,
-        {
-          headers: {
-            Authorization: `Bearer ${user?.access_token}`,
-          },
-        }
-      );
+      const response = await axios.delete(`${apiUrl}collection/${id}/delete`, {
+        headers: {
+          Authorization: `Bearer ${user?.access_token}`,
+        },
+      });
 
       fetchData();
 

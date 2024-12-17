@@ -12,21 +12,14 @@ import {
 } from "react-native";
 import { TabView, SceneMap } from "react-native-tab-view";
 
-
 import { useState } from "react";
 
 import { useNavigation } from "@react-navigation/native";
 
-
-import GraphicForProject from "./ProjectAdvertTabPages/GraphicForProject";
-import BalanceForProject from "./ProjectAdvertTabPages/BalanceForProject";
-import PendingBalanceForProject from "./ProjectAdvertTabPages/PendingBalanceForProject";
-import RejectBalanceProject from "./ProjectAdvertTabPages/RejectBalanceProject";
 import GraphicForDailyRent from "./DaliyRentTabPages/GraphicForDailyRent";
 import BalanceForDailyRent from "./DaliyRentTabPages/BalanceForDailyRent";
 import PendingBalanceDailyRent from "./DaliyRentTabPages/PendingBalanceDailyRent";
 import RejectBalanceForDaily from "./DaliyRentTabPages/RejectBalanceForDaily";
-
 
 const renderScene = ({ route, index }) => {
   switch (route.key) {
@@ -50,7 +43,7 @@ const CustomTabBar = ({
   tab,
   indexChange,
 }) => {
-  const menuItems=[
+  const menuItems = [
     {
       text: "Tüm İşlemler",
       color: "#EEEDEB",
@@ -79,14 +72,15 @@ const CustomTabBar = ({
       Inactive: "#FFFFFF",
       InactiveTex: "#000000",
     },
-  ]
-
- 
+  ];
 
   return (
     <View>
-    
-      <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} contentContainerStyle={{backgroundColor:'#F6F6F6'}}>
+      <ScrollView
+        horizontal={true}
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={{ backgroundColor: "#F6F6F6" }}
+      >
         <View style={{ padding: 10, flexDirection: "row", gap: 10 }}>
           {menuItems.map((item, index) => (
             <TouchableOpacity
@@ -95,8 +89,8 @@ const CustomTabBar = ({
                 styles.tabBtn,
                 {
                   backgroundColor: tab == index ? item.color : item.Inactive,
-                
-                  borderRadius:8
+
+                  borderRadius: 8,
                 },
               ]}
               onPress={() => {
@@ -108,7 +102,7 @@ const CustomTabBar = ({
                   textAlign: "center",
                   color: tab == index ? item.textColor : item.InactiveTex,
                   fontSize: 12,
-                  fontWeight:'400'
+                  fontWeight: "400",
                 }}
               >
                 {item.text}
@@ -134,7 +128,6 @@ export default function DailyRentTab() {
     { key: "second", title: "Second" },
     { key: "shop", title: "Shop" },
     { key: "area", title: "Area" },
-  
   ]);
   const indexChange = (index) => {
     setIndex(index);
@@ -142,13 +135,7 @@ export default function DailyRentTab() {
   };
 
   return (
-    <SafeAreaView
-      style={{ flex: 1,backgroundColor:'#F6F6F6',  }}
-    >
-     
-      
-     
-
+    <SafeAreaView style={{ flex: 1, backgroundColor: "#F6F6F6" }}>
       <TabView
         navigationState={{ index, routes }}
         renderScene={({ route, jumpTo }) =>

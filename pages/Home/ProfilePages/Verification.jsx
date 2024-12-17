@@ -4,6 +4,8 @@ import {
   StyleSheet,
   TouchableOpacity,
   SafeAreaView,
+  TouchableWithoutFeedback,
+  Keyboard,
 } from "react-native";
 import React, { useState, useRef, useEffect } from "react";
 import { TextInput } from "react-native";
@@ -12,10 +14,7 @@ import axios from "axios";
 import Modal from "react-native-modal";
 import { ActivityIndicator } from "react-native-paper";
 import Icon from "react-native-vector-icons/AntDesign";
-import {
-  useIsFocused,
-  useNavigation,
-} from "@react-navigation/native";
+import { useIsFocused, useNavigation } from "@react-navigation/native";
 import * as SecureStore from "expo-secure-store";
 import { apiUrl } from "../../../components/methods/apiRequest";
 export default function Verification({ nextStep, prevStep }) {
@@ -101,22 +100,20 @@ export default function Verification({ nextStep, prevStep }) {
       console.debug("Doğrulama isteği başarılı:", response.data);
 
       if (response.data.success) {
-
         // Başarılı doğrulama sonrası işlemler
         updateUserData();
         setCodes("");
         setsucces(true);
         // Doğrulama durumunu kaydet
         await SecureStore.setItemAsync("PhoneVerify", "1");
+
         setIsucces(true);
         // Başarı mesajını 2 saniye göster
         setTimeout(() => {
           setIsucces(false);
         }, 2000);
         // Başarıyla yönlendir
-        setTimeout(() => {
-          navigation.navigate("Drawer", { screen: "Home" });
-        }, 1000);
+        navigation.navigate("Home", { screen: "Home" });
       }
     } catch (error) {
       console.error("Doğrulama isteği başarısız:", error);
@@ -127,7 +124,6 @@ export default function Verification({ nextStep, prevStep }) {
       setloading(false);
     }
   };
-
 
   const [error, setError] = useState(null);
   const [verifyStatu, setverifyStatu] = useState(null);
@@ -204,95 +200,126 @@ export default function Verification({ nextStep, prevStep }) {
   };
   console.log(isActive);
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={{ padding: 10 }}>
-        <View style={{}}>
-          <Text
-            style={{
-              fontSize: 30,
-              color: "#333",
-              fontWeight: "800",
-              textAlign: "center",
-            }}
-          >
-            Hoş Geldiniz!
-          </Text>
-          <View style={{ paddingTop: 30 }}>
+    <TouchableWithoutFeedback
+      onPress={() => {
+        Keyboard.dismiss();
+      }}
+    >
+      <View style={styles.container}>
+        <View style={{ padding: 10 }}>
+          <View style={{}}>
             <Text
               style={{
-                fontSize: 13,
-                color: "#262020",
-                fontWeight: "400",
-                letterSpacing: 0.8,
+                fontSize: 30,
+                color: "#333",
+                fontWeight: "800",
                 textAlign: "center",
               }}
             >
-              Lütfen hesabınızı doğrulamak için{" "}
-              <Text style={{ color: "red" }}>{user?.mobile_phone}</Text> No'lu
-              telefona gönderdiğimiz 6 haneli doğrulama kodunu giriniz
+              Hoş Geldiniz!
+            </Text>
+            <View style={{ paddingTop: 30 }}>
+              <Text
+                style={{
+                  fontSize: 13,
+                  color: "#262020",
+                  fontWeight: "400",
+                  letterSpacing: 0.8,
+                  textAlign: "center",
+                }}
+              >
+                Lütfen hesabınızı doğrulamak için{" "}
+                <Text style={{ color: "red" }}>{user?.mobile_phone}</Text> No'lu
+                telefona gönderdiğimiz 6 haneli doğrulama kodunu giriniz
+              </Text>
+            </View>
+          </View>
+        </View>
+        <View style={{ paddingTop: 10, alignItems: "center" }}>
+          <View
+            style={{
+              backgroundColor: "#EA2C2E",
+              borderRadius: 50,
+              width: 60,
+              height: 60,
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <Text style={{ fontSize: 20, textAlign: "center", color: "white" }}>
+              {formatTime(seconds)}
             </Text>
           </View>
         </View>
-      </View>
-      <View style={{ paddingTop: 10, alignItems: "center" }}>
-        <View
-          style={{
-            backgroundColor: "#EA2C2E",
-            borderRadius: 50,
-            width: 60,
-            height: 60,
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          <Text style={{ fontSize: 20, textAlign: "center", color: "white" }}>
-            {formatTime(seconds)}
-          </Text>
-        </View>
-      </View>
-      <View style={{ paddingTop: 30 }}>
-        <View
-          style={{ flexDirection: "row", justifyContent: "center", gap: 10 }}
-        >
-          {[...Array(6)].map((_, index) => (
-            <TextInput
-              key={index}
-              ref={(ref) => (inputs.current[index] = ref)}
-              style={styles.Input}
-              value={codes[index] || ""}
-              maxLength={1}
-              keyboardType="numeric"
-              onChangeText={(text) => handleInputChange(index, text)}
-              onKeyPress={({ nativeEvent }) => {
-                if (nativeEvent.key === "Backspace" && !codes[index]) {
-                  if (index > 0) {
-                    inputs.current[index - 1].focus();
+        <View style={{ paddingTop: 20 }}>
+          <View
+            style={{ flexDirection: "row", justifyContent: "center", gap: 10 }}
+          >
+            {[...Array(6)].map((_, index) => (
+              <TextInput
+                key={index}
+                ref={(ref) => (inputs.current[index] = ref)}
+                style={styles.Input}
+                value={codes[index] || ""}
+                maxLength={1}
+                keyboardType="numeric"
+                onChangeText={(text) => handleInputChange(index, text)}
+                onKeyPress={({ nativeEvent }) => {
+                  if (nativeEvent.key === "Backspace" && !codes[index]) {
+                    if (index > 0) {
+                      inputs.current[index - 1].focus();
+                    }
+                    handleDelete(index);
                   }
-                  handleDelete(index);
-                }
-              }}
-            />
-          ))}
-        </View>
-        <View style={{ padding: 10, paddingTop: 50, gap: 20 }}>
-          {isActive ? (
-            <TouchableOpacity
-              disabled={codes.length == 6 ? false : true}
-              onPress={() => {
-                handleSubmit();
-              }}
-              style={{
-                backgroundColor: "#EA2A28",
-                padding: 9,
-                borderRadius: 5,
-                opacity: codes.length == 6 ? 1 : 0.5,
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              {loading ? (
-                <ActivityIndicator color="white" />
-              ) : (
+                }}
+              />
+            ))}
+          </View>
+          <View style={{ padding: 10, paddingTop: 20, gap: 20 }}>
+            {isActive ? (
+              <TouchableOpacity
+                disabled={codes.length == 6 ? false : true}
+                onPress={() => {
+                  handleSubmit();
+                }}
+                style={{
+                  backgroundColor: "#EA2A28",
+                  padding: 9,
+                  borderRadius: 5,
+                  opacity: codes.length == 6 ? 1 : 0.5,
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                {loading ? (
+                  <ActivityIndicator color="white" />
+                ) : (
+                  <Text
+                    style={{
+                      color: "white",
+                      textAlign: "center",
+                      fontWeight: "600",
+                    }}
+                  >
+                    Onayla
+                  </Text>
+                )}
+              </TouchableOpacity>
+            ) : (
+              <TouchableOpacity
+                onPress={() => {
+                  resetTimer();
+                  sendPostRequest();
+                }}
+                style={{
+                  backgroundColor: "#EA2A28",
+                  padding: 9,
+                  borderRadius: 5,
+
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
                 <Text
                   style={{
                     color: "white",
@@ -300,158 +327,133 @@ export default function Verification({ nextStep, prevStep }) {
                     fontWeight: "600",
                   }}
                 >
-                  Onayla
+                  Kod Gönder
                 </Text>
-              )}
-            </TouchableOpacity>
-          ) : (
-            <TouchableOpacity
-              onPress={() => {
-                resetTimer();
-                sendPostRequest();
-              }}
-              style={{
-                backgroundColor: "#EA2A28",
-                padding: 9,
-                borderRadius: 5,
-
+              </TouchableOpacity>
+            )}
+          </View>
+        </View>
+        <Modal
+          isVisible={Isucces}
+          style={styles.modal}
+          animationIn={"fadeIn"}
+          animationOut={"fadeOut"}
+        >
+          <View
+            style={[
+              styles.modalContent,
+              {
+                padding: 0,
                 alignItems: "center",
                 justifyContent: "center",
+                backgroundColor: "transparent",
+              },
+            ]}
+          >
+            <View
+              style={{
+                backgroundColor: "#ffffff94",
+                width: "20%",
+                padding: 10,
+                borderRadius: 10,
+              }}
+            >
+              <ActivityIndicator size="large" color="#333" />
+            </View>
+          </View>
+        </Modal>
+        <Modal
+          isVisible={falseCodeAlert}
+          style={styles.modal}
+          animationIn={"fadeIn"}
+          animationOut={"fadeOut"}
+          onBackdropPress={() => {
+            setfalseCodeAlert(false);
+          }}
+        >
+          <View style={styles.modalContent}>
+            <View
+              style={{
+                padding: 10,
+                alignItems: "center",
+                justifyContent: "center",
+                backgroundColor: "#EA2A28",
+                borderTopLeftRadius: 10,
+                borderTopRightRadius: 10,
+              }}
+            >
+              <Icon name="exclamationcircle" color={"#fff"} size={40} />
+            </View>
+            <View
+              style={{
+                alignItems: "center",
+                justifyContent: "center",
+                paddingTop: 15,
+                gap: 15,
               }}
             >
               <Text
                 style={{
-                  color: "white",
                   textAlign: "center",
-                  fontWeight: "600",
+                  fontWeight: "500",
+                  color: "#EA2A28",
+                  fontSize: 18,
+                  letterSpacing: 0.7,
                 }}
               >
-                Kod Gönder
+                Uyarı
               </Text>
-            </TouchableOpacity>
-          )}
-        </View>
-      </View>
-      <Modal
-        isVisible={Isucces}
-        style={styles.modal}
-        animationIn={"fadeIn"}
-        animationOut={"fadeOut"}
-      >
-        <View
-          style={[
-            styles.modalContent,
-            {
-              padding: 0,
-              alignItems: "center",
-              justifyContent: "center",
-              backgroundColor: "transparent",
-            },
-          ]}
-        >
-          <View
-            style={{
-              backgroundColor: "#ffffff94",
-              width: "20%",
-              padding: 10,
-              borderRadius: 10,
-            }}
-          >
-            <ActivityIndicator size="large" color="#333" />
-          </View>
-        </View>
-      </Modal>
-      <Modal
-        isVisible={falseCodeAlert}
-        style={styles.modal}
-        animationIn={"fadeIn"}
-        animationOut={"fadeOut"}
-        onBackdropPress={() => {
-          setfalseCodeAlert(false);
-        }}
-      >
-        <View style={styles.modalContent}>
-          <View
-            style={{
-              padding: 10,
-              alignItems: "center",
-              justifyContent: "center",
-              backgroundColor: "#EA2A28",
-              borderTopLeftRadius: 10,
-              borderTopRightRadius: 10,
-            }}
-          >
-            <Icon name="exclamationcircle" color={"#fff"} size={40} />
-          </View>
-          <View
-            style={{
-              alignItems: "center",
-              justifyContent: "center",
-              paddingTop: 15,
-              gap: 15,
-            }}
-          >
-            <Text
-              style={{
-                textAlign: "center",
-                fontWeight: "500",
-                color: "#EA2A28",
-                fontSize: 18,
-                letterSpacing: 0.7,
-              }}
-            >
-              Uyarı
-            </Text>
-            <View style={{ alignItems: "center", justifyContent: "center" }}>
-              <View style={{ width: "70%", padding: 4, paddingBottom: 20 }}>
+              <View style={{ alignItems: "center", justifyContent: "center" }}>
+                <View style={{ width: "70%", padding: 4, paddingBottom: 20 }}>
+                  <Text
+                    style={{
+                      textAlign: "center",
+                      fontSize: 14,
+                      fontWeight: "500",
+                      color: "#333",
+                      letterSpacing: 0.7,
+                      lineHeight: 20,
+                    }}
+                  >
+                    Girmiş olduğunuz kod hatalı,kontrol ederek tekrar
+                    deneyiniz.tekrar göndere basarak kodu yenileyebilirsiniz
+                  </Text>
+                </View>
+              </View>
+            </View>
+            <View style={{ padding: 10 }}>
+              <TouchableOpacity
+                style={{
+                  backgroundColor: "#EA2A28",
+                  padding: 10,
+                  borderRadius: 5,
+                }}
+                onPress={() => {
+                  setfalseCodeAlert(false);
+                }}
+              >
                 <Text
                   style={{
                     textAlign: "center",
-                    fontSize: 14,
-                    fontWeight: "500",
-                    color: "#333",
-                    letterSpacing: 0.7,
-                    lineHeight: 20,
+                    color: "white",
+                    fontWeight: "600",
                   }}
                 >
-                  Girmiş olduğunuz kod hatalı,kontrol ederek tekrar
-                  deneyiniz.tekrar göndere basarak kodu yenileyebilirsiniz
+                  Tamam
                 </Text>
-              </View>
+              </TouchableOpacity>
             </View>
           </View>
-          <View style={{ padding: 10 }}>
-            <TouchableOpacity
-              style={{
-                backgroundColor: "#EA2A28",
-                padding: 10,
-                borderRadius: 5,
-              }}
-              onPress={() => {
-                setfalseCodeAlert(false);
-              }}
-            >
-              <Text
-                style={{
-                  textAlign: "center",
-                  color: "white",
-                  fontWeight: "600",
-                }}
-              >
-                Tamam
-              </Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </Modal>
-    </SafeAreaView>
+        </Modal>
+      </View>
+    </TouchableWithoutFeedback>
   );
 }
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#FCFCFC",
-    margin: 33,
+    paddingTop: 100,
   },
   Input: {
     backgroundColor: "#ebebeb",

@@ -5,11 +5,8 @@ import {
   Keyboard,
   ScrollView,
   StyleSheet,
-  FlatList,
   TouchableOpacity,
-  TextInput,
   SafeAreaView,
-  ImageBackground,
 } from "react-native";
 import { Platform } from "react-native";
 import IconIdCard from "react-native-vector-icons/FontAwesome";
@@ -20,34 +17,25 @@ import {
   GestureHandlerRootView,
 } from "react-native-gesture-handler";
 import TrashIcon from "react-native-vector-icons/EvilIcons";
-import {
-  useRoute,
-  useNavigation,
-  useIsFocused,
-} from "@react-navigation/native";
+import { useNavigation, useIsFocused } from "@react-navigation/native";
 
-import Header from "../../components/Header";
-import Search from "./Search";
-import Categories from "../../components/Categories";
 import Modal from "react-native-modal";
 import { getValueFor } from "../../components/methods/user";
 import axios from "axios";
 import { addDotEveryThreeDigits } from "../../components/methods/merhod";
 import { Alert } from "react-native";
 import * as SecureStore from "expo-secure-store";
-import { Image } from "react-native-svg";
-import Icon2 from "react-native-vector-icons/MaterialCommunityIcons";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 
-import { DrawerMenu } from "../../components";
 import { ActivityIndicator } from "react-native-paper";
 import NoDataScreen from "../../components/NoDataScreen";
 import { apiUrl } from "../../components/methods/apiRequest";
+import { useDispatch, useSelector } from "react-redux";
+import { setBasketItem } from "../../store/slices/Basket/BasketSlice";
 
 export default function Basket() {
-  const route = useRoute();
-
   const navigation = useNavigation();
+  const dispatch = useDispatch();
+  const basketItem = useSelector((state) => state.basket.basketItem);
   const [title, setTitle] = useState("");
   const [amount, setAmount] = useState("");
   const [imageUrl, setImageUrl] = useState("");
@@ -90,18 +78,6 @@ export default function Basket() {
     fetchDatass();
   }, []);
 
-  /*   console.log(imageUrl, "aa");
-   */
-  const [Basket, SetBasket] = useState([
-    {
-      name: "MASTER ORMAN KÖY EVLERİ",
-      price: 2500000,
-      shopName: "Maliyetine Ev",
-      shopPoint: 8.3,
-      id: 1,
-      hisse: true,
-    },
-  ]);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   const toggleDrawer = () => {
@@ -115,7 +91,6 @@ export default function Basket() {
   const [offerControl, setofferControl] = useState({});
   const [payDec, setpayDec] = useState([]);
   const [isShare, setisShare] = useState([]);
-  const [CartLength, setCartLength] = useState([]);
   const isFocused = useIsFocused();
   const [loading, setLoading] = useState(false);
   useEffect(() => {
@@ -126,21 +101,22 @@ export default function Basket() {
     try {
       if (user?.access_token && isFocused) {
         setLoading(true);
-        const response = await axios.get(
-          `${apiUrl}institutional/my-cart`,
-          {
-            headers: {
-              Authorization: `Bearer ${user?.access_token}`,
-            },
-          }
-        );
+        const response = await axios.get(`${apiUrl}institutional/my-cart`, {
+          headers: {
+            Authorization: `Bearer ${user?.access_token}`,
+          },
+        });
         setCart(response?.data?.cart?.item);
         settype(response?.data?.cart);
         setsaleType(response?.data?.saleType);
         setofferControl(response?.data);
         setpayDec(response?.data?.cart?.item?.pay_decs);
         setisShare(response?.data?.cart?.item?.isShare);
-        setCartLength(response?.data?.cart);
+        dispatch(
+          setBasketItem({
+            basketItem: response?.data?.cart?.item,
+          })
+        );
         setLoading(false);
       }
     } catch (error) {
@@ -155,25 +131,34 @@ export default function Basket() {
     }
   }, [isFocused, user]);
   const [parsedshare, setparsedshare] = useState("");
-  const Parse = async () => {
+
+  const Parse = () => {
     try {
       if (Cart && isShare && type && saleType) {
-        setparsedshare(JSON.parse(isShare)[0]);
+        const parsed = JSON.parse(isShare);
+        if (Array.isArray(parsed)) {
+          setparsedshare(parsed[0]);
+        } else {
+          console.log("Parsed data is not an array");
+        }
       }
     } catch (error) {
-      console.log("parse edilemedi");
+      console.log("Error parsing data:", error);
     }
   };
+
   useEffect(() => {
     Parse();
   }, [fetchData]);
 
   const [isInstallament, setisInstallament] = useState(1);
 
-  let DiscountRate = Cart?.discount_rate;
-  let TotalPrice = Cart?.price;
   let DiscountPrice = Cart?.price - (Cart?.amount * Cart?.discount_rate) / 100;
-  let KaporaForDiscountPrice = (DiscountPrice * 2) / 100;
+  let KaporaForDiscountPrice =
+    (DiscountPrice *
+      (offerControl?.housing?.total_rate_percentage ??
+        offerControl?.project?.total_rate_percentage)) /
+    100;
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
@@ -200,8 +185,6 @@ export default function Basket() {
     return `${month}, ${day} ${year}`;
   };
 
-  const [shareCounter, setshareCounter] = useState(1);
-
   const [message, setmessage] = useState({});
   const [counter, setcounter] = useState(1);
   const UpdateCart = async () => {
@@ -209,15 +192,11 @@ export default function Basket() {
     formData.append("change", "artir");
     try {
       if (user.access_token) {
-        const response = await axios.post(
-          `${apiUrl}update-cart-qt`,
-          formData,
-          {
-            headers: {
-              Authorization: `Bearer ${user?.access_token}`,
-            },
-          }
-        );
+        const response = await axios.post(`${apiUrl}update-cart-qt`, formData, {
+          headers: {
+            Authorization: `Bearer ${user?.access_token}`,
+          },
+        });
         fetchData();
         setmessage(response.data);
         setcounter(response?.data?.quantity);
@@ -234,15 +213,11 @@ export default function Basket() {
     formData.append("change", "azalt");
     try {
       if (user.access_token) {
-        const response = await axios.post(
-          `${apiUrl}update-cart-qt`,
-          formData,
-          {
-            headers: {
-              Authorization: `Bearer ${user?.access_token}`,
-            },
-          }
-        );
+        const response = await axios.post(`${apiUrl}update-cart-qt`, formData, {
+          headers: {
+            Authorization: `Bearer ${user?.access_token}`,
+          },
+        });
         fetchData();
         setmessage(response.data);
         setcounter(response?.data?.quantity);
@@ -254,14 +229,11 @@ export default function Basket() {
 
   const updateUserData = async () => {
     try {
-      const updateResponse = await axios.get(
-        `${apiUrl}users/` + user?.id,
-        {
-          headers: {
-            Authorization: `Bearer ${user.access_token}`,
-          },
-        }
-      );
+      const updateResponse = await axios.get(`${apiUrl}users/` + user?.id, {
+        headers: {
+          Authorization: `Bearer ${user.access_token}`,
+        },
+      });
 
       // Mevcut kullanıcı verilerini güncellenmiş verilerle birleştirme
       const updatedUser = {
@@ -294,8 +266,6 @@ export default function Basket() {
         );
         updateUserData();
         fetchData();
-
-        //  console.log(updateResponse.data + 'User')
       }
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -323,15 +293,11 @@ export default function Basket() {
     formData.append("updatedPrice", updatedPrice);
     try {
       if (user.access_token) {
-        const response = await axios.post(
-          `${apiUrl}update-cart`,
-          formData,
-          {
-            headers: {
-              Authorization: `Bearer ${user?.access_token}`,
-            },
-          }
-        );
+        const response = await axios.post(`${apiUrl}update-cart`, formData, {
+          headers: {
+            Authorization: `Bearer ${user?.access_token}`,
+          },
+        });
         fetchData();
         setmessageUpdateCart(response.data);
       }
@@ -340,11 +306,6 @@ export default function Basket() {
     }
   };
 
-  const nav = useNavigation();
-  const [index, setindex] = useState(0);
-  const [tab, settab] = useState(0);
-  /*   console.log(CartLength);
-   */
   const [paymentMethod, setPaymentMethod] = useState("");
 
   const renderRightActions = () => (
@@ -357,37 +318,12 @@ export default function Basket() {
   return (
     <View style={{ flex: 1 }}>
       {loading ? (
-        <ActivityIndicator color="#333" size="large" />
+        <View style={styles.loader}>
+          <ActivityIndicator color="#333" size="large" />
+        </View>
       ) : (
         <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
-          <View
-            style={{
-              ...Platform.select({
-                ios: {},
-                android: {
-                  paddingTop: 25,
-                },
-              }),
-            }}
-          >
-            {/* <Header onPress={toggleDrawer} index={setindex} tab={settab} /> */}
-          </View>
-
-          <Modal
-            isVisible={isDrawerOpen}
-            onBackdropPress={() => setIsDrawerOpen(false)}
-            animationIn="bounceInLeft"
-            animationOut="bounceOutLeft"
-            swipeDirection={["left"]}
-            onSwipeComplete={() => setIsDrawerOpen(false)}
-            style={styles.modal}
-          >
-            {/* <View>
-              <DrawerMenu setIsDrawerOpen={setIsDrawerOpen} />
-            </View> */}
-          </Modal>
-
-          {CartLength !== false ? (
+          {basketItem ? (
             <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
               <ScrollView
                 style={styles.container}
@@ -414,31 +350,6 @@ export default function Basket() {
                     />
                   </Swipeable>
                 </GestureHandlerRootView>
-
-                {/* <View>
-            <View style={[styles.HouseInfo, { padding: 15 }]}>
-              <View style={{ flexDirection: "row", gap: 5 }}>
-                <Text style={{ fontSize: 12 }}>İlan Adı:</Text>
-                {
-                  type.type=='housing'?
-                  <Text>{Cart.title}</Text>
-                  :
-                  <Text style={{ fontSize: 12 }}>
-                    {Cart.title} Projesinde {Cart.housing} No'lu Konut
-                  </Text>
-                }
-              
-              </View>
-              <View style={{ flexDirection: "row", gap: 5 }}>
-                <Text style={{ fontSize: 12 }}>İlan Konumu:</Text>
-                <Text style={{ fontSize: 12 }}>{Cart.city} / Hendek</Text>
-              </View>
-              <View style={{ flexDirection: "row", gap: 5 }}>
-                <Text style={{ fontSize: 12 }}>Mağaza:</Text>
-                <Text style={{ fontSize: 12 }}>Maliyetine Ev</Text>
-              </View>
-            </View>
-          </View> */}
 
                 {Cart?.installmentPrice != 0 &&
                   Cart?.installmentPrice != null && (
@@ -603,12 +514,6 @@ export default function Basket() {
                           </Text>
                         </View>
                       </View>
-                      // <View style={{flexDirection:'column',gap:5,alignItems:'center'}}>
-
-                      //       <Text style={{color:'#7E7E7E',fontWeight:'600'}}>{payDec.length}. Ara Ödeme</Text>
-                      //       <Text style={{color:'#7E7E7E',fontWeight:'600'}}>{addDotEveryThreeDigits(item[`pay_dec_price${_index}`])} ₺</Text>
-                      //       <Text style={{color:'#7E7E7E',fontWeight:'600'}}>{formatDate(item[`pay_dec_date${_index}`])}</Text>
-                      // </View>
                     ))}
                   </View>
                 )}
@@ -622,12 +527,17 @@ export default function Basket() {
                         gap: 10,
                         paddingBottom: 5,
                         alignItems: "center",
+                        maxWidth: "100%",
                       }}
                     >
                       <IconIdCard name="star-o" size={15} />
-                      <Text>Sepet Özeti</Text>
-                      <Text>
-                        İlan Başlığı: {amount}, {title}
+                      <Text style={{ flexShrink: 1 }}>Sepet Özeti</Text>
+                      <Text
+                        style={{ flexShrink: 1 }}
+                        numberOfLines={2}
+                        ellipsizeMode="tail"
+                      >
+                        İlan Başlığı: {Cart.title}
                       </Text>
                     </View>
 
@@ -642,7 +552,7 @@ export default function Basket() {
 
                         {neightboord ? (
                           <View>
-                            <Text>adsaaddasd</Text>
+                            <Text>-</Text>
                           </View>
                         ) : (
                           <View>
@@ -681,19 +591,22 @@ export default function Basket() {
                         }}
                       >
                         <Text>
-                          %{offerControl?.project?.deposit_rate} Kapora:
+                          %{offerControl?.project?.total_rate_percentage}{" "}
+                          Kapora:
                         </Text>
                         <Text>
                           {" "}
                           {isInstallament == 2
                             ? formatAmount(
                                 (Cart?.installmentPrice *
-                                  offerControl?.project?.deposit_rate) /
+                                  offerControl?.project
+                                    ?.total_rate_percentage) /
                                   100
                               )
                             : formatAmount(
                                 (Cart?.amount *
-                                  offerControl?.project?.deposit_rate) /
+                                  offerControl?.project
+                                    ?.total_rate_percentage) /
                                   100
                               )}{" "}
                           ₺
@@ -758,7 +671,10 @@ export default function Basket() {
                               justifyContent: "space-between",
                             }}
                           >
-                            <Text style={{ color: "#333" }}>%2 Kapora:</Text>
+                            <Text style={{ color: "#333" }}>
+                              %{offerControl?.housing?.total_rate_percentage}{" "}
+                              Kapora:
+                            </Text>
                             <Text style={{ color: "#333" }}>
                               {addDotEveryThreeDigits(KaporaForDiscountPrice)} ₺
                             </Text>
@@ -806,10 +722,18 @@ export default function Basket() {
                                 justifyContent: "space-between",
                               }}
                             >
-                              <Text>%2 Kapora:</Text>
+                              <Text>
+                                % {offerControl?.housing?.total_rate_percentage}{" "}
+                                Kapora:
+                              </Text>
                               <Text>
                                 {addDotEveryThreeDigits(
-                                  Math.round((Cart?.price * 2) / 100)
+                                  Math.round(
+                                    (Cart?.price *
+                                      offerControl?.housing
+                                        ?.total_rate_percentage) /
+                                      100
+                                  )
                                 )}{" "}
                                 ₺
                               </Text>
@@ -817,44 +741,6 @@ export default function Basket() {
                           )}
                         </>
                       )}
-
-                      {/* 
-                                    <View  style={{flexDirection:'row',justifyContent:'space-between'}}>
-                                        <Text>Toplam Fiyat:</Text>
-                                        <Text>{addDotEveryThreeDigits(Cart.amount) } ₺</Text>
-                                    </View>
-                                      {
-                                        saleType=='kiralik'?
-                                        <View  style={{flexDirection:'row',justifyContent:'space-between'}}>
-                                        <Text>Bir Kira Kapora</Text>
-                                        <Text>{addDotEveryThreeDigits(Cart.amount) } ₺</Text>
-                                    </View>:
-                                          type.hasCounter==true? 
-                                       <View  style={{flexDirection:'row',justifyContent:'space-between'}}>
-                                       <Text>%2 Kapora</Text>
-                                       <Text>{addDotEveryThreeDigits(KaporaForDiscountPrice)} ₺</Text>
-                                   </View>:  <View  style={{flexDirection:'row',justifyContent:'space-between'}}>
-                                       <Text>%2 Kapora</Text>
-                                       <Text>{addDotEveryThreeDigits(Cart.amount * 2 /100)} ₺</Text>
-                                   </View>
-                                      }
-
-                                      {
-                                          type.hasCounter==true?
-                                          <>
-                                              <View  style={{flexDirection:'row',justifyContent:'space-between'}}>
-                                          <Text>Emlak Kulüp İndirimi</Text>
-                                          <Text>%{Cart.discount_rate}</Text>
-                                      </View>
-                                              <View  style={{flexDirection:'row',justifyContent:'space-between'}}>
-                                          <Text>İndirimli Fiyat</Text>
-                                          <Text>{DiscountPrice} ₺</Text>
-                                      </View>
-                                          </>
-                                          :<></>
-                                      
-                                      }
-                               */}
                     </View>
                   </View>
                 )}
@@ -877,14 +763,14 @@ export default function Basket() {
                           type?.type == "project" &&
                           formatAmount(
                             (Cart?.amount *
-                              offerControl?.project?.deposit_rate) /
+                              offerControl?.project?.total_rate_percentage) /
                               100
                           )}
                         {isInstallament == 2 &&
                           type?.type == "project" &&
                           addDotEveryThreeDigits(
                             (Cart?.installmentPrice *
-                              offerControl?.project?.deposit_rate) /
+                              offerControl?.project?.total_rate_percentage) /
                               100
                           )}
                         {type?.type == "housing" &&
@@ -893,7 +779,11 @@ export default function Basket() {
                         {type?.type == "housing" &&
                           saleType == "satilik" &&
                           addDotEveryThreeDigits(
-                            Math.round((Cart?.price * 2) / 100)
+                            Math.round(
+                              (Cart?.price *
+                                offerControl?.housing?.total_rate_percentage) /
+                                100
+                            )
                           )}
                         ₺
                       </Text>
@@ -907,7 +797,7 @@ export default function Basket() {
                           price: Cart.price,
                           totalPrice: DiscountPrice,
                           deposit: KaporaForDiscountPrice,
-                          kapora: offerControl?.project?.deposit_rate,
+                          Kapora: offerControl?.project?.total_rate_percentage,
                           isInstallament: isInstallament,
                           installmentPrice: Cart?.installmentPrice,
                           paymentMethod: paymentMethod,
@@ -1082,5 +972,11 @@ const styles = StyleSheet.create({
         elevation: 5,
       },
     }),
+  },
+  loader: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "white",
   },
 });
