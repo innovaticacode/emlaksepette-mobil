@@ -78,7 +78,7 @@ const CustomTabBar = ({
   React.useEffect(() => {
     const fetchMenuItems = async () => {
       try {
-        const response = await axios.get(apiUrl + "menu-list");
+        const response = await axios.get(apiUrl + "menu-list-names");
         setMenuItems(response.data);
         setMenuItems([{ text: "Anasayfa" }, ...response.data]);
       } catch (error) {
