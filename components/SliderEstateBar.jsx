@@ -1,7 +1,7 @@
 import { View, Text, StyleSheet } from "react-native";
 import React, { useState, useEffect } from "react";
 import SliderItem from "./SliderItem";
-import axios from "axios";
+
 import SliderItemSkeleton from "./SkeletonComponents/SliderItemSkeleton";
 import {
   GestureHandlerRootView,
@@ -10,9 +10,26 @@ import {
 import { apiUrl, frontEndUriBase } from "./methods/apiRequest";
 
 export default function SliderEstateBar() {
-
   const [loading, setloading] = useState(false);
+  const [featuredStores, setFeaturedStores] = useState([]);
 
+  const fetchFeaturedStores = async () => {
+    try {
+      const response = await axios.get(
+        apiUrl+"popular-estate-brands"
+      );
+      if (response.data.length > 0) {
+        setFeaturedStores(response.data);
+        setloading(true);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    fetchFeaturedStores();
+  }, []);
   const capitalizeFirstLetter = (text) => {
     return text.charAt(0).toUpperCase() + text.slice(1);
   };

@@ -8,13 +8,13 @@ import {
   TouchableOpacity,
 } from "react-native";
 import StepIndicator from "react-native-step-indicator";
-import Verification from "./ProfilePages/Verification";
+
 import VerifyDocument from "../../components/VerifyComponents/VerifyDocument";
 import { getValueFor } from "../../components/methods/user";
 import axios from "axios";
 import { useIsFocused, useNavigation } from "@react-navigation/native";
 import { ActivityIndicator } from "react-native-paper";
-import * as SecureStore from "expo-secure-store";
+
 import { apiUrl } from "../../components/methods/apiRequest";
 import UpdateProfileImage from "../../components/VerifyComponents/UpdateProfileImage";
 import UpdateShopInfo from "../../components/VerifyComponents/UpdateShopInfo";
@@ -63,16 +63,17 @@ const VerifyScreen = () => {
     getValueFor("PhoneVerify", setverifyStatu);
   }, []);
   const [loading, setloading] = useState(false);
+
   const GetUserInfo = async () => {
     setloading(true);
     try {
       if (user?.access_token && user) {
-        const userInfo = await axios.get(apiUrl + "user", {
+        const userInfo = await axios.get(apiUrl + "users/" + user?.id, {
           headers: {
             Authorization: `Bearer ${user.access_token}`,
           },
         });
-        const userData = userInfo?.data;
+        const userData = userInfo?.data?.user;
         setnamFromGetUser(userData);
       }
     } catch (error) {
@@ -166,6 +167,44 @@ const VerifyScreen = () => {
           />
           {/* <Text>{namFromGetUser.phone_verification_status} </Text> */}
           <View style={styles.content}>{renderStepContent()}</View>
+
+          {/* <View style={styles.buttonContainer}>
+             {currentPosition > 0 && (
+               <Button title="Önceki" onPress={prevStep} />
+             )}
+             {currentPosition < labels.length - 1 && (
+               <Button title="Sonraki" onPress={nextStep} />
+             )}
+           </View>  */}
+          <View style={{ alignItems: "center", paddingBottom: 20 }}>
+            <TouchableOpacity
+              style={{
+                backgroundColor: "#EC302E",
+                padding: 8,
+                borderRadius: 8,
+                width: "80%",
+              }}
+              onPress={() => {
+                SecureStore.setItemAsync("user", "");
+                navigation.navigate("Drawer", {
+                  screen: "Home",
+                  params: {
+                    status: "logout",
+                  },
+                });
+              }}
+            >
+              <Text
+                style={{
+                  textAlign: "center",
+                  color: "white",
+                  fontWeight: "600",
+                }}
+              >
+                Kapat
+              </Text>
+            </TouchableOpacity>
+          </View>
         </SafeAreaView>
       )}
     </>

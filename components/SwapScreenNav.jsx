@@ -12,7 +12,6 @@ import React, { useEffect, useState, useRef } from "react";
 import { useRoute } from "@react-navigation/native";
 import axios from "axios";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { Platform, findNodeHandle, UIManager } from "react-native";
 
 import RNPickerSelect from "react-native-picker-select";
 import { getValueFor } from "./methods/user";
@@ -127,9 +126,7 @@ const SwapScreenNav = () => {
   useEffect(() => {
     const fetchProjectTitle = async () => {
       try {
-        const response = await axios.get(
-          `${apiUrl}project/${projectId}`
-        );
+        const response = await axios.get(`${apiUrl}project/${projectId}`);
         setProjectData(response.data); // Başlığı state'e aktarma
       } catch (error) {
         console.error("API isteği sırasında bir hata oluştu:", error);
@@ -155,16 +152,12 @@ const SwapScreenNav = () => {
     formData.append("offer_description", offerid);
 
     axios
-      .post(
-        `${apiUrl}institutional/give_offer`,
-        formData,
-        {
-          headers: {
-            Authorization: `Bearer ${user.access_token}`,
-            "Content-Type": "multipart/form-data", // İçerik tipini belirtmek
-          },
-        }
-      )
+      .post(`${apiUrl}institutional/give_offer`, formData, {
+        headers: {
+          Authorization: `Bearer ${user.access_token}`,
+          "Content-Type": "multipart/form-data", // İçerik tipini belirtmek
+        },
+      })
       .then((response) => {
         setFormVisible(false);
 
@@ -202,10 +195,8 @@ const SwapScreenNav = () => {
 
   const fetchCity = async () => {
     try {
-      const response = await axios.get(
-        `${apiUrl}cities`
-      );
-      
+      const response = await axios.get(`${apiUrl}cities`);
+
       return response.data;
     } catch (error) {
       console.error("Hata:", error);
@@ -248,9 +239,7 @@ const SwapScreenNav = () => {
 
   const fetchDataCounty = async (value) => {
     try {
-      const response = await axios.get(
-        `${apiUrl}counties/${value}`
-      );
+      const response = await axios.get(`${apiUrl}counties/${value}`);
       return response.data;
     } catch (error) {
       console.error("Hata:", error);
@@ -269,7 +258,6 @@ const SwapScreenNav = () => {
       setcounties([]);
     }
   };
-
 
   const [errorMessage, seterrorMessage] = useState("");
 

@@ -16,7 +16,7 @@ import {
 import { useState, useRef, useEffect } from "react";
 import { useRoute, useNavigation } from "@react-navigation/native";
 import { TextInput } from "react-native";
-import UserTypes from "./profileComponents/UserTypes";
+
 import Icon from "react-native-vector-icons/MaterialIcons";
 import ModalEdit from "react-native-modal";
 import DotIcon from "react-native-vector-icons/Entypo";

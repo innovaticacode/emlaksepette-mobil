@@ -7,14 +7,10 @@ import {
   FlatList,
   ScrollView,
   Platform,
+  Keyboard,
 } from "react-native";
 import React, { useState, useEffect } from "react";
-import Icon from "react-native-vector-icons/FontAwesome";
-import { TouchableWithoutFeedback, Keyboard } from "react-native";
 
-import UploadIcon from "react-native-vector-icons/AntDesign";
-import { CheckBox } from "@rneui/themed";
-import { Shadow } from "react-native-shadow-2";
 import { useNavigation } from "@react-navigation/native";
 import axios from "axios";
 import { getValueFor } from "./methods/user";

@@ -10,11 +10,10 @@ import {
 
 import axios from "axios";
 import { ActivityIndicator } from "react-native-paper";
-import Modal from "react-native-modal";
+
 import { getValueFor } from "../../../components/methods/user";
 import { useNavigation } from "@react-navigation/native";
-import Icon from "react-native-vector-icons/AntDesign";
-import SliderEstateBar from "../../../components/SliderEstateBar";
+
 import { AlertNotificationRoot } from "react-native-alert-notification";
 import { apiUrl } from "../../../components/methods/apiRequest";
 import RealtorPost from "../../../components/Card/RealtorCard/RealtorPost";
@@ -22,7 +21,7 @@ const PAGE_SIZE = 10;
 
 const Shared = ({ index }) => {
   const navigation = useNavigation();
- 
+
   const [featuredEstates, setFeaturedEstates] = useState([]);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
@@ -40,9 +39,7 @@ const Shared = ({ index }) => {
     console.log(config);
     try {
       const response = await axios.get(
-        `${apiUrl}real-estates?page=${
-          reset ? 1 : page
-        }&limit=${PAGE_SIZE}`,
+        `${apiUrl}real-estates?page=${reset ? 1 : page}&limit=${PAGE_SIZE}`,
         config
       );
       const newEstates = response.data;

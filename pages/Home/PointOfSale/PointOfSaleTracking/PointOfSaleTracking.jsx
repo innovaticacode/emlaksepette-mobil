@@ -65,11 +65,11 @@ const PointOfSaleTracking = () => {
       }
       try {
         const result = await apiRequestGetWithBearer(endpoint);
-        if (result.data.message === "success") {
+        if (result?.data?.message === "success") {
           const data = result?.data?.sales_points;
-          setPending(data?.filter((item) => item.status === "pending"));
-          setSuccess(data?.filter((item) => item.status === "approved"));
-          setFailed(data?.filter((item) => item.status === "rejected"));
+          setPending(data?.filter((item) => item.status == "pending"));
+          setSuccess(data?.filter((item) => item.status == "approved"));
+          setFailed(data?.filter((item) => item.status == "rejected"));
         } else {
           Alert.alert("Hata", "Bir hata oluştu. Lütfen tekrar deneyin.");
         }

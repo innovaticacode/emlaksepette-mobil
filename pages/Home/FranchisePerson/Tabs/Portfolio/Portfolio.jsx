@@ -4,8 +4,6 @@ import { BasicButtons, CommentsBottomModal } from "../../../../../components";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { styles } from "./Portfolio.styles";
 import RealtorPost from "../../../../../components/Card/RealtorCard/RealtorPost";
-import * as Sharing from "expo-sharing";
-import * as Linking from "expo-linking";
 
 const Portfolio = () => {
   const [isVisible, setIsVisible] = useState(false);

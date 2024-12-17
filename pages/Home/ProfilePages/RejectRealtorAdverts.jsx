@@ -16,7 +16,7 @@ import MaterialIcon from "react-native-vector-icons/MaterialCommunityIcons";
 import { useNavigation } from "@react-navigation/native";
 import { Platform } from "react-native";
 import Icon3 from "react-native-vector-icons/MaterialIcons";
-import Icon4 from "react-native-vector-icons/FontAwesome5";
+
 import { ActivityIndicator } from "react-native-paper";
 import { CheckBox } from "react-native-elements";
 import { Stack } from "@react-native-material/core";
@@ -82,7 +82,6 @@ export default function RejectRealtorAdverts() {
   useEffect(() => {
     fetchDisabledHousings(sort, take, skip);
     console.log(user?.acces_token + "aswww");
-
   }, [user, sort, skip]);
 
   const [selectedIndex, setIndex] = React.useState(null);
@@ -171,27 +170,26 @@ export default function RejectRealtorAdverts() {
             </TouchableOpacity>
           </View>
 
-          <View style={{ paddingTop: 10, gap: 10, alignItems: "center" }}>
-            {loading ? (
-              <Text>Yükleniyor...</Text>
-            ) : housings.length === 0 ? (
-              <Text>Reddedilen İlanınız Bulunmamaktadır</Text>
-            ) : (
-              <FlatList
-                data={housings} // Yüklenen ilanları burada render ediyoruz
-                renderItem={({ item, index }) => (
-                  <RealtorAdvertPost
-                    key={index}
-                    housing={item}
-                    Onpress={openSheet}
-                  />
-                )}
-                keyExtractor={(item, index) => index.toString()}
-                onEndReached={handleEndReached} // Sayfa sonuna gelindiğinde yeni verileri yükle
-                onEndReachedThreshold={0.5} // Sayfa sonunda ne kadar yaklaşınca tetiklensin
-              />
-            )}
-          </View>
+          {loading ? (
+            <Text>Yükleniyor...</Text>
+          ) : housings.length === 0 ? (
+            <Text>Reddedilen İlanınız Bulunmamaktadır</Text>
+          ) : (
+            <FlatList
+              contentContainerStyle={{ gap: 5, paddingBottom: 100 }}
+              data={housings} // Yüklenen ilanları burada render ediyoruz
+              renderItem={({ item, index }) => (
+                <RealtorAdvertPost
+                  key={index}
+                  housing={item}
+                  Onpress={openSheet}
+                />
+              )}
+              keyExtractor={(item, index) => index.toString()}
+              onEndReached={handleEndReached} // Sayfa sonuna gelindiğinde yeni verileri yükle
+              onEndReachedThreshold={0.5} // Sayfa sonunda ne kadar yaklaşınca tetiklensin
+            />
+          )}
 
           <Modal
             isVisible={SortLıstModal}

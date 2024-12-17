@@ -12,7 +12,7 @@ import {
 import { ActivityIndicator } from "react-native-paper";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { AlertNotificationRoot } from "react-native-alert-notification";
-import bannerSRC from "../../../src/assets/images/is_yeri.png";
+
 import { frontEndUriBase } from "../../../components/methods/apiRequest";
 import RealtorPost from "../../../components/Card/RealtorCard/RealtorPost";
 import { UsePaginatedData } from "../../../hooks";
@@ -41,6 +41,12 @@ const Shop = ({ index }) => {
     await setSkip(0);
     setLoading(false);
   };
+
+  useEffect(() => {
+    if (data && data.length > 0) {
+      setLoading(false); // Data yüklendiğinde loading state'i false yap
+    }
+  }, [data]);
 
   const renderFooter = () => {
     if (!hooksLoading) return null;

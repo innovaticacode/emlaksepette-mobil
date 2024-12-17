@@ -13,7 +13,7 @@ import { getValueFor } from "../../../components/methods/user";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { useIsFocused, useNavigation } from "@react-navigation/native";
 import AwesomeAlert from "react-native-awesome-alerts";
-import Icon2 from "react-native-vector-icons/FontAwesome6";
+
 import {
   ALERT_TYPE,
   Dialog,
@@ -53,14 +53,11 @@ export default function UsersList() {
     setloading(true);
     try {
       if (user.access_token) {
-        const response = await axios.get(
-          apiUrl+"institutional/users",
-          {
-            headers: {
-              Authorization: `Bearer ${user.access_token}`,
-            },
-          }
-        );
+        const response = await axios.get(apiUrl + "institutional/users", {
+          headers: {
+            Authorization: `Bearer ${user.access_token}`,
+          },
+        });
         setsubUsers(response.data.users);
         return setloading(false);
       }
@@ -137,15 +134,12 @@ export default function UsersList() {
       user_ids: userList,
     };
     try {
-      const response = await axios.delete(
-        apiUrl+"institutional/sub-users",
-        {
-          data: data,
-          headers: {
-            Authorization: `Bearer ${user.access_token}`,
-          },
-        }
-      );
+      const response = await axios.delete(apiUrl + "institutional/sub-users", {
+        data: data,
+        headers: {
+          Authorization: `Bearer ${user.access_token}`,
+        },
+      });
       console.log("DELETE Response:", response);
 
       if (response.status === 200) {
@@ -175,15 +169,12 @@ export default function UsersList() {
       user_ids: SelectedUserIDS,
     };
     try {
-      const response = await axios.delete(
-        apiUrl+"institutional/sub-users",
-        {
-          data: data,
-          headers: {
-            Authorization: `Bearer ${user.access_token}`,
-          },
-        }
-      );
+      const response = await axios.delete(apiUrl + "institutional/sub-users", {
+        data: data,
+        headers: {
+          Authorization: `Bearer ${user.access_token}`,
+        },
+      });
       if (response.status === 200) {
         setTimeout(() => {
           console.log("dialog");

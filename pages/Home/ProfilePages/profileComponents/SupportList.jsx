@@ -26,7 +26,10 @@ import * as Sharing from "expo-sharing";
 import { useNavigation } from "@react-navigation/native";
 import NoDataScreen from "../../../../components/NoDataScreen";
 import RenderHtml from "react-native-render-html";
-import { apiUrl, frontEndUriBase } from "../../../../components/methods/apiRequest";
+import {
+  apiUrl,
+  frontEndUriBase,
+} from "../../../../components/methods/apiRequest";
 
 export default function SupportList() {
   const [supportData, setSupportData] = useState([]);
@@ -63,14 +66,11 @@ export default function SupportList() {
 
       try {
         if (user.access_token) {
-          const response = await axios.get(
-            apiUrl+"support",
-            {
-              headers: {
-                Authorization: `Bearer ${user.access_token}`,
-              },
-            }
-          );
+          const response = await axios.get(apiUrl + "support", {
+            headers: {
+              Authorization: `Bearer ${user.access_token}`,
+            },
+          });
 
           let data = response.data.data;
 
@@ -160,9 +160,7 @@ export default function SupportList() {
     }
 
     try {
-      const response = await axios.get(
-        `${apiUrl}support?code=${trackingCode}`
-      );
+      const response = await axios.get(`${apiUrl}support?code=${trackingCode}`);
 
       if (response.status === 200) {
         setSupportData(response.data.data);
@@ -178,9 +176,7 @@ export default function SupportList() {
   };
 
   return (
-    <View
-      style={styles.container}
-    >
+    <View style={styles.container}>
       {user.access_token ? (
         loading ? (
           <ActivityIndicator size="large" color="#333" />
@@ -598,11 +594,11 @@ export default function SupportList() {
 }
 const { width } = Dimensions.get("window");
 const styles = StyleSheet.create({
-  container:{
+  container: {
     flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-        paddingBottom: 35,
+    justifyContent: "center",
+    alignItems: "center",
+    paddingBottom: 35,
   },
   supportItem: {
     backgroundColor: "white",

@@ -10,12 +10,12 @@ import {
   Modal,
 } from "react-native";
 import { useState } from "react";
-import Icon from "react-native-vector-icons/Entypo";
+
 import Icon2 from "react-native-vector-icons/SimpleLineIcons";
 import Icon3 from "react-native-vector-icons/FontAwesome";
 import { useNavigation } from "@react-navigation/native";
 import { Platform } from "react-native";
-import { addDotEveryThreeDigits } from "./methods/merhod";
+
 import AwesomeAlert from "react-native-awesome-alerts";
 import { useRoute } from "@react-navigation/native";
 

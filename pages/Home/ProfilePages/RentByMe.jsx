@@ -5,6 +5,7 @@ import {
   ScrollView,
   TouchableOpacity,
   Animated,
+  FlatList,
 } from "react-native";
 import { useState, useRef, useEffect } from "react";
 import { useRoute, useNavigation } from "@react-navigation/native";
@@ -24,7 +25,7 @@ export default function RentByMe() {
   const [currentPage, setCurrentPage] = useState(0);
   const [hasMore, setHasMore] = useState(true);
   const navigation = useNavigation();
-  const [loading, setLoading] = useState(false); // Loading state
+  const [loading, setLoading] = useState(true); // Loading state
   const [RentItems, setRentItems] = useState([]);
   const [reservations, setreservations] = useState([]);
   const [cancel, setcancel] = useState([]);
@@ -64,25 +65,21 @@ export default function RentByMe() {
   ];
 
   const getRentCategoriesAnItem = async (tabValue, page) => {
-    setLoading(true)
+    setLoading(true);
     if (user?.access_token && user) {
-    try {
-    
+      try {
         const skipValue = page * 10; // Calculate skip value
         console.log("Fetching items with skip:", skipValue, "and take:", 10);
-        const response = await axios.get(
-          apiUrl+"get_customer_reservations",
-          {
-            headers: {
-              Authorization: `Bearer ${user?.access_token}`,
-            },
-            params: {
-              type: tabValue,
-              skip: skipValue,
-              take: 10,
-            },
-          }
-        );
+        const response = await axios.get(apiUrl + "get_customer_reservations", {
+          headers: {
+            Authorization: `Bearer ${user?.access_token}`,
+          },
+          params: {
+            type: tabValue,
+            skip: skipValue,
+            take: 10,
+          },
+        });
         const newItems = response.data.reservations || [];
 
         setRentItems((prevItems) => {
@@ -91,16 +88,15 @@ export default function RentByMe() {
           return updatedItems; // Append new items
         });
         setHasMore(newItems.length === 10);
-     
-    }  catch (error) {
-      console.error("Hata:", error.response?.data || error.message);
+      } catch (error) {
+        console.error("Hata:", error.response?.data || error.message);
 
-      console.error("Hata:", error);
-      throw error;
-    } finally {
-      setLoading(false); // Ensure loading state is reset
+        console.error("Hata:", error);
+        throw error;
+      } finally {
+        setLoading(false); // Ensure loading state is reset
+      }
     }
-   }
   };
   const handleScroll = (event) => {
     const { contentOffset, layoutMeasurement, contentSize } = event.nativeEvent;
@@ -130,7 +126,6 @@ export default function RentByMe() {
     }
   }, [user, Tabs]); // Include Tabs as a dependency
 
-
   return (
     <View style={{ flex: 1 }}>
       <View style={styles.container}>
@@ -138,36 +133,43 @@ export default function RentByMe() {
           <View style={styles.TabBar}>
             <ScrollView horizontal showsHorizontalScrollIndicator={false}>
               <View style={{ display: "flex", flexDirection: "row", gap: 20 }}>
-                {TabBarItem.map((item, index) => (
-                  <TouchableOpacity
-                    key={index}
-                    style={[
-                      styles.tabBtn,
-                      {
-                        backgroundColor:
-                          TabIndex == index ? "white" : "#EEEDEB",
-                        borderWidth: TabIndex == index ? 0 : 1,
-                      },
-                    ]}
-                    onPress={() => {
-                      const selectedValue = item.value; // Get the value of the selected tab
-                      setTabIndex(index);
-                      setTabs(item.value);
-                      getRentCategoriesAnItem(item.value); // Fetch data immediately on press
-                    }}
-                  >
-                    <Text
-                      style={{
-                        textAlign: "center",
-                        color: Tabs == index ? "#333" : "#333",
-                        fontSize: 12,
-                        fontWeight: "600",
+                <FlatList
+                  data={TabBarItem}
+                  keyExtractor={(item, index) => index.toString()}
+                  horizontal
+                  showsHorizontalScrollIndicator={false}
+                  ItemSeparatorComponent={() => <View style={{ width: 10 }} />} // Aralık
+                  renderItem={({ item, index }) => (
+                    <TouchableOpacity
+                      key={index}
+                      style={[
+                        styles.tabBtn,
+                        {
+                          backgroundColor:
+                            TabIndex === index ? "white" : "#EEEDEB",
+                          borderWidth: TabIndex === index ? 0 : 1,
+                        },
+                      ]}
+                      onPress={() => {
+                        const selectedValue = item.value;
+                        setTabIndex(index);
+                        setTabs(item.value);
+                        getRentCategoriesAnItem(item.value);
                       }}
                     >
-                      {item.label}
-                    </Text>
-                  </TouchableOpacity>
-                ))}
+                      <Text
+                        style={{
+                          textAlign: "center",
+                          color: Tabs === index ? "#333" : "#333",
+                          fontSize: 12,
+                          fontWeight: "600",
+                        }}
+                      >
+                        {item.label}
+                      </Text>
+                    </TouchableOpacity>
+                  )}
+                />
               </View>
             </ScrollView>
           </View>
@@ -188,42 +190,60 @@ export default function RentByMe() {
                       <Text>Notes: {reservation.notes}</Text>
                   </View>
               ))} */}
-              {
-                loading ?
-                <View style={{width:'100%',height:'100%',alignItems:'center',justifyContent:'center'}}>
-                  <ActivityIndicator/>
-                </View>:
-                  <View style={styles.OrdersArea}>
-                  {RentItems.length > 0 ? (
-                    RentItems.map((item) => (
-                      <TouchableOpacity
-                        key={item.id} // Use item.id as the key
-                        onPress={() => {
-                          navigation.navigate("RentByMeDetails", {
-                            id: item.id, // Pass the item.id to navigate
-                          });
-                        }}
-                      >
-                        <RentOrder
-                          id={item?.id}
-                          title={item?.housing?.title}
-                          display={"flex"}
-                          checkIn={item?.check_in_date}
-                          checkOut={item?.check_out_date}
-                          price={item?.price}
-                          status={item?.status}
-                          address={item?.address}
-                          email={item?.email}
-                          totalPrice={item?.total_price}
-                        />
-                      </TouchableOpacity>
-                    ))
-                  ) : (
-                    <Text style={{textAlign:'center',fontSize:15,color:'#333',fontWeight:'600'}}>Rezervasyon bulunamadı.</Text>
+          {loading ? (
+            <View
+              style={{
+                width: "100%",
+                height: "100%",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <ActivityIndicator color="#333" size={"large"} />
+            </View>
+          ) : (
+            <View style={styles.OrdersArea}>
+              {RentItems.length > 0 ? (
+                <FlatList
+                  data={RentItems} // Veriyi FlatList'e veriyoruz
+                  keyExtractor={(item) => item.id.toString()} // Benzersiz anahtar
+                  renderItem={({ item }) => (
+                    <TouchableOpacity
+                      onPress={() => {
+                        navigation.navigate("RentByMeDetails", {
+                          id: item.id, // item.id'yi parametre olarak gönder
+                        });
+                      }}
+                    >
+                      <RentOrder
+                        id={item?.id}
+                        title={item?.housing?.title}
+                        display={"flex"}
+                        checkIn={item?.check_in_date}
+                        checkOut={item?.check_out_date}
+                        price={item?.price}
+                        status={item?.status}
+                        address={item?.address}
+                        email={item?.email}
+                        totalPrice={item?.total_price}
+                      />
+                    </TouchableOpacity>
                   )}
-                </View>
-              }
-        
+                />
+              ) : (
+                <Text
+                  style={{
+                    textAlign: "center",
+                    fontSize: 15,
+                    color: "#333",
+                    fontWeight: "600",
+                  }}
+                >
+                  Rezervasyon bulunamadı.
+                </Text>
+              )}
+            </View>
+          )}
         </ScrollView>
       </View>
     </View>

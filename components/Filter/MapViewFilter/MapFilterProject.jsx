@@ -17,8 +17,7 @@ import MapView, {
 } from "react-native-maps";
 import { apiUrl, frontEndUriBase } from "../../methods/apiRequest";
 import { useDispatch, useSelector } from "react-redux";
-import Basket from "../../../assets/basket.svg";
-import RNPickerSelect from "react-native-picker-select";
+
 import Icon from "react-native-vector-icons/FontAwesome5";
 import { useNavigation } from "@react-navigation/native";
 import { ActivityIndicator } from "react-native-paper";

@@ -9,12 +9,15 @@ import {
 import { useState } from "react";
 import Icon from "react-native-vector-icons/Ionicons";
 import Icon2 from "react-native-vector-icons/Entypo";
-import { frontEndUri, frontEndUriBase } from "../../../../components/methods/apiRequest";
+import {
+  frontEndUri,
+  frontEndUriBase,
+} from "../../../../components/methods/apiRequest";
 import { Platform } from "react-native";
 
 export default function ProjectAdvertPost({ Onpress, project }) {
   const [status, setStatus] = useState(project.status);
- 
+
   const { width, height } = Dimensions.get("window");
   return (
     <View style={[style.card, { gap: 5 }]}>

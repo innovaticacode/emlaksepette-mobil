@@ -30,6 +30,8 @@ const Home = ({ route }) => {
   const shoppingPage = useSelector((state) => state.menu.isShoppingProfile);
   const nav = useNavigation();
 
+  const basketItem = useSelector((state) => state.basket.basketItem);
+
   const [user, setUser] = useState({});
   const [verifyStatus, setverifyStatus] = useState(null);
 
@@ -171,7 +173,7 @@ const Home = ({ route }) => {
             ) : (
               <Feather name="shopping-cart" color="grey" size={20} />
             ),
-          tabBarBadge: 1,
+          tabBarBadge: basketItem ? 1 : null,
           tabBarBadgeStyle: styles.tabBarBadgeStyle,
         }}
         listeners={({ navigation }) => ({

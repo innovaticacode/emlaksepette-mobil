@@ -9,12 +9,10 @@ import {
   Platform,
 } from "react-native";
 import React, { useEffect, useState } from "react";
-import Icon from "react-native-vector-icons/FontAwesome";
-import { TouchableWithoutFeedback, Keyboard } from "react-native";
+
+import { Keyboard } from "react-native";
 import CommentItem from "./CommentItem";
-import UploadIcon from "react-native-vector-icons/AntDesign";
-import { CheckBox } from "@rneui/themed";
-import { Shadow } from "react-native-shadow-2";
+
 import { useNavigation } from "@react-navigation/native";
 import { getValueFor } from "../../../components/methods/user";
 

@@ -72,10 +72,7 @@ export default function ForgotPassword() {
       formData.append("email", email);
 
       console.log("API çağrısı yapılıyor...");
-      const response = await axios.post(
-        apiUrl+"password/email",
-        formData
-      );
+      const response = await axios.post(apiUrl + "password/email", formData);
       console.log("API çağrısı başarılı. Yanıt:", response.data);
 
       // Modal kapanır
