@@ -10,10 +10,9 @@ import {
 import { React, useEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import Heart from "react-native-vector-icons/AntDesign";
-import Bookmark from "react-native-vector-icons/FontAwesome";
+
 import Icon from "react-native-vector-icons/FontAwesome6";
 
-import { Platform } from "react-native";
 import AwesomeAlert from "react-native-awesome-alerts";
 import axios from "axios";
 
@@ -23,12 +22,10 @@ import {
   Dialog,
   AlertNotificationRoot,
 } from "react-native-alert-notification";
-import { color } from "@rneui/base";
 
 import { getValueFor } from "../../methods/user";
 import { apiUrl } from "../../methods/apiRequest";
 import { styles } from "./RealtorCard.styles";
-import { addDotEveryThreeDigits } from "../../methods/merhod";
 
 export default function RealtorPost({
   title,

@@ -8,8 +8,7 @@ import {
   Modal,
 } from "react-native";
 import { React, useState } from "react";
-import Icon from "react-native-vector-icons/AntDesign";
-import Icon2 from "react-native-vector-icons/Fontisto";
+
 import Posts from "./Posts";
 import { Platform } from "react-native";
 

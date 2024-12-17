@@ -10,7 +10,7 @@ import {
 } from "react-native";
 import React, { useEffect, useRef, useState } from "react";
 import ArrowRightIcon from "react-native-vector-icons/AntDesign";
-import HomeIcon from "react-native-vector-icons/Entypo";
+
 import BuildingIcon from "react-native-vector-icons/FontAwesome";
 import WidthIcon from "react-native-vector-icons/SimpleLineIcons";
 import LocationIcon from "react-native-vector-icons/MaterialIcons";

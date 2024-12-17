@@ -7,8 +7,7 @@ import { useRoute } from "@react-navigation/native";
 import { Platform } from "react-native";
 import { addDotEveryThreeDigits } from "../../components/methods/merhod";
 import { ActivityIndicator } from "react-native-paper";
-import { TouchableOpacity } from "react-native";
-import AntDesign from "@expo/vector-icons/AntDesign";
+
 import { apiUrl } from "../../components/methods/apiRequest";
 
 export default function Invoice() {

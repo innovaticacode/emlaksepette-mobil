@@ -13,13 +13,9 @@ import {
   Image,
 } from "react-native";
 import { Platform } from "react-native";
-import IconIdCard from "react-native-vector-icons/FontAwesome";
+
 import React, { useState, useEffect } from "react";
-import BasketItem from "../../components/BasketItem";
-import {
-  Swipeable,
-  GestureHandlerRootView,
-} from "react-native-gesture-handler";
+
 import TrashIcon from "react-native-vector-icons/EvilIcons";
 import {
   useRoute,
@@ -27,18 +23,11 @@ import {
   useIsFocused,
 } from "@react-navigation/native";
 
-import Header from "../../components/Header";
-import Search from "./Search";
-import Categories from "../../components/Categories";
-import Modal from "react-native-modal";
 import { getValueFor } from "../../components/methods/user";
 import axios from "axios";
-import { addDotEveryThreeDigits } from "../../components/methods/merhod";
+
 import { Alert } from "react-native";
 import * as SecureStore from "expo-secure-store";
-
-import Icon2 from "react-native-vector-icons/MaterialCommunityIcons";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import { ActivityIndicator } from "react-native-paper";
 import { apiUrl } from "../../components/methods/apiRequest";

@@ -9,7 +9,7 @@ import {
 import { useState, useRef, useEffect } from "react";
 import ProjectAdvertPost from "../profileComponents/ProjectAdvertPost";
 import Modal from "react-native-modal";
-import Icon from "react-native-vector-icons/AntDesign";
+
 import MaterialIcon from "react-native-vector-icons/MaterialCommunityIcons";
 import {
   apiRequestGetWithBearer,
@@ -23,8 +23,7 @@ import { TextInput } from "react-native";
 import { CheckBox } from "react-native-elements";
 import { Stack } from "@react-native-material/core";
 import Icon3 from "react-native-vector-icons/MaterialIcons";
-import Icon4 from "react-native-vector-icons/FontAwesome5";
-import { ActivityIndicator } from "react-native-paper";
+
 export default function ActiveAdverts({}) {
   const navigation = useNavigation();
   const translateY = useRef(new Animated.Value(400)).current;

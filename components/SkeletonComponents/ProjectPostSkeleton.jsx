@@ -8,9 +8,9 @@ import {
   Image,
 } from "react-native";
 import React from "react";
-import { useNavigation } from "@react-navigation/native";
+
 import { Skeleton } from "@rneui/themed";
-import ProjectPost from "../ProjectPost";
+
 export default function ProjectPostSkeleton({}) {
   return (
     <TouchableOpacity style={{ backgroundColor: "#ebebeb" }}>

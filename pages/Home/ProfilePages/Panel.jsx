@@ -11,20 +11,15 @@ import {
   ImageBackground,
 } from "react-native";
 import { useEffect, useRef, useState } from "react";
-import Icon from "react-native-vector-icons/EvilIcons";
-import Coin from "react-native-vector-icons/FontAwesome5";
-import Loading from "react-native-vector-icons/EvilIcons";
-import Icon2 from "react-native-vector-icons/Entypo";
+
 import { useNavigation } from "@react-navigation/native";
-import CollectionItemPanel from "./profileComponents/CollectionItemPanel";
+
 import { getValueFor } from "../../../components/methods/user";
 import { Platform } from "react-native";
 import axios from "axios";
-import Header from "../../../components/Header";
+
 import { ActivityIndicator } from "react-native-paper";
-import FontAwesome5Icon from "react-native-vector-icons/FontAwesome5";
-import { Path, Svg } from "react-native-svg";
-import { LinearGradient } from "expo-linear-gradient";
+
 import Icon3 from "react-native-vector-icons/AntDesign";
 import enler from "../../../components/images/enler.png";
 import cerceve from "../../../components/images/cerceve.png";

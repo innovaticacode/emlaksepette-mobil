@@ -10,7 +10,7 @@ import {
 import React, { useState, useEffect } from "react";
 import Users from "./profileComponents/Users";
 import { getValueFor } from "../../../components/methods/user";
-import Modal from "react-native-modal";
+
 import axios from "axios";
 import Icon from "react-native-vector-icons/FontAwesome";
 import Icon2 from "react-native-vector-icons/FontAwesome6";

@@ -19,8 +19,7 @@ import { AlertNotificationRoot } from "react-native-alert-notification";
 import { ActivityIndicator } from "react-native-paper";
 import ProjectButton from "../../components/ProjectButton";
 import FranchiseBanner from "../../components/FranchiseBanner";
-import WhatIsEmlakSepette from "../../components/WhatIsEmlakSepette";
-import SliderEstateBar from "../../components/SliderEstateBar";
+
 import SliderTourismRent from "./SliderTourismRent";
 import {
   apiUrl,
@@ -30,7 +29,7 @@ import {
 import Arrow from "react-native-vector-icons/SimpleLineIcons";
 import SliderBarForFeature from "../../components/SliderBarForFeature";
 import RealtorCardHome from "../../components/Card/RealtorCardHomePage/RealtorCardHome";
-import RealtorPost from "../../components/Card/RealtorCard/RealtorPost";
+
 import { UsePaginatedData } from "../../hooks";
 import { setBasketItem } from "../../store/slices/Basket/BasketSlice";
 import BasketItem from "../../components/BasketItem";

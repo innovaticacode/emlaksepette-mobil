@@ -16,18 +16,14 @@ import Icon2 from "react-native-vector-icons/EvilIcons";
 import Icon3 from "react-native-vector-icons/MaterialIcons";
 import Feather from "react-native-vector-icons/Ionicons";
 import Modal from "react-native-modal";
-import {
-  Collapse,
-  CollapseHeader,
-  CollapseBody,
-} from "accordion-collapse-react-native";
+
 import RNPickerSelect from "react-native-picker-select";
 import { Platform } from "react-native";
-import Arrow from "react-native-vector-icons/SimpleLineIcons";
+
 import * as ImagePicker from "expo-image-picker";
 import ColorPicker from "react-native-wheel-color-picker";
 import { getValueFor } from "../../../components/methods/user";
-import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
+
 import axios from "axios";
 import { ActivityIndicator } from "react-native-paper";
 import * as Progress from "react-native-progress";
@@ -38,7 +34,7 @@ import {
   Dialog,
 } from "react-native-alert-notification";
 import { Forms } from "../../../components/ProfileUpgradeComponents/formshelper";
-import ImageView from "react-native-image-viewing";
+
 import {
   formatPhoneNumber,
   formatPhoneNumberNew,

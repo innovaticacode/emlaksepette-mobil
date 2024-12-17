@@ -9,7 +9,7 @@ import {
   FlatList,
   Platform,
 } from "react-native";
-import Icon from "react-native-vector-icons/Ionicons";
+
 import Icon2 from "react-native-vector-icons/MaterialCommunityIcons";
 import Icon3 from "react-native-vector-icons/FontAwesome";
 import Icon4 from "react-native-vector-icons/FontAwesome6";
@@ -326,8 +326,8 @@ const styles = StyleSheet.create({
   },
   imageContainer: {
     width: width * 0.62, // ekran genişliğinin %80'i
-    height: height * 0.40, // ekran yüksekliğinin %35'i
-    marginTop: 20
+    height: height * 0.4, // ekran yüksekliğinin %35'i
+    marginTop: 20,
   },
   circleImage: {
     width: "100%",

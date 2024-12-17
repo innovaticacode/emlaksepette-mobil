@@ -16,7 +16,7 @@ import {
 } from "react-native";
 import { React, useRef, useState, useEffect } from "react";
 import Icon2 from "react-native-vector-icons/AntDesign";
-import Phone from "react-native-vector-icons/Entypo";
+
 import { Platform } from "react-native";
 import PagerView from "react-native-pager-view";
 import * as SecureStore from "expo-secure-store";
@@ -26,13 +26,11 @@ import {
   useRoute,
 } from "@react-navigation/native";
 import Heart from "react-native-vector-icons/AntDesign";
-import Bookmark from "react-native-vector-icons/FontAwesome";
+
 import DetailsSettings from "../components/PostDetailsSettings/DetailsSettings";
 import Icon4 from "react-native-vector-icons/AntDesign";
-import Swiper from "react-native-swiper";
-import { SocialIcon, Icon } from "react-native-elements";
+
 import LinkIcon3 from "react-native-vector-icons/Feather";
-import MegaPhone from "react-native-vector-icons/Ionicons";
 
 import {
   ALERT_TYPE,
@@ -42,10 +40,9 @@ import {
 import PostMap from "../components/PostDetailsSettings/Postmap";
 import PostPayment from "../components/PostDetailsSettings/PostPayment";
 import PostCaption from "../components/PostDetailsSettings/PostCaption";
-import Header from "../components/Header";
+
 import Modal from "react-native-modal";
-import Categories from "../components/Categories";
-import Search from "./Home/Search";
+
 import LinkIcon from "react-native-vector-icons/Entypo";
 import Arrow from "react-native-vector-icons/MaterialIcons";
 import CloseIcon from "react-native-vector-icons/AntDesign";
@@ -59,8 +56,7 @@ import Posts from "../components/Posts";
 import PostOtherProject from "../components/PostDetailsSettings/PostOtherProject";
 import SettingsItem from "../components/SettingsItem";
 import { addDotEveryThreeDigits } from "../components/methods/merhod";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { Shadow } from "react-native-shadow-2";
+
 import AddCollection from "../components/AddCollection";
 import axios from "axios";
 import { getValueFor } from "../components/methods/user";
@@ -69,8 +65,7 @@ import { ActivityIndicator } from "react-native-paper";
 import FloorPlan from "../components/FloorPlan";
 import { Svg } from "react-native-svg";
 import { Polyline } from "react-native-maps";
-import PaymentItem from "../components/PaymentItem";
-import DrawerMenu from "../components/Menu/DrawerMenu/DrawerMenu";
+
 import AwesomeAlert from "react-native-awesome-alerts";
 import CommentForProject from "../components/CommentForProject";
 import { leftButtonsForPost, PriceStatus, rightButtonsForPost } from "./helper";

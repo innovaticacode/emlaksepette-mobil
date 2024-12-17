@@ -12,10 +12,10 @@ import {
 
 import axios from "axios";
 import { ActivityIndicator } from "react-native-paper";
-import Modal from "react-native-modal";
+
 import { getValueFor } from "../../../components/methods/user";
 import { useNavigation } from "@react-navigation/native";
-import Icon from "react-native-vector-icons/AntDesign";
+
 import { AlertNotificationRoot } from "react-native-alert-notification";
 import bannerSRC from "../../../src/assets/images/AcilAlSatBanner350x120px.png";
 import {

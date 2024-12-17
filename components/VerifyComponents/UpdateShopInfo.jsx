@@ -8,13 +8,9 @@ import {
   TouchableOpacity,
 } from "react-native";
 import React, { useRef, useState, useEffect } from "react";
-import {
-  actions,
-  RichEditor,
-  RichToolbar,
-} from "react-native-pell-rich-editor";
+
 import { ScrollView } from "react-native";
-import WebView from "react-native-webview";
+
 import NextAndPrevButton from "./NextAndPrevButton";
 import { getValueFor } from "../methods/user";
 import { apiUrl } from "../methods/apiRequest";

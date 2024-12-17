@@ -28,10 +28,10 @@ import Map from "../../components/Map";
 import { Icon } from "react-native-elements";
 import OtherHomeInProject from "../../components/OtherHomeInProject";
 import FloorPlan from "../../components/FloorPlan";
-import Information from "../../components/Information";
+
 import LinkIcon from "react-native-vector-icons/Entypo";
 import { useRoute } from "@react-navigation/native";
-import Header from "../../components/Header";
+
 import Modal from "react-native-modal";
 import SliderMenuDetails from "../../components/SliderMenuDetails";
 import {
@@ -42,7 +42,7 @@ import {
 import AddCollection from "../../components/AddCollection";
 import { getValueFor } from "../../components/methods/user";
 import axios from "axios";
-import DrawerMenu from "../../components/Menu/DrawerMenu/DrawerMenu";
+
 import { ActivityIndicator } from "react-native-paper";
 import AwesomeAlert from "react-native-awesome-alerts";
 import CommentForProject from "../../components/CommentForProject";

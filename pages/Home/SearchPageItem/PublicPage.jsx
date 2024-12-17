@@ -1,7 +1,7 @@
 import { View, Text, TouchableOpacity } from "react-native";
 import React from "react";
 import { useRoute, useNavigation } from "@react-navigation/native";
-import Categories from "../../../components/Categories";
+
 import CategoryAdverts from "../IlanYukleme/ProjectAdvertsAdd/CategoryAdverts";
 import slugify from "react-slugify";
 
@@ -25,10 +25,11 @@ export default function PublicPage() {
                   title: title,
                 });
               } else {
-                navigation.navigate( item.text === "Projeler"
-                  ? "AllProjects"
-                  : "AllRealtorAdverts", {
-                
+                navigation.navigate(
+                  item.text === "Projeler"
+                    ? "AllProjects"
+                    : "AllRealtorAdverts",
+                  {
                     name: title === "Projeler" ? item.text : "Emlak İlanları",
                     slug: slugify(
                       title === "Projeler" ? item.text : "emlak-ilanlari"
@@ -43,8 +44,8 @@ export default function PublicPage() {
                     county: null,
                     hood: null,
                     href: item.href,
-                  
-                });
+                  }
+                );
               }
             }}
             key={index}

@@ -15,26 +15,24 @@ import {
   TextInput,
   Share,
 } from "react-native";
-import Posts from "../../../components/Posts";
+
 import LinkIcon3 from "react-native-vector-icons/Feather";
 import LinkIcon4 from "react-native-vector-icons/Fontisto";
 import LinkIcon2 from "react-native-vector-icons/FontAwesome";
 import LinkIcon from "react-native-vector-icons/Entypo";
 import Icon from "react-native-vector-icons/AntDesign";
 import { useNavigation, useRoute } from "@react-navigation/native";
-import BackIcon from "react-native-vector-icons/MaterialIcons";
+
 import axios from "axios";
 
 import Modal from "react-native-modal";
-import Heart from "react-native-vector-icons/AntDesign";
-import SettingsItem from "../../../components/SettingsItem";
+
 import { SocialIcon } from "react-native-elements";
 import Icon2 from "react-native-vector-icons/AntDesign";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import RNPickerSelect from "react-native-picker-select";
 import CloseIcon from "react-native-vector-icons/AntDesign";
-import PagerView from "react-native-pager-view";
-import SliderMenuDetails from "../../../components/SliderMenuDetails";
+
 import {
   apiRequestGet,
   apiUrl,

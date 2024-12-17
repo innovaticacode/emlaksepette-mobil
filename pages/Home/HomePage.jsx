@@ -16,7 +16,7 @@ import ProjectPost from "../../components/ProjectPost";
 import { getValueFor } from "../../components/methods/user";
 import { AlertNotificationRoot } from "react-native-alert-notification";
 import { ActivityIndicator } from "react-native-paper";
-import bannerSRC from "../../src/assets/images/project-banner.png";
+
 import { useNavigation } from "@react-navigation/native";
 import { apiUrl, frontEndUriBase } from "../../components/methods/apiRequest";
 import { useSelector } from "react-redux";

@@ -8,18 +8,15 @@ import {
   ImageBackground,
 } from "react-native";
 import React, { useState, useEffect } from "react";
-import Favorite from "../../components/Favorite";
-import Header from "../../components/Header";
+
 import Modal from "react-native-modal";
-import Categories from "../../components/Categories";
-import Search from "./Search";
+
 import { useNavigation } from "@react-navigation/native";
 import Favorites from "./Favorites";
 import CollectionsPage from "./CollectionsPage";
 import { getValueFor } from "../../components/methods/user";
-import { ActivityIndicator } from "react-native";
+
 import { Platform } from "react-native";
-import { DrawerMenu } from "../../components";
 
 import {
   ALERT_TYPE,

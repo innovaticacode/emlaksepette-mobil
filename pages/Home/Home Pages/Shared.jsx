@@ -10,11 +10,10 @@ import {
 
 import axios from "axios";
 import { ActivityIndicator } from "react-native-paper";
-import Modal from "react-native-modal";
+
 import { getValueFor } from "../../../components/methods/user";
 import { useNavigation } from "@react-navigation/native";
-import Icon from "react-native-vector-icons/AntDesign";
-import SliderEstateBar from "../../../components/SliderEstateBar";
+
 import { AlertNotificationRoot } from "react-native-alert-notification";
 import { apiUrl } from "../../../components/methods/apiRequest";
 import RealtorPost from "../../../components/Card/RealtorCard/RealtorPost";

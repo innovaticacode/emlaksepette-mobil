@@ -1,7 +1,7 @@
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import React from "react";
 import Modal from "react-native-modal";
-import { Button } from "react-native-paper";
+
 import Icon from "react-native-vector-icons/AntDesign";
 import Icon2 from "react-native-vector-icons/Ionicons";
 import IconGraph from "react-native-vector-icons/SimpleLineIcons";
@@ -13,7 +13,7 @@ import { useEffect } from "react";
 import { ScrollView } from "react-native-gesture-handler";
 import { Image } from "react-native";
 import WhiteOrRedButtons from "./Buttons/WhiteOrRedButtons/WhiteOrRedButtons";
-import axios from "axios";
+
 import { useNavigation } from "@react-navigation/native";
 import { getValueFor } from "./methods/user";
 export default function PaymentPlanModal({

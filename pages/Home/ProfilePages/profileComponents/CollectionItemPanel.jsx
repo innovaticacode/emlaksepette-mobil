@@ -6,9 +6,9 @@ import {
   ImageBackground,
 } from "react-native";
 import React from "react";
-import Icon2 from "react-native-vector-icons/Entypo";
+
 import { useNavigation } from "@react-navigation/native";
-import { Platform } from "react-native";
+
 import { frontEndUriBase } from "../../../../components/methods/apiRequest";
 export default function CollectionItemPanel({ collection, panelInfo }) {
   const navigation = useNavigation();

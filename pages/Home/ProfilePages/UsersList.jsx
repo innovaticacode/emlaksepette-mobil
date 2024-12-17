@@ -13,7 +13,7 @@ import { getValueFor } from "../../../components/methods/user";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { useIsFocused, useNavigation } from "@react-navigation/native";
 import AwesomeAlert from "react-native-awesome-alerts";
-import Icon2 from "react-native-vector-icons/FontAwesome6";
+
 import {
   ALERT_TYPE,
   Dialog,

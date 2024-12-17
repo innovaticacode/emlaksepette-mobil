@@ -16,26 +16,24 @@ import {
 import ImageViewing from "react-native-image-viewing";
 import { React, useRef, useState, useEffect, useCallback } from "react";
 import Icon2 from "react-native-vector-icons/AntDesign";
-import * as Clipboard from "expo-clipboard";
+
 import { Platform } from "react-native";
 import PagerView from "react-native-pager-view";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import Heart from "react-native-vector-icons/AntDesign";
-import Bookmark from "react-native-vector-icons/FontAwesome";
+
 import Modal from "react-native-modal";
-import Categories from "../../../components/Categories";
-import { SocialIcon, Icon } from "react-native-elements";
+
+import { Icon } from "react-native-elements";
 import LinkIcon from "react-native-vector-icons/Entypo";
 import Arrow from "react-native-vector-icons/MaterialIcons";
-import Ionicons from "react-native-vector-icons/Ionicons";
-import SliderMenuPostDetails from "../../../components/PostDetailsSettings/SliderMenuPostDetails";
+
 import {
   apiRequestGet,
   apiUrl,
   frontEndUriBase,
 } from "../../../components/methods/apiRequest";
-import Header from "../../../components/Header";
-import Search from "../Search";
+
 import SliderMenuRealtorDetails from "../../../components/SliderMenuRealtorDetail";
 import RealtorCaption from "./RealtorCaption";
 import Settings from "./Settings";
@@ -43,9 +41,7 @@ import CloseIcon from "react-native-vector-icons/AntDesign";
 import RealtorMap from "./RealtorMap";
 import Comment from "./Comment";
 import { addDotEveryThreeDigits } from "../../../components/methods/merhod";
-import { Shadow } from "react-native-shadow-2";
-import { CheckBox } from "react-native-elements";
-import SwapForm from "./SwapForm";
+
 import AddCollection from "../../../components/AddCollection";
 import { getValueFor } from "../../../components/methods/user";
 import axios from "axios";
@@ -57,7 +53,7 @@ import {
   AlertNotificationRoot,
 } from "react-native-alert-notification";
 import TextAlertModal from "../../../components/TextAlertModal";
-import { DrawerMenu } from "../../../components";
+
 import AwesomeAlertComp from "../../../components/AwesomeAlertComp";
 export default function PostDetail() {
   const [modalVisible, setModalVisible] = useState(false);

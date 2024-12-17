@@ -41,12 +41,7 @@ export default function Login({ navigation }) {
   const dispatch = useDispatch();
   const [status, setStatus] = useState(false);
   const [statusMessage, setStatusMessage] = useState(false);
-  const [showLengthAlert, setShowLengthAlert] = useState(false);
-  const [showUpperAlert, setShowUpperAlert] = useState(false);
-  const [showSymbolAlert, setShowSymbolAlert] = useState(false);
-  const [showNumberAlert, setShowNumberAlert] = useState(false);
-  const [textfull, settextfull] = useState(false);
-  const [submitDisabled, setsubmitDisabled] = useState(false);
+
   const [eye, seteye] = useState("eye-off-sharp");
   const [Show, setShow] = useState(false);
   const [checked, setChecked] = useState(false);

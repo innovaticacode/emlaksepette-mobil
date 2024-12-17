@@ -13,7 +13,7 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 import Icon from "react-native-vector-icons/AntDesign";
 import Icon2 from "react-native-vector-icons/Entypo";
 import { CheckBox, Image } from "react-native-elements";
-import { addDotEveryThreeDigits } from "../../components/methods/merhod";
+
 import { ImageBackground } from "expo-image";
 import axios from "axios";
 import * as ImagePicker from "expo-image-picker";

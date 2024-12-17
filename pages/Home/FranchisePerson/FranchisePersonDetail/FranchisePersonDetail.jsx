@@ -21,7 +21,6 @@ import { frontEndUriBase } from "../../../../components/methods/apiRequest";
 import { TabView, SceneMap, TabBar } from "react-native-tab-view";
 import Portfolio from "../Tabs/Portfolio/Portfolio";
 import Comments from "../Tabs/Comments/Comments";
-import { CommentsBottomModal } from "../../../../components";
 
 const renderScene = SceneMap({
   porfolio: Portfolio,

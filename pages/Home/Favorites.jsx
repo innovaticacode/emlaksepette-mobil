@@ -13,7 +13,7 @@ import { getValueFor } from "../../components/methods/user";
 import axios from "axios";
 
 import { useIsFocused, useNavigation } from "@react-navigation/native";
-import Modal from "react-native-modal";
+
 import { ActivityIndicator } from "react-native-paper";
 import Icon2 from "react-native-vector-icons/FontAwesome";
 import AwesomeAlert from "react-native-awesome-alerts";
@@ -24,10 +24,9 @@ import {
 } from "react-native-alert-notification";
 import NoDataScreen from "../../components/NoDataScreen";
 import { SearchBar } from "@rneui/base";
-import SortModal from "../../components/SortModal";
-import Icon3 from "react-native-vector-icons/MaterialCommunityIcons";
+
 import IconFilter from "react-native-vector-icons/MaterialCommunityIcons";
-import RadioFilter from "../../components/Filter/RadioFilter/RadioFilter";
+
 import { apiUrl, frontEndUriBase } from "../../components/methods/apiRequest";
 import { useDispatch } from "react-redux";
 import { getFavorites } from "../../store/slices/Favorites/FavoritesSlice";

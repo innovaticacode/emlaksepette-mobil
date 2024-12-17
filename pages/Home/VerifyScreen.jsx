@@ -8,13 +8,13 @@ import {
   TouchableOpacity,
 } from "react-native";
 import StepIndicator from "react-native-step-indicator";
-import Verification from "./ProfilePages/Verification";
+
 import VerifyDocument from "../../components/VerifyComponents/VerifyDocument";
 import { getValueFor } from "../../components/methods/user";
 import axios from "axios";
 import { useIsFocused, useNavigation } from "@react-navigation/native";
 import { ActivityIndicator } from "react-native-paper";
-import * as SecureStore from "expo-secure-store";
+
 import { apiUrl } from "../../components/methods/apiRequest";
 import UpdateProfileImage from "../../components/VerifyComponents/UpdateProfileImage";
 import UpdateShopInfo from "../../components/VerifyComponents/UpdateShopInfo";

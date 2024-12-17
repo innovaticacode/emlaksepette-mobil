@@ -8,18 +8,17 @@ import {
   Alert,
 } from "react-native";
 import React, { useState, useEffect } from "react";
-import Icon from "react-native-vector-icons/AntDesign";
+
 import AdsPictureItem from "./profileComponents/AdsPictureItem";
 import { useNavigation } from "@react-navigation/native";
 import {
   apiRequestGetWithBearer,
   apiRequestPostWithBearer,
 } from "../../../components/methods/apiRequest";
-import { ActivityIndicator } from "react-native-paper";
+
 import AwesomeAlert from "react-native-awesome-alerts";
 import {
   ALERT_TYPE,
-  AlertNotificationDialog,
   AlertNotificationRoot,
   Dialog,
 } from "react-native-alert-notification";
@@ -33,7 +32,6 @@ export default function AdsPictureList({ StoreBanners, getStoreBanner }) {
   const navigation = useNavigation();
   const [choose, setchoose] = useState(false);
   const [ımage, setImage] = useState(null);
-  const [loadingPictures, setloadingPictures] = useState(false);
 
   const [deleteAlert, setdeleteAlert] = useState(false);
 

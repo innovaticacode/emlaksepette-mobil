@@ -14,7 +14,7 @@ import { TabView } from "react-native-tab-view";
 import HomePage from "./HomePage";
 import axios from "axios";
 import { useState } from "react";
-import { DrawerMenu } from "../../components";
+
 import Estates from "./Home Pages/Estates";
 import Shop from "./Home Pages/Shop";
 import Area from "./Home Pages/Area";

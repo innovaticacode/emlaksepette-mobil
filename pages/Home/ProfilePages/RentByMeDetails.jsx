@@ -10,16 +10,14 @@ import Icon2 from "react-native-vector-icons/MaterialIcons";
 import Icon3 from "react-native-vector-icons/MaterialCommunityIcons";
 import AwesomeAlert from "react-native-awesome-alerts";
 import Icon from "react-native-vector-icons/FontAwesome5";
-import FirstHome from "../FirstHome";
 
-import IconApartment from "react-native-vector-icons/MaterialIcons";
 import { useRoute, useNavigation } from "@react-navigation/native";
 import { getValueFor } from "../../../components/methods/user";
 import { Dimensions } from "react-native";
 import IconInfo from "react-native-vector-icons/Feather";
-import SuccessForRent from "./SuccessForRent";
+
 import axios from "axios";
-import { color } from "@rneui/base";
+
 import { apiUrl } from "../../../components/methods/apiRequest";
 const { width, height } = Dimensions.get("window");
 export default function RentByMeDetails({ route }) {

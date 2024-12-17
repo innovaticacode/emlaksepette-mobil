@@ -11,8 +11,7 @@ import {
 import React, { useState, useEffect } from "react";
 import IconIdCard from "react-native-vector-icons/FontAwesome";
 import { CheckBox } from "@rneui/themed";
-import CreditCardScreen from "./CreditCardScreen";
-import EftPay from "./EftPay";
+
 import Modal from "react-native-modal";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import * as DocumentPicker from "expo-document-picker";

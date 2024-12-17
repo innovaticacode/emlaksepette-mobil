@@ -9,10 +9,8 @@ import {
 import { React, useEffect, useState } from "react";
 import { Platform } from "react-native";
 
-
-
 import Posts from "../Posts";
-import { apiRequestGet } from "../methods/apiRequest";
+
 export default function OtherHomeInProject({
   selectedTab,
   getBlockItems,
@@ -22,21 +20,15 @@ export default function OtherHomeInProject({
   data,
   getLastItemCount,
   openFormModal,
- 
-
-  
 }) {
   const [tabs, setTabs] = useState(0);
   const [rooms, setRooms] = useState([]);
   const Home = [];
 
-
   return (
     <SafeAreaView>
       <View style={{ paddingLeft: 10, paddingRight: 10 }}>
         <View style={styles.container}>
-      
-
           <View>
             {Array.from({
               length:
@@ -45,7 +37,6 @@ export default function OtherHomeInProject({
                   : data.project.room_count,
             }).map((index, _index) => {
               return (
-            
                 <Posts
                   key={_index}
                   data={data}

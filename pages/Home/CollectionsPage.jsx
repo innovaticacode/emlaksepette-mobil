@@ -14,17 +14,17 @@ import {
 import { useState, useRef, useEffect } from "react";
 import Modal from "react-native-modal";
 import ShareIcon from "react-native-vector-icons/Entypo";
-import DeleteIcon from "react-native-vector-icons/MaterialIcons";
+
 import PencilIcon from "react-native-vector-icons/FontAwesome5";
 import Icon from "react-native-vector-icons/FontAwesome";
-import Heart from "react-native-vector-icons/AntDesign";
+
 import IconMessenger from "react-native-vector-icons/Fontisto";
 import IconSms from "react-native-vector-icons/Feather";
 import * as Clipboard from "expo-clipboard";
 import { Platform } from "react-native";
-import { SearchBar } from "@rneui/themed";
+
 import axios from "axios";
-import Icon2 from "react-native-vector-icons/MaterialCommunityIcons";
+
 import Icon3 from "react-native-vector-icons/MaterialIcons";
 import CollectionsItem from "./ProfilePages/profileComponents/CollectionsItem";
 import { getValueFor } from "../../components/methods/user";

@@ -7,10 +7,10 @@ import {
   Image,
 } from "react-native";
 import React, { useEffect, useState } from "react";
-import Icon from "react-native-vector-icons/Ionicons";
+
 import { addDotEveryThreeDigits } from "../../../../components/methods/merhod";
 import { Platform } from "react-native";
-import Icon2 from "react-native-vector-icons/Feather";
+
 import { useNavigation } from "@react-navigation/native";
 import axios from "axios";
 import { getValueFor } from "../../../../components/methods/user";
