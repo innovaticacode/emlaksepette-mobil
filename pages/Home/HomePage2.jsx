@@ -80,7 +80,7 @@ const CustomTabBar = ({
       try {
         const response = await axios.get(apiUrl + "menu-list");
         setMenuItems(response.data);
-        setMenuItems([{ text: "Anasayfa" }, ...response.data.slice(0, -1)]);
+        setMenuItems([{ text: "Anasayfa" }, ...response.data]);
       } catch (error) {
         console.error("Error fetching menu items:", error);
       }
