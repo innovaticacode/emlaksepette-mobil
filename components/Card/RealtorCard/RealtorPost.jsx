@@ -84,6 +84,9 @@ export default function RealtorPost({
     return formattedValue.length > 10
       ? formattedValue.slice(0, 10)
       : formattedValue;
+    return formattedValue.length > 10
+      ? formattedValue.slice(0, 10)
+      : formattedValue;
   };
 
   const formattedPrice = formatPriceWithLimit(
@@ -577,20 +580,6 @@ export default function RealtorPost({
                         Satıldı
                       </Text>
                     </View>
-                  ) : sold == 0 ? (
-                    <View
-                      style={[styles.addBasket, { backgroundColor: "#FFA500" }]}
-                    >
-                      <Text
-                        style={{
-                          color: "white",
-                          fontWeight: "600",
-                          fontSize: 10,
-                        }}
-                      >
-                        Rezerve Edildi
-                      </Text>
-                    </View>
                   ) : (
                     <View
                       style={[styles.addBasket, { backgroundColor: "#FFA500" }]}
@@ -602,7 +591,7 @@ export default function RealtorPost({
                           fontSize: 10,
                         }}
                       >
-                        Sepete Ekle
+                        Rezerve Edildi
                       </Text>
                     </View>
                   )}

@@ -31,4 +31,5 @@ export {
   SalePointCard,
   FranchiseForm,
   DepositStatusCard,
+  TracingCard,
 };
