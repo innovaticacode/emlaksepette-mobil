@@ -13,13 +13,9 @@ import {
   Image,
 } from "react-native";
 import { Platform } from "react-native";
-import IconIdCard from "react-native-vector-icons/FontAwesome";
+
 import React, { useState, useEffect } from "react";
-import BasketItem from "../../components/BasketItem";
-import {
-  Swipeable,
-  GestureHandlerRootView,
-} from "react-native-gesture-handler";
+
 import TrashIcon from "react-native-vector-icons/EvilIcons";
 import {
   useRoute,
@@ -27,18 +23,11 @@ import {
   useIsFocused,
 } from "@react-navigation/native";
 
-import Header from "../../components/Header";
-import Search from "./Search";
-import Categories from "../../components/Categories";
-import Modal from "react-native-modal";
 import { getValueFor } from "../../components/methods/user";
 import axios from "axios";
-import { addDotEveryThreeDigits } from "../../components/methods/merhod";
+
 import { Alert } from "react-native";
 import * as SecureStore from "expo-secure-store";
-
-import Icon2 from "react-native-vector-icons/MaterialCommunityIcons";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import { ActivityIndicator } from "react-native-paper";
 import { apiUrl } from "../../components/methods/apiRequest";
@@ -116,14 +105,11 @@ export default function Basket2() {
     try {
       if (user?.access_token && isFocused) {
         setLoading(true);
-        const response = await axios.get(
-          apiUrl+"institutional/my-cart",
-          {
-            headers: {
-              Authorization: `Bearer ${user?.access_token}`,
-            },
-          }
-        );
+        const response = await axios.get(apiUrl + "institutional/my-cart", {
+          headers: {
+            Authorization: `Bearer ${user?.access_token}`,
+          },
+        });
         setCart(response?.data?.cart?.item);
         settype(response?.data?.cart);
         setsaleType(response?.data?.saleType);
@@ -200,15 +186,11 @@ export default function Basket2() {
     formData.append("change", "artir");
     try {
       if (user.access_token) {
-        const response = await axios.post(
-          apiUrl+"update-cart-qt",
-          formData,
-          {
-            headers: {
-              Authorization: `Bearer ${user?.access_token}`,
-            },
-          }
-        );
+        const response = await axios.post(apiUrl + "update-cart-qt", formData, {
+          headers: {
+            Authorization: `Bearer ${user?.access_token}`,
+          },
+        });
         fetchData();
         setmessage(response.data);
         setcounter(response?.data?.quantity);
@@ -225,15 +207,11 @@ export default function Basket2() {
     formData.append("change", "azalt");
     try {
       if (user.access_token) {
-        const response = await axios.post(
-          apiUrl+"update-cart-qt",
-          formData,
-          {
-            headers: {
-              Authorization: `Bearer ${user?.access_token}`,
-            },
-          }
-        );
+        const response = await axios.post(apiUrl + "update-cart-qt", formData, {
+          headers: {
+            Authorization: `Bearer ${user?.access_token}`,
+          },
+        });
         fetchData();
         setmessage(response.data);
         setcounter(response?.data?.quantity);
@@ -245,14 +223,11 @@ export default function Basket2() {
 
   const updateUserData = async () => {
     try {
-      const updateResponse = await axios.get(
-        apiUrl+"users/" + user?.id,
-        {
-          headers: {
-            Authorization: `Bearer ${user.access_token}`,
-          },
-        }
-      );
+      const updateResponse = await axios.get(apiUrl + "users/" + user?.id, {
+        headers: {
+          Authorization: `Bearer ${user.access_token}`,
+        },
+      });
 
       // Mevcut kullanıcı verilerini güncellenmiş verilerle birleştirme
       const updatedUser = {
@@ -275,7 +250,7 @@ export default function Basket2() {
     try {
       if (user.access_token) {
         const response = await axios.post(
-          apiUrl+"remove-from-cart",
+          apiUrl + "remove-from-cart",
           {},
           {
             headers: {
@@ -314,15 +289,11 @@ export default function Basket2() {
     formData.append("updatedPrice", updatedPrice);
     try {
       if (user.access_token) {
-        const response = await axios.post(
-          apiUrl+"update-cart",
-          formData,
-          {
-            headers: {
-              Authorization: `Bearer ${user?.access_token}`,
-            },
-          }
-        );
+        const response = await axios.post(apiUrl + "update-cart", formData, {
+          headers: {
+            Authorization: `Bearer ${user?.access_token}`,
+          },
+        });
         fetchData();
         setmessageUpdateCart(response.data);
       }

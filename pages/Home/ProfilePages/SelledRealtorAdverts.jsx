@@ -10,7 +10,7 @@ import {
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { getValueFor } from "../../../components/methods/user";
-import ProjectAdverts from "../ProfilePageItem/ProjectAdverts";
+
 import MaterialIcon from "react-native-vector-icons/MaterialCommunityIcons";
 import { useIsFocused, useNavigation } from "@react-navigation/native";
 import RealtorAdvertPost from "./profileComponents/RealtorAdvertPost";
@@ -21,7 +21,7 @@ import { ActivityIndicator } from "react-native-paper";
 import { CheckBox } from "react-native-elements";
 import { Stack } from "@react-native-material/core";
 import { apiUrl } from "../../../components/methods/apiRequest";
-import { sk } from "date-fns/locale";
+
 export default function SelledRealtorAdverts() {
   const navigation = useNavigation();
   const [user, setUser] = useState({});
@@ -38,8 +38,7 @@ export default function SelledRealtorAdverts() {
   const [sort, setsort] = useState(null);
   const [totalAdvert, setTotalAdvert] = useState("");
 
-  const fetchHousings = async (sort,take,skip) => {
-
+  const fetchHousings = async (sort, take, skip) => {
     try {
       const res = await axios({
         method: "get",

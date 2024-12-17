@@ -4,7 +4,7 @@ import SellPlaceItem from "../../../components/SellPlaceItem";
 import axios from "axios";
 import { getValueFor } from "../../../components/methods/user";
 import { ActivityIndicator } from "react-native-paper";
-import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+
 import { useNavigation } from "@react-navigation/native";
 import NoDataScreen from "../../../components/NoDataScreen";
 import { apiUrl } from "../../../components/methods/apiRequest";

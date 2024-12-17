@@ -6,23 +6,19 @@ import {
   TouchableOpacity,
 } from "react-native";
 import React, { useEffect, useState } from "react";
-import { Image } from "react-native-elements";
-import Swiper from "react-native-swiper";
+
 import { FlatList, ScrollView } from "react-native-gesture-handler";
-import CommentItem from "../RealtorPages/CommentItem";
-import RealtorPost from "../../../components/RealtorPost";
-import ProjectPost from "../../../components/ProjectPost";
+
 import { Platform } from "react-native";
-import Modal from "react-native-modal";
+
 import axios from "axios";
 import { getValueFor } from "../../../components/methods/user";
 import { useNavigation } from "@react-navigation/native";
-import { ActivityIndicator } from "react-native-paper";
+
 import { apiUrl } from "../../../components/methods/apiRequest";
 
 export default function ShopVitrin({ data, housingdata, settab }) {
   const navigation = useNavigation();
- 
 
   const [banners, setBanners] = useState([]);
   const [owners, setOwners] = useState([]);
@@ -77,7 +73,7 @@ export default function ShopVitrin({ data, housingdata, settab }) {
     try {
       if (user?.access_token) {
         const response = await axios.post(
-          apiUrl+"institutional/add_to_cart",
+          apiUrl + "institutional/add_to_cart",
           formData,
           {
             headers: {

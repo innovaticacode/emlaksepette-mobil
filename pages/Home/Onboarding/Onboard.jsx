@@ -10,8 +10,7 @@ import {
 } from "react-native";
 import React, { useRef, useState } from "react";
 import PagerView from "react-native-pager-view";
-import { Button } from "react-native-elements";
-import Icon from "react-native-vector-icons/AntDesign";
+
 import Arrow from "react-native-vector-icons/SimpleLineIcons";
 import { useNavigation } from "@react-navigation/native";
 const { width, height } = Dimensions.get("window");

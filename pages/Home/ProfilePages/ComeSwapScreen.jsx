@@ -15,8 +15,7 @@ import React, { useEffect, useState } from "react";
 import { getValueFor } from "../../../components/methods/user";
 import NoDataScreen from "../../../components/NoDataScreen";
 import axios from "axios";
-import Modal from "react-native-modal";
-import Icon from "react-native-vector-icons/AntDesign";
+
 import { InfoCard, MySwapInfoBottom } from "../../../components";
 import { formatDate } from "../../../utils";
 import { apiUrl } from "../../../components/methods/apiRequest";
@@ -45,7 +44,7 @@ export default function ComeSwapScreen() {
     try {
       if (user?.access_token) {
         const response = await axios.get(
-          apiUrl+"institutional/my-swap-applications",
+          apiUrl + "institutional/my-swap-applications",
           {
             headers: {
               Authorization: `Bearer ${user.access_token}`,

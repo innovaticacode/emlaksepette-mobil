@@ -12,7 +12,6 @@ import React, { useState, useEffect } from "react";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import Checkbox from "./profileComponents/Checkbox";
 
-import Users from "./profileComponents/Users";
 import axios from "axios";
 import { getValueFor } from "../../../components/methods/user";
 import { Platform } from "react-native";

@@ -7,8 +7,7 @@ import { useRoute } from "@react-navigation/native";
 import { Platform } from "react-native";
 import { addDotEveryThreeDigits } from "../../components/methods/merhod";
 import { ActivityIndicator } from "react-native-paper";
-import { TouchableOpacity } from "react-native";
-import AntDesign from "@expo/vector-icons/AntDesign";
+
 import { apiUrl } from "../../components/methods/apiRequest";
 
 export default function Invoice() {
@@ -89,7 +88,6 @@ export default function Invoice() {
     }
   }, [data, user.access_token]);
 
-
   return (
     <>
       {loading ? (
@@ -100,11 +98,10 @@ export default function Invoice() {
         </View>
       ) : (
         <ScrollView
-
           contentContainerStyle={{ flexGrow: 1 }}
           showsVerticalScrollIndicator={false}
         >
-          <View style={styles.body} >
+          <View style={styles.body}>
             <View style={styles.cardContainer}>
               <View style={{ paddingHorizontal: 20 }}>
                 <View style={{ width: "100%" }}>
@@ -168,8 +165,8 @@ export default function Invoice() {
                     {data?.project
                       ? `1000${data.project.id}`
                       : data?.housing
-                        ? `2000${data.housing.id}`
-                        : "Değer bulunamadı"}
+                      ? `2000${data.housing.id}`
+                      : "Değer bulunamadı"}
                   </Text>
                 </Text>
                 <View style={{ flexDirection: "row", marginTop: 10 }}>

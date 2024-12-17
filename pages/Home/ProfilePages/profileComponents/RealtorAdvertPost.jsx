@@ -9,10 +9,7 @@ import {
 import { useEffect, useState } from "react";
 import Icon from "react-native-vector-icons/Ionicons";
 import Icon2 from "react-native-vector-icons/Entypo";
-import {
-  frontEndUri,
-  frontEndUriBase,
-} from "../../../../components/methods/apiRequest";
+import { frontEndUriBase } from "../../../../components/methods/apiRequest";
 import { Platform } from "react-native";
 import { addDotEveryThreeDigits } from "../../../../components/methods/merhod";
 export default function RealtorAdvertPost({ Onpress, housing }) {

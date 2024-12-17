@@ -19,7 +19,7 @@ import {
   CollapseHeader,
   CollapseBody,
 } from "accordion-collapse-react-native";
-import Modal from "react-native-modal";
+
 import ProfileSettingsItem from "../../components/ProfileSettingsItem";
 import {
   useRoute,
@@ -30,14 +30,14 @@ import {
 import { getValueFor } from "../../components/methods/user";
 import * as SecureStore from "expo-secure-store";
 import axios from "axios";
-import Menu from "./Menu.json";
+
 import { Platform } from "react-native";
-import { ActivityIndicator } from "react-native-paper";
+
 import AwesomeAlert from "react-native-awesome-alerts";
 import { useDispatch } from "react-redux";
 import { setNotificationsRedux } from "../../store/slices/Notifications/NotificationsSlice";
 import { Skeleton } from "@rneui/themed";
-import { id } from "date-fns/locale";
+
 import { setShoppingProfile } from "../../store/slices/Menu/MenuSlice";
 import { apiUrl, frontEndUriBase } from "../../components/methods/apiRequest";
 
@@ -52,7 +52,7 @@ export default function ShoppingProfile() {
   const [notificationCount, setNotificationCount] = useState(0);
 
   const [user, setUser] = useState({});
-  const [isLoggedIn, setIsLoggedIn] = useState(true);
+
   const [data, setData] = useState([]);
   const [permissionsUser, setPermissionsUser] = useState([]);
   const [dialogVisible, setDialogVisible] = useState(false);
@@ -884,12 +884,12 @@ export default function ShoppingProfile() {
                       (user.type == 2 &&
                         user.corporate_type == "Emlak Ofisi" &&
                         group.label == "Satış Noktalarımız") ||
-                        (user.corporate_type !== "Emlak Ofisi" &&
-                          user.type == 2 &&
-                          group.label == "Emlak Kulüp") ||
-                        (user.type == 1 && group.label == "Satış Noktalarımız") ||
-                        (user.type == 1 &&
-                          group.text == "Satış Noktası Talepleri")
+                      (user.corporate_type !== "Emlak Ofisi" &&
+                        user.type == 2 &&
+                        group.label == "Emlak Kulüp") ||
+                      (user.type == 1 && group.label == "Satış Noktalarımız") ||
+                      (user.type == 1 &&
+                        group.text == "Satış Noktası Talepleri")
                         ? "none"
                         : "flex",
                   }}

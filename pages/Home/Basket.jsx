@@ -26,20 +26,13 @@ import {
   useIsFocused,
 } from "@react-navigation/native";
 
-import Header from "../../components/Header";
-import Search from "./Search";
-import Categories from "../../components/Categories";
 import Modal from "react-native-modal";
 import { getValueFor } from "../../components/methods/user";
 import axios from "axios";
 import { addDotEveryThreeDigits } from "../../components/methods/merhod";
 import { Alert } from "react-native";
 import * as SecureStore from "expo-secure-store";
-import { Image } from "react-native-svg";
-import Icon2 from "react-native-vector-icons/MaterialCommunityIcons";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 
-import { DrawerMenu } from "../../components";
 import { ActivityIndicator } from "react-native-paper";
 import NoDataScreen from "../../components/NoDataScreen";
 import { apiUrl } from "../../components/methods/apiRequest";
@@ -126,14 +119,11 @@ export default function Basket() {
     try {
       if (user?.access_token && isFocused) {
         setLoading(true);
-        const response = await axios.get(
-          `${apiUrl}institutional/my-cart`,
-          {
-            headers: {
-              Authorization: `Bearer ${user?.access_token}`,
-            },
-          }
-        );
+        const response = await axios.get(`${apiUrl}institutional/my-cart`, {
+          headers: {
+            Authorization: `Bearer ${user?.access_token}`,
+          },
+        });
         setCart(response?.data?.cart?.item);
         settype(response?.data?.cart);
         setsaleType(response?.data?.saleType);
@@ -209,15 +199,11 @@ export default function Basket() {
     formData.append("change", "artir");
     try {
       if (user.access_token) {
-        const response = await axios.post(
-          `${apiUrl}update-cart-qt`,
-          formData,
-          {
-            headers: {
-              Authorization: `Bearer ${user?.access_token}`,
-            },
-          }
-        );
+        const response = await axios.post(`${apiUrl}update-cart-qt`, formData, {
+          headers: {
+            Authorization: `Bearer ${user?.access_token}`,
+          },
+        });
         fetchData();
         setmessage(response.data);
         setcounter(response?.data?.quantity);
@@ -234,15 +220,11 @@ export default function Basket() {
     formData.append("change", "azalt");
     try {
       if (user.access_token) {
-        const response = await axios.post(
-          `${apiUrl}update-cart-qt`,
-          formData,
-          {
-            headers: {
-              Authorization: `Bearer ${user?.access_token}`,
-            },
-          }
-        );
+        const response = await axios.post(`${apiUrl}update-cart-qt`, formData, {
+          headers: {
+            Authorization: `Bearer ${user?.access_token}`,
+          },
+        });
         fetchData();
         setmessage(response.data);
         setcounter(response?.data?.quantity);
@@ -254,14 +236,11 @@ export default function Basket() {
 
   const updateUserData = async () => {
     try {
-      const updateResponse = await axios.get(
-        `${apiUrl}users/` + user?.id,
-        {
-          headers: {
-            Authorization: `Bearer ${user.access_token}`,
-          },
-        }
-      );
+      const updateResponse = await axios.get(`${apiUrl}users/` + user?.id, {
+        headers: {
+          Authorization: `Bearer ${user.access_token}`,
+        },
+      });
 
       // Mevcut kullanıcı verilerini güncellenmiş verilerle birleştirme
       const updatedUser = {
@@ -323,15 +302,11 @@ export default function Basket() {
     formData.append("updatedPrice", updatedPrice);
     try {
       if (user.access_token) {
-        const response = await axios.post(
-          `${apiUrl}update-cart`,
-          formData,
-          {
-            headers: {
-              Authorization: `Bearer ${user?.access_token}`,
-            },
-          }
-        );
+        const response = await axios.post(`${apiUrl}update-cart`, formData, {
+          headers: {
+            Authorization: `Bearer ${user?.access_token}`,
+          },
+        });
         fetchData();
         setmessageUpdateCart(response.data);
       }

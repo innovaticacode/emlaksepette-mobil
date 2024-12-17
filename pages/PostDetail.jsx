@@ -16,7 +16,7 @@ import {
 } from "react-native";
 import { React, useRef, useState, useEffect } from "react";
 import Icon2 from "react-native-vector-icons/AntDesign";
-import Phone from "react-native-vector-icons/Entypo";
+
 import { Platform } from "react-native";
 import PagerView from "react-native-pager-view";
 import * as SecureStore from "expo-secure-store";
@@ -26,13 +26,11 @@ import {
   useRoute,
 } from "@react-navigation/native";
 import Heart from "react-native-vector-icons/AntDesign";
-import Bookmark from "react-native-vector-icons/FontAwesome";
+
 import DetailsSettings from "../components/PostDetailsSettings/DetailsSettings";
 import Icon4 from "react-native-vector-icons/AntDesign";
-import Swiper from "react-native-swiper";
-import { SocialIcon, Icon } from "react-native-elements";
+
 import LinkIcon3 from "react-native-vector-icons/Feather";
-import MegaPhone from "react-native-vector-icons/Ionicons";
 
 import {
   ALERT_TYPE,
@@ -42,21 +40,22 @@ import {
 import PostMap from "../components/PostDetailsSettings/Postmap";
 import PostPayment from "../components/PostDetailsSettings/PostPayment";
 import PostCaption from "../components/PostDetailsSettings/PostCaption";
-import Header from "../components/Header";
+
 import Modal from "react-native-modal";
-import Categories from "../components/Categories";
-import Search from "./Home/Search";
+
 import LinkIcon from "react-native-vector-icons/Entypo";
 import Arrow from "react-native-vector-icons/MaterialIcons";
 import CloseIcon from "react-native-vector-icons/AntDesign";
 import SliderMenuPostDetails from "../components/PostDetailsSettings/SliderMenuPostDetails";
-import { apiRequestGet, apiUrl, frontEndUriBase } from "../components/methods/apiRequest";
-import Posts from "../components/Posts";
-import PostOtherProject from "../components/PostDetailsSettings/PostOtherProject";
+import {
+  apiRequestGet,
+  apiUrl,
+  frontEndUriBase,
+} from "../components/methods/apiRequest";
+
 import SettingsItem from "../components/SettingsItem";
 import { addDotEveryThreeDigits } from "../components/methods/merhod";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { Shadow } from "react-native-shadow-2";
+
 import AddCollection from "../components/AddCollection";
 import axios from "axios";
 import { getValueFor } from "../components/methods/user";
@@ -65,8 +64,7 @@ import { ActivityIndicator } from "react-native-paper";
 import FloorPlan from "../components/FloorPlan";
 import { Svg } from "react-native-svg";
 import { Polyline } from "react-native-maps";
-import PaymentItem from "../components/PaymentItem";
-import DrawerMenu from "../components/Menu/DrawerMenu/DrawerMenu";
+
 import AwesomeAlert from "react-native-awesome-alerts";
 import CommentForProject from "../components/CommentForProject";
 import { leftButtonsForPost, PriceStatus, rightButtonsForPost } from "./helper";
@@ -76,7 +74,6 @@ import TextAlertModal from "../components/TextAlertModal";
 import ShareProgressBar from "../components/ShareProgessBar";
 import AwesomeAlertComp from "../components/AwesomeAlertComp";
 export default function PostDetail() {
-
   const [modalVisible, setModalVisible] = useState(false);
   const [tabs, setTabs] = useState(0);
   const [heart, setHeart] = useState("hearto");
@@ -96,17 +93,13 @@ export default function PostDetail() {
   const route = useRoute();
   const [loading, setLoading] = useState(false);
 
-  const {
-    HomeId,
-    projectId,
-  } = route.params;
+  const { HomeId, projectId } = route.params;
   console.log(HomeId);
   useEffect(() => {
     getValueFor("user", setUser);
   }, [isFocused]);
   const navigation = useNavigation();
   const windowWidth = Dimensions.get("window").width;
-
 
   const changeTab = (tabs) => {
     setTabs(tabs);
@@ -123,7 +116,6 @@ export default function PostDetail() {
     setColectionSheet(!ColectionSheet);
   };
 
-
   const [ProjectHomeData, setProjectHomeData] = useState({
     project: {
       room_count: 0,
@@ -136,12 +128,14 @@ export default function PostDetail() {
     sumCartOrderQt: {},
   });
   useEffect(() => {
-    apiRequestGet("project/" + projectId).then((res) => {
-      setLoading(true)
-      setProjectHomeData(res.data);
-    }).finally(() => {
-      setLoading(false)
-    });
+    apiRequestGet("project/" + projectId)
+      .then((res) => {
+        setLoading(true);
+        setProjectHomeData(res.data);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   }, [HomeId]);
   const [ShareSaleEmpty, setShareSaleEmpty] = useState(null);
   const [namFromGetUser, setnamFromGetUser] = useState([]);
@@ -150,14 +144,11 @@ export default function PostDetail() {
     setloadingCollection(true);
     try {
       if (user?.access_token && user) {
-        const userInfo = await axios.get(
-          apiUrl + "users/" + user?.id,
-          {
-            headers: {
-              Authorization: `Bearer ${user.access_token}`,
-            },
-          }
-        );
+        const userInfo = await axios.get(apiUrl + "users/" + user?.id, {
+          headers: {
+            Authorization: `Bearer ${user.access_token}`,
+          },
+        });
         const userData = userInfo?.data?.user;
         setnamFromGetUser(userData);
       }
@@ -168,25 +159,27 @@ export default function PostDetail() {
     }
   };
 
-
   const [galleries, setGalleries] = useState([]);
-  const [roomData, setroomData] = useState({})
+  const [roomData, setroomData] = useState({});
   useEffect(() => {
     setShareSaleEmpty(
       !roomData["share_sale[]"] || roomData["share_sale[]"] === "[]"
     );
-    if (user, ProjectHomeData) {
+    if ((user, ProjectHomeData)) {
       const roomData = ProjectHomeData.projectHousingsList[HomeId] || {};
-      setroomData(roomData)
+      setroomData(roomData);
     }
-
   }, [ProjectHomeData]);
 
   useEffect(() => {
-    if (ProjectHomeData?.project && ProjectHomeData.projectHousingsList && roomData) {
-
-      const imageObject = { image: `/project_housing_images/${roomData['image[]']}` };
-
+    if (
+      ProjectHomeData?.project &&
+      ProjectHomeData.projectHousingsList &&
+      roomData
+    ) {
+      const imageObject = {
+        image: `/project_housing_images/${roomData["image[]"]}`,
+      };
 
       const updatedImages = [imageObject, ...ProjectHomeData?.project?.images];
       setGalleries(updatedImages);
@@ -199,20 +192,22 @@ export default function PostDetail() {
     uri: `${frontEndUriBase}${image.image.replace("public", "storage")}`,
   }));
 
-
-
   const [pagination, setPagination] = useState(0);
   const handlePageChange = (pageNumber) => {
     setPagination(pageNumber);
     setSelectedImage(pageNumber);
   };
-  const [paymentModalVisible, setpaymentModalVisible] = useState(false)
+  const [paymentModalVisible, setpaymentModalVisible] = useState(false);
   const [PaymaentAlert, setPaymaentAlert] = useState(false);
   const openModal = () => {
-    if ((roomData['share_sale[]'] !== '[]' && ProjectHomeData.sumCartOrderQt[HomeId]?.qt_total == roomData['number_of_shares[]'])) {
-      setPaymaentAlert(true)
+    if (
+      roomData["share_sale[]"] !== "[]" &&
+      ProjectHomeData.sumCartOrderQt[HomeId]?.qt_total ==
+        roomData["number_of_shares[]"]
+    ) {
+      setPaymaentAlert(true);
     } else {
-      setpaymentModalVisible(true)
+      setpaymentModalVisible(true);
     }
   };
   const [FormVisible, setFormVisible] = useState(false);
@@ -221,8 +216,8 @@ export default function PostDetail() {
     setFormVisible(!FormVisible);
   };
   const onClose = () => {
-    setpaymentModalVisible(false)
-  }
+    setpaymentModalVisible(false);
+  };
   const [changeIcon, setchangeIcon] = useState(false);
   const toggleIcon = () => {
     setchangeIcon(!changeIcon);
@@ -248,14 +243,11 @@ export default function PostDetail() {
   const fetchData = async (token, setCollections) => {
     try {
       if (user.access_token) {
-        const response = await axios.get(
-          `${apiUrl}client/collections`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+        const response = await axios.get(`${apiUrl}client/collections`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
 
         if (response?.data?.collections) {
           setCollections(response.data.collections);
@@ -263,7 +255,6 @@ export default function PostDetail() {
           setCollections([]);
         }
       }
-
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -301,16 +292,12 @@ export default function PostDetail() {
     };
 
     axios
-      .post(
-        `${apiUrl}add/collection`,
-        collectionData,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${user?.access_token}`,
-          },
-        }
-      )
+      .post(`${apiUrl}add/collection`, collectionData, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${user?.access_token}`,
+        },
+      })
       .then((response) => {
         setaddCollection(false);
         setnewCollectionNameCreate("");
@@ -417,9 +404,8 @@ export default function PostDetail() {
       setselectedCartItem(id);
       setModalForAddToCart(true);
     } else {
-      setAlertForSign(true)
+      setAlertForSign(true);
     }
-
   };
 
   const [itemCount, setItemCount] = useState(10);
@@ -452,11 +438,11 @@ export default function PostDetail() {
     }
     apiRequestGet(
       "project_housings/" +
-      projectId +
-      "?start=" +
-      lastBlockItemsCount +
-      "&end=" +
-      (lastBlockItemsCount + 10)
+        projectId +
+        "?start=" +
+        lastBlockItemsCount +
+        "&end=" +
+        (lastBlockItemsCount + 10)
     ).then((res) => {
       setData({
         ...data,
@@ -468,17 +454,23 @@ export default function PostDetail() {
   };
   const fetchHousings = (page) => {
     if (ProjectHomeData.project.have_blocks) {
-      if (page * 10 < ProjectHomeData.project.blocks[selectedTab].housing_count) {
+      if (
+        page * 10 <
+        ProjectHomeData.project.blocks[selectedTab].housing_count
+      ) {
         apiRequestGet(
           "project_housings/" +
-          projectId +
-          "?start=" +
-          (parseInt(lastBlockItemCount) + parseInt(page * 10)) +
-          "&end=" +
-          ((page + 1) * 10 > ProjectHomeData.project.blocks[selectedTab].housing_count
-            ? parseInt(lastBlockItemCount) +
-            parseInt(ProjectHomeData.project.blocks[selectedTab].housing_count)
-            : parseInt(lastBlockItemCount) + parseInt((page + 1) * 10))
+            projectId +
+            "?start=" +
+            (parseInt(lastBlockItemCount) + parseInt(page * 10)) +
+            "&end=" +
+            ((page + 1) * 10 >
+            ProjectHomeData.project.blocks[selectedTab].housing_count
+              ? parseInt(lastBlockItemCount) +
+                parseInt(
+                  ProjectHomeData.project.blocks[selectedTab].housing_count
+                )
+              : parseInt(lastBlockItemCount) + parseInt((page + 1) * 10))
         ).then((res) => {
           // console.log(res);
           setProjectHomeData({
@@ -489,7 +481,8 @@ export default function PostDetail() {
             },
           });
           setItemCount(
-            (page + 1) * 10 > ProjectHomeData.project.blocks[selectedTab].housing_count
+            (page + 1) * 10 >
+              ProjectHomeData.project.blocks[selectedTab].housing_count
               ? ProjectHomeData.project.blocks[selectedTab].housing_count
               : (page + 1) * 10
           );
@@ -501,11 +494,11 @@ export default function PostDetail() {
         setIsLoading(true);
         apiRequestGet(
           "project_housings/" +
-          projectId +
-          "?start=" +
-          page * 10 +
-          "&end=" +
-          (page + 1) * 10
+            projectId +
+            "?start=" +
+            page * 10 +
+            "&end=" +
+            (page + 1) * 10
         ).then((res) => {
           setProjectHomeData({
             ...ProjectHomeData,
@@ -571,16 +564,12 @@ export default function PostDetail() {
     };
 
     axios
-      .post(
-        `${apiUrl}remove_item_on_collection`,
-        collectionData,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${user.access_token}`,
-          },
-        }
-      )
+      .post(`${apiUrl}remove_item_on_collection`, collectionData, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${user.access_token}`,
+        },
+      })
       .then((response) => {
         var newCollections = collections.map((collection) => {
           if (collection.id == collectionId) {
@@ -612,8 +601,6 @@ export default function PostDetail() {
       });
   };
 
-
-
   const formatAmount = (amount) => {
     return new Intl.NumberFormat("tr-TR", {
       style: "currency",
@@ -632,7 +619,7 @@ export default function PostDetail() {
     formData.append(
       "numbershare",
       ProjectHomeData.projectHousingsList[selectedCartItem][
-      "number_of_shares[]"
+        "number_of_shares[]"
       ]
     );
     formData.append("qt", 1);
@@ -667,7 +654,7 @@ export default function PostDetail() {
     formData.append(
       "numbershare",
       ProjectHomeData.projectHousingsList[paymentModalShowOrder][
-      "number_of_shares[]"
+        "number_of_shares[]"
       ]
     );
     formData.append("qt", 1);
@@ -729,8 +716,7 @@ export default function PostDetail() {
       };
       axios
         .post(
-          `${apiUrl}add_project_to_favorites/` +
-          HomeId,
+          `${apiUrl}add_project_to_favorites/` + HomeId,
           {
             project_id: projectId,
             housing_id: HomeId,
@@ -751,7 +737,6 @@ export default function PostDetail() {
     }
   };
   const getDiscountAmount = (project, roomIndex) => {
-
     const projectOffer = ProjectHomeData.project.offer;
     return projectOffer ? projectOffer.discount_amount : 0;
   };
@@ -769,11 +754,11 @@ export default function PostDetail() {
       ? formatPrice(discountedPrice / roomData["number_of_shares[]"])
       : formatPrice(roomData["price[]"] / roomData["number_of_shares[]"])
     : discountAmount != 0
-      ? formatPrice(discountedPrice)
-      : formatPrice(roomData["price[]"]);
+    ? formatPrice(discountedPrice)
+    : formatPrice(roomData["price[]"]);
 
-  console.log(discountAmount + '---DiscountAmount')
-  console.log(discountedPrice + '---DiscountedPrice')
+  console.log(discountAmount + "---DiscountAmount");
+  console.log(discountedPrice + "---DiscountedPrice");
   const [comments, setcomments] = useState([]);
   const fetchCommentTotalRate = async () => {
     try {
@@ -794,15 +779,21 @@ export default function PostDetail() {
     .map((item) => parseFloat(item?.rate) || 0)
     .reduce((acc, rate) => acc + rate, 0);
 
-
-
   const [offSaleStatus, setoffSaleStatus] = useState(null);
   useEffect(() => {
-    if (ProjectHomeData && ProjectHomeData.project && roomData && roomData["off_sale[]"]) {
+    if (
+      ProjectHomeData &&
+      ProjectHomeData.project &&
+      roomData &&
+      roomData["off_sale[]"]
+    ) {
       const parsedOffsale = JSON.parse(roomData["off_sale[]"]);
-      ProjectHomeData && ProjectHomeData.project && roomData && setoffSaleStatus(parsedOffsale);
+      ProjectHomeData &&
+        ProjectHomeData.project &&
+        roomData &&
+        setoffSaleStatus(parsedOffsale);
     }
-  }, [HomeId, roomData])
+  }, [HomeId, roomData]);
 
   // console.log(ProjectHomeData.project.images)
 
@@ -838,7 +829,7 @@ export default function PostDetail() {
       case "GiveOffer":
         return handlePress();
       case "ShowAdvert":
-        return alert('zaten ilandasın ');
+        return alert("zaten ilandasın ");
       default:
         return [];
     }
@@ -878,20 +869,17 @@ export default function PostDetail() {
       ? words?.slice(0, wordLimit).join(" ") + "..."
       : text;
   }
-  const [SeeAlertModal, setSeeAlertModal] = useState(false)
+  const [SeeAlertModal, setSeeAlertModal] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
   const handleYes = () => {
     // İlan başlığını, fiyatı ve ilan numarasını alın
-    const title = HomeId
-      ? roomData["advertise_title[]"]
-      : "Başlık bulunamadı";
+    const title = HomeId ? roomData["advertise_title[]"] : "Başlık bulunamadı";
     const amount = 250; // Fiyatı burada belirliyoruz
     const imageUrl = roomData
-      ? `${frontEndUriBase}project_housing_images` +
-      roomData["image[]"]
+      ? `${frontEndUriBase}project_housing_images` + roomData["image[]"]
       : ""; // Resim URL'sini burada belirleyin
     const neightboord = false;
-    const ilanNo = 1000000 + ProjectHomeData.project.id + '-' + HomeId; // İlan numarasını belirliyoruz
+    const ilanNo = 1000000 + ProjectHomeData.project.id + "-" + HomeId; // İlan numarasını belirliyoruz
     const roomOrderString = HomeId.toString();
 
     // Verileri secureStore ile saklayın
@@ -901,7 +889,6 @@ export default function PostDetail() {
         navigation.navigate("Basket2");
 
         // Modalı kapatın
-
       })
       .catch((error) => {
         console.error("Onay işlemi sırasında bir hata oluştu:", error);
@@ -911,7 +898,10 @@ export default function PostDetail() {
     let phoneNumber;
 
     // Eğer data?.housing?.user?.phone varsa ve area_code mevcutsa
-    if (ProjectHomeData?.project?.user?.phone && ProjectHomeData?.project?.user?.area_code) {
+    if (
+      ProjectHomeData?.project?.user?.phone &&
+      ProjectHomeData?.project?.user?.area_code
+    ) {
       // Alan kodu ve telefon numarasını birleştir
       phoneNumber = `90${ProjectHomeData.project?.user.area_code}${ProjectHomeData?.project?.user?.phone}`;
     }
@@ -931,14 +921,13 @@ export default function PostDetail() {
       console.error("Telefon numarası bulunamadı.");
     }
   };
-  const [show, setShow] = useState(false)
+  const [show, setShow] = useState(false);
   const tempIndexRef = useRef(currentIndex); // To temporarily store the index
   const handleImageIndexChange = (index) => {
     tempIndexRef.current = index; //Update temporary index
   };
 
   return (
-
     <>
       <AlertNotificationRoot>
         {loading ? (
@@ -949,13 +938,44 @@ export default function PostDetail() {
           <SafeAreaView
             style={{ backgroundColor: "white", flex: 1, paddingTop: 30 }}
           >
-
-
-            <View style={{ position: 'absolute', width: '100%', bottom: 35, padding: 4, zIndex: 1, flexDirection: 'row', justifyContent: 'space-around' }}>
-              <TouchableOpacity style={{ width: '45%', backgroundColor: '#EA2B2E', padding: 12, borderRadius: 8 }} onPress={handleOpenPhone}>
-                <Text style={{ fontSize: 14, color: 'white', fontWeight: '600', textAlign: 'center' }}>Ara</Text>
+            <View
+              style={{
+                position: "absolute",
+                width: "100%",
+                bottom: 35,
+                padding: 4,
+                zIndex: 1,
+                flexDirection: "row",
+                justifyContent: "space-around",
+              }}
+            >
+              <TouchableOpacity
+                style={{
+                  width: "45%",
+                  backgroundColor: "#EA2B2E",
+                  padding: 12,
+                  borderRadius: 8,
+                }}
+                onPress={handleOpenPhone}
+              >
+                <Text
+                  style={{
+                    fontSize: 14,
+                    color: "white",
+                    fontWeight: "600",
+                    textAlign: "center",
+                  }}
+                >
+                  Ara
+                </Text>
               </TouchableOpacity>
-              <TouchableOpacity style={{ width: '45%', backgroundColor: '#EA2B2E', padding: 12, borderRadius: 8 }}
+              <TouchableOpacity
+                style={{
+                  width: "45%",
+                  backgroundColor: "#EA2B2E",
+                  padding: 12,
+                  borderRadius: 8,
+                }}
                 onPress={() => {
                   navigation.navigate("Profile", {
                     name: "",
@@ -963,7 +983,16 @@ export default function PostDetail() {
                   });
                 }}
               >
-                <Text style={{ fontSize: 14, color: 'white', fontWeight: '600', textAlign: 'center' }}>Satış Noktalarını Gör</Text>
+                <Text
+                  style={{
+                    fontSize: 14,
+                    color: "white",
+                    fontWeight: "600",
+                    textAlign: "center",
+                  }}
+                >
+                  Satış Noktalarını Gör
+                </Text>
               </TouchableOpacity>
             </View>
             <View
@@ -1038,8 +1067,8 @@ export default function PostDetail() {
                       marginHorizontal: 15,
                     }}
                   >
-                    İlan No: {1000000 + ProjectHomeData?.project?.id + '-' + HomeId}
-
+                    İlan No:{" "}
+                    {1000000 + ProjectHomeData?.project?.id + "-" + HomeId}
                   </Text>
                 </View>
               </TouchableOpacity>
@@ -1049,12 +1078,11 @@ export default function PostDetail() {
               showProgress={false}
               title="Komşumu Gör"
               message={`"${truncateText(
-                HomeId
-                  ? roomData["advertise_title[]"]
-                  : "Başlık bulunamadı",
+                HomeId ? roomData["advertise_title[]"] : "Başlık bulunamadı",
                 20
-              )}"\n\nİlan No: ${1000000 + ProjectHomeData.project.id + '-' + HomeId
-                }\nÖdeme Tarihi: ${formattedDate}\nTutar: 250 TL\n\nKomşumu Gör Özelliği: İlgilendiğiniz projeden konut alanları arayıp proje hakkında detaylı referans bilgisi almanıza imkan sağlar.\n\nKomşunuza ait iletişim bilgilerini görmek için aşağıdaki adımları takip edin:\n\n1. Ödeme işlemini tamamlayın ve belirtilen tutarı ödediğiniz takdirde,\n2. Ödemeniz onaylandıktan sonra, "Komşumu Gör" düğmesi aktif olacak ve komşunuzun iletişim bilgilerine ulaşabileceksiniz.`}
+              )}"\n\nİlan No: ${
+                1000000 + ProjectHomeData.project.id + "-" + HomeId
+              }\nÖdeme Tarihi: ${formattedDate}\nTutar: 250 TL\n\nKomşumu Gör Özelliği: İlgilendiğiniz projeden konut alanları arayıp proje hakkında detaylı referans bilgisi almanıza imkan sağlar.\n\nKomşunuza ait iletişim bilgilerini görmek için aşağıdaki adımları takip edin:\n\n1. Ödeme işlemini tamamlayın ve belirtilen tutarı ödediğiniz takdirde,\n2. Ödemeniz onaylandıktan sonra, "Komşumu Gör" düğmesi aktif olacak ve komşunuzun iletişim bilgilerine ulaşabileceksiniz.`}
               closeOnTouchOutside={true}
               closeOnHardwareBackPress={false}
               showCancelButton={true}
@@ -1063,13 +1091,13 @@ export default function PostDetail() {
               confirmText="Evet"
               confirmButtonColor="#EA2A28"
               onCancelPressed={() => {
-                setShowAlert(false)
+                setShowAlert(false);
               }}
               onConfirmPressed={() => {
-                setShowAlert(false)
+                setShowAlert(false);
 
                 setTimeout(() => {
-                  handleYes()
+                  handleYes();
                 }, 300);
               }}
               contentContainerStyle={{
@@ -1095,7 +1123,8 @@ export default function PostDetail() {
                 fontSize: 16,
               }}
             />
-            <ScrollView scrollEventThrottle={16}
+            <ScrollView
+              scrollEventThrottle={16}
               contentContainerStyle={{ paddingBottom: 60 }}
               onScroll={({ nativeEvent }) => {
                 if (isCloseToBottom(nativeEvent)) {
@@ -1146,8 +1175,7 @@ export default function PostDetail() {
                     }}
                   >
                     <Text style={{ color: "white", fontSize: 12 }}>
-                      {pagination + 1} /{" "}
-                      {galleries.length}
+                      {pagination + 1} / {galleries.length}
                     </Text>
                   </View>
                 </View>
@@ -1196,9 +1224,7 @@ export default function PostDetail() {
                   initialPage={currentIndex}
                   key={currentIndex}
                   style={{ height: 250 }}
-                  onPageSelected={(e) =>
-                    setPagination(e.nativeEvent.position)
-                  }
+                  onPageSelected={(e) => setPagination(e.nativeEvent.position)}
                 >
                   {galleries.map((image, index) => (
                     <Pressable
@@ -1227,38 +1253,53 @@ export default function PostDetail() {
                   imageIndex={currentIndex}
                   visible={isVisible}
                   onRequestClose={() => {
-                    setIsVisible(false)
-                    setCurrentIndex(tempIndexRef.current)
+                    setIsVisible(false);
+                    setCurrentIndex(tempIndexRef.current);
                   }}
                   onImageIndexChange={handleImageIndexChange}
                   FooterComponent={({ imageIndex }) => (
                     <View style={{ marginBottom: 50 }}>
-                      <Text style={{
-                        color: "#FFF",
-                        fontSize: 12,
-                        textAlign: "center",
-                        fontWeight: "500",
-                      }}>
+                      <Text
+                        style={{
+                          color: "#FFF",
+                          fontSize: 12,
+                          textAlign: "center",
+                          fontWeight: "500",
+                        }}
+                      >
                         {imageIndex + 1} / {images.length}
                       </Text>
                     </View>
                   )}
                 />
-
-
               </View>
-              {
-                user?.corporate_type !== 'Emlak Ofisi' &&
-                <TouchableOpacity style={{ padding: 5, flexDirection: 'row', alignItems: 'center', gap: 5, }} onPress={() => {
-                  navigation.navigate("Profile", {
-                    name: "",
-                    id: ProjectHomeData?.project?.user?.id,
-                  })
-                }}>
-                  <Text style={{ fontSize: 13, color: '#ED3135', fontWeight: '600' }}>Satış Noktalarında Alırsanız %2 İndirim</Text>
-                  <Icon2 name="arrowright" size={17} color={'#ED3135'} />
+              {user?.corporate_type !== "Emlak Ofisi" && (
+                <TouchableOpacity
+                  style={{
+                    padding: 5,
+                    flexDirection: "row",
+                    alignItems: "center",
+                    gap: 5,
+                  }}
+                  onPress={() => {
+                    navigation.navigate("Profile", {
+                      name: "",
+                      id: ProjectHomeData?.project?.user?.id,
+                    });
+                  }}
+                >
+                  <Text
+                    style={{
+                      fontSize: 13,
+                      color: "#ED3135",
+                      fontWeight: "600",
+                    }}
+                  >
+                    Satış Noktalarında Alırsanız %2 İndirim
+                  </Text>
+                  <Icon2 name="arrowright" size={17} color={"#ED3135"} />
                 </TouchableOpacity>
-              }
+              )}
               <View
                 style={{
                   paddingTop: 8,
@@ -1296,11 +1337,9 @@ export default function PostDetail() {
                 <View style={{ paddingLeft: 8, gap: 5, paddingTop: 8 }}>
                   <Text
                     style={{
-
                       fontSize: 11,
                       color: "#333",
                       fontWeight: "700",
-
                     }}
                   >
                     {ProjectHomeData?.project?.city?.title
@@ -1309,35 +1348,32 @@ export default function PostDetail() {
                   </Text>
                   <Text
                     style={{
-
                       fontSize: 16,
                       color: "#333",
                       fontWeight: "700",
-
                     }}
                   >
                     {ProjectHomeData?.projectHousingsList[HomeId]
-                      ? ProjectHomeData?.projectHousingsList[HomeId]["advertise_title[]"]?.toLocaleUpperCase('tr-TR') +
-                      " " +
-                      HomeId +
-                      " No'lu " +
-                      ProjectHomeData.project.step1_slug
-                        .charAt(0)
-                        .toUpperCase() + // İlk harfi büyütme
-                      ProjectHomeData.project.step1_slug.slice(1) // Geri kalanı olduğu gibi bırakma
+                      ? ProjectHomeData?.projectHousingsList[HomeId][
+                          "advertise_title[]"
+                        ]?.toLocaleUpperCase("tr-TR") +
+                        " " +
+                        HomeId +
+                        " No'lu " +
+                        ProjectHomeData.project.step1_slug
+                          .charAt(0)
+                          .toUpperCase() + // İlk harfi büyütme
+                        ProjectHomeData.project.step1_slug.slice(1) // Geri kalanı olduğu gibi bırakma
                       : ""}
                   </Text>
                 </View>
-                {
-                  PriceStatus.map((item) => (
-                    <View style={{
+                {PriceStatus.map((item) => (
+                  <View
+                    style={{
                       display:
-
                         user.type == 2
                           ? Array.isArray(item.OnlySee) &&
-                            item.OnlySee.includes(
-                              user.corporate_type
-                            ) &&
+                            item.OnlySee.includes(user.corporate_type) &&
                             item.offsale == offSaleStatus &&
                             !ProjectHomeData.projectCartOrders[HomeId]
                             ? "flex"
@@ -1345,93 +1381,110 @@ export default function PostDetail() {
                           : item.isShowClient == 1 &&
                             item.offsale == offSaleStatus &&
                             !ProjectHomeData.projectCartOrders[HomeId]
-                            ? "flex"
-                            : "none",
-
-                    }}>
-
-
-                      {!ProjectHomeData.projectCartOrders[HomeId] && !roomData['share_sale[]'] ? (
-
-                        <View>
-                          {discountAmount ? (
-                            <View style={styles.discountContainer}>
-                              <Svg
-                                viewBox="0 0 24 24"
-                                width={18}
-                                height={18}
-                                stroke="#EA2B2E"
-                                strokeWidth={2}
-                                fill="#EA2B2E"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                className="css-i6dzq1"
-                              >
-                                <Polyline points="23 18 13.5 8.5 8.5 13.5 1 6" />
-                                <Polyline points="17 18 23 18 23 12" />
-                              </Svg>
-                              <Text style={styles.originalPrice}>
-                                <Text style={styles.strikethrough}>
-                                  {formatPrice(roomData["price[]"])} ₺
-                                </Text>
+                          ? "flex"
+                          : "none",
+                    }}
+                  >
+                    {!ProjectHomeData.projectCartOrders[HomeId] &&
+                    !roomData["share_sale[]"] ? (
+                      <View>
+                        {discountAmount ? (
+                          <View style={styles.discountContainer}>
+                            <Svg
+                              viewBox="0 0 24 24"
+                              width={18}
+                              height={18}
+                              stroke="#EA2B2E"
+                              strokeWidth={2}
+                              fill="#EA2B2E"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              className="css-i6dzq1"
+                            >
+                              <Polyline points="23 18 13.5 8.5 8.5 13.5 1 6" />
+                              <Polyline points="17 18 23 18 23 12" />
+                            </Svg>
+                            <Text style={styles.originalPrice}>
+                              <Text style={styles.strikethrough}>
+                                {formatPrice(roomData["price[]"])} ₺
                               </Text>
-                              <Text style={styles.discountedPrice}>
-                                {formatPrice(discountedPrice)} ₺
+                            </Text>
+                            <Text style={styles.discountedPrice}>
+                              {formatPrice(discountedPrice)} ₺
+                            </Text>
+                          </View>
+                        ) : (
+                          <Text style={styles.regularPrice}>
+                            {formatPrice(roomData["price[]"])} ₺
+                          </Text>
+                        )}
+                        {discountAmount > 0 && (
+                          <Text style={styles.discountText}>
+                            {formatPrice(discountAmount)} ₺ indirim
+                          </Text>
+                        )}
+                      </View>
+                    ) : (roomData["share_sale[]"] &&
+                        roomData["share_sale[]"] !== "[]" &&
+                        ProjectHomeData.sumCartOrderQt[HomeId]?.qt_total !==
+                          roomData["number_of_shares[]"]) ||
+                      (roomData["share_sale[]"] &&
+                        roomData["share_sale[]"] !== "[]" &&
+                        !ProjectHomeData.sumCartOrderQt[HomeId]) ? (
+                      <View>
+                        <Text style={[styles.regularPrice, {}]}>
+                          {roomData["share_sale[]"] &&
+                            roomData["share_sale[]"] !== "[]" &&
+                            roomData["number_of_shares[]"] !== 0 && (
+                              <Text style={styles.shareSaleText}>
+                                1/{roomData["number_of_shares[]"]}
                               </Text>
-                            </View>
-                          ) : (
-                            <Text style={styles.regularPrice}>
-                              {formatPrice(roomData["price[]"])} ₺
-                            </Text>
-                          )}
-                          {discountAmount > 0 && (
-                            <Text style={styles.discountText}>
-                              {formatPrice(discountAmount)} ₺ indirim
-                            </Text>
-                          )}
-                        </View>
-                      ) : (roomData['share_sale[]'] &&
-                        roomData['share_sale[]'] !== "[]" &&
-                        ProjectHomeData.sumCartOrderQt[HomeId]?.qt_total !== roomData['number_of_shares[]']) ||
-                        (roomData['share_sale[]'] && roomData['share_sale[]'] !== "[]" && !ProjectHomeData.sumCartOrderQt[HomeId]) ? (
-                        <View>
-                          <Text style={[styles.regularPrice, {}]}>
-                            {roomData['share_sale[]'] && roomData['share_sale[]'] !== "[]" && roomData['number_of_shares[]'] !== 0 && (
-                              <Text style={styles.shareSaleText}>1/{roomData['number_of_shares[]']}</Text>
                             )}
-                            {" Pay Fiyatı - "}
-                            {roomData['share_sale[]'] && roomData['share_sale[]'] !== "[]" && roomData['number_of_shares[]'] !== 0
-                              ? formatPrice(roomData["price[]"] / roomData['number_of_shares[]'])
-                              : formatPrice(roomData["price[]"])}
-                            ₺
-                          </Text>
-                        </View>
-                      ) : (
-                        <View style={{ paddingTop: 5, }}>
-                          <Text
-                            style={{ fontSize: 12, color: "#264ABB", fontWeight: "800", textAlign: 'center' }}
-                          >
-                            {formatPrice(roomData["price[]"])}₺
-                          </Text>
-                        </View>
-                      )
-                      }
-                    </View>
-
-                  ))
-
-
-
-                }
-
+                          {" Pay Fiyatı - "}
+                          {roomData["share_sale[]"] &&
+                          roomData["share_sale[]"] !== "[]" &&
+                          roomData["number_of_shares[]"] !== 0
+                            ? formatPrice(
+                                roomData["price[]"] /
+                                  roomData["number_of_shares[]"]
+                              )
+                            : formatPrice(roomData["price[]"])}
+                          ₺
+                        </Text>
+                      </View>
+                    ) : (
+                      <View style={{ paddingTop: 5 }}>
+                        <Text
+                          style={{
+                            fontSize: 12,
+                            color: "#264ABB",
+                            fontWeight: "800",
+                            textAlign: "center",
+                          }}
+                        >
+                          {formatPrice(roomData["price[]"])}₺
+                        </Text>
+                      </View>
+                    )}
+                  </View>
+                ))}
               </View>
 
               <View style={styles.priceAndButtons}>
-                <View style={[styles.btns, {
-                  justifyContent: (roomData["share_sale[]"] !== "[]" && offSaleStatus == 1) ? '' : 'center'
-                }]}>
+                <View
+                  style={[
+                    styles.btns,
+                    {
+                      justifyContent:
+                        roomData["share_sale[]"] !== "[]" && offSaleStatus == 1
+                          ? ""
+                          : "center",
+                    },
+                  ]}
+                >
                   {roomData["share_sale[]"] !== "[]" ? (
-                    ProjectHomeData.sumCartOrderQt[HomeId]?.qt_total == roomData["number_of_shares[]"] ? (
+                    ProjectHomeData.sumCartOrderQt[HomeId]?.qt_total ==
+                    roomData["number_of_shares[]"] ? (
                       <>
                         <View
                           style={{
@@ -1449,9 +1502,13 @@ export default function PostDetail() {
                             display:
                               (offSaleStatus == 1 &&
                                 roomData["share_sale[]"] !== "[]") ||
-                                (ProjectHomeData.projectCartOrders[HomeId]?.status == 1 && ProjectHomeData.projectCartOrders[HomeId]?.is_show_user !== "on") ||
-                                ProjectHomeData?.project?.user?.id == user.id ||
-                                ProjectHomeData?.project?.user?.id == user.parent_id
+                              (ProjectHomeData.projectCartOrders[HomeId]
+                                ?.status == 1 &&
+                                ProjectHomeData.projectCartOrders[HomeId]
+                                  ?.is_show_user !== "on") ||
+                              ProjectHomeData?.project?.user?.id == user.id ||
+                              ProjectHomeData?.project?.user?.id ==
+                                user.parent_id
                                 ? "none"
                                 : "flex",
                           }}
@@ -1473,15 +1530,17 @@ export default function PostDetail() {
                                         : "none"
                                       : item.isShowClient == 1 &&
                                         item.offsale == offSaleStatus
-                                        ? "flex"
-                                        : "none",
+                                      ? "flex"
+                                      : "none",
                                 },
                               ]}
                               onPress={() => {
                                 RigthBtnFunctionsForkey(item.key);
                               }}
                             >
-                              <Text style={styles.payDetailText}>{item.title}</Text>
+                              <Text style={styles.payDetailText}>
+                                {item.title}
+                              </Text>
                             </TouchableOpacity>
                           ))}
                         </View>
@@ -1494,7 +1553,8 @@ export default function PostDetail() {
                           }}
                         >
                           {ProjectHomeData?.project?.user?.id == user.id ||
-                            ProjectHomeData?.project?.user?.id == user.parent_id ? (
+                          ProjectHomeData?.project?.user?.id ==
+                            user.parent_id ? (
                             <View style={styles.priceContainer}>
                               <TouchableOpacity style={styles.addBasket}>
                                 <Text style={styles.addBasketText}>
@@ -1523,8 +1583,8 @@ export default function PostDetail() {
                                           : "none"
                                         : item.isShowClient == 1 &&
                                           item.offsale == offSaleStatus
-                                          ? "flex"
-                                          : "none",
+                                        ? "flex"
+                                        : "none",
                                   },
                                 ]}
                                 key={_i}
@@ -1543,9 +1603,13 @@ export default function PostDetail() {
                             display:
                               (roomData["off_sale[]"] == 1 &&
                                 roomData["share_sale[]"] !== "[]") ||
-                                (ProjectHomeData.projectCartOrders[HomeId]?.status == 1 && ProjectHomeData.projectCartOrders[HomeId].is_show_user !== "on") ||
-                                ProjectHomeData?.project?.user?.id == user.id ||
-                                ProjectHomeData?.project?.user?.id == user.parent_id
+                              (ProjectHomeData.projectCartOrders[HomeId]
+                                ?.status == 1 &&
+                                ProjectHomeData.projectCartOrders[HomeId]
+                                  .is_show_user !== "on") ||
+                              ProjectHomeData?.project?.user?.id == user.id ||
+                              ProjectHomeData?.project?.user?.id ==
+                                user.parent_id
                                 ? "none"
                                 : "flex",
                           }}
@@ -1567,15 +1631,17 @@ export default function PostDetail() {
                                         : "none"
                                       : item.isShowClient == 1 &&
                                         item.offsale == offSaleStatus
-                                        ? "flex"
-                                        : "none",
+                                      ? "flex"
+                                      : "none",
                                 },
                               ]}
                               onPress={() => {
                                 RigthBtnFunctionsForkey(item.key);
                               }}
                             >
-                              <Text style={styles.payDetailText}>{item.title}</Text>
+                              <Text style={styles.payDetailText}>
+                                {item.title}
+                              </Text>
                             </TouchableOpacity>
                           ))}
                         </View>
@@ -1588,19 +1654,24 @@ export default function PostDetail() {
                           width:
                             (roomData["off_sale[]"] == 1 &&
                               roomData["share_sale[]"] !== "[]") ||
-                              (ProjectHomeData.projectCartOrders[HomeId] && ProjectHomeData.projectCartOrders[HomeId].is_show_user !== "on") ||
-                              (ProjectHomeData.projectCartOrders[HomeId] &&
-                                ProjectHomeData.projectCartOrders[HomeId].is_show_user == "on" &&
-                                ProjectHomeData.projectCartOrders[HomeId].user_id == user.id) ||
-                              ProjectHomeData?.project?.user?.id == user.id ||
-                              ProjectHomeData?.project?.user?.id == user.parent_id
+                            (ProjectHomeData.projectCartOrders[HomeId] &&
+                              ProjectHomeData.projectCartOrders[HomeId]
+                                .is_show_user !== "on") ||
+                            (ProjectHomeData.projectCartOrders[HomeId] &&
+                              ProjectHomeData.projectCartOrders[HomeId]
+                                .is_show_user == "on" &&
+                              ProjectHomeData.projectCartOrders[HomeId]
+                                .user_id == user.id) ||
+                            ProjectHomeData?.project?.user?.id == user.id ||
+                            ProjectHomeData?.project?.user?.id == user.parent_id
                               ? "100%"
                               : "50%",
                         }}
                       >
-
-                        {!ProjectHomeData.projectCartOrders[HomeId] && ProjectHomeData.project.user.id == user.id ||
-                          !ProjectHomeData.projectCartOrders[HomeId] && ProjectHomeData.project.user.id == user.parent_id ? (
+                        {(!ProjectHomeData.projectCartOrders[HomeId] &&
+                          ProjectHomeData.project.user.id == user.id) ||
+                        (!ProjectHomeData.projectCartOrders[HomeId] &&
+                          ProjectHomeData.project.user.id == user.parent_id) ? (
                           <View style={styles.priceContainer}>
                             <TouchableOpacity style={styles.addBasket}>
                               <Text style={styles.addBasketText}>
@@ -1609,15 +1680,18 @@ export default function PostDetail() {
                             </TouchableOpacity>
                           </View>
                         ) : ProjectHomeData.projectCartOrders[HomeId] ? (
-                          ProjectHomeData.projectCartOrders[HomeId]?.status == 1 ? (
+                          ProjectHomeData.projectCartOrders[HomeId]?.status ==
+                          1 ? (
                             <View
                               style={
-                                ProjectHomeData.projectCartOrders[HomeId].user_id == user.id
+                                ProjectHomeData.projectCartOrders[HomeId]
+                                  .user_id == user.id
                                   ? styles.showCustomer
                                   : styles.sold
                               }
                             >
-                              {ProjectHomeData.projectCartOrders[HomeId].user_id == user.id ? (
+                              {ProjectHomeData.projectCartOrders[HomeId]
+                                .user_id == user.id ? (
                                 <Text style={styles.soldText}>
                                   Siz satın aldınız
                                 </Text>
@@ -1627,7 +1701,9 @@ export default function PostDetail() {
                             </View>
                           ) : (
                             <View style={styles.pending}>
-                              <Text style={styles.soldText}>Rezerve Edildi</Text>
+                              <Text style={styles.soldText}>
+                                Rezerve Edildi
+                              </Text>
                             </View>
                           )
                         ) : (
@@ -1651,13 +1727,15 @@ export default function PostDetail() {
                                         : "none"
                                       : item.isShowClient == 1 &&
                                         item.offsale == offSaleStatus
-                                        ? "flex"
-                                        : "none",
+                                      ? "flex"
+                                      : "none",
                                 },
                               ]}
                               key={_i}
                             >
-                              <Text style={styles.addBasketText}>{item.title}</Text>
+                              <Text style={styles.addBasketText}>
+                                {item.title}
+                              </Text>
                             </TouchableOpacity>
                           ))
                         )}
@@ -1669,31 +1747,37 @@ export default function PostDetail() {
                           display:
                             (offSaleStatus == 1 &&
                               roomData["share_sale[]"] !== "[]") ||
-                              (ProjectHomeData.projectCartOrders[HomeId]?.status == 1 && ProjectHomeData.projectCartOrders[HomeId].is_show_user !== "on") ||
-                              ProjectHomeData?.project?.user?.id == user.id ||
-                              ProjectHomeData?.project?.user?.id == user.parent_id
+                            (ProjectHomeData.projectCartOrders[HomeId]
+                              ?.status == 1 &&
+                              ProjectHomeData.projectCartOrders[HomeId]
+                                .is_show_user !== "on") ||
+                            ProjectHomeData?.project?.user?.id == user.id ||
+                            ProjectHomeData?.project?.user?.id == user.parent_id
                               ? "none"
                               : "flex",
                         }}
                       >
                         {ProjectHomeData.projectCartOrders[HomeId] ? (
-                          (ProjectHomeData.projectCartOrders[HomeId]?.status == 1 && ProjectHomeData.projectCartOrders[HomeId].is_show_user == "on") ||
-                            (ProjectHomeData.projectCartOrders[HomeId] &&
-                              ProjectHomeData.projectCartOrders[HomeId].is_show_user == "on" &&
-                              ProjectHomeData.projectCartOrders[HomeId].user_id != user.id)
-
-                            ? (
-                              <TouchableOpacity
-                                style={styles.showCustomer}
-                                onPress={() => setShowAlert(true)}
-                              >
-                                <Text style={styles.showCustomerText}>
-                                  Komşumu Gör
-                                </Text>
-                              </TouchableOpacity>
-                            ) : (
-                              <></>
-                            )
+                          (ProjectHomeData.projectCartOrders[HomeId]?.status ==
+                            1 &&
+                            ProjectHomeData.projectCartOrders[HomeId]
+                              .is_show_user == "on") ||
+                          (ProjectHomeData.projectCartOrders[HomeId] &&
+                            ProjectHomeData.projectCartOrders[HomeId]
+                              .is_show_user == "on" &&
+                            ProjectHomeData.projectCartOrders[HomeId].user_id !=
+                              user.id) ? (
+                            <TouchableOpacity
+                              style={styles.showCustomer}
+                              onPress={() => setShowAlert(true)}
+                            >
+                              <Text style={styles.showCustomerText}>
+                                Komşumu Gör
+                              </Text>
+                            </TouchableOpacity>
+                          ) : (
+                            <></>
+                          )
                         ) : (
                           rightButtonsForPost.map((item, _i) => (
                             <TouchableOpacity
@@ -1712,35 +1796,39 @@ export default function PostDetail() {
                                         : "none"
                                       : item.isShowClient == 1 &&
                                         item.offsale == offSaleStatus
-                                        ? "flex"
-                                        : "none",
+                                      ? "flex"
+                                      : "none",
                                 },
                               ]}
                               onPress={() => {
-                                RigthBtnFunctionsForkey(item.key)
+                                RigthBtnFunctionsForkey(item.key);
                               }}
                             >
-                              <Text style={styles.payDetailText}>{item.title}</Text>
+                              <Text style={styles.payDetailText}>
+                                {item.title}
+                              </Text>
                             </TouchableOpacity>
                           ))
                         )}
                       </View>
                     </>
                   )}
-
-
                 </View>
               </View>
-              {
-
-                (roomData['share_sale[]'] !== '[]' && offSaleStatus != 1) &&
-
-                <ShareProgressBar toplamHisse={roomData['number_of_shares[]']} satilanHisse={ProjectHomeData.projectCartOrders[HomeId] ? ProjectHomeData.sumCartOrderQt[HomeId]?.qt_total : 0} IsShowText={ProjectHomeData.sumCartOrderQt[HomeId]?.qt_total == roomData['number_of_shares[]']} />
-
-
-
-              }
-
+              {roomData["share_sale[]"] !== "[]" && offSaleStatus != 1 && (
+                <ShareProgressBar
+                  toplamHisse={roomData["number_of_shares[]"]}
+                  satilanHisse={
+                    ProjectHomeData.projectCartOrders[HomeId]
+                      ? ProjectHomeData.sumCartOrderQt[HomeId]?.qt_total
+                      : 0
+                  }
+                  IsShowText={
+                    ProjectHomeData.sumCartOrderQt[HomeId]?.qt_total ==
+                    roomData["number_of_shares[]"]
+                  }
+                />
+              )}
 
               <View>
                 {roomData &&
@@ -1768,7 +1856,7 @@ export default function PostDetail() {
               </View>
 
               <View>
-                {roomData && roomData["swap[]"] !== '[]' && (
+                {roomData && roomData["swap[]"] !== "[]" && (
                   <SettingsItem
                     info="Takas Başvurusu Yap"
                     color={"orange"}
@@ -1803,71 +1891,67 @@ export default function PostDetail() {
                 </TouchableOpacity>
               )} */}
 
-              {roomData &&
-                roomData['swap[]'] &&
-                roomData['swap[]'] !== '[]' ?
-                (
-                  <View style={{ paddingLeft: 10, paddingRight: 10 }}>
-                    <TouchableOpacity
+              {roomData && roomData["swap[]"] && roomData["swap[]"] !== "[]" ? (
+                <View style={{ paddingLeft: 10, paddingRight: 10 }}>
+                  <TouchableOpacity
+                    style={{
+                      backgroundColor: "#FEF4EB",
+                      flexDirection: "row",
+                      padding: 6,
+                      alignItems: "center",
+                      justifyContent: "space-between",
+                      borderRadius: 5,
+                    }}
+                    onPress={() => {
+                      if (user.access_token) {
+                        navigation.navigate("SwapForm", {
+                          projectId: projectId,
+                          houseid: HomeId,
+                          type: 1,
+                        });
+                      } else {
+                        setShow(true);
+                      }
+                    }}
+                  >
+                    <View
                       style={{
-                        backgroundColor: "#FEF4EB",
                         flexDirection: "row",
-                        padding: 6,
                         alignItems: "center",
-                        justifyContent: "space-between",
-                        borderRadius: 5,
-                      }}
-                      onPress={() => {
-                        if (user.access_token) {
-                          navigation.navigate("SwapForm", {
-                            projectId: projectId,
-                            houseid: HomeId,
-                            type: 1
-                          });
-                        } else {
-                          setShow(true)
-                        }
-
+                        gap: 10,
                       }}
                     >
                       <View
                         style={{
-                          flexDirection: "row",
-                          alignItems: "center",
-                          gap: 10,
+                          backgroundColor: "#F37919",
+                          padding: 6,
+                          borderRadius: 5,
                         }}
                       >
-                        <View
+                        <Icon2 name="plus" size={16} color={"#fff"} />
+                      </View>
+                      <View style={{}}>
+                        <Text
                           style={{
-                            backgroundColor: "#F37919",
-                            padding: 6,
-                            borderRadius: 5,
+                            fontSize: 12,
+                            color: "#333",
+                            fontWeight: "600",
                           }}
                         >
-                          <Icon2 name="plus" size={16} color={"#fff"} />
-                        </View>
-                        <View style={{}}>
-                          <Text
-                            style={{
-                              fontSize: 12,
-                              color: "#333",
-                              fontWeight: "600",
-                            }}
-                          >
-                            Takas Başvurusu Yap
-                          </Text>
-                        </View>
+                          Takas Başvurusu Yapasd
+                        </Text>
                       </View>
-                      <View>
-                        <Arrow
-                          name="arrow-forward-ios"
-                          size={16}
-                          color={"#333"}
-                        />
-                      </View>
-                    </TouchableOpacity>
-                  </View>
-                ) : null}
+                    </View>
+                    <View>
+                      <Arrow
+                        name="arrow-forward-ios"
+                        size={16}
+                        color={"#333"}
+                      />
+                    </View>
+                  </TouchableOpacity>
+                </View>
+              ) : null}
               <View style={{ padding: 8 }}>
                 <SliderMenuPostDetails
                   tab={tabs}
@@ -1876,12 +1960,31 @@ export default function PostDetail() {
                 />
               </View>
 
-
-              <View style={{ paddingLeft: 5, paddingRight: 5, paddingBottom: 5 }}>
-                <TouchableOpacity style={{ borderWidth: 1, borderColor: '#EA2B2E', padding: 5, borderRadius: 6, backgroundColor: 'white' }} onPress={() => {
-                  setSeeAlertModal(true)
-                }}>
-                  <Text style={{ textAlign: 'center', fontSize: 13, color: '#EA2B2E', fontWeight: '600' }}>Bilgilendirme!</Text>
+              <View
+                style={{ paddingLeft: 5, paddingRight: 5, paddingBottom: 5 }}
+              >
+                <TouchableOpacity
+                  style={{
+                    borderWidth: 1,
+                    borderColor: "#EA2B2E",
+                    padding: 5,
+                    borderRadius: 6,
+                    backgroundColor: "white",
+                  }}
+                  onPress={() => {
+                    setSeeAlertModal(true);
+                  }}
+                >
+                  <Text
+                    style={{
+                      textAlign: "center",
+                      fontSize: 13,
+                      color: "#EA2B2E",
+                      fontWeight: "600",
+                    }}
+                  >
+                    Bilgilendirme!
+                  </Text>
                 </TouchableOpacity>
               </View>
 
@@ -1904,7 +2007,6 @@ export default function PostDetail() {
                   setLastBlockItemCount={setLastBlockItemCount}
                   lastBlockItemCount={lastBlockItemCount}
                   setPage={setPage}
-
                 />
               )}
               {tabs == 1 && <PostCaption data={ProjectHomeData} />}
@@ -1922,8 +2024,13 @@ export default function PostDetail() {
 
               <View style={{ padding: 10 }}></View>
 
-              <PaymentPlanModal visible={paymentModalVisible} title={ProjectHomeData?.project?.project_title} onClose={onClose} data={roomData ?? roomData} RoomOrder={HomeId} />
-
+              <PaymentPlanModal
+                visible={paymentModalVisible}
+                title={ProjectHomeData?.project?.project_title}
+                onClose={onClose}
+                data={roomData ?? roomData}
+                RoomOrder={HomeId}
+              />
 
               <Modal
                 isVisible={showCoverImageModal}
@@ -1972,7 +2079,10 @@ export default function PostDetail() {
                 </View>
               </Modal>
             </ScrollView>
-            <TextAlertModal visible={SeeAlertModal} onClose={setSeeAlertModal} />
+            <TextAlertModal
+              visible={SeeAlertModal}
+              onClose={setSeeAlertModal}
+            />
             <Modal
               isVisible={ColectionSheet}
               onBackdropPress={() => setColectionSheet(false)}
@@ -2015,7 +2125,7 @@ export default function PostDetail() {
                           }}
                         >
                           {user.type == 2 &&
-                            user.corporate_type == "Emlak Ofisi"
+                          user.corporate_type == "Emlak Ofisi"
                             ? "Portföye Ekle"
                             : "Koleksiyona Ekle"}
                         </Text>
@@ -2027,7 +2137,7 @@ export default function PostDetail() {
                           }}
                         >
                           {user.type == 2 &&
-                            user.corporate_type == "Emlak Ofisi"
+                          user.corporate_type == "Emlak Ofisi"
                             ? " Konutu portföylerinden birine ekleyebilir veya yeni bir portföy oluşturabilirsin"
                             : "Konutu koleksiyonlarından birine ekleyebilir veya yeni bir koleksiyon oluşturabilirsin"}
                         </Text>
@@ -2072,7 +2182,7 @@ export default function PostDetail() {
                                       }}
                                     >
                                       {user.type == 2 &&
-                                        user.corporate_type == "Emlak Ofisi"
+                                      user.corporate_type == "Emlak Ofisi"
                                         ? "Portföyünüze konut ekleyebilmeniz emlak kulüp üyesi olmaız gerekmektedir"
                                         : "Koleksiyonunuza konut ekleyebilmeniz emlak kulüp üyesi olmaız gerekmektedir"}
                                     </Text>
@@ -2103,7 +2213,7 @@ export default function PostDetail() {
                                     }}
                                   >
                                     {user.type == 2 &&
-                                      user.corporate_type == "Emlak Ofisi"
+                                    user.corporate_type == "Emlak Ofisi"
                                       ? "Portföyünüze konut ekleyebilmeniz emlak kulüp üyesi olmaız gerekmektedir"
                                       : "Koleksiyonunuza konut ekleyebilmeniz emlak kulüp üyesi olmaız gerekmektedir"}
                                   </Text>
@@ -2154,7 +2264,7 @@ export default function PostDetail() {
                                       }}
                                     >
                                       {user.type == 2 &&
-                                        user.corporate_type == "Emlak Ofisi"
+                                      user.corporate_type == "Emlak Ofisi"
                                         ? "Portföyünüze konut ekleyebilmeniz emlak kulüp üyesi olmaız gerekmektedir"
                                         : "Koleksiyonunuza konut ekleyebilmeniz emlak kulüp üyesi olmaız gerekmektedir"}
                                     </Text>
@@ -2269,7 +2379,7 @@ export default function PostDetail() {
                                   }}
                                 >
                                   {user.type == 2 &&
-                                    user.corporate_type == "Emlak Ofisi"
+                                  user.corporate_type == "Emlak Ofisi"
                                     ? "Portföyünüze konut ekleyebilmeniz giriş yapmanız gerekmektedir"
                                     : "Koleksiyonunuza konut ekleyebilmeniz giriş yapmanız gerekmektedir"}
                                 </Text>
@@ -2299,7 +2409,6 @@ export default function PostDetail() {
                             </View>
                           </>
                         )}
-
                       </ScrollView>
                     </SafeAreaView>
                   )}
@@ -2366,7 +2475,7 @@ export default function PostDetail() {
                           }}
                         >
                           {user.type == 2 &&
-                            user.corporate_type == "Emlak Ofisi"
+                          user.corporate_type == "Emlak Ofisi"
                             ? "Portföy Oluştur"
                             : "Koleksiyon Oluştur"}
                         </Text>
@@ -2422,7 +2531,7 @@ export default function PostDetail() {
                           }}
                         >
                           {user.type == 2 &&
-                            user.corporate_type == "Emlak Ofisi"
+                          user.corporate_type == "Emlak Ofisi"
                             ? "Portföy Oluştur"
                             : "Koleksiyon Oluştur"}
                         </Text>
@@ -2434,16 +2543,17 @@ export default function PostDetail() {
             </Modal>
 
             <AwesomeAlertComp
-              message={'Takas başvurusu yapmak için giriş yapmanız gerekmektedir'}
+              message={
+                "Takas başvurusu yapmak için giriş yapmanız gerekmektedir"
+              }
               canselFunc={() => {
-                setShow(false)
+                setShow(false);
               }}
               confirmFunc={() => {
-                setShow(false)
+                setShow(false);
                 setTimeout(() => {
-                  navigation.navigate('Login')
+                  navigation.navigate("Login");
                 }, 200);
-
               }}
               show={show}
               setShow={setShow}
@@ -2470,12 +2580,12 @@ export default function PostDetail() {
               cancelButtonColor="#ce4d63"
               confirmButtonColor="#1d8027"
               onCancelPressed={() => {
-                setModalForAddToCart(false)
+                setModalForAddToCart(false);
                 setModalVisible(false);
               }}
               onConfirmPressed={() => {
-                addToCard()
-                setModalForAddToCart(false)
+                addToCard();
+                setModalForAddToCart(false);
                 setModalVisible(false);
               }}
               confirmButtonTextStyle={{ marginLeft: 20, marginRight: 20 }}
@@ -2491,7 +2601,9 @@ export default function PostDetail() {
                 textAlign: "center",
                 margin: 5,
               }}
-              title={"Sepetinize ilan ekleyebilmek için giriş yapmanız gerekiyor."}
+              title={
+                "Sepetinize ilan ekleyebilmek için giriş yapmanız gerekiyor."
+              }
               messageStyle={{ textAlign: "center" }}
               closeOnTouchOutside={true}
               closeOnHardwareBackPress={false}
@@ -2532,16 +2644,12 @@ export default function PostDetail() {
               closeOnHardwareBackPress={false}
               showCancelButton={false}
               showConfirmButton={true}
-
               confirmText="Tamam"
-
               confirmButtonColor="#1d8027"
-
               onConfirmPressed={() => {
-                setPaymaentAlert(false)
+                setPaymaentAlert(false);
               }}
               confirmButtonTextStyle={{ marginLeft: 20, marginRight: 20 }}
-
             />
             <AwesomeAlert
               show={AlertForFavorite}
@@ -2850,7 +2958,7 @@ const styles = StyleSheet.create({
     width: "100%",
     alignItems: "center",
     backgroundColor: "#EA2C2E",
-    borderRadius: 5
+    borderRadius: 5,
   },
   offSaleText: {
     color: "white",
@@ -2864,7 +2972,7 @@ const styles = StyleSheet.create({
     width: "100%",
     alignItems: "center",
     backgroundColor: "#EA2C2E",
-    borderRadius: 5
+    borderRadius: 5,
   },
   soldText: {
     color: "white",
@@ -2877,7 +2985,7 @@ const styles = StyleSheet.create({
     padding: 10,
     alignItems: "center",
     backgroundColor: "#000000",
-    borderRadius: 5
+    borderRadius: 5,
   },
   payDetailText: {
     fontWeight: "500",
@@ -2902,10 +3010,10 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: 'center',
+    justifyContent: "center",
     width: "100%",
     padding: 6,
-    gap: 3
+    gap: 3,
   },
   addBasket: {
     paddingLeft: 20,
@@ -2914,7 +3022,7 @@ const styles = StyleSheet.create({
     width: "100%",
     alignItems: "center",
     backgroundColor: "#264ABB",
-    borderRadius: 5
+    borderRadius: 5,
   },
   addBasketText: {
     color: "white",
@@ -2928,7 +3036,7 @@ const styles = StyleSheet.create({
     width: "100%",
     alignItems: "center",
     backgroundColor: "green",
-    borderRadius: 5
+    borderRadius: 5,
   },
   showCustomerText: {
     color: "white",
@@ -2936,12 +3044,11 @@ const styles = StyleSheet.create({
     fontSize: 12,
   },
   pending: {
-
     padding: 10,
     width: "100%",
     alignItems: "center",
     backgroundColor: "orange",
-    borderRadius: 5
+    borderRadius: 5,
   },
   pendingText: {
     color: "white",

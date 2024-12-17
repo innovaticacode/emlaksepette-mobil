@@ -16,7 +16,7 @@ import MaterialIcon from "react-native-vector-icons/MaterialCommunityIcons";
 import { useNavigation } from "@react-navigation/native";
 import { Platform } from "react-native";
 import Icon3 from "react-native-vector-icons/MaterialIcons";
-import Icon4 from "react-native-vector-icons/FontAwesome5";
+
 import { ActivityIndicator } from "react-native-paper";
 import { CheckBox } from "react-native-elements";
 import { Stack } from "@react-native-material/core";
@@ -82,7 +82,6 @@ export default function RejectRealtorAdverts() {
   useEffect(() => {
     fetchDisabledHousings(sort, take, skip);
     console.log(user?.acces_token + "aswww");
-
   }, [user, sort, skip]);
 
   const [selectedIndex, setIndex] = React.useState(null);

@@ -16,7 +16,7 @@ import MaterialIcon from "react-native-vector-icons/MaterialCommunityIcons";
 import { useNavigation } from "@react-navigation/native";
 import { Platform } from "react-native";
 import Icon3 from "react-native-vector-icons/MaterialIcons";
-import Icon4 from "react-native-vector-icons/FontAwesome5";
+
 import { ActivityIndicator } from "react-native-paper";
 import { Stack } from "@react-native-material/core";
 import { CheckBox } from "react-native-elements";
@@ -41,8 +41,7 @@ export default function WaitRealtorAdverts({ index }) {
   };
   const [loading, setloading] = useState(false);
   const [housingRecords, sethousingRecords] = useState([]);
-  const fetchPendingHousings = async (sort,take,skip) => {
-
+  const fetchPendingHousings = async (sort, take, skip) => {
     try {
       const res = await axios({
         method: "get",
@@ -77,14 +76,14 @@ export default function WaitRealtorAdverts({ index }) {
   };
 
   useEffect(() => {
-if(user?.access_token){
-    fetchPendingHousings(sort, take, skip);
-}
+    if (user?.access_token) {
+      fetchPendingHousings(sort, take, skip);
+    }
   }, [user, sort, skip]);
 
-const handleEndReached = () =>{
-setSkip((prevSkip) => prevSkip + take);
-}
+  const handleEndReached = () => {
+    setSkip((prevSkip) => prevSkip + take);
+  };
 
   const [selectedIndex, setIndex] = React.useState(null);
   const [SortLıstModal, setSortLıstModal] = useState(false);
@@ -92,7 +91,7 @@ setSkip((prevSkip) => prevSkip + take);
     setIndex(index);
     setTimeout(() => {
       setSortLıstModal(false);
-      fetchPendingHousings(sort,take,0);
+      fetchPendingHousings(sort, take, 0);
     }, 600);
   };
   const [searchValue, setsearchValue] = useState("");
@@ -120,7 +119,7 @@ setSkip((prevSkip) => prevSkip + take);
           <ActivityIndicator size={"large"} color="#333" />
         </View>
       ) : (
-        <View >
+        <View>
           <View
             style={{
               paddingTop: 6,
@@ -176,7 +175,7 @@ setSkip((prevSkip) => prevSkip + take);
             ) : (
               <FlatList
                 data={housings}
-                renderItem={({item, index}) => (
+                renderItem={({ item, index }) => (
                   <RealtorAdvertPost
                     key={index}
                     housing={item}

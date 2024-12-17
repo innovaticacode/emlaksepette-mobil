@@ -9,10 +9,7 @@ import {
 } from "react-native";
 import { React, useEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
-import Heart from "react-native-vector-icons/AntDesign";
-import Bookmark from "react-native-vector-icons/FontAwesome";
-import Trash from "react-native-vector-icons/Entypo";
-import Info from "./Info";
+
 import { Platform } from "react-native";
 import AwesomeAlert from "react-native-awesome-alerts";
 import {

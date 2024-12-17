@@ -18,7 +18,7 @@ import EftPay from "./EftPay";
 import Modal from "react-native-modal";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import * as DocumentPicker from "expo-document-picker";
-import * as SecureStore from "expo-secure-store";
+
 import { addDotEveryThreeDigits } from "../../components/methods/merhod";
 
 import { Platform } from "react-native";
@@ -29,10 +29,9 @@ import {
 } from "../../components/methods/apiRequest";
 import { useRoute } from "@react-navigation/native";
 import axios from "axios";
-import WebView from "react-native-webview";
+
 import HTMLView from "react-native-htmlview";
-import { checkFileSize } from "../../utils";
-import { ALERT_TYPE, Dialog } from "react-native-alert-notification";
+
 export default function PaymentScreen() {
   // Kullanarak bu değerleri göstermek için devam edin
 

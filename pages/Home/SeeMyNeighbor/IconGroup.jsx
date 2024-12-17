@@ -2,8 +2,6 @@ import React from "react";
 import { View, StyleSheet, Dimensions } from "react-native";
 import Icon1 from "react-native-vector-icons/MaterialCommunityIcons";
 import Icon2 from "react-native-vector-icons/AntDesign";
-import Icon3 from "react-native-vector-icons/FontAwesome5";
-import { he } from "date-fns/locale";
 
 const { width } = Dimensions.get("window"); // Get the width of the window
 

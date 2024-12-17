@@ -7,12 +7,11 @@ import {
   ScrollView,
 } from "react-native";
 import React, { useState, useEffect } from "react";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+
 import { CheckBox } from "react-native-elements";
-import Modal from "react-native-modal";
+
 import CheckboxForm from "../../components/CheckboxForm";
-import { FaLess } from "react-icons/fa";
-import { Alert } from "react-native";
+
 import RNPickerSelect from "react-native-picker-select";
 import axios from "axios";
 import { apiUrl } from "../../components/methods/apiRequest";
@@ -20,10 +19,6 @@ import { apiUrl } from "../../components/methods/apiRequest";
 export default function SendSellAndRentForm() {
   const [selectedIndexRadio, setIndexRadio] = useState(0);
   const [selectedInfo, setselectedInfo] = useState(0);
-
-  const [NameSurname, setNameSurname] = useState("");
-  const [PhoneNumber, setPhoneNumber] = useState("");
-  const [ePosta, setePosta] = useState("");
   const [city, setcity] = useState("");
   const [county, setcounty] = useState("");
   const [neigbourhod, setneigbourhod] = useState("");
@@ -181,9 +176,7 @@ export default function SendSellAndRentForm() {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get(
-        apiUrl+"cities"
-      );
+      const response = await axios.get(apiUrl + "cities");
       return response.data;
     } catch (error) {
       console.error("Hata:", error);
@@ -203,9 +196,7 @@ export default function SendSellAndRentForm() {
   const [counties, setcounties] = useState([]);
   const fetchDataCounty = async (value) => {
     try {
-      const response = await axios.get(
-        `${apiUrl}counties/${value}`
-      );
+      const response = await axios.get(`${apiUrl}counties/${value}`);
       return response.data;
     } catch (error) {
       console.error("Hata:", error);
@@ -233,9 +224,7 @@ export default function SendSellAndRentForm() {
   const [Neigbour, setNeigbour] = useState([]);
   const fetchDataNeigbour = async (value) => {
     try {
-      const response = await axios.get(
-        `${apiUrl}neighborhoods/${value}`
-      );
+      const response = await axios.get(`${apiUrl}neighborhoods/${value}`);
       return response.data;
     } catch (error) {
       console.error("Hata:", error);

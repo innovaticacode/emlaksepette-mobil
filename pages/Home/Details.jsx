@@ -28,17 +28,21 @@ import Map from "../../components/Map";
 import { Icon } from "react-native-elements";
 import OtherHomeInProject from "../../components/OtherHomeInProject";
 import FloorPlan from "../../components/FloorPlan";
-import Information from "../../components/Information";
+
 import LinkIcon from "react-native-vector-icons/Entypo";
 import { useRoute } from "@react-navigation/native";
-import Header from "../../components/Header";
+
 import Modal from "react-native-modal";
 import SliderMenuDetails from "../../components/SliderMenuDetails";
-import { apiRequestGet, apiUrl, frontEndUriBase } from "../../components/methods/apiRequest";
+import {
+  apiRequestGet,
+  apiUrl,
+  frontEndUriBase,
+} from "../../components/methods/apiRequest";
 import AddCollection from "../../components/AddCollection";
 import { getValueFor } from "../../components/methods/user";
 import axios from "axios";
-import DrawerMenu from "../../components/Menu/DrawerMenu/DrawerMenu";
+
 import { ActivityIndicator } from "react-native-paper";
 import AwesomeAlert from "react-native-awesome-alerts";
 import CommentForProject from "../../components/CommentForProject";
@@ -46,7 +50,6 @@ import ImageViewing from "react-native-image-viewing";
 import TextAlertModal from "../../components/TextAlertModal";
 
 export default function Details({ navigation }) {
-
   const [ColectionSheet, setColectionSheet] = useState(false);
   const [selectedTab, setSelectedTab] = useState(0);
   const [page, setPage] = useState(0);
@@ -75,7 +78,7 @@ export default function Details({ navigation }) {
   const [addCollection, setaddCollection] = useState(false);
   const [newCollectionNameCreate, setnewCollectionNameCreate] = useState("");
   const translateY = useRef(new Animated.Value(400)).current;
-  const [SeeAlertModal, setSeeAlertModal] = useState(false)
+  const [SeeAlertModal, setSeeAlertModal] = useState(false);
   const [selectedHouse, setselectedHouse] = useState(0);
   const [collections, setcollections] = useState([]);
   const [selectedCollectionName, setselectedCollectionName] = useState("");
@@ -140,14 +143,11 @@ export default function Details({ navigation }) {
   const GetUserInfo = async () => {
     try {
       if (user?.access_token && user) {
-        const userInfo = await axios.get(
-          `${apiUrl}users/` + user?.id,
-          {
-            headers: {
-              Authorization: `Bearer ${user.access_token}`,
-            },
-          }
-        );
+        const userInfo = await axios.get(`${apiUrl}users/` + user?.id, {
+          headers: {
+            Authorization: `Bearer ${user.access_token}`,
+          },
+        });
         const userData = userInfo?.data?.user;
         setnamFromGetUser(userData);
       }
@@ -167,11 +167,10 @@ export default function Details({ navigation }) {
         setData(res?.data);
         setloadingDetails(true);
         GetUserInfo();
-      }).finally(() => {
-        setloadingDetails(false)
-
       })
-
+      .finally(() => {
+        setloadingDetails(false);
+      });
   }, [ProjectId, user]);
 
   const getLastItemCount = () => {
@@ -191,11 +190,11 @@ export default function Details({ navigation }) {
     setItemCount(10);
     apiRequestGet(
       "project_housings/" +
-      ProjectId +
-      "?start=" +
-      lastBlockItemsCount +
-      "&end=" +
-      (lastBlockItemsCount + 10)
+        ProjectId +
+        "?start=" +
+        lastBlockItemsCount +
+        "&end=" +
+        (lastBlockItemsCount + 10)
     ).then((res) => {
       setData({
         ...data,
@@ -211,14 +210,14 @@ export default function Details({ navigation }) {
       if (page * 10 < data.project.blocks[selectedTab].housing_count) {
         apiRequestGet(
           "project_housings/" +
-          ProjectId +
-          "?start=" +
-          (parseInt(lastBlockItemCount) + parseInt(page * 10)) +
-          "&end=" +
-          ((page + 1) * 10 > data.project.blocks[selectedTab].housing_count
-            ? parseInt(lastBlockItemCount) +
-            parseInt(data.project.blocks[selectedTab].housing_count)
-            : parseInt(lastBlockItemCount) + parseInt((page + 1) * 10))
+            ProjectId +
+            "?start=" +
+            (parseInt(lastBlockItemCount) + parseInt(page * 10)) +
+            "&end=" +
+            ((page + 1) * 10 > data.project.blocks[selectedTab].housing_count
+              ? parseInt(lastBlockItemCount) +
+                parseInt(data.project.blocks[selectedTab].housing_count)
+              : parseInt(lastBlockItemCount) + parseInt((page + 1) * 10))
         ).then((res) => {
           // console.log(res);
           setData({
@@ -241,11 +240,11 @@ export default function Details({ navigation }) {
         setIsLoading(true);
         apiRequestGet(
           "project_housings/" +
-          ProjectId +
-          "?start=" +
-          page * 10 +
-          "&end=" +
-          (page + 1) * 10
+            ProjectId +
+            "?start=" +
+            page * 10 +
+            "&end=" +
+            (page + 1) * 10
         ).then((res) => {
           setData({
             ...data,
@@ -275,16 +274,12 @@ export default function Details({ navigation }) {
     };
 
     axios
-      .post(
-        `${apiUrl}remove_item_on_collection`,
-        collectionData,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${user.access_token}`,
-          },
-        }
-      )
+      .post(`${apiUrl}remove_item_on_collection`, collectionData, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${user.access_token}`,
+        },
+      })
       .then((response) => {
         setColectionSheet(false);
         setTimeout(() => {
@@ -358,14 +353,11 @@ export default function Details({ navigation }) {
   const fetchData = async () => {
     try {
       if (user.access_token) {
-        const response = await axios.get(
-          apiUrl + "client/collections",
-          {
-            headers: {
-              Authorization: `Bearer ${user.access_token}`,
-            },
-          }
-        );
+        const response = await axios.get(apiUrl + "client/collections", {
+          headers: {
+            Authorization: `Bearer ${user.access_token}`,
+          },
+        });
 
         setcollections(response?.data.collections);
       }
@@ -422,16 +414,12 @@ export default function Details({ navigation }) {
     };
 
     axios
-      .post(
-        apiUrl + "add/collection",
-        collectionData,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${user.access_token}`,
-          },
-        }
-      )
+      .post(apiUrl + "add/collection", collectionData, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${user.access_token}`,
+        },
+      })
       .then((response) => {
         fetchData();
         setaddCollection(false);
@@ -635,19 +623,61 @@ export default function Details({ navigation }) {
             <ActivityIndicator size={"large"} color="#333" />
           ) : (
             <>
-
-
-              <View style={{ position: 'absolute', width: '100%', bottom: 35, padding: 4, zIndex: 1, flexDirection: 'row', justifyContent: 'space-around' }}>
-                <TouchableOpacity style={{ width: '45%', backgroundColor: '#EA2B2E', padding: 12, borderRadius: 8 }} onPress={handleOpenPhone}>
-                  <Text style={{ fontSize: 14, color: 'white', fontWeight: '600', textAlign: 'center' }} >Ara</Text>
+              <View
+                style={{
+                  position: "absolute",
+                  width: "100%",
+                  bottom: 35,
+                  padding: 4,
+                  zIndex: 1,
+                  flexDirection: "row",
+                  justifyContent: "space-around",
+                }}
+              >
+                <TouchableOpacity
+                  style={{
+                    width: "45%",
+                    backgroundColor: "#EA2B2E",
+                    padding: 12,
+                    borderRadius: 8,
+                  }}
+                  onPress={handleOpenPhone}
+                >
+                  <Text
+                    style={{
+                      fontSize: 14,
+                      color: "white",
+                      fontWeight: "600",
+                      textAlign: "center",
+                    }}
+                  >
+                    Ara
+                  </Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={{ width: '45%', backgroundColor: '#EA2B2E', padding: 12, borderRadius: 8 }} onPress={() => {
-                  navigation.navigate("Profile", {
-                    name: "",
-                    id: data?.project?.user?.id,
-                  })
-                }}>
-                  <Text style={{ fontSize: 14, color: 'white', fontWeight: '600', textAlign: 'center' }}>Satış Noktalarını Gör</Text>
+                <TouchableOpacity
+                  style={{
+                    width: "45%",
+                    backgroundColor: "#EA2B2E",
+                    padding: 12,
+                    borderRadius: 8,
+                  }}
+                  onPress={() => {
+                    navigation.navigate("Profile", {
+                      name: "",
+                      id: data?.project?.user?.id,
+                    });
+                  }}
+                >
+                  <Text
+                    style={{
+                      fontSize: 14,
+                      color: "white",
+                      fontWeight: "600",
+                      textAlign: "center",
+                    }}
+                  >
+                    Satış Noktalarını Gör
+                  </Text>
                 </TouchableOpacity>
               </View>
               <View
@@ -737,7 +767,6 @@ export default function Details({ navigation }) {
                 </TouchableOpacity>
               </View>
 
-
               <ScrollView
                 ref={scrollViewRef}
                 contentContainerStyle={{ paddingBottom: 80 }}
@@ -779,7 +808,6 @@ export default function Details({ navigation }) {
                   }
                 }}
               >
-
                 <View style={{ height: 250 }}>
                   <View style={styles.pagination}>
                     <View
@@ -803,7 +831,6 @@ export default function Details({ navigation }) {
                         <Icon2 name="sharealt" size={18} />
                       </View>
                     </TouchableOpacity>
-
                   </View>
                   <View style={styles.clubRateContainer}>
                     {user &&
@@ -859,34 +886,49 @@ export default function Details({ navigation }) {
                     onImageIndexChange={handleImageIndexChange}
                     FooterComponent={({ imageIndex }) => (
                       <View style={{ marginBottom: 50 }}>
-                        <Text style={{
-                          color: "#FFF",
-                          fontSize: 12,
-                          textAlign: "center",
-                          fontWeight: "500",
-                        }}>
+                        <Text
+                          style={{
+                            color: "#FFF",
+                            fontSize: 12,
+                            textAlign: "center",
+                            fontWeight: "500",
+                          }}
+                        >
                           {imageIndex + 1} / {images.length}
                         </Text>
                       </View>
                     )}
                   />
                 </View>
-                {
-                  user.corporate_type !== 'Emlak Ofisi' &&
-                  <TouchableOpacity style={{ padding: 5, flexDirection: 'row', alignItems: 'center', gap: 5 }} onPress={() => {
-                    navigation.navigate("Profile", {
-                      name: "",
-                      id: data?.project?.user?.id,
-                    })
-                  }}>
-                    <Text style={{ fontSize: 13, color: '#ED3135', fontWeight: '600' }}>Satış Noktalarında Alırsanız %2 İndirim</Text>
-                    <Icon2 name="arrowright" size={17} color={'#ED3135'} />
+                {user.corporate_type !== "Emlak Ofisi" && (
+                  <TouchableOpacity
+                    style={{
+                      padding: 5,
+                      flexDirection: "row",
+                      alignItems: "center",
+                      gap: 5,
+                    }}
+                    onPress={() => {
+                      navigation.navigate("Profile", {
+                        name: "",
+                        id: data?.project?.user?.id,
+                      });
+                    }}
+                  >
+                    <Text
+                      style={{
+                        fontSize: 13,
+                        color: "#ED3135",
+                        fontWeight: "600",
+                      }}
+                    >
+                      Satış Noktalarında Alırsanız %2 İndirim
+                    </Text>
+                    <Icon2 name="arrowright" size={17} color={"#ED3135"} />
                   </TouchableOpacity>
-                }
+                )}
 
-                <View
-                  style={styles.CaptionPriceAndSlider}
-                >
+                <View style={styles.CaptionPriceAndSlider}>
                   {totalRate != 0 && (
                     <View
                       style={{
@@ -910,11 +952,10 @@ export default function Details({ navigation }) {
                       <Icon2 name="star" color={"gold"} />
                     </View>
                   )}
-                  <View style={{ width: '100%' }}>
-                    <View style={{ gap: 5, width: '70%' }}>
+                  <View style={{ width: "100%" }}>
+                    <View style={{ gap: 5, width: "70%" }}>
                       <Text
                         style={{
-
                           fontSize: 11,
                           color: "#333",
                           fontWeight: "600",
@@ -926,16 +967,16 @@ export default function Details({ navigation }) {
                       </Text>
                       <Text
                         style={{
-
                           fontSize: 16,
                           color: "#333",
                           fontWeight: "600",
                         }}
                       >
-                        {data?.project?.project_title?.toLocaleUpperCase('tr-TR')}
+                        {data?.project?.project_title?.toLocaleUpperCase(
+                          "tr-TR"
+                        )}
                       </Text>
                     </View>
-
                   </View>
 
                   <View>
@@ -945,7 +986,6 @@ export default function Details({ navigation }) {
                       changeTab={changeTab}
                     />
                   </View>
-
                 </View>
                 {/* {
                   data?.isShareLink?.length!==0 &&
@@ -968,11 +1008,35 @@ export default function Details({ navigation }) {
                 } */}
 
                 <View style={{ marginTop: 5 }}>
-                  <View style={{ paddingLeft: 5, paddingRight: 5, paddingBottom: 5 }}>
-                    <TouchableOpacity style={{ borderWidth: 1, borderColor: '#EA2B2E', padding: 5, borderRadius: 6, backgroundColor: 'white' }} onPress={() => {
-                      setSeeAlertModal(true)
-                    }}>
-                      <Text style={{ textAlign: 'center', fontSize: 13, color: '#EA2B2E', fontWeight: '600' }}>Bilgilendirme!</Text>
+                  <View
+                    style={{
+                      paddingLeft: 5,
+                      paddingRight: 5,
+                      paddingBottom: 5,
+                    }}
+                  >
+                    <TouchableOpacity
+                      style={{
+                        borderWidth: 1,
+                        borderColor: "#EA2B2E",
+                        padding: 5,
+                        borderRadius: 6,
+                        backgroundColor: "white",
+                      }}
+                      onPress={() => {
+                        setSeeAlertModal(true);
+                      }}
+                    >
+                      <Text
+                        style={{
+                          textAlign: "center",
+                          fontSize: 13,
+                          color: "#EA2B2E",
+                          fontWeight: "600",
+                        }}
+                      >
+                        Bilgilendirme!
+                      </Text>
                     </TouchableOpacity>
                   </View>
                   {tabs == 0 && (
@@ -994,7 +1058,6 @@ export default function Details({ navigation }) {
                       setLastBlockItemCount={setLastBlockItemCount}
                       lastBlockItemCount={lastBlockItemCount}
                       setPage={setPage}
-
                     />
                   )}
                   <View>{tabs == 1 && <Caption data={data} />}</View>
@@ -1005,7 +1068,6 @@ export default function Details({ navigation }) {
                   {tabs == 4 && (
                     <CommentForProject projectId={data?.project?.id} />
                   )}
-
                 </View>
 
                 <Modal
@@ -1038,7 +1100,7 @@ export default function Details({ navigation }) {
                           }}
                         >
                           {user.type == 2 &&
-                            user.corporate_type == "Emlak Ofisi"
+                          user.corporate_type == "Emlak Ofisi"
                             ? "Portföye Ekle"
                             : "Koleksiyona Ekle"}
                         </Text>
@@ -1050,7 +1112,7 @@ export default function Details({ navigation }) {
                           }}
                         >
                           {user.type == 2 &&
-                            user.corporate_type == "Emlak Ofisi"
+                          user.corporate_type == "Emlak Ofisi"
                             ? "Konutu portföylerinden birine ekleyebilir veya yeni bir portföy oluşturabilirsin"
                             : "Konutu koleksiyonlarından birine ekleyebilir veya yeni bir koleksiyon oluşturabilirsin"}
                         </Text>
@@ -1094,7 +1156,7 @@ export default function Details({ navigation }) {
                                       }}
                                     >
                                       {user.type == 2 &&
-                                        user.corporate_type == "Emlak Ofisi"
+                                      user.corporate_type == "Emlak Ofisi"
                                         ? "Portföyünüze konut ekleyebilmeniz emlak kulüp üyesi olmaız gerekmektedir"
                                         : "Koleksiyonunuza konut ekleyebilmeniz emlak kulüp üyesi olmaız gerekmektedir"}
                                     </Text>
@@ -1125,7 +1187,7 @@ export default function Details({ navigation }) {
                                     }}
                                   >
                                     {user.type == 2 &&
-                                      user.corporate_type == "Emlak Ofisi"
+                                    user.corporate_type == "Emlak Ofisi"
                                       ? "Portföyünüze konut ekleyebilmeniz emlak kulüp üyesi olmaız gerekmektedir"
                                       : "Koleksiyonunuza konut ekleyebilmeniz emlak kulüp üyesi olmaız gerekmektedir"}
                                   </Text>
@@ -1176,7 +1238,7 @@ export default function Details({ navigation }) {
                                       }}
                                     >
                                       {user.type == 2 &&
-                                        user.corporate_type == "Emlak Ofisi"
+                                      user.corporate_type == "Emlak Ofisi"
                                         ? "Portföyünüze konut ekleyebilmeniz emlak kulüp üyesi olmaız gerekmektedir"
                                         : "Koleksiyonunuza konut ekleyebilmeniz emlak kulüp üyesi olmaız gerekmektedir"}
                                     </Text>
@@ -1291,7 +1353,7 @@ export default function Details({ navigation }) {
                                   }}
                                 >
                                   {user.type == 2 &&
-                                    user.corporate_type == "Emlak Ofisi"
+                                  user.corporate_type == "Emlak Ofisi"
                                     ? "Portföyünüze konut ekleyebilmeniz Giriş yapmanız gerekmektedir."
                                     : "Koleksiyonunuza konut ekleyebilmeniz Giriş yapmanız gerekmektedir."}
                                 </Text>
@@ -1387,7 +1449,7 @@ export default function Details({ navigation }) {
                               }}
                             >
                               {user.type == 2 &&
-                                user.corporate_type == "Emlak Ofisi"
+                              user.corporate_type == "Emlak Ofisi"
                                 ? "Portföy Oluştur"
                                 : "Koleksiyon Oluştur"}
                             </Text>
@@ -1408,7 +1470,7 @@ export default function Details({ navigation }) {
                             }}
                           >
                             {user.type == 2 &&
-                              user.corporate_type == "Emlak Ofisi"
+                            user.corporate_type == "Emlak Ofisi"
                               ? "Portföy İsmi"
                               : "Koleksiyon İsmi"}
                           </Text>
@@ -1437,7 +1499,7 @@ export default function Details({ navigation }) {
                               }}
                             >
                               {user.type == 2 &&
-                                user.corporate_type == "Emlak Ofisi"
+                              user.corporate_type == "Emlak Ofisi"
                                 ? "Portföy Oluştur"
                                 : "Koleksiyon Oluştur"}
                             </Text>
@@ -1462,7 +1524,9 @@ export default function Details({ navigation }) {
               textAlign: "center",
               margin: 5,
             }}
-            title={"Sepetinize ürün ekleyebilmek için giriş yapmanız gerekmektedir."}
+            title={
+              "Sepetinize ürün ekleyebilmek için giriş yapmanız gerekmektedir."
+            }
             messageStyle={{ textAlign: "center" }}
             closeOnTouchOutside={true}
             closeOnHardwareBackPress={false}
@@ -1708,7 +1772,6 @@ const styles = StyleSheet.create({
         elevation: 5,
       },
     }),
-
   },
   modalBackground: {
     flex: 1,
@@ -1721,8 +1784,6 @@ const styles = StyleSheet.create({
 
     backgroundColor: "white",
     borderRadius: 6,
-
-
   },
   modalTitle: {
     fontSize: 18,
@@ -1733,7 +1794,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginBottom: 20,
   },
-
 });
 const pickerSelectStyles = StyleSheet.create({
   inputIOS: {
@@ -1755,5 +1815,5 @@ const pickerSelectStyles = StyleSheet.create({
     fontSize: 12,
     textAlign: "center",
     fontWeight: "500",
-  }
+  },
 });

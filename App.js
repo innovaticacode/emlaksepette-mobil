@@ -96,7 +96,7 @@ import TypeListScreen from "./components/TypeListScreen";
 import Onboard from "./pages/Home/Onboarding/Onboard";
 import { View } from "moti";
 import SplashScreenComponent from "./pages/Home/Onboarding/SplashScreen";
-import Toast from "react-native-toast-message";
+
 import { AlertNotificationRoot } from "react-native-alert-notification";
 import SellPlaces from "./pages/Home/ProfilePages/SellPlaces";
 import ApplyForBeCompany from "./pages/Home/ProfilePages/ApplyForBeCompany";

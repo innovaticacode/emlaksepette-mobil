@@ -2,7 +2,7 @@ import { View, Text, TouchableOpacity } from "react-native";
 import { React, useEffect, useState } from "react";
 import openMap from "react-native-open-maps";
 import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
-import * as Location from "expo-location";
+
 export default function PostMap({ data }) {
   var locationCoords = data.project.location.split(",");
   const handleGetDirections = () => {
@@ -20,7 +20,7 @@ export default function PostMap({ data }) {
 
   return (
     <View style={{ height: 400 }}>
-         <TouchableOpacity
+      <TouchableOpacity
         onPress={handleGetDirections}
         style={{
           position: "absolute",
@@ -45,9 +45,11 @@ export default function PostMap({ data }) {
         <Marker
           coordinate={{
             latitude: parseFloat(locationCoords[0]),
-            longitude:parseFloat(locationCoords[1]),
+            longitude: parseFloat(locationCoords[1]),
           }}
-          title={data?.project?.city?.title + "/" + data?.project?.county?.ilce_title}
+          title={
+            data?.project?.city?.title + "/" + data?.project?.county?.ilce_title
+          }
           description="Proje Konumu"
         />
       </MapView>

@@ -1,7 +1,6 @@
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import React, { useState, useEffect } from "react";
-import axios from "axios";
-import { apiUrl } from "../methods/apiRequest";
+
 import { getValueFor } from "../methods/user";
 import AwesomeAlert from "react-native-awesome-alerts";
 import { useDispatch } from "react-redux";

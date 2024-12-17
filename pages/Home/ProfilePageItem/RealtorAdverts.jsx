@@ -14,8 +14,6 @@ import { frontEndUriBase } from "../../../components/methods/apiRequest";
 import RealtorPost from "../../../components/Card/RealtorCard/RealtorPost";
 
 export default function RealtorAdverts({ housingdata, filteredResults }) {
-  const [featuredEstates, setFeaturedEstates] = useState({});
-
   const fetchFeaturedEstates = async () => {
     try {
       // setFeaturedEstates(housingdata);
@@ -24,11 +22,8 @@ export default function RealtorAdverts({ housingdata, filteredResults }) {
     }
   };
 
-  // useEffect(() => {
-  //   fetchFeaturedEstates();
-  // }, []);
   const { width, height } = Dimensions.get("window");
- 
+
   const objectKeys = Object.keys(housingdata);
   const onRefresh = () => {
     setRefreshing(true);

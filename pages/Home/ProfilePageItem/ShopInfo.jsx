@@ -19,7 +19,6 @@ import Icon2 from "react-native-vector-icons/Entypo";
 import Icon3 from "react-native-vector-icons/MaterialCommunityIcons";
 import MapView, { Marker } from "react-native-maps";
 import openMap from "react-native-open-maps";
-import * as Location from "expo-location";
 
 export default function ShopInfo({ data, loading }) {
   const { width, height } = Dimensions.get("window");

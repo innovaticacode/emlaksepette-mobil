@@ -10,15 +10,13 @@ import {
   FlatList,
 } from "react-native";
 import { SearchBar } from "@rneui/base";
-import Icon from "react-native-vector-icons/Ionicons";
+
 import Icon2 from "react-native-vector-icons/MaterialCommunityIcons";
 import { ActivityIndicator } from "react-native-paper";
 import Order from "./profileComponents/Order";
 import axios from "axios";
 import { getValueFor } from "../../../components/methods/user";
-import { Stack } from "@react-native-material/core";
-import { CheckBox } from "react-native-elements";
-import Modal from "react-native-modal";
+
 import NoDataScreen from "../../../components/NoDataScreen";
 import { RadioFilter } from "../../../components";
 import { apiUrl } from "../../../components/methods/apiRequest";

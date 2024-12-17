@@ -11,20 +11,19 @@ import {
 } from "react-native";
 import React, { useState, useRef, useEffect } from "react";
 import { useRoute, useNavigation } from "@react-navigation/native";
-import Header from "../../components/Header";
+
 import Modal from "react-native-modal";
-import Search from "./Search";
-import Categories from "../../components/Categories";
+
 import ProjectPost from "../../components/ProjectPost";
-import * as Animatable from "react-native-animatable";
+
 import axios from "axios";
 import { Platform } from "react-native";
 import { ActivityIndicator, Switch, TextInput } from "react-native-paper";
 import FontAwesome5Icon from "react-native-vector-icons/FontAwesome5";
-import { RxDropdownMenu } from "react-icons/rx";
+
 import RNPickerSelect from "react-native-picker-select";
 import SortModal from "../../components/SortModal";
-import { DrawerMenu } from "../../components";
+
 import { useDispatch, useSelector } from "react-redux";
 import { apiUrl, frontEndUriBase } from "../../components/methods/apiRequest";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";

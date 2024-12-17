@@ -20,7 +20,7 @@ import { ActivityIndicator } from "react-native-paper";
 import Modal from "react-native-modal";
 import Icon3 from "react-native-vector-icons/MaterialIcons";
 import AwesomeAlert from "react-native-awesome-alerts";
-import * as FileSystem from "expo-file-system";
+
 import {
   ALERT_TYPE,
   AlertNotificationRoot,

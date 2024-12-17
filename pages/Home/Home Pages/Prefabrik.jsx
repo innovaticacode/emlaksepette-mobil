@@ -12,7 +12,7 @@ import {
 import { ActivityIndicator } from "react-native-paper";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { AlertNotificationRoot } from "react-native-alert-notification";
-import PrefabrikBanner from "../../../src/assets/images/prefabrik.png";
+
 import { frontEndUriBase } from "../../../components/methods/apiRequest";
 import RealtorPost from "../../../components/Card/RealtorCard/RealtorPost";
 import { UsePaginatedData } from "../../../hooks";
