@@ -75,17 +75,17 @@ export default function Header({ showBack }) {
         );
       }
       if (user?.access_token) {
-        const response = await axios.get(`${apiUrl}user/notification`, {
-          headers: {
-            Authorization: `Bearer ${user.access_token}`,
+        const response = await axios.get(apiUrl + "user/notification", {
+          params: {
+            take: 0,
+            skip: 0,
           },
+          headers: { Authorization: `Bearer ${user.access_token}` },
         });
-        const unreadCount = response.data.filter(
-          (notification) => notification.is_show === 0
-        ).length;
+
         return dispatch(
           setNotificationsRedux({
-            notificationsCount: unreadCount,
+            notificationsCount: response.data.total_unread_notifications,
           })
         );
       }

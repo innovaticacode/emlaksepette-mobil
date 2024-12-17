@@ -3,14 +3,11 @@ import {
   Text,
   StyleSheet,
   TouchableOpacity,
-  ScrollView,
-  Alert,
   FlatList,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 
 import Notificate from "../../components/Notificate";
-import { useNavigation } from "@react-navigation/native";
 import moment from "moment";
 import "moment/locale/tr";
 import { getValueFor } from "../../components/methods/user";
@@ -18,17 +15,16 @@ import axios from "axios";
 import { Platform } from "react-native";
 import AwesomeAlert from "react-native-awesome-alerts";
 import { ActivityIndicator } from "react-native-paper";
-import { apiRequestGet, apiUrl } from "../../components/methods/apiRequest";
+import { apiUrl } from "../../components/methods/apiRequest";
 import { useDispatch, useSelector } from "react-redux";
 import { setNotificationsRedux } from "../../store/slices/Notifications/NotificationsSlice";
 import NoDataScreen from "../../components/NoDataScreen";
+import { ALERT_TYPE, Dialog } from "react-native-alert-notification";
 
 export default function Notifications() {
   const dispatch = useDispatch();
   const [user, setUser] = useState({});
-  const [loading, setloading] = useState(false);
-  const navigation = useNavigation();
-  const [notificationCount, setNotificationCount] = useState(0);
+  const [loading, setLoading] = useState(false);
   const [notifications, setNotifications] = useState([]);
   const [deleteAlertForNotification, setdeleteAlertForNotification] =
     useState(false);
@@ -41,59 +37,79 @@ export default function Notifications() {
     success: false,
   });
   const [readShowAlert, setReadShowAlert] = useState(false);
-
   const notifiCountRedux = useSelector(
     (state) => state.notifications.notificationsCount
   );
-
-  const [notifiContent, setNotifiContent] = useState([]);
-
+  const take = 10;
+  const [skip, setSkip] = useState(0);
+  const [bottomLoading, setBottomLoading] = useState(false);
+  const [totalCount, setTotalCount] = useState(null);
   useEffect(() => {
     getValueFor("user", setUser);
   }, []);
 
-  const fetchNotifications = async () => {
+  /**
+   * Fetches notification data from the API and updates the state.
+   *
+   * @async
+   * @function fetchNotificationsData
+   * @param {number} [newSkip=0] - The starting point (skip) for fetching data from the API.
+   * @param {boolean} [append=false] - If `true`, appends the new data to the existing list; if `false`, replaces the list.
+   * @param {number} [is_show=0] - if `0`, fetches all notifications; if `1`, fetches only unread notifications.
+   * @returns {Promise<void>} - Does not return anything; it updates the component state.
+   * @description
+   * - Use `newSkip = 0` and `append = false` for the initial fetch.
+   * - Use `newSkip` as the current skip value and `append = true` for loading more data (pagination).
+   * - Stops fetching if there are no more notifications to load or if already in the process of loading.
+   */
+  const fetchNotificationsData = async (newSkip = 0, append = false) => {
+    if (bottomLoading || (append && notifications.length >= totalCount)) {
+      console.log("No more notifications to load");
+      return;
+    }
+
+    append ? setBottomLoading(true) : setLoading(true);
+
     try {
-      if (!user?.access_token) {
-        setNotifications([]);
-        setNotificationCount(0);
-        return;
-      }
-      setloading(true);
       const response = await axios.get(apiUrl + "user/notification", {
-        headers: {
-          Authorization: `Bearer ${user.access_token}`,
+        params: {
+          take: take,
+          skip: newSkip,
         },
+        headers: { Authorization: `Bearer ${user.access_token}` },
       });
 
-      if (response.data) {
-        // Bildirimleri tarihe göre sıralama (en yeni tarihler en üstte)
-        const sortedNotifications = response.data.sort(
-          (a, b) => new Date(b.created_at) - new Date(a.created_at)
+      if (response.data?.notifications) {
+        setNotifications((prev) =>
+          append
+            ? [...prev, ...response.data.notifications]
+            : response.data.notifications
         );
-        setNotifications(sortedNotifications);
-      } else {
-        setNotifications([]);
-      }
-
-      if (response) {
-        const unreadCount = response.data.filter(
-          (notification) => notification.is_show === 0
-        ).length;
+        setTotalCount(response.data.total_count);
+        setSkip(newSkip + take);
 
         dispatch(
           setNotificationsRedux({
-            notificationsCount: unreadCount,
+            notificationsCount: response.data.total_unread_notifications,
           })
         );
       }
     } catch (error) {
-      setNotifications([]);
-      setNotificationCount(0); // Set unreadCount to 0 in case of an error
+      console.error("Bildirimler alınırken hata oluştu:", error);
     } finally {
-      setloading(false);
+      append ? setBottomLoading(false) : setLoading(false);
     }
   };
+
+  /**
+   * Fetches the initial notifications.
+   * @function fetchNotifications
+   * @returns {void}
+   * @description
+   * - Fetches the first set of notifications and resets the list.
+   */
+  const fetchNotifications = () => fetchNotificationsData(0, false);
+  const fetchMoreNotifie = () => fetchNotificationsData(skip, true);
 
   useEffect(() => {
     if (user?.access_token) {
@@ -103,7 +119,7 @@ export default function Notifications() {
 
   //click tumunu sil button
   const deleteRequestWithToken = async () => {
-    setloading(true);
+    setLoading(true);
     try {
       const response = await axios.delete(
         apiUrl + "institutional/notifications",
@@ -113,7 +129,7 @@ export default function Notifications() {
           },
         }
       );
-      await fetchNotifications();
+      fetchNotifications();
 
       return setShowDeletedAlert({
         show: true,
@@ -121,9 +137,14 @@ export default function Notifications() {
         success: true,
       });
     } catch (error) {
-      Alert.alert("Hata", "Silme işlemi başarısız oldu!");
+      Dialog.show({
+        type: ALERT_TYPE.DANGER,
+        title: "Hata",
+        textBody: "Silme işlemi başarısız oldu!",
+        button: "Tamam",
+      });
     } finally {
-      setloading(false);
+      setLoading(false);
     }
   };
 
@@ -133,7 +154,7 @@ export default function Notifications() {
   };
 
   const deleteNotificate = async () => {
-    setloading(true);
+    setLoading(true);
     try {
       const response = await axios.delete(
         `${apiUrl}institutional/notification/delete`,
@@ -157,14 +178,24 @@ export default function Notifications() {
         });
       } else {
         setalertFordeleteNotificate(false);
-        Alert.alert("Başarısız", response.data.message);
+        Dialog.show({
+          type: ALERT_TYPE.DANGER,
+          title: "Hata",
+          textBody: response.data.message,
+          button: "Tamam",
+        });
       }
 
       setalertFordeleteNotificate(false);
     } catch (error) {
-      Alert.alert("Hata", "Silme işlemi başarısız oldu!");
+      Dialog.show({
+        type: ALERT_TYPE.DANGER,
+        title: "Hata",
+        textBody: "Silme işlemi başarısız oldu!",
+        button: "Tamam",
+      });
     } finally {
-      setloading(false);
+      setLoading(false);
     }
   };
 
@@ -200,60 +231,28 @@ export default function Notifications() {
   };
 
   const deletedAlert = () => {
-    return (
-      <AwesomeAlert
-        show={showDeletedAlert.show === true}
-        showProgress={false}
-        titleStyle={{
-          color: "#333",
-          fontSize: 16,
-          fontWeight: "700",
-          textAlign: "center",
-          margin: 5,
-        }}
-        title={showDeletedAlert.message}
-        messageStyle={{ textAlign: "center" }}
-        closeOnTouchOutside={true}
-        closeOnHardwareBackPress={false}
-        showCancelButton={false}
-        showConfirmButton={true}
-        confirmText="Tamam"
-        confirmButtonColor={showDeletedAlert.success ? "#1d8027" : "#ce4d63"}
-        onConfirmPressed={() => {
-          setShowDeletedAlert({
-            ...showDeletedAlert,
-            show: false,
-          });
-          setTimeout(() => {
-            setShowDeletedAlert({
-              show: false,
-              message: "",
-              success: false,
-            });
-          }, 300);
-        }}
-        confirmButtonTextStyle={{
-          marginLeft: 20,
-          marginRight: 20,
-        }}
-        cancelButtonTextStyle={{
-          marginLeft: 20,
-          marginRight: 20,
-        }}
-      />
-    );
+    if (!showDeletedAlert.show) {
+      return false;
+    }
+    return Dialog.show({
+      type: showDeletedAlert.success ? ALERT_TYPE.SUCCESS : ALERT_TYPE.DANGER,
+      title: showDeletedAlert.message,
+      button: "Tamam",
+      onPressButton: () => {
+        setShowDeletedAlert({
+          show: false,
+          message: "",
+          success: false,
+        });
+        Dialog.hide();
+      },
+    });
   };
 
   return (
     <>
       {loading ? (
-        <View
-          style={{
-            height: "100%",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
+        <View style={styles.loaderView}>
           <ActivityIndicator color="#333" size={"large"} />
         </View>
       ) : (
@@ -270,111 +269,70 @@ export default function Notifications() {
                 />
               ) : (
                 <>
-                  <View
-                    style={{
-                      paddingBottom: 5,
-                      flexDirection: "row",
-                      alignItems: "center",
-                      justifyContent: "space-between",
-                    }}
-                  >
+                  <View style={styles.btnsArea}>
                     <Text style={{ color: "grey" }}></Text>
-                    <View
-                      style={{ flexDirection: "row", gap: 16, marginRight: 5 }}
-                    >
+                    <View style={styles.btnInner}>
                       {notifiCountRedux > 1 && (
                         <TouchableOpacity
-                          style={{
-                            backgroundColor: "#EB2B2E",
-                            textAlign: "center",
-                            paddingHorizontal: 16,
-                            paddingVertical: 4,
-                            borderRadius: 5,
-                          }}
+                          style={styles.btn}
                           onPress={() => {
                             setReadShowAlert(true);
                           }}
                         >
-                          <Text
-                            style={{
-                              alignItems: "center",
-                              color: "#ffffff",
-                              fontWeight: "700",
-                            }}
-                          >
-                            Tümünü Oku
-                          </Text>
+                          <Text style={styles.btnText}>Tümünü Oku</Text>
                         </TouchableOpacity>
                       )}
                       <TouchableOpacity
-                        style={{
-                          backgroundColor: "#EB2B2E",
-                          textAlign: "center",
-                          paddingHorizontal: 16,
-                          paddingVertical: 4,
-                          borderRadius: 5,
-                        }}
+                        style={styles.btn}
                         onPress={() => {
                           setdeleteAlertForNotification(true);
                         }}
                       >
-                        <Text
-                          style={{
-                            alignItems: "center",
-                            color: "#ffffff",
-                            fontWeight: "700",
-                          }}
-                        >
-                          Tümünü Sil
-                        </Text>
+                        <Text style={styles.btnText}>Tümünü Sil</Text>
                       </TouchableOpacity>
                     </View>
                   </View>
-                  <ScrollView showsVerticalScrollIndicator={false}>
-                    <AwesomeAlert
-                      show={readShowAlert}
-                      showProgress={false}
-                      titleStyle={{
-                        color: "#333",
-                        fontSize: 13,
-                        fontWeight: "700",
-                        textAlign: "center",
-                        margin: 5,
-                      }}
-                      title={
-                        "Tüm bildirimleri okundu olarak işaretlemek istediğinize emin misiniz?"
-                      }
-                      messageStyle={{ textAlign: "center" }}
-                      closeOnTouchOutside={true}
-                      closeOnHardwareBackPress={false}
-                      showCancelButton={true}
-                      showConfirmButton={true}
-                      cancelText="Hayır"
-                      confirmText="Evet"
-                      cancelButtonColor="#ce4d63"
-                      confirmButtonColor="#1d8027"
-                      onCancelPressed={() => {
-                        setReadShowAlert(false);
-                      }}
-                      onConfirmPressed={() => {
-                        allRead();
-                        setReadShowAlert(false);
-                      }}
-                      confirmButtonTextStyle={{
-                        marginLeft: 20,
-                        marginRight: 20,
-                      }}
-                      cancelButtonTextStyle={{
-                        marginLeft: 20,
-                        marginRight: 20,
-                      }}
-                    />
+                  <>
+                    {readShowAlert && (
+                      <AwesomeAlert
+                        show={readShowAlert}
+                        showProgress={false}
+                        animationIn="none"
+                        animationOut="none"
+                        titleStyle={styles.alertTitle}
+                        title={
+                          "Tüm bildirimleri okundu olarak işaretlemek istediğinize emin misiniz?"
+                        }
+                        messageStyle={{ textAlign: "center" }}
+                        closeOnTouchOutside={true}
+                        closeOnHardwareBackPress={false}
+                        showCancelButton={true}
+                        showConfirmButton={true}
+                        cancelText="Hayır"
+                        confirmText="Evet"
+                        cancelButtonColor="#ce4d63"
+                        confirmButtonColor="#1d8027"
+                        onCancelPressed={() => {
+                          setReadShowAlert(false);
+                        }}
+                        onConfirmPressed={() => {
+                          allRead();
+                          setReadShowAlert(false);
+                        }}
+                        confirmButtonTextStyle={styles.alertMargin}
+                        cancelButtonTextStyle={styles.alertMargin}
+                      />
+                    )}
+
                     <>
                       <FlatList
                         data={notifications}
                         keyExtractor={(item) => item.id.toString()}
                         initialNumToRender={10}
+                        removeClippedSubviews={true}
+                        maxToRenderPerBatch={5}
                         onEndReachedThreshold={0.5}
+                        onEndReached={fetchMoreNotifie}
                         renderItem={({ item }) => (
                           <Notificate
                             isShow={item.is_show}
@@ -389,83 +347,76 @@ export default function Notifications() {
                             title={item.title}
                           />
                         )}
+                        ListFooterComponent={
+                          bottomLoading && (
+                            <ActivityIndicator
+                              size="small"
+                              color="#000"
+                              style={{ margin: 10 }}
+                            />
+                          )
+                        }
                       />
                     </>
-                    <AwesomeAlert
-                      show={deleteAlertForNotification}
-                      showProgress={false}
-                      titleStyle={{
-                        color: "#333",
-                        fontSize: 13,
-                        fontWeight: "700",
-                        textAlign: "center",
-                        margin: 5,
-                      }}
-                      title={
-                        "Tüm bildirimleri silmek istediğinize emin misiniz?"
-                      }
-                      messageStyle={{ textAlign: "center" }}
-                      closeOnTouchOutside={true}
-                      closeOnHardwareBackPress={false}
-                      showCancelButton={true}
-                      showConfirmButton={true}
-                      cancelText="Hayır"
-                      confirmText="Evet"
-                      cancelButtonColor="#ce4d63"
-                      confirmButtonColor="#1d8027"
-                      onCancelPressed={() => {
-                        setdeleteAlertForNotification(false);
-                      }}
-                      onConfirmPressed={() => {
-                        deleteRequestWithToken();
-                      }}
-                      confirmButtonTextStyle={{
-                        marginLeft: 20,
-                        marginRight: 20,
-                      }}
-                      cancelButtonTextStyle={{
-                        marginLeft: 20,
-                        marginRight: 20,
-                      }}
-                    />
+                    {deleteAlertForNotification && (
+                      <AwesomeAlert
+                        show={deleteAlertForNotification}
+                        showProgress={false}
+                        animationIn="none"
+                        animationOut="none"
+                        titleStyle={styles.alertTitle}
+                        title={
+                          "Tüm bildirimleri silmek istediğinize emin misiniz?"
+                        }
+                        messageStyle={{ textAlign: "center" }}
+                        closeOnTouchOutside={true}
+                        closeOnHardwareBackPress={false}
+                        showCancelButton={true}
+                        showConfirmButton={true}
+                        cancelText="Hayır"
+                        confirmText="Evet"
+                        cancelButtonColor="#ce4d63"
+                        confirmButtonColor="#1d8027"
+                        onCancelPressed={() => {
+                          setdeleteAlertForNotification(false);
+                        }}
+                        onConfirmPressed={() => {
+                          deleteRequestWithToken();
+                        }}
+                        confirmButtonTextStyle={styles.alertMargin}
+                        cancelButtonTextStyle={styles.alertMargin}
+                      />
+                    )}
 
-                    <AwesomeAlert
-                      show={alertFordeleteNotificate}
-                      showProgress={false}
-                      titleStyle={{
-                        color: "#333",
-                        fontSize: 13,
-                        fontWeight: "700",
-                        textAlign: "center",
-                        margin: 5,
-                      }}
-                      title={"Bildirimi silmek istediğinize eminmisiniz?"}
-                      messageStyle={{ textAlign: "center" }}
-                      closeOnTouchOutside={true}
-                      closeOnHardwareBackPress={false}
-                      showCancelButton={true}
-                      showConfirmButton={true}
-                      cancelText="Hayır"
-                      confirmText="Evet"
-                      cancelButtonColor="#ce4d63"
-                      confirmButtonColor="#1d8027"
-                      onCancelPressed={() => {
-                        setalertFordeleteNotificate(false);
-                      }}
-                      onConfirmPressed={() => {
-                        deleteNotificate();
-                        setalertFordeleteNotificate(false);
-                      }}
-                      confirmButtonTextStyle={{
-                        marginLeft: 20,
-                        marginRight: 20,
-                      }}
-                      cancelButtonTextStyle={{
-                        marginLeft: 20,
-                        marginRight: 20,
-                      }}
-                    />
-                  </ScrollView>
+                    {alertFordeleteNotificate && (
+                      <AwesomeAlert
+                        show={alertFordeleteNotificate}
+                        showProgress={false}
+                        animationIn="none"
+                        animationOut="none"
+                        titleStyle={styles.alertTitle}
+                        title={"Bildirimi silmek istediğinize eminmisiniz?"}
+                        messageStyle={{ textAlign: "center" }}
+                        closeOnTouchOutside={true}
+                        closeOnHardwareBackPress={false}
+                        showCancelButton={true}
+                        showConfirmButton={true}
+                        cancelText="Hayır"
+                        confirmText="Evet"
+                        cancelButtonColor="#ce4d63"
+                        confirmButtonColor="#1d8027"
+                        onCancelPressed={() => {
+                          setalertFordeleteNotificate(false);
+                        }}
+                        onConfirmPressed={() => {
+                          deleteNotificate();
+                          setalertFordeleteNotificate(false);
+                        }}
+                        confirmButtonTextStyle={styles.alertMargin}
+                        cancelButtonTextStyle={styles.alertMargin}
+                      />
+                    )}
+                  </>
                 </>
               )}
             </View>
@@ -508,5 +459,44 @@ const styles = StyleSheet.create({
         elevation: 5,
       },
     }),
+  },
+  loaderView: {
+    height: "100%",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  btnsArea: {
+    paddingBottom: 5,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
+  btnInner: {
+    flexDirection: "row",
+    gap: 16,
+    marginRight: 5,
+  },
+  btn: {
+    backgroundColor: "#EB2B2E",
+    textAlign: "center",
+    paddingHorizontal: 16,
+    paddingVertical: 4,
+    borderRadius: 5,
+  },
+  btnText: {
+    alignItems: "center",
+    color: "#ffffff",
+    fontWeight: "700",
+  },
+  alertTitle: {
+    color: "#333",
+    fontSize: 13,
+    fontWeight: "700",
+    textAlign: "center",
+    margin: 5,
+  },
+  alertMargin: {
+    marginLeft: 20,
+    marginRight: 20,
   },
 });
