@@ -180,7 +180,7 @@ export default function Notifications() {
     } catch (error) {
       Alert.alert("Hata", "Silme işlemi başarısız oldu!");
     } finally {
-      setloading(false);
+      setLoading(false);
     }
   };
 
