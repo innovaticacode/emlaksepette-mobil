@@ -13,12 +13,12 @@ import { ActivityIndicator } from "react-native-paper";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { AlertNotificationRoot } from "react-native-alert-notification";
 
-import { frontEndUriBase } from "../../../components/methods/apiRequest";
-import RealtorPost from "../../../components/Card/RealtorCard/RealtorPost";
-import { UsePaginatedData } from "../../../hooks";
+import { frontEndUriBase } from "../../../../components/methods/apiRequest";
+import RealtorPost from "../../../../components/Card/RealtorCard/RealtorPost";
+import { UsePaginatedData } from "../../../../hooks";
 import { useSelector } from "react-redux";
 
-const BookHouse = ({ index }) => {
+const RedyOffices = ({ index }) => {
   const navigation = useNavigation();
   const [loading, setLoading] = useState(true);
   const banners = useSelector((state) => state?.banners?.banners);
@@ -75,7 +75,7 @@ const BookHouse = ({ index }) => {
         </View>
         <View style={styles.header}>
           <Text style={{ fontSize: 14, fontWeight: 700 }}>
-            ÖNE ÇIKAN TATİL EVLERİ
+            ÖNE ÇIKAN HAZIR OFİSLER
           </Text>
 
           <TouchableOpacity style={styles.allBtn}>
@@ -199,6 +199,7 @@ const BookHouse = ({ index }) => {
     </>
   );
 };
+export default RedyOffices;
 
 const styles = StyleSheet.create({
   container: {
@@ -243,5 +244,3 @@ const styles = StyleSheet.create({
     flex: 1,
   },
 });
-
-export default BookHouse;

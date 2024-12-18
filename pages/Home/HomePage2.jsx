@@ -22,6 +22,7 @@ import Prefabrik from "./Home Pages/Prefabrik";
 import BookHouse from "./Home Pages/BookHouse";
 import SellAcil from "./Home Pages/SellAcil";
 import Shared from "./Home Pages/Shared";
+import ReadyOffices from "./Home Pages/ReadyOffices/ReadyOffices";
 import Modal from "react-native-modal";
 import { useNavigation } from "@react-navigation/native";
 import FirstHome from "./FirstHome";
@@ -47,10 +48,12 @@ const renderScene = ({ route, index }) => {
       return <Prefabrik index={index} />;
     case "bookhouse":
       return <BookHouse index={index} />;
-    case "sellacil":
-      return <SellAcil index={index} />;
-    case "shared":
-      return <Shared index={index} />;
+    // case "sellacil":
+    //   return <SellAcil index={index} />;
+    // case "shared":
+    //   return <Shared index={index} />;
+    case "readyOffices":
+      return <ReadyOffices index={index} />;
     default:
       return null;
   }
@@ -171,8 +174,9 @@ export default function HomePage2() {
     { key: "area", title: "Area" },
     { key: "prefabrik", title: "Prefabrik" },
     { key: "bookhouse", title: "Bookhouse" },
-    { key: "sellacil", title: "Sellacil" },
-    { key: "shared", title: "Shared" },
+    // { key: "sellacil", title: "Sellacil" },
+    // { key: "shared", title: "Shared" },
+    { key: "readyOffices", title: "ReadyOffices" },
   ]);
   const indexChange = (index) => {
     setIndex(index);
