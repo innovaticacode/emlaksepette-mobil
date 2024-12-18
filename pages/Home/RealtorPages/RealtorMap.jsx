@@ -72,8 +72,8 @@ export default function RealtorMap({ mapData }) {
 
       <MapView
         initialRegion={{
-          latitude: mapData?.housing?.latitude || 41.34161201,
-          longitude: mapData?.housing?.longitude || 28.66359789,
+          latitude: parseFloat(mapData?.housing?.latitude) || 41.34161201,
+          longitude: parseFloat(mapData?.housing?.longitude) || 28.66359789,
 
           latitudeDelta: 0.0922,
           longitudeDelta: 0.0421,
@@ -83,8 +83,8 @@ export default function RealtorMap({ mapData }) {
       >
         <Marker
           coordinate={{
-            latitude: mapData?.housing?.latitude || 41.34161201,
-            longitude: mapData?.housing?.longitude || 28.66359789,
+            latitude: parseFloat(mapData?.housing?.latitude) || 41.34161201,
+            longitude: parseFloat(mapData?.housing?.longitude) || 28.66359789,
           }}
           // title={mapData?.housing?.city?.title / mapData?.housing?.county?.title}
           description="Konutun Konumu"
