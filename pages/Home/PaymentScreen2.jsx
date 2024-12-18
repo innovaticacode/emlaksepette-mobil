@@ -52,25 +52,6 @@ export default function PaymentScreen2() {
     setChecked2("true");
   }, []);
 
-  const completeCreditCardPay = () => {
-    if (
-      IdNumber &&
-      NameAndSurnam &&
-      ePosta &&
-      phoneNumber &&
-      adress &&
-      notes &&
-      checked &&
-      checked2
-    ) {
-      axios.post(apiUrl + "pay", creditCartData).then((res) => {
-        setPaymentModal(true);
-        setPaymentModalContent(res.data);
-      });
-    } else {
-      alert("tüm alanları doldur");
-    }
-  };
   console.log(paymentModalContent);
   {
     /** State Of Inputs **/
@@ -211,7 +192,126 @@ export default function PaymentScreen2() {
   useEffect(() => {
     fetchDataDeal();
   }, []);
-  console.log(paymentModalContent);
+
+  const getError = (key, itemType) => {
+    if (
+      errors.find((error) => {
+        return error.key == key;
+      })
+    ) {
+      return "red";
+    } else {
+      if (itemType == "checkbox") {
+        return "#bfbfbf";
+      } else {
+        return "#ebebeb";
+      }
+    }
+  };
+  const [errors, setErrors] = useState([]);
+  const completeCreditCardPay = () => {
+    var tempErrors = [];
+    var scrollPositionsTemp = [];
+    if (!IdNumber) {
+      tempErrors.push({
+        key: "IdNumber",
+        message: "TC Kimlik alanı zorunludur",
+      });
+      scrollPosition = approximatelyInputHeight * 1 + approximatelyTop;
+      scrollPositionsTemp.push(scrollPosition);
+    }
+
+    if (!NameAndSurnam) {
+      tempErrors.push({
+        key: "NameAndSurnam",
+        message: "Ad Soyad alanı zorunludur",
+      });
+      scrollPosition = approximatelyInputHeight * 2 + approximatelyTop;
+      scrollPositionsTemp.push(scrollPosition);
+    }
+
+    if (!ePosta) {
+      tempErrors.push({
+        key: "ePosta",
+        message: "E-posta alanı zorunludur",
+      });
+      scrollPosition = approximatelyInputHeight * 3 + approximatelyTop;
+      scrollPositionsTemp.push(scrollPosition);
+    }
+
+    if (!phoneNumber) {
+      tempErrors.push({
+        key: "phoneNumber",
+        message: "Telefon alanı zorunludur",
+      });
+      scrollPosition = inputPositions["phoneNumber"];
+      scrollPosition = approximatelyInputHeight * 4 + approximatelyTop;
+      scrollPositionsTemp.push(scrollPosition);
+    }
+
+    if (!adress) {
+      tempErrors.push({
+        key: "adress",
+        message: "Adres alanı zorunludur",
+      });
+      scrollPosition = approximatelyInputHeight * 5 + approximatelyTop;
+      scrollPositionsTemp.push(scrollPosition);
+    }
+
+    if (!checked) {
+      tempErrors.push({
+        key: "checked",
+        message:
+          "Mesafeli kapora emanet sözleşmesi onay kutucuğunu işaretleyiniz",
+      });
+      scrollPosition = approximatelyInputHeight * 8 + approximatelyTop;
+      scrollPositionsTemp.push(scrollPosition);
+    }
+
+    if (!checked2) {
+      tempErrors.push({
+        key: "checked2",
+        message:
+          "Sözleşme aslını imzalamak için 7 iş günü içerisinde geleceğinizi belirten kutucuğu işaretleyiniz",
+      });
+      scrollPosition = approximatelyInputHeight * 9 + approximatelyTop;
+      scrollPositionsTemp.push(scrollPosition);
+    }
+
+    if (!creditCartData.credit_cart_number) {
+      tempErrors.push({
+        key: "card_number",
+        message: "Kart numaranızı giriniz",
+      });
+
+      scrollPosition =
+        approximatelyInputHeight * 9 + approximatelyTop + cartInfoHeight;
+      scrollPositionsTemp.push(scrollPosition);
+    }
+
+    if (!creditCartData.exp_month) {
+      tempErrors.push({
+        key: "month",
+        message: "Ay değerini giriniz",
+      });
+      scrollPosition = inputPositions["month"];
+    }
+
+    if (!creditCartData.exp_year) {
+      tempErrors.push({
+        key: "year",
+        message: "Yıl değerini giriniz",
+      });
+      scrollPosition = inputPositions["year"];
+    }
+
+    console.log("tempErrors", tempErrors);
+    scrollViewRef.current?.scrollToPosition(0, scrollPositionsTemp[0], true);
+    setErrors(tempErrors);
+    if (tempErrors.length == 0) {
+      sendPaymentRequest();
+    }
+  };
   return (
     <KeyboardAwareScrollView
       style={styles.container}
@@ -474,6 +574,8 @@ export default function PaymentScreen2() {
           setCreditCartData={setCreditCartData}
           creditCartData={creditCartData}
           CompeletePayment={completeCreditCardPay}
+          getError={getError}
+          errors={errors}
         />
       )}
       {tabs == 1 && (

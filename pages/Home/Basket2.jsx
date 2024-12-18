@@ -1,15 +1,9 @@
 import {
   View,
   Text,
-  TouchableWithoutFeedback,
-  Keyboard,
-  ScrollView,
   StyleSheet,
-  FlatList,
   TouchableOpacity,
-  TextInput,
   SafeAreaView,
-  ImageBackground,
   Image,
 } from "react-native";
 import { Platform } from "react-native";
@@ -33,8 +27,6 @@ import { ActivityIndicator } from "react-native-paper";
 import { apiUrl } from "../../components/methods/apiRequest";
 
 export default function Basket2() {
-  const route = useRoute();
-
   const navigation = useNavigation();
   const [title, setTitle] = useState("");
   const [amount, setAmount] = useState("");
@@ -69,24 +61,6 @@ export default function Basket2() {
     fetchStoredData();
   }, []);
 
-  console.log("roomOrderss");
-
-  const [Basket, SetBasket] = useState([
-    {
-      name: "MASTER ORMAN KÖY EVLERİ",
-      price: 2500000,
-      shopName: "Maliyetine Ev",
-      shopPoint: 8.3,
-      id: 1,
-      hisse: true,
-    },
-  ]);
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-
-  const toggleDrawer = () => {
-    setIsDrawerOpen(!isDrawerOpen);
-  };
-
   const [user, setuser] = useState({});
   const [Cart, setCart] = useState({});
   const [type, settype] = useState({});
@@ -97,6 +71,7 @@ export default function Basket2() {
   const [CartLength, setCartLength] = useState([]);
   const isFocused = useIsFocused();
   const [loading, setLoading] = useState(false);
+
   useEffect(() => {
     getValueFor("user", setuser);
   }, []);
@@ -130,54 +105,7 @@ export default function Basket2() {
       fetchData();
     }
   }, [isFocused, user]);
-  const [parsedshare, setparsedshare] = useState("");
-  const Parse = async () => {
-    try {
-      if (Cart && isShare && type && saleType) {
-        setparsedshare(JSON.parse(isShare)[0]);
-      }
-    } catch (error) {
-      console.log("parse edilemedi");
-    }
-  };
-  useEffect(() => {
-    Parse();
-  }, [fetchData]);
 
-  const [isInstallament, setisInstallament] = useState(1);
-
-  let DiscountRate = Cart?.discount_rate;
-  let TotalPrice = Cart?.price;
-  let DiscountPrice = Cart?.price - (Cart?.amount * Cart?.discount_rate) / 100;
-  let KaporaForDiscountPrice = (DiscountPrice * 2) / 100;
-
-  const formatDate = (dateString) => {
-    const date = new Date(dateString);
-
-    const monthNames = [
-      "Ocak",
-      "Şubat",
-      "Mart",
-      "Nisan",
-      "Mayıs",
-      "Haziran",
-      "Temmuz",
-      "Ağustos",
-      "Eylül",
-      "Ekim",
-      "Kasım",
-      "Aralık",
-    ];
-
-    const day = date.getDate();
-    const month = monthNames[date.getMonth()];
-    const year = date.getFullYear();
-
-    return `${month}, ${day} ${year}`;
-  };
-
-  // Sepetteki Hisse Sayısını Arttırma Ve Fİyat Güncelleme
-  const [shareCounter, setshareCounter] = useState(1);
   //Arttırma
   const [message, setmessage] = useState({});
   const [counter, setcounter] = useState(1);
@@ -364,10 +292,10 @@ export default function Basket2() {
                     flex: 1,
                   }}
                 >
-                  <Text style={{ fontSize: 10 }}>İlan No: {ilanNo} </Text>
+                  <Text style={{ fontSize: 14 }}>İlan No: {ilanNo} </Text>
                   <Text style={{ fontWeight: "700" }}>{title} </Text>
                   <View style={{ width: "100%" }}>
-                    <Text style={{ fontSize: 8, fontWeight: "bold" }}>
+                    <Text style={{ fontSize: 12, fontWeight: "bold" }}>
                       {roomOrder} No'lu konut için komşumu gör satın alım
                       sayfası
                     </Text>
