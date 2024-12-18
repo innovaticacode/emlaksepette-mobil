@@ -157,7 +157,7 @@ SplashScreen.preventAutoHideAsync();
 
 const navigationInstrumentation = new Sentry.ReactNavigationInstrumentation();
 
-if (process.env.EXPO_PUBLIC_ENVIRONMENT === "production") {
+if (process.env.EXPO_PUBLIC_ENVIRONMENT == "production") {
   Sentry.init({
     dsn: process.env.EXPO_PUBLIC_SENTRY_DSN,
     debug: false, // If `true`, Sentry will try to print out useful debugging information if something goes wrong with sending the event. Set it to `false` in production
