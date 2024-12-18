@@ -974,7 +974,9 @@ export default function Posts({
                             RigthBtnFunctionsForkey(item.key);
                           }}
                         >
-                          <Text style={styles.payDetailText}>{item.title}</Text>
+                          <Text style={styles.payDetailText} numberOfLines={1}>
+                            {item.title}
+                          </Text>
                         </TouchableOpacity>
                       ))
                     )}
