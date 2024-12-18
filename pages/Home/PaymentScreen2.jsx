@@ -30,6 +30,12 @@ import { io } from "socket.io-client";
 import WebView from "react-native-webview";
 import HTMLView from "react-native-htmlview";
 import { getValueFor } from "../../components/methods/user";
+import {
+  Dialog,
+  AlertNotificationRoot,
+  ALERT_TYPE,
+} from "react-native-alert-notification";
+import { payEft } from "../../services/apiServices";
 export default function PaymentScreen2() {
   // Kullanarak bu değerleri göstermek için devam edin
 
@@ -564,449 +570,461 @@ export default function PaymentScreen2() {
   };
 
   return (
-    <KeyboardAwareScrollView
-      style={styles.container}
-      contentContainerStyle={{ gap: 20, paddingBottom: 50 }}
-      showsVerticalScrollIndicator={false}
-      ref={scrollViewRef}
-      scrollEventThrottle={16}
-      onLayout={(e) => handleScrollViewLayout(e)}
-    >
-      <Modal
-        isVisible={paymentModalShow}
-        onBackdropPress={() => setPaymentModalShow(false)}
+    <AlertNotificationRoot>
+      <KeyboardAwareScrollView
+        style={styles.container}
+        contentContainerStyle={{ gap: 20, paddingBottom: 50 }}
+        showsVerticalScrollIndicator={false}
+        ref={scrollViewRef}
+        scrollEventThrottle={16}
+        onLayout={(e) => handleScrollViewLayout(e)}
       >
-        <View style={{ height: height - 200 }}>
-          <WebView
-            source={{ html: formHtml }}
-            originWhitelist={["*"]}
-            automaticallyAdjustContentInsets={false}
-            javaScriptEnabled={true} // JavaScript'i etkinleştir
-            domStorageEnabled={true} // DOM depolamayı etkinleştir
-          />
-        </View>
-      </Modal>
-      <View>
-        <View style={[styles.AdvertDetail, { flexDirection: "row" }]}>
-          <View style={styles.image}>
-            <ImageBackground
-              source={{
-                uri: imageUrl,
-              }}
-              style={{
-                width: "100%",
-                height: "100%",
-              }}
-            />
-          </View>
-          <View style={styles.Description}>
-            <View style={{ gap: 5 }}>
-              <Text style={{ fontSize: 12 }}>İlan No: {ilanNo}</Text>
-              <View>
-                <Text style={{ fontWeight: "700" }}>{title}</Text>
-              </View>
-              <Text style={{ fontSize: 12, fontWeight: "bold" }}>
-                {roomOrder} No'lu konut için komşumu gör satın alım
-              </Text>
-            </View>
-
-            <View
-              style={{
-                flexDirection: "row",
-                justifyContent: "space-between",
-                alignItems: "center",
-              }}
-            ></View>
-          </View>
-        </View>
-      </View>
-      <View style={[styles.AdvertDetail, { borderRadius: 3 }]}>
-        <View
-          style={{
-            flexDirection: "row",
-            borderBottomWidth: 0.5,
-            borderBottomColor: "grey",
-            gap: 10,
-            paddingBottom: 5,
-            alignItems: "center",
-          }}
+        <Modal
+          isVisible={paymentModalShow}
+          onBackdropPress={() => setPaymentModalShow(false)}
         >
-          <IconIdCard name="id-card-o" size={15} />
-          <Text>Satın alan Kişinin Bilgileri</Text>
-        </View>
-
-        <View style={{ gap: 15 }}>
-          <View
-            onLayout={(event) =>
-              setApproximatelyInputHeight(event.nativeEvent.layout.height)
-            }
-            style={{ gap: 5 }}
-          >
-            <Text style={styles.label}>TC</Text>
-            <View
-              style={{
-                position: "absolute",
-                right: 0,
-                top: 11,
-                backgroundColor: tcWarningColor,
-                zIndex: 222,
-                padding: 5,
-                display: "flex",
-                alignItems: "center",
-                flexDirection: "row",
-                borderRadius: 5,
-              }}
-            >
-              {tcWarningColor == "green" ? (
-                <WarningIcon
-                  style={{ fontSize: 9, color: "#fff" }}
-                  name="check"
-                />
-              ) : (
-                <WarningIcon
-                  style={{ fontSize: 9, color: "#fff" }}
-                  name="warning"
-                />
-              )}
-              <Text style={{ fontSize: 9, color: "#fff", marginLeft: 3 }}>
-                {IdNumberWarningText}
-              </Text>
+          <View style={{ height: height - 200 }}>
+            <WebView
+              source={{ html: formHtml }}
+              originWhitelist={["*"]}
+              automaticallyAdjustContentInsets={false}
+              javaScriptEnabled={true} // JavaScript'i etkinleştir
+              domStorageEnabled={true} // DOM depolamayı etkinleştir
+            />
+          </View>
+        </Modal>
+        <View>
+          <View style={[styles.AdvertDetail, { flexDirection: "row" }]}>
+            <View style={styles.image}>
+              <ImageBackground
+                source={{
+                  uri: imageUrl,
+                }}
+                style={{
+                  width: "100%",
+                  height: "100%",
+                }}
+              />
             </View>
-            <TextInput
-              keyboardType="numeric"
-              value={IdNumber}
-              onChangeText={(value) => {
-                const numericValue = value.replace(/[^0-9]/g, "");
-                if (numericValue == value) {
-                  setIdNumber(value);
-                  if (value.length == 11) {
-                    if (tcKimlikDogrula(value)) {
-                      setTcWarningColor("green");
-                      setIdNumberWarningText("Başarılı");
-                      setErrors([...filterErrors("IdNumber")]);
+            <View style={styles.Description}>
+              <View style={{ gap: 5 }}>
+                <Text style={{ fontSize: 12 }}>İlan No: {ilanNo}</Text>
+                <View>
+                  <Text style={{ fontWeight: "700" }}>{title}</Text>
+                </View>
+                <Text style={{ fontSize: 12, fontWeight: "bold" }}>
+                  {roomOrder} No'lu konut için komşumu gör satın alım
+                </Text>
+              </View>
+
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                }}
+              ></View>
+            </View>
+          </View>
+        </View>
+        <View style={[styles.AdvertDetail, { borderRadius: 3 }]}>
+          <View
+            style={{
+              flexDirection: "row",
+              borderBottomWidth: 0.5,
+              borderBottomColor: "grey",
+              gap: 10,
+              paddingBottom: 5,
+              alignItems: "center",
+            }}
+          >
+            <IconIdCard name="id-card-o" size={15} />
+            <Text>Satın alan Kişinin Bilgileri</Text>
+          </View>
+
+          <View style={{ gap: 15 }}>
+            <View
+              onLayout={(event) =>
+                setApproximatelyInputHeight(event.nativeEvent.layout.height)
+              }
+              style={{ gap: 5 }}
+            >
+              <Text style={styles.label}>TC</Text>
+              <View
+                style={{
+                  position: "absolute",
+                  right: 0,
+                  top: 11,
+                  backgroundColor: tcWarningColor,
+                  zIndex: 222,
+                  padding: 5,
+                  display: "flex",
+                  alignItems: "center",
+                  flexDirection: "row",
+                  borderRadius: 5,
+                }}
+              >
+                {tcWarningColor == "green" ? (
+                  <WarningIcon
+                    style={{ fontSize: 9, color: "#fff" }}
+                    name="check"
+                  />
+                ) : (
+                  <WarningIcon
+                    style={{ fontSize: 9, color: "#fff" }}
+                    name="warning"
+                  />
+                )}
+                <Text style={{ fontSize: 9, color: "#fff", marginLeft: 3 }}>
+                  {IdNumberWarningText}
+                </Text>
+              </View>
+              <TextInput
+                keyboardType="numeric"
+                value={IdNumber}
+                onChangeText={(value) => {
+                  const numericValue = value.replace(/[^0-9]/g, "");
+                  if (numericValue == value) {
+                    setIdNumber(value);
+                    if (value.length == 11) {
+                      if (tcKimlikDogrula(value)) {
+                        setTcWarningColor("green");
+                        setIdNumberWarningText("Başarılı");
+                        setErrors([...filterErrors("IdNumber")]);
+                      } else {
+                        setIdNumberWarningText("Geçersiz TC");
+                        setTcWarningColor("#cc3300");
+                        setErrors([
+                          ...filterErrors("IdNumber"),
+                          {
+                            key: "IdNumber",
+                            message: "Geçersiz TC",
+                          },
+                        ]);
+                      }
                     } else {
-                      setIdNumberWarningText("Geçersiz TC");
-                      setTcWarningColor("#cc3300");
-                      setErrors([
-                        ...filterErrors("IdNumber"),
-                        {
-                          key: "IdNumber",
-                          message: "Geçersiz TC",
-                        },
-                      ]);
+                      if (value.length <= 11) {
+                        setIdNumberWarningText("11 Hane Olmalıdır");
+                        setTcWarningColor("#cc3300");
+                        setIdNumber(numericValue);
+                        setErrors([
+                          ...filterErrors("IdNumber"),
+                          {
+                            key: "IdNumber",
+                            message: "11 Hane Olmalıdır",
+                          },
+                        ]);
+                      } else {
+                        setIdNumberWarningText(
+                          "Maksimum karakter sayısına ulaştınız"
+                        );
+                        setTcWarningColor("#cc3300");
+                        setIdNumber(numericValue.substring(0, 11));
+                        setErrors([
+                          ...filterErrors("IdNumber"),
+                          {
+                            key: "IdNumber",
+                            message: "Maksimum karakter sayısına ulaştınız",
+                          },
+                        ]);
+                        setTimeout(() => {
+                          if (tcKimlikDogrula(numericValue.substring(0, 11))) {
+                            setTcWarningColor("green");
+                            setIdNumberWarningText("Başarılı");
+                            setErrors([...filterErrors("IdNumber")]);
+                          } else {
+                            setIdNumberWarningText("Geçersiz TC");
+                            setTcWarningColor("#cc3300");
+                            setErrors([
+                              ...filterErrors("IdNumber"),
+                              {
+                                key: "IdNumber",
+                                message: "Geçersiz TC",
+                              },
+                            ]);
+                          }
+                        }, 1000);
+                      }
                     }
                   } else {
-                    if (value.length <= 11) {
-                      setIdNumberWarningText("11 Hane Olmalıdır");
-                      setTcWarningColor("#cc3300");
-                      setIdNumber(numericValue);
-                      setErrors([
-                        ...filterErrors("IdNumber"),
-                        {
-                          key: "IdNumber",
-                          message: "11 Hane Olmalıdır",
-                        },
-                      ]);
-                    } else {
-                      setIdNumberWarningText(
-                        "Maksimum karakter sayısına ulaştınız"
-                      );
-                      setTcWarningColor("#cc3300");
-                      setIdNumber(numericValue.substring(0, 11));
-                      setErrors([
-                        ...filterErrors("IdNumber"),
-                        {
-                          key: "IdNumber",
-                          message: "Maksimum karakter sayısına ulaştınız",
-                        },
-                      ]);
-                      setTimeout(() => {
-                        if (tcKimlikDogrula(numericValue.substring(0, 11))) {
-                          setTcWarningColor("green");
-                          setIdNumberWarningText("Başarılı");
-                          setErrors([...filterErrors("IdNumber")]);
-                        } else {
-                          setIdNumberWarningText("Geçersiz TC");
-                          setTcWarningColor("#cc3300");
-                          setErrors([
-                            ...filterErrors("IdNumber"),
-                            {
-                              key: "IdNumber",
-                              message: "Geçersiz TC",
-                            },
-                          ]);
-                        }
-                      }, 1000);
-                    }
+                    setIdNumberWarningText("Sadece sayı giriniz");
+                    setTcWarningColor("#cc3300");
+                    setIdNumber(numericValue);
+                    setErrors([
+                      ...filterErrors("IdNumber"),
+                      {
+                        key: "IdNumber",
+                        message: "Sadece sayı giriniz",
+                      },
+                    ]);
                   }
-                } else {
-                  setIdNumberWarningText("Sadece sayı giriniz");
-                  setTcWarningColor("#cc3300");
-                  setIdNumber(numericValue);
-                  setErrors([
-                    ...filterErrors("IdNumber"),
-                    {
-                      key: "IdNumber",
-                      message: "Sadece sayı giriniz",
-                    },
-                  ]);
-                }
-              }}
-              style={{ ...styles.Input, borderColor: getError("IdNumber") }}
-            />
-          </View>
-          <View style={{ gap: 5 }}>
-            <Text style={styles.label}>Ad Soyad</Text>
-            <TextInput
-              editable={false}
-              style={{
-                ...styles.Input,
-                borderColor: getError("NameAndSurnam"),
-                backgroundColor: "lightgrey",
-              }}
-              value={NameAndSurnam}
-              onLayout={(event) => {
-                handleLayout("NameAndSurnam", event);
-              }}
-              onChangeText={(value) => setNameAndSurnam(value)}
-            />
-          </View>
-          <View style={{ gap: 5 }}>
-            <Text style={styles.label}>E-posta</Text>
-            <TextInput
-              style={{
-                ...styles.Input,
-                borderColor: getError("ePosta"),
-                backgroundColor: "lightgrey",
-              }}
-              value={ePosta}
-              onLayout={(event) => {
-                handleLayout("ePosta", event);
-              }}
-              onChangeText={(value) => setePosta(value)}
-            />
-          </View>
-          <View style={{ gap: 5 }}>
-            <Text style={styles.label}>Telefon</Text>
-            <TextInput
-              style={{
-                ...styles.Input,
-                borderColor: getError("phoneNumber"),
-                backgroundColor: "lightgrey",
-              }}
-              value={phoneNumber}
-              onLayout={(event) => handleLayout("phoneNumber", event)}
-              onChangeText={(value) => setphoneNumber(value)}
-            />
-          </View>
-          <View style={{ gap: 5 }}>
-            <Text style={styles.label}>Adres</Text>
-            <AbsoluteErrorInput
-              warningColor={addressWarningColor}
-              warningText={addressWarningText}
-              show={true}
-            />
-            <TextInput
-              style={{ ...styles.Input, borderColor: getError("adress") }}
-              value={adress}
-              onLayout={(event) => handleLayout("adress", event)}
-              onChangeText={(value) => {
-                if (value) {
-                  if (value.length >= 5) {
-                    setadress(value);
-                    setAddressWarningText("Başarılı");
-                    setAddressWarningColor("green");
+                }}
+                style={{ ...styles.Input, borderColor: getError("IdNumber") }}
+              />
+            </View>
+            <View style={{ gap: 5 }}>
+              <Text style={styles.label}>Ad Soyad</Text>
+              <TextInput
+                editable={false}
+                style={{
+                  ...styles.Input,
+                  borderColor: getError("NameAndSurnam"),
+                  backgroundColor: "lightgrey",
+                }}
+                value={NameAndSurnam}
+                onLayout={(event) => {
+                  handleLayout("NameAndSurnam", event);
+                }}
+                onChangeText={(value) => setNameAndSurnam(value)}
+              />
+            </View>
+            <View style={{ gap: 5 }}>
+              <Text style={styles.label}>E-posta</Text>
+              <TextInput
+                style={{
+                  ...styles.Input,
+                  borderColor: getError("ePosta"),
+                  backgroundColor: "lightgrey",
+                }}
+                value={ePosta}
+                onLayout={(event) => {
+                  handleLayout("ePosta", event);
+                }}
+                onChangeText={(value) => setePosta(value)}
+              />
+            </View>
+            <View style={{ gap: 5 }}>
+              <Text style={styles.label}>Telefon</Text>
+              <TextInput
+                style={{
+                  ...styles.Input,
+                  borderColor: getError("phoneNumber"),
+                  backgroundColor: "lightgrey",
+                }}
+                value={phoneNumber}
+                onLayout={(event) => handleLayout("phoneNumber", event)}
+                onChangeText={(value) => setphoneNumber(value)}
+              />
+            </View>
+            <View style={{ gap: 5 }}>
+              <Text style={styles.label}>Adres</Text>
+              <AbsoluteErrorInput
+                warningColor={addressWarningColor}
+                warningText={addressWarningText}
+                show={true}
+              />
+              <TextInput
+                style={{ ...styles.Input, borderColor: getError("adress") }}
+                value={adress}
+                onLayout={(event) => handleLayout("adress", event)}
+                onChangeText={(value) => {
+                  if (value) {
+                    if (value.length >= 5) {
+                      setadress(value);
+                      setAddressWarningText("Başarılı");
+                      setAddressWarningColor("green");
+                    } else {
+                      setadress(value);
+                      setAddressWarningText("Minimum 5 karakter olmalıdır");
+                      setAddressWarningColor("#cc3300");
+                    }
                   } else {
                     setadress(value);
-                    setAddressWarningText("Minimum 5 karakter olmalıdır");
+                    setAddressWarningText("Zorunlu");
                     setAddressWarningColor("#cc3300");
                   }
-                } else {
-                  setadress(value);
-                  setAddressWarningText("Zorunlu");
-                  setAddressWarningColor("#cc3300");
-                }
-              }}
-            />
+                }}
+              />
+            </View>
+            <View style={{ gap: 5 }}>
+              <Text style={styles.label}>Notlar</Text>
+              <TextInput
+                style={styles.Input}
+                value={notes}
+                onChangeText={(value) => setnotes(value)}
+              />
+            </View>
+            <View style={{ gap: 5 }}></View>
           </View>
           <View style={{ gap: 5 }}>
-            <Text style={styles.label}>Notlar</Text>
-            <TextInput
-              style={styles.Input}
-              value={notes}
-              onChangeText={(value) => setnotes(value)}
+            <CheckBox
+              checked={checked2}
+              onPress={() => {
+                checked2 ? setModalVisible(false) : setModalVisible(true);
+                setChecked2(false);
+              }}
+              // Use ThemeProvider to make change for all checkbox
+              iconType="material-community"
+              checkedIcon="checkbox-marked"
+              uncheckedIcon="checkbox-blank-outline"
+              checkedColor="red"
+              size={21}
+              containerStyle={{
+                padding: 0,
+                margin: 0,
+                marginRight: 0,
+                marginLeft: 0,
+              }}
+              title={
+                <View style={{ padding: 5 }}>
+                  <Text
+                    style={{ textDecorationLine: "underline", fontSize: 12 }}
+                  >
+                    Komşunu Gör Bilgi Güvenliği Politikası
+                  </Text>
+
+                  <Text style={{ fontSize: 12 }}>okudum ve kabul ediyorum</Text>
+                </View>
+              }
             />
           </View>
-          <View style={{ gap: 5 }}></View>
         </View>
-        <View style={{ gap: 5 }}>
-          <CheckBox
-            checked={checked2}
-            onPress={() => {
-              checked2 ? setModalVisible(false) : setModalVisible(true);
-              setChecked2(false);
-            }}
-            // Use ThemeProvider to make change for all checkbox
-            iconType="material-community"
-            checkedIcon="checkbox-marked"
-            uncheckedIcon="checkbox-blank-outline"
-            checkedColor="red"
-            size={21}
-            containerStyle={{
-              padding: 0,
-              margin: 0,
-              marginRight: 0,
-              marginLeft: 0,
-            }}
-            title={
-              <View style={{ padding: 5 }}>
-                <Text style={{ textDecorationLine: "underline", fontSize: 12 }}>
-                  Komşunu Gör Bilgi Güvenliği Politikası
-                </Text>
 
-                <Text style={{ fontSize: 12 }}>okudum ve kabul ediyorum</Text>
-              </View>
-            }
-          />
+        <View style={[styles.AdvertDetail, { borderRadius: 3 }]}>
+          <View
+            style={{
+              flexDirection: "row",
+              borderBottomWidth: 0.5,
+              borderBottomColor: "grey",
+              gap: 10,
+              paddingBottom: 5,
+              alignItems: "center",
+            }}
+          >
+            <IconIdCard name="star-o" size={15} />
+            <Text>Sepet Özeti</Text>
+          </View>
+          <View style={{ gap: 20 }}>
+            <View
+              style={{ flexDirection: "row", justifyContent: "space-between" }}
+            >
+              <Text>Toplam Fiyat:</Text>
+              <Text> {amount} ₺ </Text>
+            </View>
+          </View>
         </View>
-      </View>
 
-      <View style={[styles.AdvertDetail, { borderRadius: 3 }]}>
         <View
           style={{
             flexDirection: "row",
-            borderBottomWidth: 0.5,
-            borderBottomColor: "grey",
+            justifyContent: "space-between",
+            borderWidth: 0.5,
             gap: 10,
-            paddingBottom: 5,
-            alignItems: "center",
+            borderColor: "#333",
+            width: "100%",
+            overflow: "hidden",
           }}
         >
-          <IconIdCard name="star-o" size={15} />
-          <Text>Sepet Özeti</Text>
+          <TouchableOpacity
+            onPress={() => {
+              settabs(0);
+            }}
+            style={{
+              width: "50%",
+              backgroundColor: tabs == 0 ? "#E54242" : "transparent",
+              padding: 10,
+            }}
+          >
+            <Text
+              style={{
+                textAlign: "center",
+                color: tabs == 0 ? "white" : "#333",
+              }}
+            >
+              Kredi Kartı
+            </Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            onPress={() => {
+              settabs(1);
+            }}
+            style={{
+              width: "50%",
+              padding: 10,
+              backgroundColor: tabs == 1 ? "#E54242" : "transparent",
+            }}
+          >
+            <Text
+              style={{
+                textAlign: "center",
+                color: tabs == 1 ? "white" : "#333",
+              }}
+            >
+              EFT / Havale ile Ödeme
+            </Text>
+          </TouchableOpacity>
         </View>
-        <View style={{ gap: 20 }}>
-          <View
-            style={{ flexDirection: "row", justifyContent: "space-between" }}
-          >
-            <Text>Toplam Fiyat:</Text>
-            <Text> {amount} ₺ </Text>
-          </View>
-        </View>
-      </View>
+        {selectedDocumentName && (
+          <Text>Seçilen Belge: {selectedDocumentName}</Text>
+        )}
 
-      <View
-        style={{
-          flexDirection: "row",
-          justifyContent: "space-between",
-          borderWidth: 0.5,
-          gap: 10,
-          borderColor: "#333",
-          width: "100%",
-          overflow: "hidden",
-        }}
-      >
-        <TouchableOpacity
-          onPress={() => {
-            settabs(0);
-          }}
-          style={{
-            width: "50%",
-            backgroundColor: tabs == 0 ? "#E54242" : "transparent",
-            padding: 10,
-          }}
+        {tabs == 0 && (
+          <CreditCardScreen
+            setCreditCartData={setCreditCartData}
+            creditCartData={creditCartData}
+            CompeletePayment={completeCreditCardPay}
+            getError={getError}
+            errors={errors}
+            loading={btnLoading}
+          />
+        )}
+        {tabs == 1 && (
+          <EftPay
+            onPress={pickDocument}
+            selectedDocumentName={selectedDocumentName}
+            url={selectedPdfUrl}
+            onHandlePayment={eftPay}
+            setSelectedBank={setSelectedBank}
+            selectedBank={selectedBank}
+          />
+        )}
+        <Modal
+          isVisible={modalVisible}
+          onBackdropPress={() => setModalVisible(false)}
+          backdropColor="transparent"
+          style={styles.modal2}
+          animationIn={"fadeInRightBig"}
+          animationOut={"fadeOutRightBig"}
         >
-          <Text
-            style={{ textAlign: "center", color: tabs == 0 ? "white" : "#333" }}
-          >
-            Kredi Kartı
-          </Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          onPress={() => {
-            settabs(1);
-          }}
-          style={{
-            width: "50%",
-            padding: 10,
-            backgroundColor: tabs == 1 ? "#E54242" : "transparent",
-          }}
-        >
-          <Text
-            style={{ textAlign: "center", color: tabs == 1 ? "white" : "#333" }}
-          >
-            EFT / Havale ile Ödeme
-          </Text>
-        </TouchableOpacity>
-      </View>
-      {selectedDocumentName && (
-        <Text>Seçilen Belge: {selectedDocumentName}</Text>
-      )}
-
-      {tabs == 0 && (
-        <CreditCardScreen
-          setCreditCartData={setCreditCartData}
-          creditCartData={creditCartData}
-          CompeletePayment={completeCreditCardPay}
-          getError={getError}
-          errors={errors}
-          loading={btnLoading}
-        />
-      )}
-      {tabs == 1 && (
-        <EftPay
-          onPress={pickDocument}
-          selectedDocumentName={selectedDocumentName}
-          url={selectedPdfUrl}
-          onHandlePayment={eftPay}
-          setSelectedBank={setSelectedBank}
-          selectedBank={selectedBank}
-        />
-      )}
-      <Modal
-        isVisible={modalVisible}
-        onBackdropPress={() => setModalVisible(false)}
-        backdropColor="transparent"
-        style={styles.modal2}
-        animationIn={"fadeInRightBig"}
-        animationOut={"fadeOutRightBig"}
-      >
-        <View style={styles.modalContent2}>
-          <SafeAreaView>
-            <ScrollView>
-              {Deals ? (
-                <HTML
-                  source={{ html: Deals }}
-                  contentWidth={Dimensions.get("window").width * 0.8}
-                />
-              ) : (
-                <View
-                  style={{
-                    alignItems: "center",
-                    justifyContent: "center",
-                    height: 200,
-                  }}
-                >
-                  <Text>Yükleniyor...</Text>
+          <View style={styles.modalContent2}>
+            <SafeAreaView>
+              <ScrollView>
+                {Deals ? (
+                  <HTML
+                    source={{ html: Deals }}
+                    contentWidth={Dimensions.get("window").width * 0.8}
+                  />
+                ) : (
+                  <View
+                    style={{
+                      alignItems: "center",
+                      justifyContent: "center",
+                      height: 200,
+                    }}
+                  >
+                    <Text>Yükleniyor...</Text>
+                  </View>
+                )}
+                <View style={{ alignItems: "center", marginTop: 20 }}>
+                  <TouchableOpacity
+                    style={styles.Acceptbtn}
+                    onPress={() => {
+                      setChecked2(true);
+                      setModalVisible(false);
+                    }}
+                  >
+                    <Text style={{ color: "white" }}>
+                      Okudum, kabul ediyorum
+                    </Text>
+                  </TouchableOpacity>
                 </View>
-              )}
-              <View style={{ alignItems: "center", marginTop: 20 }}>
-                <TouchableOpacity
-                  style={styles.Acceptbtn}
-                  onPress={() => {
-                    setChecked2(true);
-                    setModalVisible(false);
-                  }}
-                >
-                  <Text style={{ color: "white" }}>Okudum, kabul ediyorum</Text>
-                </TouchableOpacity>
-              </View>
-            </ScrollView>
-          </SafeAreaView>
-        </View>
-      </Modal>
-    </KeyboardAwareScrollView>
+              </ScrollView>
+            </SafeAreaView>
+          </View>
+        </Modal>
+      </KeyboardAwareScrollView>
+    </AlertNotificationRoot>
   );
 }
 const styles = StyleSheet.create({
