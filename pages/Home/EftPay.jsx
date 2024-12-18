@@ -164,10 +164,8 @@ export default function EftPay({
 
       <View>
         <Text style={{ color: "#696969", fontSize: 15 }}>
-          Ödeme işlemini tamamlamak için, lütfen bu{" "}
-          <Text style={{ color: "red" }}>2000247</Text> kodu kullanarak
-          ödemenizi yapın. IBAN açıklama alanına bu kodu eklemeyi unutmayın.
-          Ardından <Text style={{ color: "red" }}>Dekont Ekleyin</Text> Ve{" "}
+          Ödeme işlemini tamamlamak için, lütfen{" "}
+          <Text style={{ color: "red" }}>Dekont Ekleyin</Text> Ve{" "}
           <Text style={{ color: "red" }}>"Ödemeyi Tamamla" </Text>düğmesine
           tıklayarak işlemi bitirin.
         </Text>
