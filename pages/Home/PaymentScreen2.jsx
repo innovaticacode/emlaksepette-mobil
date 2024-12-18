@@ -116,7 +116,7 @@ export default function PaymentScreen2() {
       timeout: 20000,
     });
 
-    socketRef.current.on("result-api-payment-cart", (data) => {
+    socketRef.current.on("result-api-payment-neighbor-view", (data) => {
       paymentCheck(data);
     });
 
@@ -355,7 +355,6 @@ export default function PaymentScreen2() {
       // Burada isteğin başarısız olduğunda yapılacak işlemleri gerçekleştirebilirsiniz.
     }
   };
-
   const formHtml = `
   <html>
       <body onload="javascript:moveWindow()">
@@ -384,7 +383,8 @@ export default function PaymentScreen2() {
               }
           </script>
       </body>
-    </html>`;
+    </html>
+    `;
 
   /**
    * Sends a payment request to the server.
@@ -404,29 +404,35 @@ export default function PaymentScreen2() {
   const sendPaymentRequest = async () => {
     setBtnLoading(true);
     const paymentData = {
-      key: "order_key_app",
-      payable_amount: amount,
-      is_show_user: true,
+      item_id: ilanNo,
+      room_number: roomOrder,
       fullName: creditCartData.name,
-      email: ePosta,
+      tc: IdNumber,
       phone: phoneNumber,
       address: adress,
-      tc: IdNumber,
+      email: ePosta,
       notes: notes,
-      creditcard: creditCartData.credit_cart_number,
       month: creditCartData.exp_month,
       year: creditCartData.exp_year,
+      creditcard: creditCartData.credit_cart_number,
     };
+
+    console.log("paymentData", paymentData);
+
     const token = user?.access_token;
     const headers = {
       Authorization: `Bearer ${token}`,
       "Content-Type": "application/json",
     };
     try {
-      const response = await axios.post(apiUrl + "pay-cart", paymentData, {
-        headers,
-      });
-      console.log("Ödeme başarılı:", response);
+      const response = await axios.post(
+        apiUrl + "pay-neighbor-view",
+        paymentData,
+        {
+          headers,
+        }
+      );
+      //console.log("Ödeme başarılı:", response);
       if (response.status == 200) {
         setPaymentModalShow(true);
       }

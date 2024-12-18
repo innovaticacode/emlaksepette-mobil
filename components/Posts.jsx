@@ -121,7 +121,7 @@ export default function Posts({
       ? frontEndUriBase + "project_housing_images/" + selectedRoom["image[]"]
       : ""; // Resim URL'sini burada belirleyin
     const neightboord = false;
-    const ilanNo = 1000000 + data.project.id + roomOrder; // İlan numarasını belirliyoruz
+    const ilanNo = data.project.id; // İlan numarasını belirliyoruz
     const roomOrderString = roomOrder.toString();
 
     // Verileri secureStore ile saklayın
@@ -333,7 +333,6 @@ export default function Posts({
     }
   };
 
-  console.log(data?.neighborViews[roomOrder]?.user_id == user.id);
   return (
     <View style={styles.container}>
       <AwesomeAlert
@@ -992,7 +991,7 @@ export default function Posts({
                     : "Başlık bulunamadı",
                   20
                 )}"\n\nİlan No: ${
-                  1000000 + data.project.id + roomOrder
+                  1000000 + data.project.id + " - " + roomOrder
                 }\nÖdeme Tarihi: ${formattedDate}\nTutar: 250 TL\n\nKomşumu Gör Özelliği: İlgilendiğiniz projeden konut alanları arayıp proje hakkında detaylı referans bilgisi almanıza imkan sağlar.\n\nKomşunuza ait iletişim bilgilerini görmek için aşağıdaki adımları takip edin:\n\n1. Ödeme işlemini tamamlayın ve belirtilen tutarı ödediğiniz takdirde,\n2. Ödemeniz onaylandıktan sonra, "Komşumu Gör" düğmesi aktif olacak ve komşunuzun iletişim bilgilerine ulaşabileceksiniz.`}
                 closeOnTouchOutside={true}
                 closeOnHardwareBackPress={false}

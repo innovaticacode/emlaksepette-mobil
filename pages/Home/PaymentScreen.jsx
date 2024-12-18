@@ -150,6 +150,7 @@ export default function PaymentScreen() {
   }, []);
 
   const paymentCheck = (value) => {
+    console.log(value);
     if (!value?.status) {
       setPaymentModalShow(false);
       console.log("Payment failed!");
