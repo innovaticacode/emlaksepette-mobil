@@ -23,6 +23,7 @@ import { ActivityIndicator } from "react-native-paper";
 import { apiUrl } from "../../../components/methods/apiRequest";
 import { Dialog } from "react-native-alert-notification";
 import { sanitizeEmail } from "../../../utils";
+import ContratsActionSheet from "../../../components/ContratsModal/ContratsActionSheet";
 export default function Company() {
   const Navigation = useNavigation();
   const [selectedIndexRadio, setIndexRadio] = useState(0);
@@ -702,7 +703,8 @@ export default function Company() {
       setcolorForSymbol(true);
     }
   };
-
+  const [isVisible, setIsVisible] = useState(false);
+  const [selectedUrl, setselectedUrl] = useState(null);
   return (
     <KeyboardAvoidingView
       style={{ flex: 1, backgroundColor: "transparent" }}
@@ -1381,12 +1383,9 @@ export default function Company() {
             {/* Contracts */}
             <View style={styles.container}>
               <TouchableOpacity
-                onPress={() =>
-                  Navigation.navigate("ShowContracts", {
-                    filePath:
-                      "https://private.emlaksepette.com/agreements/kurumsal-uyelik-sozlesmesi_11-12-24-03-12-14.docx",
-                  })
-                }
+                onPress={() => {
+                  setChecked(!checked);
+                }}
                 style={styles.checkboxContainer}
               >
                 {checked ? (
@@ -1399,6 +1398,10 @@ export default function Company() {
                   <FontAwesome5Icon name="square" size={18} color="black" />
                 )}
                 <Text
+                  onPress={() => {
+                    setIsVisible(true);
+                    setselectedUrl("kurumsal-uyelik-sozlesmesi");
+                  }}
                   style={[
                     styles.checkboxLabel,
                     { color: errorStatu === 15 ? "red" : "black" },
@@ -1416,15 +1419,9 @@ export default function Company() {
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity
-                onPress={() =>
-                  handleCheckboxChange(
-                    checked1,
-                    setChecked1,
-                    modalVisible2,
-                    setModalVisible2,
-                    "kvkk-politikasi"
-                  )
-                }
+                onPress={() => {
+                  setChecked1(!checked1);
+                }}
                 style={[styles.checkboxContainer]}
               >
                 {checked1 ? (
@@ -1437,6 +1434,12 @@ export default function Company() {
                   <FontAwesome5Icon name="square" size={18} color="black" />
                 )}
                 <Text
+                  onPress={() => {
+                    setIsVisible(true);
+                    setselectedUrl(
+                      "kisisel-verilerin-korunmasi-ve-islenmesi-politikasi"
+                    );
+                  }}
                   style={[
                     styles.checkboxLabel,
                     { color: errorStatu === 15 ? "red" : "black" },
@@ -1455,15 +1458,9 @@ export default function Company() {
               </TouchableOpacity>
 
               <TouchableOpacity
-                onPress={() =>
-                  handleCheckboxChange(
-                    checked2,
-                    setChecked2,
-                    modalVisible3,
-                    setModalVisible3,
-                    "gizlilik-sozlesmesi-ve-aydinlatma-metni"
-                  )
-                }
+                onPress={() => {
+                  setChecked2(!checked2);
+                }}
                 style={styles.checkboxContainer}
               >
                 {checked2 ? (
@@ -1476,6 +1473,10 @@ export default function Company() {
                   <FontAwesome5Icon name="square" size={18} color="black" />
                 )}
                 <Text
+                  onPress={() => {
+                    setIsVisible(true);
+                    setselectedUrl("gizlilik-sozlesmesi");
+                  }}
                   style={[
                     styles.checkboxLabel,
                     { color: errorStatu === 15 ? "red" : "black" },
@@ -1675,6 +1676,11 @@ export default function Company() {
             </ScrollView>
           </SafeAreaView>
         </Modal>
+        <ContratsActionSheet
+          isVisibleOpen={isVisible}
+          setIsVisible={setIsVisible}
+          url={selectedUrl}
+        />
       </ScrollView>
     </KeyboardAvoidingView>
   );

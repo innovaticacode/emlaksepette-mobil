@@ -527,7 +527,9 @@ export default function Personal({ type }) {
               >
                 <Text
                   onPress={() => {
-                    setselectedUrl("bireysel-uyelik-sozlesmesi");
+                    setselectedUrl(
+                      "kisisel-verilerin-korunmasi-ve-islenmesi-politikasi"
+                    );
                     setIsVisible(true);
                   }}
                   style={{
