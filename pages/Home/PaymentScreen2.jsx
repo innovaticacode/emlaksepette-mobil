@@ -35,7 +35,7 @@ import {
   AlertNotificationRoot,
   ALERT_TYPE,
 } from "react-native-alert-notification";
-import { payEft } from "../../services/apiServices";
+import { payEftNeigbor } from "../../services/apiServices";
 export default function PaymentScreen2() {
   // Kullanarak bu değerleri göstermek için devam edin
 
@@ -526,7 +526,7 @@ export default function PaymentScreen2() {
         } else {
           if (tempErrors.length == 0) {
             setBtnLoading(true);
-            payEft({
+            payEftNeigbor({
               bank_id: selectedBank,
               pdf: pdfFile,
               payableAmount: amount,

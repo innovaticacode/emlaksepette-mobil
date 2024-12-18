@@ -59,6 +59,32 @@ export const payEft = (params: {
     });
 };
 
+export const payEftNeigbor = (params: {
+  bank_id: number;
+  pdf: Pdf;
+  payableAmount: string;
+}) => {
+  var formData = new FormData();
+  formData.append("bank_id", params.bank_id.toString());
+  formData.append("payableAmount", params.payableAmount);
+
+  if (params.pdf) {
+    formData.append("pdf", {
+      uri: params.pdf.uri,
+      name: params.pdf.name || "application/pdf",
+      type: params.pdf.mimeType || "document.pdf",
+    } as unknown as Blob);
+  }
+
+  return apiRequestPostWithBearer(endpoints.NEIGHBOR, formData)
+    .then((res) => {
+      return res;
+    })
+    .catch((err) => {
+      throw err;
+    });
+};
+
 /**
  * Checks the validity of a reference code by querying the server.
  *
@@ -90,6 +116,7 @@ export enum endpoints {
   CURRENT_USER = "current_user/",
   PAY_EFT = "pay_eft",
   CHECK_REFERANCE_CODE = "check_referance_code",
+  NEIGHBOR = "neighboR",
 }
 
 /**
