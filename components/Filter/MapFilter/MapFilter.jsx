@@ -1,6 +1,6 @@
 import { View, Text, TouchableOpacity, ScrollView } from "react-native";
 import React, { useEffect, useRef, useState } from "react";
-import RNPickerSelect from "react-native-picker-select";
+
 import { pickerSelectStyles, styles } from "./MapFilter.style";
 import { apiUrl } from "../../methods/apiRequest";
 import { useDispatch, useSelector } from "react-redux";
@@ -18,7 +18,7 @@ import {
   CollapseBody,
 } from "accordion-collapse-react-native";
 import { ActivityIndicator } from "react-native-paper";
-import { CheckBox } from "@rneui/themed";
+
 export default function MapFilter({
   GetProjectsInfo,
   setfilterLatiude,

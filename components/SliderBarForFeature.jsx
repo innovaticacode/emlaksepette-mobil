@@ -1,8 +1,7 @@
 import { View, Text, StyleSheet } from "react-native";
 import React, { useState, useEffect, useRef } from "react";
 import SliderItem from "./SliderItem";
-import axios from "axios";
-import SliderItemSkeleton from "./SkeletonComponents/SliderItemSkeleton";
+
 import {
   GestureHandlerRootView,
   ScrollView,
@@ -11,10 +10,8 @@ import { getValueFor } from "./methods/user";
 import { apiUrl, frontEndUriBase } from "./methods/apiRequest";
 
 export default function SliderBarForFeature() {
-
   const [loading, setloading] = useState(false);
   const [featuredStores, setFeaturedStores] = useState([]);
-
 
   const capitalizeFirstLetter = (text) => {
     return text.charAt(0).toUpperCase() + text.slice(1);
@@ -36,7 +33,6 @@ export default function SliderBarForFeature() {
       url: "SellAndRent",
       isShow: "All",
       navigationStatus: true,
-
     },
     {
       text: "Gayrimenkul Ligi",
@@ -45,7 +41,6 @@ export default function SliderBarForFeature() {
       url: "RealEstateLeague",
       isShow: "All",
       navigationStatus: true,
-
     },
     {
       text: "Al Sat Acil",
@@ -64,14 +59,11 @@ export default function SliderBarForFeature() {
       isShow: "All",
       navigationStatus: true,
     },
-
-
   ];
   const [user, setuser] = useState({});
   useEffect(() => {
     getValueFor("user", setuser);
   }, []);
-
 
   return (
     <GestureHandlerRootView>
@@ -95,8 +87,8 @@ export default function SliderBarForFeature() {
                     (!user.access_token ||
                       user.type == 1 ||
                       item.isShow == user.corporate_type)
-                    ? "flex"
-                    : "none",
+                  ? "flex"
+                  : "none",
             }}
             key={i}
           >
@@ -115,8 +107,6 @@ export default function SliderBarForFeature() {
             </Text>
           </View>
         ))}
-
-
       </ScrollView>
     </GestureHandlerRootView>
   );

@@ -5,7 +5,6 @@ import {
   ScrollView,
   TouchableOpacity,
   ImageBackground,
-
   RefreshControl,
 } from "react-native";
 import React, { useState, useEffect, useCallback } from "react";
@@ -43,8 +42,6 @@ export default function MyComments() {
   const [initialComment, setInitialComment] = useState(""); // Başlangıçtaki yorum
   const [editedComment, setEditedComment] = useState(""); // Düzenlenmiş yorum
 
-  
-
   useEffect(() => {
     getValueFor("user", setuser);
   }, []);
@@ -55,9 +52,7 @@ export default function MyComments() {
     try {
       setLoading(true);
       if (user?.access_token) {
-        const response = await axios.get(
-          `${apiUrl}user/${user?.id}/comments`
-        );
+        const response = await axios.get(`${apiUrl}user/${user?.id}/comments`);
         const sortedComments = response.data.allComments.sort((a, b) => {
           const dateA = new Date(a.comment.created_at);
           const dateB = new Date(b.comment.created_at);
@@ -82,7 +77,6 @@ export default function MyComments() {
   }, [user]);
 
   const MycommentItem = ({ item, EditComment, goToEditComment, store }) => {
-    
     const { type, comment } = item;
     const info = type === "project" ? item.project : item.housing;
     const numStars = Math.round(comment?.rate);
@@ -107,8 +101,6 @@ export default function MyComments() {
       }
     };
 
-    
-    
     return (
       <View style={styles.card}>
         <View style={styles.cardContent}>
@@ -240,7 +232,6 @@ export default function MyComments() {
       } else {
         setDeleteSuccess(false);
         setModalMessage("Yorum bulunamadı.");
-
       }
     } catch (error) {
       setDeleteSuccess(false);
@@ -251,75 +242,74 @@ export default function MyComments() {
   };
 
   return (
-      <ScrollView
-        contentContainerStyle={{ flexGrow: 1 }}
-        refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-        }
-      >
-        <View style={{ gap: 10, padding: 10, flex: 1 }}>
-          {loading ? (
-            <View
-              style={{
-                flex: 1,
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
-              <ActivityIndicator size="large" color="#333" />
-            </View>
-          ) : comments?.length > 0 ? (
-            comments.map((item, index) => (
-              <MycommentItem
-                key={index}
-                store={item.store}
-                item={item}
-                EditComment={EditComment}
-                goToEditComment={() => goToEditComment(item)} // info'yu prop olarak gönderiyoruz
-              />
-            ))
-          ) : (
-            <NoDataScreen
-              message="Yorumunuz bulunmamaktadır."
-              iconName="comment-off"
-              buttonText="Anasayfaya Dön"
-              navigateTo="HomePage"
-            />
-          )}
-
-          <Modal
-            isVisible={choose}
-            style={[styles.modal,{margin:0}]}
-            animationIn={"fadeInDown"}
-            animationOut={"fadeOutDown"}
-            onBackdropPress={() => setchoose(false)}
-            swipeDirection={["down"]}
-            onSwipeComplete={() => setchoose(false)}
+    <ScrollView
+      contentContainerStyle={{ flexGrow: 1 }}
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+      }
+    >
+      <View style={{ gap: 10, padding: 10, flex: 1 }}>
+        {loading ? (
+          <View
+            style={{
+              flex: 1,
+              justifyContent: "center",
+              alignItems: "center",
+            }}
           >
-            <View style={[styles.modalContent]}>
-              <View style={[styles.modalOptions]}>
-                {(selectedCommentStatus === 1 ||
-                  selectedCommentStatus === 2) && (
-                  <TouchableOpacity
-                    style={styles.modalOption}
-                    onPress={goToEditComment}
-                  >
-                    <Icon3 name="edit-note" size={29} color={"#333"} />
-                    <Text style={styles.modalOptionText}>Yorumu Düzenle</Text>
-                  </TouchableOpacity>
-                )}
+            <ActivityIndicator size="large" color="#333" />
+          </View>
+        ) : comments?.length > 0 ? (
+          comments.map((item, index) => (
+            <MycommentItem
+              key={index}
+              store={item.store}
+              item={item}
+              EditComment={EditComment}
+              goToEditComment={() => goToEditComment(item)} // info'yu prop olarak gönderiyoruz
+            />
+          ))
+        ) : (
+          <NoDataScreen
+            message="Yorumunuz bulunmamaktadır."
+            iconName="comment-off"
+            buttonText="Anasayfaya Dön"
+            navigateTo="HomePage"
+          />
+        )}
 
+        <Modal
+          isVisible={choose}
+          style={[styles.modal, { margin: 0 }]}
+          animationIn={"fadeInDown"}
+          animationOut={"fadeOutDown"}
+          onBackdropPress={() => setchoose(false)}
+          swipeDirection={["down"]}
+          onSwipeComplete={() => setchoose(false)}
+        >
+          <View style={[styles.modalContent]}>
+            <View style={[styles.modalOptions]}>
+              {(selectedCommentStatus === 1 || selectedCommentStatus === 2) && (
                 <TouchableOpacity
                   style={styles.modalOption}
-                  onPress={confirmDeleteComment}
+                  onPress={goToEditComment}
                 >
-                  <Icon3 name="delete" size={21} color={"#EA2A28"} />
-                  <Text style={styles.modalOptionText}>Yorumu Sil</Text>
+                  <Icon3 name="edit-note" size={29} color={"#333"} />
+                  <Text style={styles.modalOptionText}>Yorumu Düzenle</Text>
                 </TouchableOpacity>
-              </View>
+              )}
+
+              <TouchableOpacity
+                style={styles.modalOption}
+                onPress={confirmDeleteComment}
+              >
+                <Icon3 name="delete" size={21} color={"#EA2A28"} />
+                <Text style={styles.modalOptionText}>Yorumu Sil</Text>
+              </TouchableOpacity>
             </View>
-          </Modal>
-          {/* <Modal
+          </View>
+        </Modal>
+        {/* <Modal
             isVisible={modalDelete}
             style={styles.confirmationModal2}
             animationIn={"fadeInDown"}
@@ -348,104 +338,102 @@ export default function MyComments() {
               </View>
             </View>
           </Modal> */}
-          <AwesomeAlert
-            show={modalVisible}
-            showProgress={false}
-            titleStyle={{
-              color: "#333",
-              fontSize: 13,
-              fontWeight: "700",
-              textAlign: "center",
-              margin: 5,
-            }}
-            messageStyle={{ textAlign: "center" }}
-            message={`Yorumu silmek istediğinizden emin misiniz?`}
-            closeOnTouchOutside={true}
-            closeOnHardwareBackPress={false}
-            showCancelButton={true}
-            showConfirmButton={true}
-            cancelText="Hayır"
-            confirmText="Evet"
-            cancelButtonColor="#ce4d63"
-            confirmButtonColor="#1d8027"
-            onCancelPressed={() => {
-              setModalVisible(!modalVisible);
-            }}
-            onConfirmPressed={() => {
-              setModalVisible(false)
-              setTimeout(() => {
-                DeleteComment();
-              }, 600);
+        <AwesomeAlert
+          show={modalVisible}
+          showProgress={false}
+          titleStyle={{
+            color: "#333",
+            fontSize: 13,
+            fontWeight: "700",
+            textAlign: "center",
+            margin: 5,
+          }}
+          messageStyle={{ textAlign: "center" }}
+          message={`Yorumu silmek istediğinizden emin misiniz?`}
+          closeOnTouchOutside={true}
+          closeOnHardwareBackPress={false}
+          showCancelButton={true}
+          showConfirmButton={true}
+          cancelText="Hayır"
+          confirmText="Evet"
+          cancelButtonColor="#ce4d63"
+          confirmButtonColor="#1d8027"
+          onCancelPressed={() => {
+            setModalVisible(!modalVisible);
+          }}
+          onConfirmPressed={() => {
+            setModalVisible(false);
+            setTimeout(() => {
+              DeleteComment();
+            }, 600);
+          }}
+          confirmButtonTextStyle={{ marginLeft: 20, marginRight: 20 }}
+          cancelButtonTextStyle={{ marginLeft: 20, marginRight: 20 }}
+        />
 
-            }}
-            confirmButtonTextStyle={{ marginLeft: 20, marginRight: 20 }}
-            cancelButtonTextStyle={{ marginLeft: 20, marginRight: 20 }}
-          />
+        <AwesomeAlert
+          show={successAlertVisible} // Başarılı işlem alert'i görünür
+          showProgress={false}
+          titleStyle={{
+            color: "#333",
+            fontSize: 22,
+            fontWeight: "700",
+            textAlign: "center",
+            margin: 5,
+          }}
+          messageStyle={{
+            fontSize: 18,
+            margin: 5,
+            paddingHorizontal: 40,
+          }}
+          confirmButtonTextStyle={{
+            fontSize: 18,
+            margin: 5,
+          }}
+          title="Başarılı"
+          message="Yorum başarıyla silindi."
+          closeOnTouchOutside={true}
+          closeOnHardwareBackPress={false}
+          showConfirmButton={true}
+          confirmText="Tamam"
+          confirmButtonColor="#1d8027"
+          onConfirmPressed={() => {
+            setSuccessAlertVisible(false); // Success Alert'i kapat
+          }}
+        />
 
-          <AwesomeAlert
-            show={successAlertVisible} // Başarılı işlem alert'i görünür
-            showProgress={false}
-            titleStyle={{
-              color: "#333",
-              fontSize: 22,
-              fontWeight: "700",
-              textAlign: "center",
-              margin: 5,
-            }}
-            messageStyle={{
-              fontSize: 18,
-              margin: 5,
-              paddingHorizontal: 40,
-            }}
-            confirmButtonTextStyle={{
-              fontSize: 18,
-              margin: 5,
-            }}
-            title="Başarılı"
-            message="Yorum başarıyla silindi."
-            closeOnTouchOutside={true}
-            closeOnHardwareBackPress={false}
-            showConfirmButton={true}
-            confirmText="Tamam"
-            confirmButtonColor="#1d8027"
-            onConfirmPressed={() => {
-              setSuccessAlertVisible(false); // Success Alert'i kapat
-            }}
-          />
-
-          <AwesomeAlert
-            show={errorAlertVisible} // Hata alert'i görünür
-            showProgress={false}
-            titleStyle={{
-              color: "#333",
-              fontSize: 22,
-              fontWeight: "700",
-              textAlign: "center",
-              margin: 5,
-            }}
-            messageStyle={{
-              fontSize: 18,
-              margin: 5,
-              paddingHorizontal: 40,
-            }}
-            confirmButtonTextStyle={{
-              fontSize: 18,
-              margin: 5,
-            }}
-            title="Hata"
-            message="Yorum silme işlemi başarısız oldu."
-            closeOnTouchOutside={true}
-            closeOnHardwareBackPress={false}
-            showConfirmButton={true}
-            confirmText="Tamam"
-            confirmButtonColor="#EA2A28"
-            onConfirmPressed={() => {
-              setErrorAlertVisible(false); // Error Alert'i kapat
-            }}
-          />
-        </View>
-      </ScrollView>
-    
+        <AwesomeAlert
+          show={errorAlertVisible} // Hata alert'i görünür
+          showProgress={false}
+          titleStyle={{
+            color: "#333",
+            fontSize: 22,
+            fontWeight: "700",
+            textAlign: "center",
+            margin: 5,
+          }}
+          messageStyle={{
+            fontSize: 18,
+            margin: 5,
+            paddingHorizontal: 40,
+          }}
+          confirmButtonTextStyle={{
+            fontSize: 18,
+            margin: 5,
+          }}
+          title="Hata"
+          message="Yorum silme işlemi başarısız oldu."
+          closeOnTouchOutside={true}
+          closeOnHardwareBackPress={false}
+          showConfirmButton={true}
+          confirmText="Tamam"
+          confirmButtonColor="#EA2A28"
+          onConfirmPressed={() => {
+            setErrorAlertVisible(false); // Error Alert'i kapat
+          }}
+        />
+      </View>
+    </ScrollView>
   );
 }
 
@@ -541,7 +529,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     padding: 20,
     borderRadius: 10,
-    paddingBottom:30
+    paddingBottom: 30,
   },
   modalHeader: {
     flexDirection: "row",

@@ -11,8 +11,6 @@ import {
 } from "react-native";
 import React, { useState } from "react";
 import Icon5 from "react-native-vector-icons/MaterialIcons";
-import IconGroup from "./IconGroup";
-import IconGroup2 from "./IconGroup2";
 
 const { width, height } = Dimensions.get("window");
 

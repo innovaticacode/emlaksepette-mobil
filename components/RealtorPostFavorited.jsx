@@ -9,10 +9,7 @@ import {
 } from "react-native";
 import { React, useEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
-import Heart from "react-native-vector-icons/AntDesign";
-import Bookmark from "react-native-vector-icons/FontAwesome";
-import Trash from "react-native-vector-icons/Entypo";
-import Info from "./Info";
+
 import { Platform } from "react-native";
 import AwesomeAlert from "react-native-awesome-alerts";
 import {
@@ -73,19 +70,32 @@ export default function RealtorPostFavorited({
       let response;
 
       if (type === 1) {
-        response = await axios.post(
-          `${apiUrl}add_project_to_favorites/${housingId}`,
-          {
-            project_id: projectId,
-            housing_id: housingId,
-          },
-          config
-        );
-        changeFavorites(1, housingId, projectId);
-        fetchData();
+        response = await axios
+          .post(
+            `${apiUrl}add_project_to_favorites/${housingId}`,
+            {
+              project_id: projectId,
+              housing_id: housingId,
+            },
+            config
+          )
+          .then((res) => {
+            Dialog.show({
+              type: ALERT_TYPE.SUCCESS,
+              title: "Başarılı",
+              textBody: `${res.data.message}`,
+              button: "Tamam",
+            });
+            changeFavorites(1, housingId, projectId);
+          });
+        setShowAlert(false);
       } else {
-        response = await axios.post(
-          `${apiUrl}add_housing_to_favorites/${HouseId}`,
+        fetchData();
+        const config = {
+          headers: { Authorization: `Bearer ${user.access_token}` },
+        };
+        axios.post(
+          apiUrl + "add_housing_to_favorites/" + HouseId,
           {
             housing_id: HouseId,
           },

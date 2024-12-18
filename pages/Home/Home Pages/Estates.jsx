@@ -11,7 +11,7 @@ import {
 import { ActivityIndicator } from "react-native-paper";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { AlertNotificationRoot } from "react-native-alert-notification";
-import Housing from "../../../src/assets/images/Konut.png";
+
 import { frontEndUriBase } from "../../../components/methods/apiRequest";
 import RealtorPost from "../../../components/Card/RealtorCard/RealtorPost";
 import { UsePaginatedData } from "../../../hooks";
@@ -19,7 +19,7 @@ import { useSelector } from "react-redux";
 
 const Estates = ({ index }) => {
   const navigation = useNavigation();
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const apiData = [{ key: "step1_slug", value: "konut" }];
   const banners = useSelector((state) => state?.banners?.banners);
   const { data, hooksLoading, error, loadMore, setSkip } = UsePaginatedData(
@@ -42,10 +42,21 @@ const Estates = ({ index }) => {
     setLoading(false);
   };
 
+  useEffect(() => {
+    if (data && data.length > 0) {
+      setLoading(false); // Data yüklendiğinde loading state'i false yap
+    }
+  }, [data]);
+
   const renderFooter = () => {
     if (!hooksLoading) return null;
     return (
       <View style={{ height: 100 }}>
+        <ActivityIndicator
+          style={{ marginVertical: 16 }}
+          size="small"
+          color="#333"
+        />
         <ActivityIndicator
           style={{ marginVertical: 16 }}
           size="small"

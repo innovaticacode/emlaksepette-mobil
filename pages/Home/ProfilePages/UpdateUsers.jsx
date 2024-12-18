@@ -16,7 +16,7 @@ import {
 import { useState, useRef, useEffect } from "react";
 import { useRoute, useNavigation } from "@react-navigation/native";
 import { TextInput } from "react-native";
-import UserTypes from "./profileComponents/UserTypes";
+
 import Icon from "react-native-vector-icons/MaterialIcons";
 import ModalEdit from "react-native-modal";
 import DotIcon from "react-native-vector-icons/Entypo";
@@ -33,6 +33,7 @@ import {
 import { ActivityIndicator } from "react-native-paper";
 import { apiUrl } from "../../../components/methods/apiRequest";
 import mime from "mime";
+import { checkFileSize } from "../../../utils";
 
 export default function UpdateUsers() {
   const route = useRoute();
@@ -122,14 +123,11 @@ export default function UpdateUsers() {
   const fetchData = async () => {
     try {
       if (user?.access_token) {
-        const response = await axios.get(
-          `${apiUrl}institutional/roles`,
-          {
-            headers: {
-              Authorization: `Bearer ${user.access_token}`,
-            },
-          }
-        );
+        const response = await axios.get(`${apiUrl}institutional/roles`, {
+          headers: {
+            Authorization: `Bearer ${user.access_token}`,
+          },
+        });
 
         // Dönüştürülmüş veriyi state'e atama
         setroles(response.data.roles);
@@ -236,15 +234,12 @@ export default function UpdateUsers() {
     setloading(true);
     try {
       if (user?.access_token) {
-        const response = await axios.get(
-          `${apiUrl}users/${UserID}`,
-          {
-            headers: {
-              Authorization: `Bearer ${user.access_token}`,
-              "Content-Type": "multipart/form-data",
-            },
-          }
-        );
+        const response = await axios.get(`${apiUrl}users/${UserID}`, {
+          headers: {
+            Authorization: `Bearer ${user.access_token}`,
+            "Content-Type": "multipart/form-data",
+          },
+        });
 
         // Dönüştürülmüş veriyi state'e atama
         setuserDetail(response.data.user);
@@ -322,28 +317,28 @@ export default function UpdateUsers() {
     });
 
     if (!result.canceled) {
-      setImage(result.assets[0]); // Seçilen fotoğrafı state'e kaydediyoruz
-      setchoose(false); // Modal'ı kapatıyoruz
-      setselectedImage(true);
-      const ImageSize = result.assets[0].fileSize;
-      const fileSizeInMB = ImageSize / (1024 * 1024); // Byte'dan MB'ye çevir
+      const imageUri = result.assets[0].uri;
 
-      // Dosya boyutunu yukarı yuvarlayarak tam sayı olarak al
-      const roundedSizeInMB = Math.ceil(fileSizeInMB);
-      setfileSize(roundedSizeInMB);
-      if (fileSize > 2) {
+      // Dosya boyutunu kontrol et
+      const isFileSizeValid = await checkFileSize(imageUri);
+      if (!isFileSizeValid) {
+        setchoose(false);
         setTimeout(() => {
           Dialog.show({
             type: ALERT_TYPE.WARNING,
             title: "Uyarı",
-            textBody: `Yüklemeye çalıştığınız dosya 2 MB'yi aşıyor. Lütfen boyutu 2 MB'den küçük bir dosya seçin.`,
+            textBody: "Seçtiğiniz fotoğraf 5 mb den yüksek olamaz",
             button: "Tamam",
             onHide: () => {
-              setImage(null);
+              setchoose(true);
             },
           });
-        }, 300);
+        }, 800);
+        return;
       }
+      setImage(result.assets[0]); // Seçilen fotoğrafı state'e kaydediyoruz
+      setchoose(false); // Modal'ı kapatıyoruz
+      setselectedImage(true);
     }
   };
 
@@ -355,28 +350,28 @@ export default function UpdateUsers() {
     });
 
     if (!result.canceled) {
-      setImage(result.assets[0]); // Çekilen fotoğrafı state'e kaydediyoruz
-      setchoose(false); // Modal'ı kapatıyoruz
-      setselectedImage(true);
-      const ImageSize = result.assets[0].fileSize;
-      const fileSizeInMB = ImageSize / (1024 * 1024); // Byte'dan MB'ye çevir
+      const imageUri = result.assets[0].uri;
 
-      // Dosya boyutunu yukarı yuvarlayarak tam sayı olarak al
-      const roundedSizeInMB = Math.ceil(fileSizeInMB);
-      setfileSize(roundedSizeInMB);
-      if (fileSize > 2) {
+      // Dosya boyutunu kontrol et
+      const isFileSizeValid = await checkFileSize(imageUri);
+      if (!isFileSizeValid) {
+        setchoose(false);
         setTimeout(() => {
           Dialog.show({
             type: ALERT_TYPE.WARNING,
-            title: "Başarılı",
-            textBody: `Yüklemeye çalıştığınız dosya 2 MB'yi aşıyor. Lütfen boyutu 2 MB'den küçük bir dosya seçin.`,
+            title: "Uyarı",
+            textBody: "Çektiğiniz fotoğraf 5 mb den yüksek olamaz",
             button: "Tamam",
             onHide: () => {
-              setImage(null);
+              setchoose(true);
             },
           });
-        }, 300);
+        }, 800);
+        return;
       }
+      setImage(result.assets[0]); // Çekilen fotoğrafı state'e kaydediyoruz
+      setchoose(false); // Modal'ı kapatıyoruz
+      setselectedImage(true);
     }
   };
 

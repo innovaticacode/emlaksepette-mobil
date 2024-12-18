@@ -6,7 +6,7 @@ import Map from "../../../../assets/greyMap.svg";
 import PagerView from "react-native-pager-view";
 import AntDesign from "@expo/vector-icons/AntDesign";
 
-const BecomingFranchise = () => {
+export const BecomingFranchise = () => {
   const pagerRef = useRef(null);
   const imageRef = useRef(null);
   const [isVisible, setIsVisible] = useState(false);
@@ -240,5 +240,3 @@ const BecomingFranchise = () => {
     </View>
   );
 };
-
-export default BecomingFranchise;

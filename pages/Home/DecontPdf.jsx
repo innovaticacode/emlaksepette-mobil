@@ -1,40 +1,49 @@
-import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, Platform, PermissionsAndroid, ActivityIndicator,Text } from 'react-native';
-import { useRoute } from '@react-navigation/native';
-import { WebView } from 'react-native-webview';
-import * as FileSystem from 'expo-file-system';
+import React, { useEffect, useState } from "react";
+import {
+  View,
+  StyleSheet,
+  Platform,
+  PermissionsAndroid,
+  ActivityIndicator,
+  Text,
+} from "react-native";
+import { useRoute } from "@react-navigation/native";
+import { WebView } from "react-native-webview";
 
 export default function DecontPdf() {
   const route = useRoute();
   const { pdfUri } = route.params;
-  const [fileUri, setFileUri] = useState('');
+  const [fileUri, setFileUri] = useState("");
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function requestStoragePermission() {
-      if (Platform.OS === 'android') {
+      if (Platform.OS === "android") {
         try {
           const granted = await PermissionsAndroid.request(
             PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
             {
-              title: 'Depolama İzni Gerekiyor',
-              message: 'Bu uygulamanın PDF dosyalarına erişebilmesi için depolama iznine ihtiyacı var.',
-              buttonNeutral: 'Daha Sonra Sor',
-              buttonNegative: 'İptal',
-              buttonPositive: 'Tamam',
-            },
+              title: "Depolama İzni Gerekiyor",
+              message:
+                "Bu uygulamanın PDF dosyalarına erişebilmesi için depolama iznine ihtiyacı var.",
+              buttonNeutral: "Daha Sonra Sor",
+              buttonNegative: "İptal",
+              buttonPositive: "Tamam",
+            }
           );
           if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-            setFileUri(pdfUri.startsWith('file://') ? pdfUri : `file://${pdfUri}`);
+            setFileUri(
+              pdfUri.startsWith("file://") ? pdfUri : `file://${pdfUri}`
+            );
             setLoading(false);
           } else {
-            console.log('Depolama izni reddedildi');
+            console.log("Depolama izni reddedildi");
           }
         } catch (err) {
           console.warn(err);
         }
       } else {
-        setFileUri(pdfUri.startsWith('file://') ? pdfUri : `file://${pdfUri}`);
+        setFileUri(pdfUri.startsWith("file://") ? pdfUri : `file://${pdfUri}`);
         setLoading(false);
       }
     }
@@ -44,14 +53,12 @@ export default function DecontPdf() {
 
   return (
     <View style={styles.container}>
-   
-  
       {loading ? (
         <ActivityIndicator size="large" color="#0000ff" />
       ) : (
         <WebView
           style={styles.webView}
-          originWhitelist={['*']}
+          originWhitelist={["*"]}
           source={{ uri: fileUri }}
           javaScriptEnabled={true}
           domStorageEnabled={true}
@@ -59,7 +66,6 @@ export default function DecontPdf() {
           allowUniversalAccessFromFileURLs={true}
         />
       )}
-    
     </View>
   );
 }
@@ -67,11 +73,11 @@ export default function DecontPdf() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#fff',
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#fff",
   },
   webView: {
-  width:400
+    width: 400,
   },
 });

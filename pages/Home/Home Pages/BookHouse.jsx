@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useMemo } from "react";
+import React, { useState, useCallback, useMemo, useEffect } from "react";
 import {
   View,
   Text,
@@ -12,7 +12,7 @@ import {
 import { ActivityIndicator } from "react-native-paper";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { AlertNotificationRoot } from "react-native-alert-notification";
-import bannerSRC from "../../../src/assets/images/tatilim-sepette-banner.png";
+
 import { frontEndUriBase } from "../../../components/methods/apiRequest";
 import RealtorPost from "../../../components/Card/RealtorCard/RealtorPost";
 import { UsePaginatedData } from "../../../hooks";
@@ -20,7 +20,7 @@ import { useSelector } from "react-redux";
 
 const BookHouse = ({ index }) => {
   const navigation = useNavigation();
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const banners = useSelector((state) => state?.banners?.banners);
   const apiData = [{ key: "step2_slug", value: "gunluk-kiralik" }];
   const { data, hooksLoading, error, loadMore, setSkip } = UsePaginatedData(
@@ -28,6 +28,7 @@ const BookHouse = ({ index }) => {
     10,
     apiData
   );
+
   useFocusEffect(
     useCallback(() => {
       if (index === 6 && data.length === 0) {
@@ -40,12 +41,23 @@ const BookHouse = ({ index }) => {
     setLoading(true);
     await setSkip(0);
     setLoading(false);
+    setLoading(false);
   };
+  useEffect(() => {
+    if (data && data.length > 0) {
+      setLoading(false); // Data yüklendiğinde loading state'i false yap
+    }
+  }, [data]);
 
   const renderFooter = () => {
     if (!hooksLoading) return null;
     return (
       <View style={{ height: 100 }}>
+        <ActivityIndicator
+          style={{ marginVertical: 16 }}
+          size="small"
+          color="#333"
+        />
         <ActivityIndicator
           style={{ marginVertical: 16 }}
           size="small"

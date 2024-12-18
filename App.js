@@ -22,7 +22,6 @@ import ChangePassword from "./pages/Home/ProfilePages/ChangePassword";
 import RegisterRealtorClub from "./pages/Home/ProfilePages/RegisterRealtorClub";
 import { useState, useEffect, useRef } from "react";
 import MyProjectAdverts from "./pages/Home/ProfilePages/MyProjectAdverts";
-import MyRealtorAdverts from "./pages/Home/ProfilePages/MyRealtorAdverts";
 import Offer from "./pages/Home/ProfilePages/Offer";
 import CreateUserType from "./pages/Home/ProfilePages/CreateUserType";
 import CreateUser from "./pages/Home/ProfilePages/CreateUser";
@@ -96,7 +95,7 @@ import TypeListScreen from "./components/TypeListScreen";
 import Onboard from "./pages/Home/Onboarding/Onboard";
 import { View } from "moti";
 import SplashScreenComponent from "./pages/Home/Onboarding/SplashScreen";
-import Toast from "react-native-toast-message";
+
 import { AlertNotificationRoot } from "react-native-alert-notification";
 import SellPlaces from "./pages/Home/ProfilePages/SellPlaces";
 import ApplyForBeCompany from "./pages/Home/ProfilePages/ApplyForBeCompany";
@@ -128,11 +127,17 @@ import RealEstateLeague from "./pages/RealEstateLeague/RealEstateLeague";
 import TeamFilter from "./pages/Home/ProfilePageItem/TeamFilter/TeamFilter";
 import FranchisePersonDetail from "./pages/Home/FranchisePerson/FranchisePersonDetail/FranchisePersonDetail";
 import * as Linking from "expo-linking";
+import VerifyPhoneChange from "./pages/Home/Verify/VerifyPhoneChange/VerifyPhoneChange";
 import * as SplashScreen from "expo-splash-screen"; // Import SplashScreen
 import { enableScreens } from "react-native-screens";
 import MapFilterRealtor from "./pages/Home/MapFilterRealtor";
 import * as Sentry from "@sentry/react-native";
-import ShowContracts from "./pages/Home/Login&Register/ShowContracts";
+import Verification from "./pages/Home/ProfilePages/Verification";
+import { registerForPushNotificationsAsync } from "./services/registerForPushNotificationsAsync";
+import * as NotificationsExpo from "expo-notifications";
+import Constants from "expo-constants";
+import { apiRequestPostWithBearer } from "./components/methods/apiRequest";
+import MyRealtorAdverts from "./pages/Home/ProfilePages/MyRealtorAdverts";
 
 enableScreens();
 
@@ -152,19 +157,30 @@ SplashScreen.preventAutoHideAsync();
 
 const navigationInstrumentation = new Sentry.ReactNavigationInstrumentation();
 
-Sentry.init({
-  dsn: process.env.EXPO_PUBLIC_SENTRY_DSN,
-  debug: false, // If `true`, Sentry will try to print out useful debugging information if something goes wrong with sending the event. Set it to `false` in production
-  tracesSampleRate: 1.0, // Traccing performance
-  integrations: [
-    new Sentry.ReactNativeTracing({
-      routingInstrumentation: navigationInstrumentation,
-    }),
-  ],
-});
+if (process.env.EXPO_PUBLIC_ENVIRONMENT === "production") {
+  Sentry.init({
+    dsn: process.env.EXPO_PUBLIC_SENTRY_DSN,
+    debug: false, // If `true`, Sentry will try to print out useful debugging information if something goes wrong with sending the event. Set it to `false` in production
+    tracesSampleRate: 1.0, // Traccing performance
+    integrations: [
+      new Sentry.ReactNativeTracing({
+        routingInstrumentation: navigationInstrumentation,
+      }),
+    ],
+  });
+}
 
 function App({ route }) {
   const navigationRef = useRef();
+
+  NotificationsExpo.setNotificationHandler({
+    handleNotification: async () => ({
+      shouldShowAlert: true, // Bildirimi göster
+      shouldPlaySound: true, // Ses çal
+      shouldSetBadge: false, // Badge (uygulama simgesi üzerinde sayac) ayarı
+    }),
+  });
+
   return (
     <Provider store={store}>
       <AlertNotificationRoot>
@@ -226,9 +242,7 @@ const DrawerNavigator = () => {
 
 const StackScreenNavigator = () => {
   const [İsLoggedIn, setİsLoggedIn] = useState(false);
-  const [ShowOnBoard, setShowOnBoard] = useState(true);
   const [showBackIcon, setshowBackIcon] = useState(false);
-  const [showWelcome, setShowWelcome] = useState(true);
 
   const [housingTypes, setHousingTypes] = useState([]);
   const [selectedTypes, setSelectedTypes] = useState([]);
@@ -1558,14 +1572,37 @@ const StackScreenNavigator = () => {
                 })}
               />
               <Stack.Screen
-                name="ShowContracts"
-                component={ShowContracts}
+                name="PhoneVerify"
+                component={Verification}
                 options={() => ({
-                  title: "sözleşme",
+                  headerShown: false,
+                  gestureEnabled: false,
+                })}
+              />
+              <Stack.Screen
+                name="VerifyPhoneChange"
+                component={VerifyPhoneChange}
+                options={({ route }) => ({
+                  headerShown: false,
+                  gestureEnabled: false,
+                  headerBackTitleVisible: false,
+                  headerStyle: {
+                    backgroundColor: "#ffffff",
+                  },
+                })}
+              />
+              <Stack.Screen
+                name="PaymentSuccess"
+                component={PaymentSuccessScreen}
+                options={({ route }) => ({
+                  title: "Ödeme Başarılı",
+                  headerBackTitleVisible: false,
+                  headerStyle: {
+                    backgroundColor: "#ffffff",
+                  },
                 })}
               />
             </Stack.Navigator>
-            {/* </NavigationContainer> */}
           </SheetProvider>
         </GestureHandlerRootView>
       </AlertNotificationRoot>

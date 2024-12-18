@@ -13,8 +13,7 @@ import {
 import { React, useEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import Heart from "react-native-vector-icons/AntDesign";
-import Bookmark from "react-native-vector-icons/FontAwesome";
-import Trash from "react-native-vector-icons/Entypo";
+
 import Info from "./Info";
 import { addDotEveryThreeDigits } from "./methods/merhod";
 import { Platform } from "react-native";
@@ -25,11 +24,7 @@ import { Polyline } from "react-native-maps";
 import AwesomeAlert from "react-native-awesome-alerts";
 import axios from "axios";
 import { getValueFor } from "./methods/user";
-import {
-  ALERT_TYPE,
-  Dialog,
-  AlertNotificationRoot,
-} from "react-native-alert-notification";
+
 import * as SecureStore from "expo-secure-store";
 import {
   BookmarkStatus,
@@ -979,7 +974,9 @@ export default function Posts({
                             RigthBtnFunctionsForkey(item.key);
                           }}
                         >
-                          <Text style={styles.payDetailText}>{item.title}</Text>
+                          <Text style={styles.payDetailText} numberOfLines={1}>
+                            {item.title}
+                          </Text>
                         </TouchableOpacity>
                       ))
                     )}

@@ -139,7 +139,7 @@ export default function Emlak() {
                     } else {
                       if (
                         !blocks[selectedBlock].rooms[selectedRoom][
-                        formDataHousing.name
+                          formDataHousing.name
                         ]
                       ) {
                         if (!boolCheck) {
@@ -174,9 +174,9 @@ export default function Emlak() {
                   if (haveBlocks) {
                     anotherBlockErrorsTemp.push(
                       blocks[blockIndex].name +
-                      " bloğunun " +
-                      (i + 1) +
-                      " nolu konutunun verilerini doldurunuz"
+                        " bloğunun " +
+                        (i + 1) +
+                        " nolu konutunun verilerini doldurunuz"
                     );
                   } else {
                     anotherBlockErrorsTemp.push(
@@ -361,7 +361,7 @@ export default function Emlak() {
                 } else {
                   if (
                     !blocks[selectedBlock].rooms[selectedRoom][
-                    formDataHousing.name
+                      formDataHousing.name
                     ]
                   ) {
                     tempErrors.push(formDataHousing.name.replace("[]", ""));

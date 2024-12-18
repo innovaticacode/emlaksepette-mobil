@@ -17,7 +17,7 @@ import { Platform } from "react-native";
 import { ActivityIndicator, Switch, TextInput } from "react-native-paper";
 import FontAwesome5Icon from "react-native-vector-icons/FontAwesome5";
 import RNPickerSelect from "react-native-picker-select";
-import { RefreshControl } from "react-native-gesture-handler";
+
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
 import { getValueFor } from "../../components/methods/user";

@@ -2,9 +2,7 @@ import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import React, { useEffect, useState } from "react";
 import { Swipeable } from "react-native-gesture-handler";
 import Icon from "react-native-vector-icons/AntDesign";
-import { getValueFor } from "./methods/user";
-import axios from "axios";
-import { apiUrl } from "./methods/apiRequest";
+
 export default function Notificate({
   name,
   time,

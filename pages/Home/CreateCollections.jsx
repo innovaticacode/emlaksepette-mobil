@@ -11,7 +11,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { getValueFor } from "../../components/methods/user";
 import axios from "axios";
-import Icon3 from "react-native-vector-icons/MaterialIcons";
+
 import AddCollection from "../../components/AddCollection";
 import { ActivityIndicator } from "react-native-paper";
 import {
@@ -36,14 +36,11 @@ export default function CreateCollections() {
     setloading(true);
     try {
       if (user.access_token) {
-        const response = await axios.get(
-          `${apiUrl}client/collections`,
-          {
-            headers: {
-              Authorization: `Bearer ${user.access_token}`,
-            },
-          }
-        );
+        const response = await axios.get(`${apiUrl}client/collections`, {
+          headers: {
+            Authorization: `Bearer ${user.access_token}`,
+          },
+        });
 
         setcollections(response?.data.collections);
       }
@@ -61,14 +58,11 @@ export default function CreateCollections() {
     setloading(true);
     try {
       if (user?.access_token && user) {
-        const userInfo = await axios.get(
-          `${apiUrl}users/` + user?.id,
-          {
-            headers: {
-              Authorization: `Bearer ${user.access_token}`,
-            },
-          }
-        );
+        const userInfo = await axios.get(`${apiUrl}users/` + user?.id, {
+          headers: {
+            Authorization: `Bearer ${user.access_token}`,
+          },
+        });
         const userData = userInfo?.data?.user;
         setnamFromGetUser(userData);
       }
@@ -115,16 +109,12 @@ export default function CreateCollections() {
     };
 
     axios
-      .post(
-        `${apiUrl}add/collection`,
-        collectionData,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${user.access_token}`,
-          },
-        }
-      )
+      .post(`${apiUrl}add/collection`, collectionData, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${user.access_token}`,
+        },
+      })
       .then((response) => {
         Dialog.show({
           type: ALERT_TYPE.SUCCESS,
@@ -236,16 +226,12 @@ export default function CreateCollections() {
     };
 
     axios
-      .post(
-        `${apiUrl}remove_item_on_collection`,
-        collectionData,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${user.access_token}`,
-          },
-        }
-      )
+      .post(`${apiUrl}remove_item_on_collection`, collectionData, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${user.access_token}`,
+        },
+      })
       .then((response) => {
         Dialog.show({
           type: ALERT_TYPE.SUCCESS,

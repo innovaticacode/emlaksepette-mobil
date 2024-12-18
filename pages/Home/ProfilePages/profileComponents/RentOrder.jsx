@@ -7,9 +7,9 @@ import {
   ScrollView,
 } from "react-native";
 import React from "react";
-import { ImageBackground } from "react-native";
+
 import Icon from "react-native-vector-icons/Entypo";
-import Icon2 from "react-native-vector-icons/SimpleLineIcons";
+
 import { Platform } from "react-native";
 
 import { useNavigation } from "@react-navigation/native";

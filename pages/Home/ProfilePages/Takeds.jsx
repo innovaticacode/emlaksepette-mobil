@@ -7,17 +7,16 @@ import {
   Keyboard,
   ScrollView,
   Platform,
+  FlatList,
 } from "react-native";
 import { SearchBar } from "@rneui/base";
-import Icon from "react-native-vector-icons/Ionicons";
+
 import Icon2 from "react-native-vector-icons/MaterialCommunityIcons";
 import { ActivityIndicator } from "react-native-paper";
 import Order from "./profileComponents/Order";
 import axios from "axios";
 import { getValueFor } from "../../../components/methods/user";
-import { Stack } from "@react-native-material/core";
-import { CheckBox } from "react-native-elements";
-import Modal from "react-native-modal";
+
 import NoDataScreen from "../../../components/NoDataScreen";
 import { RadioFilter } from "../../../components";
 import { apiUrl } from "../../../components/methods/apiRequest";
@@ -27,7 +26,7 @@ export default function Takeds() {
   const [user, setUser] = useState({});
   const [takeds, setTakeds] = useState([]);
   const [filteredTakeds, setFilteredTakeds] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [selectedIndex, setIndex] = useState(0);
   const [sortListModal, setSortListModal] = useState(false);
   const searchLower = search.toLowerCase();
@@ -42,7 +41,7 @@ export default function Takeds() {
       try {
         if (user.access_token) {
           const response = await axios.get(
-            apiUrl+"institutional/get_boughts",
+            apiUrl + "institutional/get_boughts",
             {
               headers: {
                 Authorization: `Bearer ${user?.access_token}`,
@@ -59,6 +58,10 @@ export default function Takeds() {
     };
     fetchData();
   }, [user]);
+
+  useEffect(() => {
+    setLoading(true);
+  }, []);
 
   useEffect(() => {
     const filterTakeds = () => {
@@ -265,7 +268,11 @@ export default function Takeds() {
                   </Text>
                 </View>
               ) : (
-                filteredTakeds.map((taked, i) => <Order key={i} item={taked} />)
+                <FlatList
+                  data={filteredTakeds}
+                  keyExtractor={(item) => item.id.toString()}
+                  renderItem={({ item }) => <Order item={item} />}
+                />
               )}
             </View>
           </ScrollView>

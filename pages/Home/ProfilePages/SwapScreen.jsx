@@ -8,13 +8,10 @@ import {
   FlatList,
 } from "react-native";
 import React, { useState, useEffect } from "react";
-import Icon from "react-native-vector-icons/AntDesign";
-import SwapItem from "./profileComponents/SwapItem";
-import Modal from "react-native-modal";
+
 import { getValueFor } from "../../../components/methods/user";
 import axios from "axios";
-import { Platform } from "react-native";
-import { StatusBar } from "expo-status-bar";
+
 import NoDataScreen from "../../../components/NoDataScreen";
 import { apiUrl } from "../../../components/methods/apiRequest";
 import { InfoCard, MySwapInfoBottom } from "../../../components";

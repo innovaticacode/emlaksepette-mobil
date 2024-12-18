@@ -8,33 +8,26 @@ import {
   TouchableOpacity,
 } from "react-native";
 import StepIndicator from "react-native-step-indicator";
-import Verification from "./ProfilePages/Verification";
+
 import VerifyDocument from "../../components/VerifyComponents/VerifyDocument";
 import { getValueFor } from "../../components/methods/user";
 import axios from "axios";
 import { useIsFocused, useNavigation } from "@react-navigation/native";
 import { ActivityIndicator } from "react-native-paper";
-import * as SecureStore from "expo-secure-store";
+
 import { apiUrl } from "../../components/methods/apiRequest";
 import UpdateProfileImage from "../../components/VerifyComponents/UpdateProfileImage";
 import UpdateShopInfo from "../../components/VerifyComponents/UpdateShopInfo";
 import SuccessRegistered from "../../components/VerifyComponents/SuccessRegistered";
 import UpdateAdress from "../../components/VerifyComponents/UpdateAdress";
 const labels = [
-  "Telefon Doğrulama",
   "Mağaza Profili Oluştur",
   "Adres Bilgisi",
   "Profil Fotoğrafı Güncelle",
   "Belgeler",
   "Başarılı",
 ];
-const labels2 = [
-  "Telefon Doğrulama",
-  "Adres Bilgisi",
-  "Profil Fotoğrafı Güncelle",
-
-  "Başarılı",
-];
+const labels2 = ["Adres Bilgisi", "Profil Fotoğrafı Güncelle", "Başarılı"];
 const customStyles = {
   stepIndicatorSize: 30,
   currentStepIndicatorSize: 40,
@@ -70,16 +63,17 @@ const VerifyScreen = () => {
     getValueFor("PhoneVerify", setverifyStatu);
   }, []);
   const [loading, setloading] = useState(false);
+
   const GetUserInfo = async () => {
     setloading(true);
     try {
       if (user?.access_token && user) {
-        const userInfo = await axios.get(apiUrl + "user", {
+        const userInfo = await axios.get(apiUrl + "users/" + user?.id, {
           headers: {
             Authorization: `Bearer ${user.access_token}`,
           },
         });
-        const userData = userInfo?.data;
+        const userData = userInfo?.data?.user;
         setnamFromGetUser(userData);
       }
     } catch (error) {
@@ -112,12 +106,10 @@ const VerifyScreen = () => {
     if (namFromGetUser.type == 1) {
       switch (currentPosition) {
         case 0:
-          return <Verification nextStep={nextStep} prevStep={prevStep} />;
-        case 1:
           return <UpdateProfileImage nextStep={nextStep} prevStep={prevStep} />;
-        case 2:
+        case 1:
           return <UpdateAdress nextStep={nextStep} prevStep={prevStep} />;
-        case 3:
+        case 2:
           return <SuccessRegistered nextStep={nextStep} prevStep={prevStep} />;
         default:
           return null;
@@ -125,17 +117,15 @@ const VerifyScreen = () => {
     } else {
       switch (currentPosition) {
         case 0:
-          return <Verification nextStep={nextStep} prevStep={prevStep} />;
-        case 1:
           return <UpdateShopInfo nextStep={nextStep} prevStep={prevStep} />;
 
-        case 2:
+        case 1:
           return <UpdateAdress nextStep={nextStep} prevStep={prevStep} />;
-        case 3:
+        case 2:
           return <UpdateProfileImage nextStep={nextStep} prevStep={prevStep} />;
-        case 4:
+        case 3:
           return <VerifyDocument nextStep={nextStep} prevStep={prevStep} />;
-        case 5:
+        case 4:
           return <SuccessRegistered nextStep={nextStep} prevStep={prevStep} />;
 
         default:
@@ -177,6 +167,44 @@ const VerifyScreen = () => {
           />
           {/* <Text>{namFromGetUser.phone_verification_status} </Text> */}
           <View style={styles.content}>{renderStepContent()}</View>
+
+          {/* <View style={styles.buttonContainer}>
+             {currentPosition > 0 && (
+               <Button title="Önceki" onPress={prevStep} />
+             )}
+             {currentPosition < labels.length - 1 && (
+               <Button title="Sonraki" onPress={nextStep} />
+             )}
+           </View>  */}
+          <View style={{ alignItems: "center", paddingBottom: 20 }}>
+            <TouchableOpacity
+              style={{
+                backgroundColor: "#EC302E",
+                padding: 8,
+                borderRadius: 8,
+                width: "80%",
+              }}
+              onPress={() => {
+                SecureStore.setItemAsync("user", "");
+                navigation.navigate("Drawer", {
+                  screen: "Home",
+                  params: {
+                    status: "logout",
+                  },
+                });
+              }}
+            >
+              <Text
+                style={{
+                  textAlign: "center",
+                  color: "white",
+                  fontWeight: "600",
+                }}
+              >
+                Kapat
+              </Text>
+            </TouchableOpacity>
+          </View>
         </SafeAreaView>
       )}
     </>
@@ -187,7 +215,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#FCFCFC",
-    paddingTop: 10,
+    paddingTop: 30,
   },
   content: {
     flex: 1,

@@ -1,6 +1,5 @@
 import { View, Text, StyleSheet } from "react-native";
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 
 import {
   GestureHandlerRootView,
@@ -10,10 +9,7 @@ import SliderItemSkeleton from "../../components/SkeletonComponents/SliderItemSk
 import SliderTourismItem from "./SliderTourismItem";
 import { apiUrl, frontEndUriBase } from "../../components/methods/apiRequest";
 
-export default function SliderTourismRent({data}) {
-
-  const [loading, setloading] = useState(true);
- 
+export default function SliderTourismRent({ data }) {
   const capitalizeFirstLetter = (text) => {
     return text.charAt(0).toUpperCase() + text.slice(1);
   };
@@ -22,7 +18,7 @@ export default function SliderTourismRent({data}) {
       <ScrollView
         horizontal
         showsHorizontalScrollIndicator={false}
-        contentContainerStyle={{gap:9}}
+        contentContainerStyle={{ gap: 9 }}
         style={{
           top: 0,
         }}
@@ -35,18 +31,19 @@ export default function SliderTourismRent({data}) {
             }}
             key={i}
           >
-         
-              <>
-                <SliderTourismItem
-                  id={item.id}
-                  borderColor={"#e6e6e6"}
-                  image={`${frontEndUriBase}/storage/profile_images/${item.profile_image}`}
-                />
-                <Text numberOfLines={2} style={{fontSize:12,textAlign:'center'}}>
-                  {capitalizeFirstLetter(item.name)}
-                </Text>
-              </>
-          
+            <>
+              <SliderTourismItem
+                id={item.id}
+                borderColor={"#e6e6e6"}
+                image={`${frontEndUriBase}/storage/profile_images/${item.profile_image}`}
+              />
+              <Text
+                numberOfLines={2}
+                style={{ fontSize: 12, textAlign: "center" }}
+              >
+                {capitalizeFirstLetter(item.name)}
+              </Text>
+            </>
           </View>
         ))}
       </ScrollView>

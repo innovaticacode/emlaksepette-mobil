@@ -14,6 +14,7 @@ import TracingCard from "./Card/TracingCard/TracingCard";
 import FranchiseForm from "./BottomModals/FranchiseForm/FranchiseForm";
 import BasicButtons from "./Buttons/BasicButtons/BasicButtons";
 import CommentsBottomModal from "./BottomModals/CommentsBottomModal/CommentsBottomModal";
+import DepositStatusCard from "./Card/DepositStatusCard/DepositStatusCard";
 
 export {
   CommentCard,
@@ -28,4 +29,7 @@ export {
   MySwapInfoBottom,
   WhiteOrRedButtons,
   SalePointCard,
+  FranchiseForm,
+  DepositStatusCard,
+  TracingCard,
 };
