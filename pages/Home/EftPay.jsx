@@ -67,10 +67,6 @@ export default function EftPay({
         <Text style={{ color: "#696969" }}>
           EFT/Havale yapacağınız bankayı seçniz
         </Text>
-        <Text style={{ color: "#696969" }}>
-          1. <Text style={{ color: "red" }}>2000047</Text> Kodunu EFT/Havale
-          açıklama alanına yazdığınızdan emin olun
-        </Text>
       </View>
       <View style={{ alignItems: "center", gap: 10 }}>
         {/* <TouchableOpacity
