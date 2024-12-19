@@ -180,6 +180,32 @@ function App({ route }) {
       shouldSetBadge: false, // Badge (uygulama simgesi üzerinde sayac) ayarı
     }),
   });
+  const [token, setToken] = useState("");
+
+  useEffect(() => {
+    async function setupNotifications() {
+      try {
+        const token = await registerForPushNotificationsAsync();
+        if (token) {
+          setToken(token);
+          console.log("Expo Push Token:", token);
+
+          // Kullanıcının push_token'ı yoksa API'ye gönder
+          if (!user?.push_token) {
+            await apiRequestPostWithBearer("set_token", { token });
+          } else {
+            console.log(user?.push_token, "Token zaten var.");
+          }
+        } else {
+          console.log("Token alınamadı veya izin verilmedi.");
+        }
+      } catch (error) {
+        console.error("Bildirim ayarlanırken hata oluştu:", error);
+      }
+    }
+
+    setupNotifications(); // Fonksiyonu çağır
+  }, []);
 
   return (
     <Provider store={store}>
