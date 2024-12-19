@@ -22,7 +22,7 @@ const RedyOffices = ({ index }) => {
   const navigation = useNavigation();
   const [loading, setLoading] = useState(true);
   const banners = useSelector((state) => state?.banners?.banners);
-  const apiData = [{ key: "step2_slug", value: "gunluk-kiralik" }];
+  const apiData = [{ key: "step2_slug", value: "hazir-sanal-ofis" }];
   const { data, hooksLoading, error, loadMore, setSkip } = UsePaginatedData(
     "real-estates",
     10,
@@ -47,6 +47,9 @@ const RedyOffices = ({ index }) => {
       setLoading(false); // Data yüklendiğinde loading state'i false yap
     }
   }, [data]);
+
+  console.log("data", data);
+  console.log("data", data.length);
 
   const renderFooter = () => {
     if (!hooksLoading) return null;
@@ -164,7 +167,7 @@ const RedyOffices = ({ index }) => {
       ) : (
         <View style={styles.container}>
           <AlertNotificationRoot>
-            {loading && data && data.length === 0 ? (
+            {!loading && data && data.length == 0 ? (
               <View style={{ width: "100%", paddingTop: 10 }}>
                 <Text
                   style={{
