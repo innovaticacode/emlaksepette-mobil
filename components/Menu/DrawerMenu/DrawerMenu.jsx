@@ -211,24 +211,11 @@ const DrawerMenu = () => {
             </View>
 
             {/* BUTON START */}
-            <View style={styles.advertButtonContainer}>
-              <TouchableOpacity
-                style={styles.advertButton}
-                onPress={() => {
-                  navigateToScreen("Support");
-                }}
-              >
-                <IconAntDesign name="plus" color={"white"} size={18} />
-                <Text style={styles.advertButtonText}>
-                  Destek Talebi Oluştur
-                </Text>
-              </TouchableOpacity>
-            </View>
           </View>
           {/* BUTON END */}
 
           {/* MÜŞTERİ HİZMETLERİ ALANI START */}
-          <View style={styles.customerServiceContainer}>
+          {/* <View style={styles.customerServiceContainer}>
             <TouchableOpacity style={styles.customerServiceButton}>
               <View>
                 <Icon name="headset" size={30} color={"#EA2C2E"} />
@@ -240,7 +227,7 @@ const DrawerMenu = () => {
                 <Text style={styles.customerServiceNumber}>0850 309 55 39</Text>
               </View>
             </TouchableOpacity>
-          </View>
+          </View> */}
           {/* MÜŞTERİ HİZMETLERİ ALANI END */}
 
           <View style={styles.socialIcons}>
