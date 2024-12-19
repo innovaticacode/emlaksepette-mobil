@@ -15,7 +15,6 @@ import { CheckBox } from "@rneui/themed";
 import CreditCardScreen from "./CreditCardScreen";
 import Modal from "react-native-modal";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import * as DocumentPicker from "expo-document-picker";
 import IconIdCard from "react-native-vector-icons/FontAwesome";
 import WarningIcon from "react-native-vector-icons/AntDesign";
 import AbsoluteErrorInput from "../../components/custom_inputs/AbsoluteErrorInput";
@@ -46,7 +45,6 @@ export default function PaymentScreen2() {
   const [cartInfoHeight, setCartInfoHeight] = useState(0);
   const toggleCheckbox = () => setChecked(!checked);
   const [checked2, setChecked2] = React.useState(false);
-  const [tabs, settabs] = useState(0);
   const [paymentModalShow, setPaymentModalShow] = useState(false);
   const [errors, setErrors] = useState([]);
   const scrollViewRef = useRef();
@@ -104,21 +102,36 @@ export default function PaymentScreen2() {
   };
 
   const socketRef = useRef(null);
+
   useEffect(() => {
     socketRef.current = io(socketIO, {
-      transports: ["polling", "websocket"],
+      transports: ["websocket", "polling"],
       reconnection: true,
       reconnectionAttempts: 10,
       reconnectionDelay: 5000,
       timeout: 20000,
     });
 
+    // Event listener ekleme
+    socketRef.current.on("connect", () => {
+      console.log("Socket connected successfully.");
+    });
+
+    socketRef.current.on("connect_error", (err) => {
+      console.log("Socket connection failed:", err.message);
+    });
+
     socketRef.current.on("result-api-payment-neighbor-view", (data) => {
+      console.log("Received data:", data); // Gelen veriyi kontrol edin
       paymentCheck(data);
     });
 
+    // Cleanup işlemi
     return () => {
-      socketRef.current.disconnect();
+      if (socketRef.current) {
+        socketRef.current.off("result-api-payment-neighbor-view");
+        socketRef.current.disconnect();
+      }
     };
   }, []);
 
@@ -321,21 +334,6 @@ export default function PaymentScreen2() {
     exp_year: "",
     name: "",
   });
-
-  const pickDocument = async () => {
-    DocumentPicker.getDocumentAsync({ type: "application/pdf" })
-      .then((result) => {
-        if (!result.canceled && result.assets && result.assets.length > 0) {
-          const pdfAsset = result.assets[0];
-          setPdfFile(pdfAsset);
-          setSelectedDocumentName(pdfAsset.name);
-          setselectedPdfUrl(pdfAsset.uri);
-        }
-      })
-      .catch((error) => {
-        alert("hata");
-      });
-  };
 
   const [Deals, setDeals] = useState("");
 
