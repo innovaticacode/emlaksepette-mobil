@@ -13,7 +13,6 @@ import React, { useState, useEffect, useRef } from "react";
 import HTML from "react-native-render-html";
 import { CheckBox } from "@rneui/themed";
 import CreditCardScreen from "./CreditCardScreen";
-import EftPay from "./EftPay";
 import Modal from "react-native-modal";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import * as DocumentPicker from "expo-document-picker";
@@ -48,8 +47,6 @@ export default function PaymentScreen2() {
   const toggleCheckbox = () => setChecked(!checked);
   const [checked2, setChecked2] = React.useState(false);
   const [tabs, settabs] = useState(0);
-  const [paymentModal, setPaymentModal] = useState(false);
-  const [paymentModalContent, setPaymentModalContent] = useState("");
   const [paymentModalShow, setPaymentModalShow] = useState(false);
   const [errors, setErrors] = useState([]);
   const scrollViewRef = useRef();
@@ -454,120 +451,6 @@ export default function PaymentScreen2() {
     fetchDataDeal();
   }, [modalVisible]);
 
-  const eftPay = ({}) => {
-    var tempErrors = [];
-    var scrollPositionsTemp = [];
-    if (!IdNumber) {
-      tempErrors.push({
-        key: "IdNumber",
-        message: "TC Kimlik alanı zorunludur",
-      });
-      scrollPosition = approximatelyInputHeight * 1 + approximatelyTop;
-      scrollPositionsTemp.push(scrollPosition);
-    }
-
-    if (!NameAndSurnam) {
-      tempErrors.push({
-        key: "NameAndSurnam",
-        message: "Ad Soyad alanı zorunludur",
-      });
-      scrollPosition = approximatelyInputHeight * 2 + approximatelyTop;
-      scrollPositionsTemp.push(scrollPosition);
-    }
-
-    if (!ePosta) {
-      tempErrors.push({
-        key: "ePosta",
-        message: "E-posta alanı zorunludur",
-      });
-      scrollPosition = approximatelyInputHeight * 3 + approximatelyTop;
-      scrollPositionsTemp.push(scrollPosition);
-    }
-
-    if (!phoneNumber) {
-      tempErrors.push({
-        key: "phoneNumber",
-        message: "Telefon alanı zorunludur",
-      });
-      scrollPosition = inputPositions["phoneNumber"];
-      scrollPosition = approximatelyInputHeight * 4 + approximatelyTop;
-      scrollPositionsTemp.push(scrollPosition);
-    }
-
-    if (!adress) {
-      tempErrors.push({
-        key: "adress",
-        message: "Adres alanı zorunludur",
-      });
-      scrollPosition = approximatelyInputHeight * 5 + approximatelyTop;
-      scrollPositionsTemp.push(scrollPosition);
-    }
-
-    if (!checked2) {
-      tempErrors.push({
-        key: "checked2",
-        message:
-          "Komşunu Gör Bilgi Güvenliği Politikası sözleşmesi onay kutucuğunu işaretleyiniz",
-      });
-      scrollPosition = approximatelyInputHeight * 8 + approximatelyTop;
-      scrollPositionsTemp.push(scrollPosition);
-    }
-
-    if (tempErrors.length == 0) {
-      if (!selectedBank) {
-        Dialog.show({
-          type: ALERT_TYPE.WARNING,
-          title: "Uyarı",
-          textBody: "Lütfen havale yapacağınız bankayı seçiniz",
-          button: "Tamam",
-        });
-      } else {
-        if (!pdfFile) {
-          Dialog.show({
-            type: ALERT_TYPE.WARNING,
-            title: "Uyarı",
-            textBody: "Lütfen dekont ekleyiniz",
-            button: "Tamam",
-          });
-        } else {
-          if (tempErrors.length == 0) {
-            setBtnLoading(true);
-            payEftNeigbor({
-              bank_id: selectedBank,
-              pdf: pdfFile,
-              payableAmount: amount,
-            })
-              .then((res) => {
-                if (res.status == 200) {
-                  nav.navigate("PaymentSuccess", {
-                    title: "SİPARİŞ İÇİN TEŞEKKÜRLER!",
-                    message: "Siparişiniz başarıyla oluşturuldu.",
-                    primaryButtonText: "Siparişlerim",
-                    secondaryButtonText: "Ana Sayfa",
-                    icon: "check-circle",
-                  });
-                }
-              })
-              .catch((err) => {
-                Dialog.show({
-                  type: ALERT_TYPE.DANGER,
-                  title: "Hata",
-                  textBody: "Ödeme işlemi sırasında bir hata oluştu.",
-                  button: "Tamam",
-                });
-              });
-            setBtnLoading(false);
-          }
-        }
-      }
-    }
-
-    if (tempErrors.length > 0) {
-      scrollViewRef.current?.scrollToPosition(0, scrollPositionsTemp[0], true);
-    }
-    setErrors(tempErrors);
-  };
-
   const filterErrors = (key) => {
     var newErrors = errors.filter((error) => error.key != key);
     return newErrors;
@@ -908,81 +791,19 @@ export default function PaymentScreen2() {
           </View>
         </View>
 
-        <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "space-between",
-            borderWidth: 0.5,
-            gap: 10,
-            borderColor: "#333",
-            width: "100%",
-            overflow: "hidden",
-          }}
-        >
-          <TouchableOpacity
-            onPress={() => {
-              settabs(0);
-            }}
-            style={{
-              width: "50%",
-              backgroundColor: tabs == 0 ? "#E54242" : "transparent",
-              padding: 10,
-            }}
-          >
-            <Text
-              style={{
-                textAlign: "center",
-                color: tabs == 0 ? "white" : "#333",
-              }}
-            >
-              Kredi Kartı
-            </Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            onPress={() => {
-              settabs(1);
-            }}
-            style={{
-              width: "50%",
-              padding: 10,
-              backgroundColor: tabs == 1 ? "#E54242" : "transparent",
-            }}
-          >
-            <Text
-              style={{
-                textAlign: "center",
-                color: tabs == 1 ? "white" : "#333",
-              }}
-            >
-              EFT / Havale ile Ödeme
-            </Text>
-          </TouchableOpacity>
-        </View>
         {selectedDocumentName && (
           <Text>Seçilen Belge: {selectedDocumentName}</Text>
         )}
 
-        {tabs == 0 && (
-          <CreditCardScreen
-            setCreditCartData={setCreditCartData}
-            creditCartData={creditCartData}
-            CompeletePayment={completeCreditCardPay}
-            getError={getError}
-            errors={errors}
-            loading={btnLoading}
-          />
-        )}
-        {tabs == 1 && (
-          <EftPay
-            onPress={pickDocument}
-            selectedDocumentName={selectedDocumentName}
-            url={selectedPdfUrl}
-            onHandlePayment={eftPay}
-            setSelectedBank={setSelectedBank}
-            selectedBank={selectedBank}
-          />
-        )}
+        <CreditCardScreen
+          setCreditCartData={setCreditCartData}
+          creditCartData={creditCartData}
+          CompeletePayment={completeCreditCardPay}
+          getError={getError}
+          errors={errors}
+          loading={btnLoading}
+        />
+
         <Modal
           isVisible={modalVisible}
           onBackdropPress={() => setModalVisible(false)}
