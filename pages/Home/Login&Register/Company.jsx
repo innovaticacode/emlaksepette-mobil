@@ -1458,9 +1458,6 @@ export default function Company() {
               </TouchableOpacity>
             </View>
 
-            {/* Contract Finish */}
-
-            {/* Register Button */}
             <View style={{ alignItems: "center" }}>
               <TouchableOpacity style={styles.btnRegister} onPress={register}>
                 <Text style={styles.btnRegisterText}>Üye Ol</Text>

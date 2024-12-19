@@ -1,9 +1,10 @@
-import { View, Text, Dimensions } from "react-native";
+import { View, Text, Dimensions, TouchableOpacity } from "react-native";
 import React, { useRef, useState, useEffect } from "react";
 import ActionSheet from "react-native-actions-sheet";
 import { WebView } from "react-native-webview";
 import { frontEndUriBase } from "../methods/apiRequest";
 import { ActivityIndicator } from "react-native-paper";
+import Icon from "react-native-vector-icons/AntDesign";
 export default function ContratsActionSheet({
   isVisibleOpen,
   url,
@@ -36,6 +37,15 @@ export default function ContratsActionSheet({
       animated={true}
     >
       <View style={{ height: "100%" }}>
+        <View style={{ padding: 10, alignItems: "flex-end" }}>
+          <TouchableOpacity
+            onPress={() => {
+              setIsVisible(false);
+            }}
+          >
+            <Icon name="close" size={30} color={"#333"} />
+          </TouchableOpacity>
+        </View>
         {loading && (
           <View
             style={{ alignItems: "center", justifyContent: "center", flex: 1 }}
