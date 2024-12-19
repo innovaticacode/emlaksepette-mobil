@@ -42,9 +42,12 @@ const RedyOffices = ({ index }) => {
     await setSkip(0);
     setLoading(false);
   };
+
   useEffect(() => {
     if (data && data.length > 0) {
-      setLoading(false); // Data yüklendiğinde loading state'i false yap
+      setLoading(false); // Veri yüklendi ve dolu
+    } else if (data && data.length === 0) {
+      setLoading(false); // Veri yüklendi ama boş
     }
   }, [data]);
 
@@ -152,6 +155,8 @@ const RedyOffices = ({ index }) => {
     [hooksLoading, loadMore]
   );
 
+  console.log("loading----1", loading);
+
   return (
     <>
       {loading ? (
@@ -167,7 +172,7 @@ const RedyOffices = ({ index }) => {
       ) : (
         <View style={styles.container}>
           <AlertNotificationRoot>
-            {!loading && data && data.length == 0 ? (
+            {data && data.length == 0 ? (
               <View style={{ width: "100%", paddingTop: 10 }}>
                 <Text
                   style={{

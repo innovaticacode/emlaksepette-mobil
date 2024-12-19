@@ -46,7 +46,9 @@ const Area = ({ index }) => {
 
   useEffect(() => {
     if (data && data.length > 0) {
-      setLoading(false); // Data yüklendiğinde loading state'i false yap
+      setLoading(false); // Veri yüklendi ve dolu
+    } else if (data && data.length === 0) {
+      setLoading(false); // Veri yüklendi ama boş
     }
   }, [data]);
 
@@ -165,7 +167,7 @@ const Area = ({ index }) => {
       ) : (
         <View style={styles.container}>
           <AlertNotificationRoot>
-            {!loading && data && data.length === 0 ? (
+            {data && data.length === 0 ? (
               <View style={{ width: "100%", paddingTop: 10 }}>
                 <Text
                   style={{

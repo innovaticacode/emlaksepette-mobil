@@ -44,7 +44,9 @@ const Prefabrik = ({ index }) => {
   };
   useEffect(() => {
     if (data && data.length > 0) {
-      setLoading(false); // Data yüklendiğinde loading state'i false yap
+      setLoading(false); // Veri yüklendi ve dolu
+    } else if (data && data.length === 0) {
+      setLoading(false); // Veri yüklendi ama boş
     }
   }, [data]);
   const renderFooter = () => {
@@ -154,7 +156,7 @@ const Prefabrik = ({ index }) => {
       ) : (
         <View style={styles.container}>
           <AlertNotificationRoot>
-            {!loading && data && data.length === 0 ? (
+            {data && data.length === 0 ? (
               <View style={{ width: "100%", paddingTop: 10 }}>
                 <Text
                   style={{
