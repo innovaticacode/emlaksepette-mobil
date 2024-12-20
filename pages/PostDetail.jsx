@@ -2003,6 +2003,7 @@ export default function PostDetail() {
                 onClose={onClose}
                 data={roomData ?? roomData}
                 RoomOrder={HomeId}
+                deposit_rate={ProjectHomeData?.project?.deposit_rate}
               />
 
               <Modal
@@ -2997,7 +2998,7 @@ const styles = StyleSheet.create({
     padding: 10,
     width: "100%",
     alignItems: "center",
-    backgroundColor: "#264ABB",
+    backgroundColor: "#EA2C2E",
     borderRadius: 5,
   },
   addBasketText: {

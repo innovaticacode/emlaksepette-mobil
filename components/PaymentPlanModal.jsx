@@ -217,12 +217,14 @@ export default function PaymentPlanModal({
                           data["share_sale[]"] != "[]" &&
                           data["number_of_shares[]"]
                             ? addDotEveryThreeDigits(
-                                (data["installments-price[]"] /
-                                  data["number_of_shares[]"] -
-                                  (parseInt(data["advance[]"]) /
-                                    parseInt(data["number_of_shares[]"]) +
-                                    parseInt(totalPrice))) /
-                                  parseInt(data["installments[]"])
+                                Math.round(
+                                  (data["installments-price[]"] /
+                                    data["number_of_shares[]"] -
+                                    (parseInt(data["advance[]"]) /
+                                      parseInt(data["number_of_shares[]"]) +
+                                      parseInt(totalPrice))) /
+                                    parseInt(data["installments[]"])
+                                )
                               ) + " ₺"
                             : addDotEveryThreeDigits(
                                 (
@@ -240,6 +242,7 @@ export default function PaymentPlanModal({
                       info={"Taksit Başlangıç Tarihi"}
                       numbers={"30 Ekim 2024"}
                     />
+
                     <View style={styles.headerGrey}>
                       <Text
                         style={{
@@ -304,9 +307,15 @@ export default function PaymentPlanModal({
                   }}
                 >
                   {" "}
-                  {addDotEveryThreeDigits(
-                    (data["price[]"] * deposit_rate) / 100
-                  )}
+                  {data["share_sale[]"] != "[]"
+                    ? addDotEveryThreeDigits(
+                        ((data["price[]"] / data["number_of_shares[]"]) *
+                          deposit_rate) /
+                          100
+                      )
+                    : addDotEveryThreeDigits(
+                        (data["price[]"] * deposit_rate) / 100
+                      )}
                   ₺
                 </Text>
               </View>
