@@ -41,11 +41,12 @@ const BookHouse = ({ index }) => {
     setLoading(true);
     await setSkip(0);
     setLoading(false);
-    setLoading(false);
   };
   useEffect(() => {
     if (data && data.length > 0) {
-      setLoading(false); // Data yüklendiğinde loading state'i false yap
+      setLoading(false); // Veri yüklendi ve dolu
+    } else if (data && data.length === 0) {
+      setLoading(false); // Veri yüklendi ama boş
     }
   }, [data]);
 
@@ -53,11 +54,6 @@ const BookHouse = ({ index }) => {
     if (!hooksLoading) return null;
     return (
       <View style={{ height: 100 }}>
-        <ActivityIndicator
-          style={{ marginVertical: 16 }}
-          size="small"
-          color="#333"
-        />
         <ActivityIndicator
           style={{ marginVertical: 16 }}
           size="small"
@@ -95,8 +91,8 @@ const BookHouse = ({ index }) => {
                 navigation.navigate("AllRealtorAdverts", {
                   name: "Emlak İlanları",
                   slug: "emlak-ilanlari",
-                  data: filteredHomes,
-                  count: filteredHomes.length,
+                  data: data,
+                  count: data.length,
                   type: "mustakil-tatil",
                   optional: null,
                   title: null,

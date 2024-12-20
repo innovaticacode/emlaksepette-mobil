@@ -28,6 +28,7 @@ import RealtorPost from "../../components/Card/RealtorCard/RealtorPost";
 import ViewFilter from "../../components/Filter/ViewFilter/ViewFilter";
 import FilterRealtor from "../../assets/filterRealtor.svg";
 export default function AllRealtorAdverts() {
+  console.log("AllRealtorAdverts");
   const [cityItems, setCityItems] = useState();
   const [state, setState] = useState({
     loading: true,
@@ -185,14 +186,15 @@ export default function AllRealtorAdverts() {
     hood,
   }) => {
     let url = `${apiUrl}kategori`;
+    if (type) url += `/${type}`;
     if (slug) url += `/${slug}`;
     if (title) url += `/${title}`;
     if (optional) url += `/${optional}`;
-    if (type) url += `/${type}`;
     if (check) url += `/${check}`;
     if (city) url += `/${city}`;
     if (county) url += `/${county}`;
     if (hood) url += `/${hood}`;
+    console.log("url", url);
     return url;
   };
 
