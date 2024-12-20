@@ -167,27 +167,27 @@ export default function WaitRealtorAdverts({ index }) {
               <MaterialIcon name="swap-vertical" size={23} color={"#333"} />
             </TouchableOpacity>
           </View>
-          <View style={{ gap: 10, paddingTop: 10, alignItems: "center" }}>
-            {loading ? (
-              <Text>Yükleniyor...</Text>
-            ) : housings.length === 0 ? (
-              <Text>Onay Bekleyen İlanınız Bulunmamaktadır.</Text>
-            ) : (
-              <FlatList
-                data={housings}
-                renderItem={({ item, index }) => (
-                  <RealtorAdvertPost
-                    key={index}
-                    housing={item}
-                    Onpress={openSheet}
-                  />
-                )}
-                keyExtractor={(item, index) => index.toString()}
-                onEndReached={handleEndReached}
-                onEndReachedThreshold={0.5}
-              />
-            )}
-          </View>
+
+          {loading ? (
+            <Text>Yükleniyor...</Text>
+          ) : housings.length === 0 ? (
+            <Text>Onay Bekleyen İlanınız Bulunmamaktadır.</Text>
+          ) : (
+            <FlatList
+              contentContainerStyle={{ gap: 5, paddingBottom: 100 }}
+              data={housings}
+              renderItem={({ item, index }) => (
+                <RealtorAdvertPost
+                  key={index}
+                  housing={item}
+                  Onpress={openSheet}
+                />
+              )}
+              keyExtractor={(item, index) => index.toString()}
+              onEndReached={handleEndReached}
+              onEndReachedThreshold={0.5}
+            />
+          )}
 
           <Modal
             isVisible={SortLıstModal}

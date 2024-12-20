@@ -46,10 +46,9 @@ export default function ActiveAdverts({}) {
   }, []);
   const [start, setStart] = useState(0);
   const [take, setTake] = useState(10);
-  const [loading, setloading] = useState(false);
+  const [loading, setloading] = useState(true);
   const [ProjectRecords, setProjectRecords] = useState([]);
   const fetchProjects = async () => {
-    setloading(true);
     try {
       const response = await axios.get(
         apiUrl + "get_my_projects?status=1&start=" + start + "&take=" + take,
@@ -122,15 +121,7 @@ export default function ActiveAdverts({}) {
                   Aktif İlanlar({projects?.length})
                 </Text>
               </View>
-              <View
-                style={{
-                  padding: 2,
-                  paddingLeft: 10,
-                  paddingRight: 10,
-                  flexDirection: "row",
-                  gap: 4,
-                }}
-              >
+              <View style={styles.searchContainer}>
                 <TextInput
                   style={styles.Input}
                   placeholder="Kelime veya İlan No ile ara"
@@ -138,14 +129,7 @@ export default function ActiveAdverts({}) {
                   onChangeText={handleSearch}
                 />
                 <TouchableOpacity
-                  style={{
-                    backgroundColor: "#ebebeb",
-                    width: "10%",
-                    borderRadius: 5,
-                    flexDirection: "row",
-                    alignItems: "center",
-                    justifyContent: "center",
-                  }}
+                  style={styles.sortBtn}
                   onPress={() => {
                     setSortLıstModal(true);
                   }}
@@ -395,6 +379,21 @@ const styles = StyleSheet.create({
     justifyContent: "flex-end",
     margin: 0,
     backgroundColor: "#0c03033d",
+  },
+  searchContainer: {
+    padding: 2,
+    paddingLeft: 10,
+    paddingRight: 10,
+    flexDirection: "row",
+    gap: 4,
+  },
+  sortBtn: {
+    backgroundColor: "#ebebeb",
+    width: "10%",
+    borderRadius: 5,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
   },
   modalContent: {
     gap: 5,

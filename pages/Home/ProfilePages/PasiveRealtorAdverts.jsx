@@ -38,7 +38,7 @@ export default function PasiveRealtorAdverts() {
     setSelectedProject(id);
     setEditModalVisible(!EditModalVisible);
   };
-  const [loading, setloading] = useState(false);
+  const [loading, setloading] = useState(true);
   const [housingRecords, sethousingRecords] = useState([]);
   const [totalAdvert, setTotalAdvert] = useState("");
 
