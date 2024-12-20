@@ -20,6 +20,7 @@ import axios from "axios";
 import Modal from "react-native-modal";
 import { getValueFor } from "../../../components/methods/user";
 import { apiUrl } from "../../../components/methods/apiRequest";
+import ContratsActionSheet from "../../../components/ContratsModal/ContratsActionSheet";
 
 const SalePage = () => {
   const [modalVisible, setModalVisible] = useState(false); // State for Modal visibility
@@ -332,6 +333,8 @@ const SalePage = () => {
         return [];
     }
   };
+  const [isVisible, setIsVisible] = useState(false);
+  const [selectedUrl, setselectedUrl] = useState(null);
   return (
     <KeyboardAvoidingView
       style={{ flex: 1 }}
@@ -518,15 +521,9 @@ const SalePage = () => {
               }}
             >
               <TouchableOpacity
-                onPress={() =>
-                  handleCheckboxChange(
-                    checked,
-                    setChecked,
-                    modalVisible,
-                    setModalVisible,
-                    "kvkk-politikasi"
-                  )
-                }
+                onPress={() => {
+                  setChecked(!checked);
+                }}
                 style={styles.checkboxContainer}
               >
                 {checked ? (
@@ -545,6 +542,12 @@ const SalePage = () => {
                   ]}
                 >
                   <Text
+                    onPress={() => {
+                      setselectedUrl(
+                        "kisisel-verilerin-korunmasi-ve-islenmesi-politikasi"
+                      );
+                      setIsVisible(true);
+                    }}
                     style={{
                       color: errorStatu === 5 ? "red" : "#027BFF",
                       fontSize: 13,
@@ -559,15 +562,9 @@ const SalePage = () => {
 
             {/* Accept Cerez Checkbox */}
             <TouchableOpacity
-              onPress={() =>
-                handleCheckboxChange(
-                  checked1,
-                  setChecked1,
-                  modalVisible2,
-                  setModalVisible2,
-                  "cerez-politikasi"
-                )
-              }
+              onPress={() => {
+                setChecked1(!checked1);
+              }}
               style={styles.checkboxContainer}
             >
               {checked1 ? (
@@ -582,6 +579,10 @@ const SalePage = () => {
                 ]}
               >
                 <Text
+                  onPress={() => {
+                    setselectedUrl("cerez-politikasi");
+                    setIsVisible(true);
+                  }}
                   style={{
                     color: errorStatu === 5 ? "red" : "#027BFF",
                     fontSize: 13,
@@ -595,15 +596,9 @@ const SalePage = () => {
 
             {/* Accept gizlilik Checkbox */}
             <TouchableOpacity
-              onPress={() =>
-                handleCheckboxChange(
-                  checked2,
-                  setChecked2,
-                  modalVisible3,
-                  setModalVisible3,
-                  "gizlilik-sozlesmesi-ve-aydinlatma-metni"
-                )
-              }
+              onPress={() => {
+                setChecked2(!checked2);
+              }}
               style={styles.checkboxContainer}
             >
               {checked2 ? (
@@ -618,6 +613,10 @@ const SalePage = () => {
                 ]}
               >
                 <Text
+                  onPress={() => {
+                    setIsVisible(true);
+                    setselectedUrl("gizlilik-sozlesmesi");
+                  }}
                   style={{
                     color: errorStatu === 5 ? "red" : "#027BFF",
                     fontSize: 13,
@@ -629,7 +628,11 @@ const SalePage = () => {
               </Text>
             </TouchableOpacity>
           </View>
-
+          <ContratsActionSheet
+            url={selectedUrl}
+            isVisibleOpen={isVisible}
+            setIsVisible={setIsVisible}
+          />
           <View style={{ alignItems: "center" }}>
             <TouchableOpacity
               style={{
@@ -667,9 +670,6 @@ const SalePage = () => {
                 style={{ padding: 20 }}
                 contentContainerStyle={{ gap: 20 }}
               >
-                {/* <Text>
-          
-            </Text> */}
                 <HTML source={{ html: Deals }} contentWidth={100} />
 
                 <View style={{ alignItems: "center", paddingBottom: 25 }}>

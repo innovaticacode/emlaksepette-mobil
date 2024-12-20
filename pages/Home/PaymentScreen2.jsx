@@ -25,6 +25,7 @@ import { useRoute } from "@react-navigation/native";
 import axios from "axios";
 import WebView from "react-native-webview";
 import HTMLView from "react-native-htmlview";
+import ContratsActionSheet from "../../components/ContratsModal/ContratsActionSheet";
 export default function PaymentScreen2() {
   // Kullanarak bu değerleri göstermek için devam edin
 
@@ -212,6 +213,8 @@ export default function PaymentScreen2() {
     fetchDataDeal();
   }, []);
   console.log(paymentModalContent);
+  const [isVisible, setIsVisible] = useState(false);
+  const [selectedUrl, setselectedUrl] = useState(null);
   return (
     <KeyboardAwareScrollView
       style={styles.container}
@@ -354,13 +357,24 @@ export default function PaymentScreen2() {
             }}
             title={
               <View style={{ padding: 5 }}>
-                <Text style={{ textDecorationLine: "underline", fontSize: 12 }}>
+                <Text
+                  style={{ textDecorationLine: "underline", fontSize: 12 }}
+                  onPress={() => {
+                    setIsVisible(true);
+                    setselectedUrl("mesafeli-guvenli-kapora-sozlesmesi");
+                  }}
+                >
                   Mesafeli kapora emanet sözleşmesini
                 </Text>
 
                 <Text style={{ fontSize: 12 }}>okudum kabul ediyorum</Text>
               </View>
             }
+          />
+          <ContratsActionSheet
+            url={selectedUrl}
+            isVisibleOpen={isVisible}
+            setIsVisible={setIsVisible}
           />
           <CheckBox
             checked={checked}
