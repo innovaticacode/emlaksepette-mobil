@@ -75,7 +75,7 @@ const RedyOffices = ({ index }) => {
       <>
         <View style={{ paddingHorizontal: 0 }}>
           <Image
-            source={{ uri: banners?.mustakil_tatil }}
+            source={{ uri: banners?.hazir_sanal_ofis }}
             style={{
               width: "100%",
               height: 120,
