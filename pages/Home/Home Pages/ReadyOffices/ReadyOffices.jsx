@@ -94,21 +94,21 @@ const RedyOffices = ({ index }) => {
                 fontSize: 12,
                 fontWeight: "bold",
               }}
-              onPress={() =>
+              onPress={() => {
                 navigation.navigate("AllRealtorAdverts", {
                   name: "Emlak İlanları",
-                  slug: "emlak-ilanlari",
-                  data: filteredHomes,
-                  count: filteredHomes.length,
-                  type: "mustakil-tatil",
+                  slug: "hazir-sanal-ofis",
+                  data: data,
+                  count: data.length,
+                  type: "is-yeri",
                   optional: null,
                   title: null,
                   check: null,
                   city: null,
                   county: null,
                   hood: null,
-                })
-              }
+                });
+              }}
             >
               Tüm İlanları Gör
             </Text>

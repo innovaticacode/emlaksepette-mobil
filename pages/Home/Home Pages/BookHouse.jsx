@@ -91,8 +91,8 @@ const BookHouse = ({ index }) => {
                 navigation.navigate("AllRealtorAdverts", {
                   name: "Emlak İlanları",
                   slug: "emlak-ilanlari",
-                  data: filteredHomes,
-                  count: filteredHomes.length,
+                  data: data,
+                  count: data.length,
                   type: "mustakil-tatil",
                   optional: null,
                   title: null,
