@@ -133,13 +133,9 @@ import { enableScreens } from "react-native-screens";
 import MapFilterRealtor from "./pages/Home/MapFilterRealtor";
 import * as Sentry from "@sentry/react-native";
 import Verification from "./pages/Home/ProfilePages/Verification";
-import { registerForPushNotificationsAsync } from "./services/registerForPushNotificationsAsync";
 import * as NotificationsExpo from "expo-notifications";
 import Constants from "expo-constants";
-import {
-  apiRequestPostWithBearer,
-  apiUrl,
-} from "./components/methods/apiRequest";
+import { apiUrl } from "./components/methods/apiRequest";
 import MyRealtorAdverts from "./pages/Home/ProfilePages/MyRealtorAdverts";
 import axios from "axios";
 import { setTypes } from "./store/slices/RealEstatesTypes/RealEstatesTypesSlice";
@@ -185,32 +181,6 @@ function App({ route }) {
       shouldSetBadge: false, // Badge (uygulama simgesi üzerinde sayac) ayarı
     }),
   });
-  const [token, setToken] = useState("");
-
-  useEffect(() => {
-    async function setupNotifications() {
-      try {
-        const token = await registerForPushNotificationsAsync();
-        if (token) {
-          setToken(token);
-          console.log("Expo Push Token:", token);
-
-          // Kullanıcının push_token'ı yoksa API'ye gönder
-          if (!user?.push_token) {
-            await apiRequestPostWithBearer("set_token", { token });
-          } else {
-            console.log(user?.push_token, "Token zaten var.");
-          }
-        } else {
-          console.log("Token alınamadı veya izin verilmedi.");
-        }
-      } catch (error) {
-        console.error("Bildirim ayarlanırken hata oluştu:", error);
-      }
-    }
-
-    setupNotifications(); // Fonksiyonu çağır
-  }, []);
 
   return (
     <Provider store={store}>

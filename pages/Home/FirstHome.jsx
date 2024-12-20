@@ -21,7 +21,11 @@ import ProjectButton from "../../components/ProjectButton";
 import FranchiseBanner from "../../components/FranchiseBanner";
 
 import SliderTourismRent from "./SliderTourismRent";
-import { apiUrl, frontEndUriBase } from "../../components/methods/apiRequest";
+import {
+  apiRequestPostWithBearer,
+  apiUrl,
+  frontEndUriBase,
+} from "../../components/methods/apiRequest";
 import Arrow from "react-native-vector-icons/SimpleLineIcons";
 import SliderBarForFeature from "../../components/SliderBarForFeature";
 import RealtorCardHome from "../../components/Card/RealtorCardHomePage/RealtorCardHome";
@@ -29,6 +33,7 @@ import RealtorCardHome from "../../components/Card/RealtorCardHomePage/RealtorCa
 import { UsePaginatedData } from "../../hooks";
 import { setBasketItem } from "../../store/slices/Basket/BasketSlice";
 import { useDispatch } from "react-redux";
+import { registerForPushNotificationsAsync } from "../../services/registerForPushNotificationsAsync";
 
 const FirstHome = (props) => {
   const { index } = props;
@@ -51,6 +56,33 @@ const FirstHome = (props) => {
   );
   const [creatorBrands, setcreatorBrands] = useState([]);
   const [Bungalov, setBungalov] = useState([]);
+  const [token, setToken] = useState("");
+
+  useEffect(() => {
+    async function setupNotifications() {
+      try {
+        const token = await registerForPushNotificationsAsync();
+        if (token) {
+          setToken(token);
+          console.log("Expo Push Token:", token);
+
+          // Kullanıcının push_token'ı yoksa API'ye gönder
+          if (!user?.push_token) {
+            await apiRequestPostWithBearer("set_token", { token });
+          } else {
+            console.log(user?.push_token, "Token zaten var.");
+          }
+        } else {
+          console.log("Token alınamadı veya izin verilmedi.");
+        }
+      } catch (error) {
+        console.error("Bildirim ayarlanırken hata oluştu:", error);
+      }
+    }
+
+    setupNotifications(); // Fonksiyonu çağır
+  }, []);
+
   // Fetch featured sliders
   const fetchFeaturedSliders = async () => {
     setLoadingSliders(true);
