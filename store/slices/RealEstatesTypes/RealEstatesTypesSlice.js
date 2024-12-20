@@ -9,10 +9,6 @@ export const realEstatesTypesSlice = createSlice({
   initialState,
   reducers: {
     setTypes: (state, action) => {
-      console.log(
-        "action.payload.realEstatesTypes",
-        action.payload.realEstatesTypes
-      );
       state.realEstatesTypes = action.payload.realEstatesTypes;
     },
   },

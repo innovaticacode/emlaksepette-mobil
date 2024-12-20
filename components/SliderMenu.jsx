@@ -15,9 +15,7 @@ export default function SliderMenu({ goToSlide, tab, settab }) {
   useEffect(() => {
     const fetchMenuItems = async () => {
       try {
-        const response = await axios.get(
-          `${apiUrl}menu-list`
-        );
+        const response = await axios.get(`${apiUrl}menu-list`);
         setMenuItems(response.data);
       } catch (error) {
         console.error("Error fetching menu items:", error);
