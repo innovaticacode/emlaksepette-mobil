@@ -39,7 +39,7 @@ export default function RejectRealtorAdverts() {
     setSelectedProject(id);
     setEditModalVisible(!EditModalVisible);
   };
-  const [loading, setloading] = useState(false);
+  const [loading, setloading] = useState(true);
   const [housingRecords, sethousingRecords] = useState([]);
   const [sort, setsort] = useState(null);
 
