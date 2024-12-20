@@ -173,7 +173,7 @@ const RedyOffices = ({ index }) => {
       ) : (
         <View style={styles.container}>
           <AlertNotificationRoot>
-            {data && data.length == 0 ? (
+            {loading && data && data.length == 0 ? (
               <View style={{ width: "100%", paddingTop: 10 }}>
                 <Text
                   style={{
