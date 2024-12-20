@@ -22,6 +22,7 @@ import { ActivityIndicator } from "react-native-paper";
 
 import { apiUrl } from "../../../components/methods/apiRequest";
 import { sanitizeEmail } from "../../../utils";
+import ContratsActionSheet from "../../../components/ContratsModal/ContratsActionSheet";
 export default function Personal({ type }) {
   const navigation = useNavigation();
   const [eye, seteye] = useState("eye-off-sharp");
@@ -217,8 +218,6 @@ export default function Personal({ type }) {
     }
   };
 
-  // Örnek kullanım
-
   const fetchData = async (deal) => {
     const url = `${apiUrl}sayfa/${deal}`;
     try {
@@ -256,20 +255,13 @@ export default function Personal({ type }) {
     setphoneNumber(formattedPhoneNumber);
   };
 
-  const handleCheckboxChange = (
-    checked,
-    setChecked,
-    modalVisible,
-    setModalVisible,
-    deal
-  ) => {
+  const handleCheckboxChange = (checked, setChecked, isVisible, deal) => {
     if (checked) {
-      setModalVisible(false);
       setChecked(false);
     } else {
       setModalVisible(true);
       if (deal) {
-        GetDeal(deal);
+        setselectedUrl(deal);
       }
     }
   };
@@ -319,6 +311,8 @@ export default function Personal({ type }) {
     }
   };
   console.log("------> ", Errors.emailErr);
+  const [isVisible, setIsVisible] = useState(false);
+  const [selectedUrl, setselectedUrl] = useState(null);
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
       <ScrollView
@@ -479,15 +473,9 @@ export default function Personal({ type }) {
           </View>
           <View style={styles.container}>
             <TouchableOpacity
-              onPress={() =>
-                handleCheckboxChange(
-                  checked,
-                  setChecked,
-                  modalVisible,
-                  setModalVisible,
-                  "bireysel-uyelik-sozlesmesi"
-                )
-              }
+              onPress={() => {
+                setChecked(!checked);
+              }}
               style={styles.checkboxContainer}
             >
               {checked ? (
@@ -502,6 +490,10 @@ export default function Personal({ type }) {
                 ]}
               >
                 <Text
+                  onPress={() => {
+                    setIsVisible(true);
+                    setselectedUrl("bireysel-uyelik-sozlesmesi");
+                  }}
                   style={{
                     color: errorStatu === 5 ? "red" : "#027BFF",
                     fontSize: 13,
@@ -513,15 +505,9 @@ export default function Personal({ type }) {
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
-              onPress={() =>
-                handleCheckboxChange(
-                  checked1,
-                  setChecked1,
-                  modalVisible2,
-                  setModalVisible2,
-                  "kvkk-politikasi"
-                )
-              }
+              onPress={() => {
+                setChecked1(!checked1);
+              }}
               style={styles.checkboxContainer}
             >
               {checked1 ? (
@@ -536,6 +522,12 @@ export default function Personal({ type }) {
                 ]}
               >
                 <Text
+                  onPress={() => {
+                    setselectedUrl(
+                      "kisisel-verilerin-korunmasi-ve-islenmesi-politikasi"
+                    );
+                    setIsVisible(true);
+                  }}
                   style={{
                     color: errorStatu === 5 ? "red" : "#027BFF",
                     fontSize: 13,
@@ -548,15 +540,9 @@ export default function Personal({ type }) {
             </TouchableOpacity>
 
             <TouchableOpacity
-              onPress={() =>
-                handleCheckboxChange(
-                  checked2,
-                  setChecked2,
-                  modalVisible3,
-                  setModalVisible3,
-                  "gizlilik-sozlesmesi-ve-aydinlatma-metni"
-                )
-              }
+              onPress={() => {
+                setChecked2(!checked2);
+              }}
               style={styles.checkboxContainer}
             >
               {checked2 ? (
@@ -571,6 +557,10 @@ export default function Personal({ type }) {
                 ]}
               >
                 <Text
+                  onPress={() => {
+                    setIsVisible(true);
+                    setselectedUrl("gizlilik-sozlesmesi");
+                  }}
                   style={{
                     color: errorStatu === 5 ? "red" : "#027BFF",
                     fontSize: 13,
@@ -875,6 +865,11 @@ export default function Personal({ type }) {
             </View>
           </View>
         </Modal>
+        <ContratsActionSheet
+          isVisibleOpen={isVisible}
+          setIsVisible={setIsVisible}
+          url={selectedUrl}
+        />
       </ScrollView>
     </TouchableWithoutFeedback>
   );
