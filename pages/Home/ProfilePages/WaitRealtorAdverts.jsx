@@ -39,7 +39,7 @@ export default function WaitRealtorAdverts({ index }) {
     setSelectedProject(id);
     setEditModalVisible(!EditModalVisible);
   };
-  const [loading, setloading] = useState(false);
+  const [loading, setloading] = useState(true);
   const [housingRecords, sethousingRecords] = useState([]);
   const fetchPendingHousings = async (sort, take, skip) => {
     try {
@@ -188,27 +188,6 @@ export default function WaitRealtorAdverts({ index }) {
               />
             )}
           </View>
-
-          {loading ? (
-            <Text>Yükleniyor...</Text>
-          ) : housings.length === 0 ? (
-            <Text>Onay Bekleyen İlanınız Bulunmamaktadır.</Text>
-          ) : (
-            <FlatList
-              contentContainerStyle={{ gap: 5, paddingBottom: 100 }}
-              data={housings}
-              renderItem={({ item, index }) => (
-                <RealtorAdvertPost
-                  key={index}
-                  housing={item}
-                  Onpress={openSheet}
-                />
-              )}
-              keyExtractor={(item, index) => index.toString()}
-              onEndReached={handleEndReached}
-              onEndReachedThreshold={0.5}
-            />
-          )}
 
           <Modal
             isVisible={SortLıstModal}

@@ -132,16 +132,12 @@ export default function ComeSwapScreen() {
         </View>
       )}
       {mySwapRequest.length === 0 && !loading ? (
-        <>
-          <View>
-            <NoDataScreen
-              message="Takas bilgisi bulunamadı."
-              iconName="swap-horizontal-bold"
-              buttonText="Anasayfaya Dön"
-              navigateTo="HomePage"
-            />
-          </View>
-        </>
+        <NoDataScreen
+          message={"Takas bilgisi bulunamadı."}
+          iconName={"swap-horizontal-bold"}
+          buttonText={"Anasayfaya Dön"}
+          navigateTo={"HomePage"}
+        />
       ) : null}
     </View>
   );
