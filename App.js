@@ -104,7 +104,7 @@ import { SheetProvider } from "react-native-actions-sheet";
 import AllFranchiseBrands from "./pages/Home/AllFranchiseBrands";
 import AllFeaturedRealEstate from "./pages/Home/AllFeaturedRealEstate";
 import SeeMyNeighbor from "./pages/Home/SeeMyNeighbor/SeeMyNeighbor";
-import { Provider, useSelector } from "react-redux";
+import { Provider, useDispatch, useSelector } from "react-redux";
 import { store } from "./store/store";
 import SalePageMain from "./pages/Home/PointOfSale/SalePageMain";
 import SalePage from "./pages/Home/PointOfSale/SalePage";
@@ -136,8 +136,13 @@ import Verification from "./pages/Home/ProfilePages/Verification";
 import { registerForPushNotificationsAsync } from "./services/registerForPushNotificationsAsync";
 import * as NotificationsExpo from "expo-notifications";
 import Constants from "expo-constants";
-import { apiRequestPostWithBearer } from "./components/methods/apiRequest";
+import {
+  apiRequestPostWithBearer,
+  apiUrl,
+} from "./components/methods/apiRequest";
 import MyRealtorAdverts from "./pages/Home/ProfilePages/MyRealtorAdverts";
+import axios from "axios";
+import { setTypes } from "./store/slices/RealEstatesTypes/RealEstatesTypesSlice";
 
 enableScreens();
 
@@ -246,6 +251,7 @@ const StackScreenNavigator = () => {
 
   const [housingTypes, setHousingTypes] = useState([]);
   const [selectedTypes, setSelectedTypes] = useState([]);
+  const dispatch = useDispatch();
 
   global.ErrorUtils.setGlobalHandler((error, isFatal) => {
     console.log("Global Hata:", error);
@@ -254,10 +260,23 @@ const StackScreenNavigator = () => {
     }
   });
 
+  async function fetchTypes() {
+    try {
+      const response = await axios.get(apiUrl + "real-estates-types");
+      return dispatch(
+        setTypes({
+          realEstatesTypes: response.data,
+        })
+      );
+    } catch (error) {
+      console.error("error", error);
+    }
+  }
   useEffect(() => {
     const loadApp = async () => {
-      // Artificial delay to keep splash screen visible
-      await new Promise((resolve) => setTimeout(resolve, 2000));
+      await SplashScreen.preventAutoHideAsync();
+
+      await fetchTypes();
 
       // Check if it's the first launch
       const hasLaunched = await SecureStore.getItemAsync("hasLaunched");

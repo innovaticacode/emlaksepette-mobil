@@ -12,7 +12,6 @@ import {
 import { ActivityIndicator } from "react-native-paper";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { AlertNotificationRoot } from "react-native-alert-notification";
-
 import { frontEndUriBase } from "../../../../components/methods/apiRequest";
 import RealtorPost from "../../../../components/Card/RealtorCard/RealtorPost";
 import { UsePaginatedData } from "../../../../hooks";
@@ -22,7 +21,14 @@ const RedyOffices = ({ index }) => {
   const navigation = useNavigation();
   const [loading, setLoading] = useState(true);
   const banners = useSelector((state) => state?.banners?.banners);
-  const apiData = [{ key: "step2_slug", value: "hazir-sanal-ofis" }];
+  const ID = useSelector((state) => state.realEstatesTypes.realEstatesTypes);
+
+  const flatData = ID.flat();
+  const filteredStatus = Array.isArray(ID)
+    ? flatData.find((item) => item.title === "Hazır & Sanal Ofis")
+    : [];
+
+  const apiData = [{ key: "housing_type_id", value: filteredStatus.id }];
   const { data, hooksLoading, error, loadMore, setSkip } = UsePaginatedData(
     "real-estates",
     10,
@@ -50,9 +56,6 @@ const RedyOffices = ({ index }) => {
       setLoading(false); // Veri yüklendi ama boş
     }
   }, [data]);
-
-  console.log("data", data);
-  console.log("data", data.length);
 
   const renderFooter = () => {
     if (!hooksLoading) return null;
@@ -154,8 +157,6 @@ const RedyOffices = ({ index }) => {
       },
     [hooksLoading, loadMore]
   );
-
-  console.log("loading----1", loading);
 
   return (
     <>
