@@ -426,10 +426,7 @@ export const BuilderOffice = [
 ];
 export const Uretici = [
   {
-    text: "Toplu ilanlarımız",
-  },
-  {
-    text: "Tekli İlanlarımız",
+    text: "İlanlarımız",
   },
   {
     text: "Hakkımızda",
