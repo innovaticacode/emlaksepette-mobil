@@ -283,7 +283,12 @@ export default function Panel({ options, onSelect }) {
           >
             <View style={style.container}>
               <View style={{ backgroundColor: "#FFFFFF" }}>
-                <View style={{ backgroundColor: "#EA2C2E", padding: 8 }}>
+                <View
+                  style={{
+                    backgroundColor: panelInfo?.user?.banner_hex_code,
+                    padding: 8,
+                  }}
+                >
                   <View
                     style={{
                       flexDirection: "row",
@@ -296,7 +301,7 @@ export default function Panel({ options, onSelect }) {
                         width: 65,
                         height: 65,
                         borderRadius: 50,
-                        backgroundColor: "yellow",
+
                         borderWidth: 2,
                         borderColor: "white",
                       }}
