@@ -1,4 +1,4 @@
-import "dotenv/config";
+import { googleMapsKey } from "./components/methods/apiRequest";
 
 export default {
   expo: {
@@ -68,7 +68,7 @@ export default {
       package: "com.mastergirisim.emlaksepette",
       config: {
         googleMaps: {
-          apiKey: process.env.EXPO_PUBLIC_GOOGLE_API,
+          apiKey: googleMapsKey,
         },
       },
     },

@@ -1,28 +1,39 @@
 {
   "cli": {
-    "version": ">= 13.4.1",
-    "appVersionSource": "remote"
+    "version": ">= 13.4.1"
   },
   "build": {
     "development": {
       "developmentClient": true,
-      "distribution": "internal"
-    },
-    "preview": {
-      "distribution": "internal"
+      "distribution": "internal",
+      "env": {
+        "EXPO_PUBLIC_API_URL": "@expo_public_api_url",
+        "EXPO_PUBLIC_FRONTEND_URI": "@expo_public_frontend_uri",
+        "GOOGLE_API": "@google_api",
+        "PAYMENT_URL": "@payment_url",
+        "SENTRY_AUTH_TOKEN": "@sentry_auth_token",
+        "SENTRY_DSN": "@sentry_dsn",
+        "SOCKET": "@socket",
+        "ENVIRONMENT": "@environment"
+      }
     },
     "production": {
       "autoIncrement": true,
       "android": {
-        "buildType": "apk",
-        "env": {
-          "SENTRY_AUTH_TOKEN": "$EXPO_PUBLIC_SENTRY_AUTH_TOKEN"
-        }
+        "buildType": "apk"
       },
       "ios": {
-        "env": {
-          "SENTRY_AUTH_TOKEN": "$EXPO_PUBLIC_SENTRY_AUTH_TOKEN"
-        }
+        "simulator": false
+      },
+      "env": {
+        "EXPO_PUBLIC_API_URL": "@expo_public_api_url",
+        "EXPO_PUBLIC_FRONTEND_URI": "@expo_public_frontend_uri",
+        "GOOGLE_API": "@google_api",
+        "PAYMENT_URL": "@payment_url",
+        "SENTRY_AUTH_TOKEN": "@sentry_auth_token",
+        "SENTRY_DSN": "@sentry_dsn",
+        "SOCKET": "@socket",
+        "ENVIRONMENT": "@environment"
       }
     }
   },

@@ -1,9 +1,19 @@
 import axios from "axios";
 import { getValueFor } from "./user";
+
+/**
+ *  The base URL for the API.
+ */
+
 export const apiUrl = process.env.EXPO_PUBLIC_API_URL;
 export const frontEndUri = process.env.EXPO_PUBLIC_API_URL;
 export const frontEndUriBase = process.env.EXPO_PUBLIC_FRONTEND_URI;
-export const socketIO = process.env.EXPO_PUBLIC_SOCKET_IO;
+export const socketIO = process.env.SOCKET;
+export const paymentUrl = process.env.PAYMENT_URL;
+export const sentryDsn = process.env.SENTRY_DSN;
+export const sentryAuth = process.env.SENTRY_AUTH;
+export const googleMapsKey = process.env.GOOGLE_MAPS_KEY;
+export const enviroment = process.env.ENVIRONMENT;
 
 export const apiRequestGet = (url) => {
   return axios.get(apiUrl + url);

@@ -135,7 +135,7 @@ import * as Sentry from "@sentry/react-native";
 import Verification from "./pages/Home/ProfilePages/Verification";
 import * as NotificationsExpo from "expo-notifications";
 import Constants from "expo-constants";
-import { apiUrl } from "./components/methods/apiRequest";
+import { apiUrl, enviroment, sentryDsn } from "./components/methods/apiRequest";
 import MyRealtorAdverts from "./pages/Home/ProfilePages/MyRealtorAdverts";
 import axios from "axios";
 import { setTypes } from "./store/slices/RealEstatesTypes/RealEstatesTypesSlice";
@@ -158,9 +158,9 @@ SplashScreen.preventAutoHideAsync();
 
 const navigationInstrumentation = new Sentry.ReactNavigationInstrumentation();
 
-if (process.env.EXPO_PUBLIC_ENVIRONMENT == "production") {
+if (enviroment == "production") {
   Sentry.init({
-    dsn: process.env.EXPO_PUBLIC_SENTRY_DSN,
+    dsn: sentryDsn,
     debug: false, // If `true`, Sentry will try to print out useful debugging information if something goes wrong with sending the event. Set it to `false` in production
     tracesSampleRate: 1.0, // Traccing performance
     integrations: [
