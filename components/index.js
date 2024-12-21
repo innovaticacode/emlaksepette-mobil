@@ -15,6 +15,7 @@ import FranchiseForm from "./BottomModals/FranchiseForm/FranchiseForm";
 import BasicButtons from "./Buttons/BasicButtons/BasicButtons";
 import CommentsBottomModal from "./BottomModals/CommentsBottomModal/CommentsBottomModal";
 import DepositStatusCard from "./Card/DepositStatusCard/DepositStatusCard";
+import ErrorBoundaryView from "./Error/ErrorBoundaryView/ErrorBoundaryView";
 
 export {
   CommentCard,
@@ -32,4 +33,7 @@ export {
   FranchiseForm,
   DepositStatusCard,
   TracingCard,
+  BasicButtons,
+  CommentsBottomModal,
+  ErrorBoundaryView,
 };

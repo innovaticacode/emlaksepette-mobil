@@ -109,7 +109,7 @@ import { store } from "./store/store";
 import SalePageMain from "./pages/Home/PointOfSale/SalePageMain";
 import SalePage from "./pages/Home/PointOfSale/SalePage";
 import { createDrawerNavigator } from "@react-navigation/drawer"; // Drawer için import
-import { DrawerMenu } from "./components";
+import { DrawerMenu, ErrorBoundaryView } from "./components";
 import Header from "./components/Header";
 import SuccessForRent from "./pages/Home/ProfilePages/SuccessForRent";
 import RentByMeDetails from "./pages/Home/ProfilePages/RentByMeDetails";
@@ -139,6 +139,7 @@ import { apiUrl } from "./components/methods/apiRequest";
 import MyRealtorAdverts from "./pages/Home/ProfilePages/MyRealtorAdverts";
 import axios from "axios";
 import { setTypes } from "./store/slices/RealEstatesTypes/RealEstatesTypesSlice";
+import { ErrorBoundary } from "react-error-boundary";
 
 enableScreens();
 
@@ -187,16 +188,18 @@ function App({ route }) {
       <AlertNotificationRoot>
         <GestureHandlerRootView style={{ flex: 1 }}>
           <SheetProvider>
-            <NavigationContainer
-              ref={navigationRef}
-              onReady={() => {
-                navigationInstrumentation.registerNavigationContainer(
-                  navigationRef
-                );
-              }}
-            >
-              <StackScreenNavigator />
-            </NavigationContainer>
+            <ErrorBoundary FallbackComponent={ErrorBoundaryView}>
+              <NavigationContainer
+                ref={navigationRef}
+                onReady={() => {
+                  navigationInstrumentation.registerNavigationContainer(
+                    navigationRef
+                  );
+                }}
+              >
+                <StackScreenNavigator />
+              </NavigationContainer>
+            </ErrorBoundary>
           </SheetProvider>
         </GestureHandlerRootView>
       </AlertNotificationRoot>
@@ -249,12 +252,12 @@ const StackScreenNavigator = () => {
   const [selectedTypes, setSelectedTypes] = useState([]);
   const dispatch = useDispatch();
 
-  global.ErrorUtils.setGlobalHandler((error, isFatal) => {
-    console.log("Global Hata:", error);
-    if (isFatal) {
-      console.error("Kritik Hata:", error);
-    }
-  });
+  // global.ErrorUtils.setGlobalHandler((error, isFatal) => {
+  //   console.log("Global Hata:", error);
+  //   if (isFatal) {
+  //     console.error("Kritik Hata:", error);
+  //   }
+  // });
 
   async function fetchTypes() {
     try {
