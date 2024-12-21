@@ -980,18 +980,24 @@ export default function PostDetail() {
                 </View>
 
                 {/* İlan No kısmı en sağda hizalanıyor */}
-                <View style={{ alignItems: "flex-end" }}>
-                  <Text
-                    style={{
-                      fontSize: 11,
-                      color: "white",
-                      fontWeight: "bold",
-                    }}
-                  >
-                    İlan No:#2000{data?.housing?.id}
-                  </Text>
-                </View>
               </TouchableOpacity>
+              <View
+                style={{
+                  alignItems: "center",
+                  justifyContent: "center",
+                  paddingRight: 15,
+                }}
+              >
+                <Text
+                  style={{
+                    fontSize: 11,
+                    color: "white",
+                    fontWeight: "bold",
+                  }}
+                >
+                  İlan No:#2000{data?.housing?.id}
+                </Text>
+              </View>
             </View>
             <ScrollView
               showsVerticalScrollIndicator={false}

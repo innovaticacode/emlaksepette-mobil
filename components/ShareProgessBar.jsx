@@ -8,17 +8,6 @@ const ShareProgressBar = ({ toplamHisse, satilanHisse, IsShowText }) => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.progressBarContainer}>
-        {parcalar.map((_, index) => (
-          <View
-            key={index}
-            style={[
-              styles.parca,
-              index < satilanHisse && styles.filledParca, // Dolu parçalar yeşil olacak
-            ]}
-          />
-        ))}
-      </View>
       {!IsShowText && (
         <View
           style={{

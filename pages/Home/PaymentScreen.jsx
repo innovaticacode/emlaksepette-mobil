@@ -23,7 +23,11 @@ import * as DocumentPicker from "expo-document-picker";
 import { addDotEveryThreeDigits } from "../../components/methods/merhod";
 
 import { Platform } from "react-native";
-import { apiRequestGet, socketIO } from "../../components/methods/apiRequest";
+import {
+  apiRequestGet,
+  paymentUrl,
+  socketIO,
+} from "../../components/methods/apiRequest";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { WebView } from "react-native-webview";
 import { apiUrl, frontEndUriBase } from "../../components/methods/apiRequest";
@@ -416,7 +420,7 @@ export default function PaymentScreen() {
   const formHtml = `
   <html>
       <body onload="javascript:moveWindow()">
-          <form name="pay_form" method="post" action=${process.env.EXPO_PUBLIC_PAYMENT_URL}>
+          <form name="pay_form" method="post" action=${paymentUrl}>
               <input type="hidden" name="clientid" value="${payResponse?.clientid}"/>
               <input type="hidden" name="callbackurl" value="${payResponse?.callbackurl}"/>
               <input type="hidden" name="amount" value="${payResponse?.amount}"/>

@@ -68,7 +68,7 @@ export default {
       package: "com.mastergirisim.emlaksepette",
       config: {
         googleMaps: {
-          apiKey: process.env.EXPO_PUBLIC_GOOGLE_API,
+          apiKey: process.env.GOOGLE_API,
         },
       },
     },

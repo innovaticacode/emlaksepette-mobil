@@ -820,7 +820,8 @@ export default function Profile() {
             <View
               style={{
                 flexDirection: "row",
-                justifyContent: "space-around",
+                justifyContent:
+                  userID !== storeID ? "space-around" : "flex-start",
                 padding: 10,
                 position: "absolute",
                 bottom: 0,
@@ -829,7 +830,10 @@ export default function Profile() {
                 height: "auto",
               }}
             >
-              {(tab == 1 || tab == 2) && (
+              {((corporateType == "İnşaat Ofisi" && (tab == 0 || tab == 1)) ||
+                (corporateType == "Emlak Ofisi" && tab == 0) ||
+                (corporateType == "Turizm Amaçlı Kiralama" && tab == 0) ||
+                (corporateType == "Üretici" && tab == 0)) && (
                 <TouchableOpacity
                   onPress={() =>
                     tab == 2

@@ -34,6 +34,7 @@ import { UsePaginatedData } from "../../hooks";
 import { setBasketItem } from "../../store/slices/Basket/BasketSlice";
 import { useDispatch } from "react-redux";
 import { registerForPushNotificationsAsync } from "../../services/registerForPushNotificationsAsync";
+import * as SecureStore from "expo-secure-store";
 
 const FirstHome = (props) => {
   const { index } = props;
