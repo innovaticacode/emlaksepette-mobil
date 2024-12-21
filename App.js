@@ -243,8 +243,6 @@ const DrawerNavigator = () => {
 
 const StackScreenNavigator = () => {
   const [İsLoggedIn, setİsLoggedIn] = useState(false);
-  const [showBackIcon, setshowBackIcon] = useState(false);
-
   const [housingTypes, setHousingTypes] = useState([]);
   const [selectedTypes, setSelectedTypes] = useState([]);
   const dispatch = useDispatch();
@@ -299,8 +297,6 @@ const StackScreenNavigator = () => {
     housingTypes,
     selectedTypes,
   }) {
-    console.debug("StepScreen.js: step", step);
-
     return (
       <View style={styles.container}>
         <TypeListScreen
