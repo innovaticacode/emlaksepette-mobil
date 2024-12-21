@@ -89,8 +89,6 @@ export default function Profile() {
   const userID = user?.id;
   const storeID = storeData?.data?.id;
 
-  console.log(storeData);
-
   useEffect(() => {
     getValueFor("user", setUser);
   }, []);
@@ -174,6 +172,7 @@ export default function Profile() {
   };
 
   useEffect(() => {
+    console.log("1");
     const fetchData = async () => {
       try {
         setloadingShopping(true);
@@ -184,6 +183,7 @@ export default function Profile() {
             prefixedID: `20000${housing.id}`,
           })
         );
+        console.log("2");
 
         setstoreData(res.data);
         setProjectData(res.data.data.projects);
@@ -191,15 +191,21 @@ export default function Profile() {
         setTeamm(res.data.data.child);
         sethousingRecords(housingsWithPrefixedID); // Housings dizisini başlangıçta kopyala
         setCorporateType(res.data.data.corporate_type);
+        console.log("3");
       } catch (error) {
         console.error("Error fetching data:", error);
       } finally {
         setloadingShopping(false);
+        console.log("4");
       }
     };
 
     fetchData();
   }, [id]);
+
+  useEffect(() => {
+    console.log("----------xxx---------------->", Housings);
+  }, [Housings]);
 
   const handleSearch = (text) => {
     setSearchText(text);
@@ -648,8 +654,6 @@ export default function Profile() {
     }
   };
 
-  console.log("storeID", storeID);
-  console.log("userID", userID);
   return (
     <>
       {loadingShopping ? (

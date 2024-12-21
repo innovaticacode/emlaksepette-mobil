@@ -33,8 +33,6 @@ export default function ProjectAdverts(props) {
       setLoadingProjects(true);
       const response = await axios.get(uri, { params });
 
-      console.log("Fetched projects data:", response.data);
-
       if (response.data.length === 0) {
         setHasMore(false);
       } else {
