@@ -120,7 +120,7 @@ export default function GraphicForProject() {
           </Text>
         </View>
       </View>
-      <View>
+      {/* <View>
         <TouchableOpacity
           style={{
             backgroundColor: "#FFFFFF",
@@ -149,7 +149,7 @@ export default function GraphicForProject() {
             <Arrow name="arrow-down" size={15} color={"#606060"} />
           </View>
         </TouchableOpacity>
-      </View>
+      </View> */}
       <View style={styles.StatisticCard}>
         {SaleCards.map((item, index) => (
           <PanelComponent

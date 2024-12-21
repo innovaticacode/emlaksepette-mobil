@@ -842,7 +842,7 @@ export default function ShoppingProfile() {
                         fontWeight: "600",
                       }}
                     >
-                      Mağazama Git
+                      {namFromGetUser.type == 1 ? "Profilim" : "Mağazama Git"}
                     </Text>
                   </TouchableOpacity>
                   <View
@@ -874,7 +874,9 @@ export default function ShoppingProfile() {
                         fontWeight: "600",
                       }}
                     >
-                      Mağazamı Paylaş
+                      {namFromGetUser.type == 1
+                        ? "Profilimi Paylaş"
+                        : "Mağazamı Paylaş"}
                     </Text>
                   </TouchableOpacity>
                 </View>

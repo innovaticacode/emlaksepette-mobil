@@ -23,7 +23,6 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { setNotificationsRedux } from "../store/slices/Notifications/NotificationsSlice";
 import { setUser } from "../store/user/UserSlice";
-import { registerForPushNotificationsAsync } from "../services/registerForPushNotificationsAsync";
 import * as Device from "expo-device";
 
 export default function Header({ showBack }) {
@@ -47,25 +46,6 @@ export default function Header({ showBack }) {
   useEffect(() => {
     getValueFor("user", setUser);
   }, []);
-
-  const [token, setToken] = useState("");
-
-  useEffect(() => {
-    registerForPushNotificationsAsync()
-      .then((token) => {
-        setToken(token);
-        if (!user?.push_token) {
-          apiRequestPostWithBearer("set_token", {
-            token: token,
-          });
-        } else {
-          console.log(user?.token, "tokeni-var");
-        }
-      })
-      .catch((err) => {
-        console.log(err, "qqq");
-      });
-  }, [token]);
 
   const getNotifications = async () => {
     try {

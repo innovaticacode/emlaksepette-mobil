@@ -658,7 +658,7 @@ export default function PostDetail() {
                   paddingBottom: width > 400 ? 15 : 7,
                 }}
               >
-                {!data?.housing?.sold || data?.housing?.sold > 1 ? (
+                {
                   <>
                     {data?.housing?.user?.id == user?.id ? (
                       <TouchableOpacity
@@ -756,51 +756,7 @@ export default function PostDetail() {
                       </>
                     )}
                   </>
-                ) : data?.housing?.sold == 1 ? (
-                  <View
-                    style={[
-                      {
-                        backgroundColor: "#000000",
-                        width: "100%",
-                        padding: 15,
-                        borderRadius: 10,
-                      },
-                    ]}
-                  >
-                    <Text
-                      style={{
-                        color: "white",
-                        fontWeight: "600",
-                        textAlign: "center",
-                        fontSize: 14,
-                      }}
-                    >
-                      Satıldı
-                    </Text>
-                  </View>
-                ) : (
-                  <View
-                    style={[
-                      {
-                        backgroundColor: "#373737",
-                        width: "100%",
-                        padding: 15,
-                        borderRadius: 10,
-                      },
-                    ]}
-                  >
-                    <Text
-                      style={{
-                        color: "white",
-                        fontWeight: "600",
-                        textAlign: "center",
-                        fontSize: 14,
-                      }}
-                    >
-                      Rezerve Edildi
-                    </Text>
-                  </View>
-                )}
+                }
                 {/* {data?.housing?.user?.id == user?.id || data?.housing?.sold ? (
                   <></>
                 ) : (
@@ -1024,18 +980,24 @@ export default function PostDetail() {
                 </View>
 
                 {/* İlan No kısmı en sağda hizalanıyor */}
-                <View style={{ alignItems: "flex-end" }}>
-                  <Text
-                    style={{
-                      fontSize: 11,
-                      color: "white",
-                      fontWeight: "bold",
-                    }}
-                  >
-                    İlan No:#2000{data?.housing?.id}
-                  </Text>
-                </View>
               </TouchableOpacity>
+              <View
+                style={{
+                  alignItems: "center",
+                  justifyContent: "center",
+                  paddingRight: 15,
+                }}
+              >
+                <Text
+                  style={{
+                    fontSize: 11,
+                    color: "white",
+                    fontWeight: "bold",
+                  }}
+                >
+                  İlan No:#2000{data?.housing?.id}
+                </Text>
+              </View>
             </View>
             <ScrollView
               showsVerticalScrollIndicator={false}

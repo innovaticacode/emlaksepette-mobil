@@ -12,6 +12,8 @@ import MapView, { Marker, PROVIDER_GOOGLE } from "react-native-maps";
 import openMap from "react-native-open-maps";
 
 export default function RealtorMap({ mapData }) {
+  console.log("mapData----------->", mapData);
+
   const handleGetDirections = () => {
     if (
       mapData &&
@@ -70,8 +72,8 @@ export default function RealtorMap({ mapData }) {
 
       <MapView
         initialRegion={{
-          latitude: mapData.housing?.latitude,
-          longitude: mapData?.housing?.longitude,
+          latitude: parseFloat(mapData?.housing?.latitude) || 41.34161201,
+          longitude: parseFloat(mapData?.housing?.longitude) || 28.66359789,
 
           latitudeDelta: 0.0922,
           longitudeDelta: 0.0421,
@@ -81,8 +83,8 @@ export default function RealtorMap({ mapData }) {
       >
         <Marker
           coordinate={{
-            latitude: mapData.housing?.latitude,
-            longitude: mapData?.housing?.longitude,
+            latitude: parseFloat(mapData?.housing?.latitude) || 41.34161201,
+            longitude: parseFloat(mapData?.housing?.longitude) || 28.66359789,
           }}
           // title={mapData?.housing?.city?.title / mapData?.housing?.county?.title}
           description="Konutun Konumu"

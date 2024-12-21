@@ -36,6 +36,7 @@ import AwesomeAlert from "react-native-awesome-alerts";
 import FontAwesome5Icon from "react-native-vector-icons/FontAwesome5";
 import { apiUrl } from "../../../../components/methods/apiRequest";
 import { checkFileSize } from "../../../../utils";
+import ContratsActionSheet from "../../../../components/ContratsModal/ContratsActionSheet";
 
 export default function SupportAdd() {
   const [name, setName] = useState("");
@@ -488,7 +489,8 @@ export default function SupportAdd() {
     const formattedPhone = formatPhoneNumberLive(text);
     setPhone(formattedPhone);
   };
-
+  const [isVisibleContrats, setIsVisibleContrats] = useState(false);
+  const [selectedUrl, setselectedUrl] = useState(null);
   return (
     <AlertNotificationRoot>
       <KeyboardAvoidingView
@@ -785,15 +787,9 @@ export default function SupportAdd() {
                     }}
                   >
                     <TouchableOpacity
-                      onPress={() =>
-                        handleCheckboxChange(
-                          checked,
-                          setChecked,
-                          modalVisible,
-                          setModalVisible,
-                          "kvkk-politikasi"
-                        )
-                      }
+                      onPress={() => {
+                        setChecked(!checked);
+                      }}
                       style={styles.checkboxContainer}
                     >
                       {checked ? (
@@ -816,6 +812,12 @@ export default function SupportAdd() {
                         ]}
                       >
                         <Text
+                          onPress={() => {
+                            setIsVisibleContrats(true);
+                            setselectedUrl(
+                              "kisisel-verilerin-korunmasi-ve-islenmesi-politikasi"
+                            );
+                          }}
                           style={{
                             color: errorStatu === 5 ? "red" : "#027BFF",
                             fontSize: 13,
@@ -830,15 +832,7 @@ export default function SupportAdd() {
 
                   {/* Accept Cerez Checkbox */}
                   <TouchableOpacity
-                    onPress={() =>
-                      handleCheckboxChange(
-                        checked1,
-                        setChecked1,
-                        modalVisible2,
-                        setModalVisible2,
-                        "cerez-politikasi"
-                      )
-                    }
+                    onPress={() => setChecked1(!checked1)}
                     style={styles.checkboxContainer}
                   >
                     {checked1 ? (
@@ -857,6 +851,10 @@ export default function SupportAdd() {
                       ]}
                     >
                       <Text
+                        onPress={() => {
+                          setIsVisibleContrats(true);
+                          setselectedUrl("cerez-politikasi");
+                        }}
                         style={{
                           color: errorStatu === 5 ? "red" : "#027BFF",
                           fontSize: 13,
@@ -870,15 +868,7 @@ export default function SupportAdd() {
 
                   {/* Accept gizlilik Checkbox */}
                   <TouchableOpacity
-                    onPress={() =>
-                      handleCheckboxChange(
-                        checked2,
-                        setChecked2,
-                        modalVisible3,
-                        setModalVisible3,
-                        "gizlilik-sozlesmesi-ve-aydinlatma-metni"
-                      )
-                    }
+                    onPress={() => setChecked2(!checked2)}
                     style={styles.checkboxContainer}
                   >
                     {checked2 ? (
@@ -897,6 +887,10 @@ export default function SupportAdd() {
                       ]}
                     >
                       <Text
+                        onPress={() => {
+                          setIsVisibleContrats(true);
+                          setselectedUrl("gizlilik-sozlesmesi");
+                        }}
                         style={{
                           color: errorStatu === 5 ? "red" : "#027BFF",
                           fontSize: 13,
@@ -908,7 +902,11 @@ export default function SupportAdd() {
                     </Text>
                   </TouchableOpacity>
                 </View>
-
+                <ContratsActionSheet
+                  url={selectedUrl}
+                  isVisibleOpen={isVisibleContrats}
+                  setIsVisible={setIsVisibleContrats}
+                />
                 <TouchableOpacity
                   style={{
                     backgroundColor: "#ea2b2e",

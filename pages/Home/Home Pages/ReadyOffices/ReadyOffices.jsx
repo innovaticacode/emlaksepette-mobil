@@ -12,18 +12,23 @@ import {
 import { ActivityIndicator } from "react-native-paper";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { AlertNotificationRoot } from "react-native-alert-notification";
-
-import { frontEndUriBase } from "../../../components/methods/apiRequest";
-import RealtorPost from "../../../components/Card/RealtorCard/RealtorPost";
-import { UsePaginatedData } from "../../../hooks";
+import { frontEndUriBase } from "../../../../components/methods/apiRequest";
+import RealtorPost from "../../../../components/Card/RealtorCard/RealtorPost";
+import { UsePaginatedData } from "../../../../hooks";
 import { useSelector } from "react-redux";
 
-const Area = ({ index }) => {
+const RedyOffices = ({ index }) => {
   const navigation = useNavigation();
+  const [loading, setLoading] = useState(true);
   const banners = useSelector((state) => state?.banners?.banners);
-  const [loading, setLoading] = useState(false);
+  const ID = useSelector((state) => state.realEstatesTypes.realEstatesTypes);
 
-  const apiData = [{ key: "step1_slug", value: "arsa" }];
+  const flatData = ID.flat();
+  const filteredStatus = Array.isArray(ID)
+    ? flatData.find((item) => item.title === "Hazır & Sanal Ofis")
+    : [];
+
+  const apiData = [{ key: "housing_type_id", value: filteredStatus.id }];
   const { data, hooksLoading, error, loadMore, setSkip } = UsePaginatedData(
     "real-estates",
     10,
@@ -32,7 +37,7 @@ const Area = ({ index }) => {
 
   useFocusEffect(
     useCallback(() => {
-      if (index === 4 && data.length === 0) {
+      if (index === 6 && data.length === 0) {
         setSkip(0);
       }
     }, [index, data.length])
@@ -70,17 +75,16 @@ const Area = ({ index }) => {
       <>
         <View style={{ paddingHorizontal: 0 }}>
           <Image
-            source={{ uri: banners.arsa }}
+            source={{ uri: banners?.hazir_sanal_ofis }}
             style={{
-              width: "auto",
+              width: "100%",
               height: 120,
-              resizeMode: "cover",
             }}
           />
         </View>
         <View style={styles.header}>
           <Text style={{ fontSize: 14, fontWeight: 700 }}>
-            ÖNE ÇIKAN ARSALAR
+            ÖNE ÇIKAN HAZIR OFİSLER
           </Text>
 
           <TouchableOpacity style={styles.allBtn}>
@@ -90,21 +94,21 @@ const Area = ({ index }) => {
                 fontSize: 12,
                 fontWeight: "bold",
               }}
-              onPress={() =>
+              onPress={() => {
                 navigation.navigate("AllRealtorAdverts", {
                   name: "Emlak İlanları",
-                  slug: "emlak-ilanlari",
+                  slug: "hazir-sanal-ofis",
                   data: data,
                   count: data.length,
-                  type: "arsa",
+                  type: "is-yeri",
                   optional: null,
                   title: null,
                   check: null,
                   city: null,
                   county: null,
                   hood: null,
-                })
-              }
+                });
+              }}
             >
               Tüm İlanları Gör
             </Text>
@@ -121,11 +125,16 @@ const Area = ({ index }) => {
         const getColumnName = (columnNameKey) => {
           return housingTypeData[columnNameKey] || "";
         };
+        const price =
+          item.step2_slug === "gunluk-kiralik"
+            ? housingTypeData["daily_rent"]
+            : housingTypeData["price"];
 
         return (
           <RealtorPost
+            openSharing={housingTypeData["open_sharing1"]}
             HouseId={item.id}
-            price={`${housingTypeData["price"]} `}
+            price={`${price} `}
             housing={item}
             title={item.housing_title}
             loading={loading}
@@ -139,7 +148,6 @@ const Area = ({ index }) => {
             column3_additional={item.column3_additional}
             column4_name={getColumnName(item.column4_name)}
             column4_additional={item.column4_additional}
-            openSharing={housingTypeData["open_sharing1"]}
             bookmarkStatus={true}
             dailyRent={false}
             isFavorite={item.is_favorite}
@@ -147,7 +155,7 @@ const Area = ({ index }) => {
           />
         );
       },
-    [loadMore, hooksLoading]
+    [hooksLoading, loadMore]
   );
 
   return (
@@ -159,15 +167,13 @@ const Area = ({ index }) => {
           <ActivityIndicator size={"large"} color="#333" />
         </View>
       ) : error ? (
-        <>
-          <View style={styles.errArea}>
-            <Text style={styles.errorText}>Bir şeyler ters gitti: {error}</Text>
-          </View>
-        </>
+        <View style={styles.errArea}>
+          <Text style={styles.errorText}>Bir şeyler ters gitti: {error}</Text>
+        </View>
       ) : (
         <View style={styles.container}>
           <AlertNotificationRoot>
-            {loading && data && data.length === 0 ? (
+            {loading && data && data.length == 0 ? (
               <View style={{ width: "100%", paddingTop: 10 }}>
                 <Text
                   style={{
@@ -176,7 +182,7 @@ const Area = ({ index }) => {
                     fontWeight: "700",
                   }}
                 >
-                  Arsa İlanı Bulunamadı
+                  Konut İlanı Bulunamadı
                 </Text>
               </View>
             ) : (
@@ -202,6 +208,7 @@ const Area = ({ index }) => {
     </>
   );
 };
+export default RedyOffices;
 
 const styles = StyleSheet.create({
   container: {
@@ -223,11 +230,11 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     margin: 0,
     padding: 20,
-    backgroundColor: "#22283100",
+    backgroundColor: "#1414148c",
   },
   modalContent4: {
     backgroundColor: "#fefefe",
-    padding: 5,
+    padding: 20,
     borderRadius: 5,
   },
   header: {
@@ -246,5 +253,3 @@ const styles = StyleSheet.create({
     flex: 1,
   },
 });
-
-export default Area;

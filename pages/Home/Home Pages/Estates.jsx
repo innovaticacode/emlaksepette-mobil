@@ -44,7 +44,9 @@ const Estates = ({ index }) => {
 
   useEffect(() => {
     if (data && data.length > 0) {
-      setLoading(false); // Data yüklendiğinde loading state'i false yap
+      setLoading(false); // Veri yüklendi ve dolu
+    } else if (data && data.length === 0) {
+      setLoading(false); // Veri yüklendi ama boş
     }
   }, [data]);
 
@@ -52,11 +54,6 @@ const Estates = ({ index }) => {
     if (!hooksLoading) return null;
     return (
       <View style={{ height: 100 }}>
-        <ActivityIndicator
-          style={{ marginVertical: 16 }}
-          size="small"
-          color="#333"
-        />
         <ActivityIndicator
           style={{ marginVertical: 16 }}
           size="small"
@@ -170,7 +167,7 @@ const Estates = ({ index }) => {
       ) : (
         <View style={styles.container}>
           <AlertNotificationRoot>
-            {data && data.length === 0 ? (
+            {loading && data && data.length === 0 ? (
               <View style={{ width: "100%", paddingTop: 10 }}>
                 <Text
                   style={{

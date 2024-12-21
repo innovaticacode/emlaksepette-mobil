@@ -86,6 +86,11 @@ export default function Profile() {
   const [color, setColor] = useState("#000000");
   const [corporateType, setCorporateType] = useState(null);
 
+  const userID = user?.id;
+  const storeID = storeData?.data?.id;
+
+  console.log(storeData);
+
   useEffect(() => {
     getValueFor("user", setUser);
   }, []);
@@ -642,6 +647,9 @@ export default function Profile() {
         break;
     }
   };
+
+  console.log("storeID", storeID);
+  console.log("userID", userID);
   return (
     <>
       {loadingShopping ? (
@@ -797,14 +805,19 @@ export default function Profile() {
 
             <View>{rendertab()}</View>
 
-            <View style={{ flex: 1, paddingBottom: 60 }}>{renderPages()}</View>
+            <View
+              style={{ flex: 1, paddingBottom: userID != storeID ? 20 : 0 }}
+            >
+              {renderPages()}
+            </View>
           </View>
 
-          <View>
+          <>
             <View
               style={{
                 flexDirection: "row",
-                justifyContent: "space-around",
+                justifyContent:
+                  userID !== storeID ? "space-around" : "flex-start",
                 padding: 10,
                 position: "absolute",
                 bottom: 0,
@@ -813,7 +826,10 @@ export default function Profile() {
                 height: "auto",
               }}
             >
-              {(tab == 1 || tab == 2) && (
+              {((corporateType == "İnşaat Ofisi" && (tab == 0 || tab == 1)) ||
+                (corporateType == "Emlak Ofisi" && tab == 0) ||
+                (corporateType == "Turizm Amaçlı Kiralama" && tab == 0) ||
+                (corporateType == "Üretici" && tab == 0)) && (
                 <TouchableOpacity
                   onPress={() =>
                     tab == 2
@@ -859,7 +875,8 @@ export default function Profile() {
                     Danışman Ol
                   </Text>
                 </TouchableOpacity>
-              ) : (
+              ) : userID !== storeID ? (
+                // Eğer userID ve storeID eşit değilse "Ara" butonu gösterilecek
                 <TouchableOpacity
                   onPress={() => handleOpenPhone()}
                   style={{
@@ -882,7 +899,7 @@ export default function Profile() {
                     Ara
                   </Text>
                 </TouchableOpacity>
-              )}
+              ) : null}
               {corporateType == "Emlak Ofisi" &&
               storeData?.data?.is_brand == 1 ? (
                 <TouchableOpacity
@@ -908,7 +925,7 @@ export default function Profile() {
                     Franchise Ol
                   </Text>
                 </TouchableOpacity>
-              ) : (
+              ) : userID !== storeID ? (
                 <TouchableOpacity
                   style={{
                     width: "45%",
@@ -933,9 +950,9 @@ export default function Profile() {
                     Hemen Başvur
                   </Text>
                 </TouchableOpacity>
-              )}
+              ) : null}
             </View>
-          </View>
+          </>
           <Modal
             animationType="fade"
             onBackdropPress={() => setFormVisible(false)}

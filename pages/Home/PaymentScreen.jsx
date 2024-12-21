@@ -40,6 +40,7 @@ import AbsoluteErrorInput from "../../components/custom_inputs/AbsoluteErrorInpu
 import axios from "axios";
 import { getValueFor } from "../../components/methods/user";
 import Toast from "react-native-toast-message";
+import ContratsActionSheet from "../../components/ContratsModal/ContratsActionSheet";
 export default function PaymentScreen() {
   // Kullanarak bu değerleri göstermek için devam edin
 
@@ -662,7 +663,8 @@ export default function PaymentScreen() {
       setParsed(parsedData);
     }
   }, [housing]);
-
+  const [isVisible, setIsVisible] = useState(false);
+  const [selectedUrl, setselectedUrl] = useState(null);
   return (
     <AlertNotificationRoot>
       <KeyboardAwareScrollView
@@ -1044,8 +1046,7 @@ export default function PaymentScreen() {
             <CheckBox
               checked={checked2}
               onPress={() => {
-                checked2 ? setModalVisible(false) : setModalVisible(true);
-                setChecked2(false);
+                setChecked2(!checked2);
               }}
               onLayout={(event) => handleLayout("checked2", event)}
               // Use ThemeProvider to make change for all checkbox
@@ -1064,6 +1065,10 @@ export default function PaymentScreen() {
               title={
                 <View style={{ padding: 5 }}>
                   <Text
+                    onPress={() => {
+                      setIsVisible(true);
+                      setselectedUrl("mesafeli-guvenli-kapora-sozlesmesi");
+                    }}
                     style={{ textDecorationLine: "underline", fontSize: 12 }}
                   >
                     Mesafeli kapora emanet sözleşmesini
@@ -1072,6 +1077,11 @@ export default function PaymentScreen() {
                   <Text style={{ fontSize: 12 }}>okudum kabul ediyorum</Text>
                 </View>
               }
+            />
+            <ContratsActionSheet
+              url={selectedUrl}
+              isVisibleOpen={isVisible}
+              setIsVisible={setIsVisible}
             />
             <CheckBox
               checked={checked}

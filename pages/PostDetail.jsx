@@ -1457,8 +1457,8 @@ export default function PostDetail() {
                       <View style={{ paddingTop: 5 }}>
                         <Text
                           style={{
-                            fontSize: 12,
-                            color: "#264ABB",
+                            fontSize: 15,
+                            color: "#EA2C2E",
                             fontWeight: "800",
                             textAlign: "center",
                           }}
@@ -1831,7 +1831,7 @@ export default function PostDetail() {
                 />
               )}
 
-              <View>
+              <View style={{ paddingLeft: 10, paddingRight: 10 }}>
                 {roomData &&
                   roomData["projected_earnings[]"] &&
                   roomData["projected_earnings[]"] && (
@@ -1856,16 +1856,6 @@ export default function PostDetail() {
                   )}
               </View>
 
-              <View>
-                {roomData && roomData["swap[]"] !== "[]" && (
-                  <SettingsItem
-                    info="Takas Başvurusu Yap"
-                    color={"orange"}
-                    fontWeight={"700"}
-                    icon={<LinkIcon3 name="plus" size={15} color={"orange"} />}
-                  />
-                )}
-              </View>
               {/* {(user.corporate_type == "Emlak Ofisi" || user.type == 1) && (
                 <TouchableOpacity
                   onPress={() => {
@@ -1893,16 +1883,16 @@ export default function PostDetail() {
               )} */}
 
               {roomData && roomData["swap[]"] && roomData["swap[]"] !== "[]" ? (
-                <View style={{ paddingLeft: 10, paddingRight: 10 }}>
+                <View
+                  style={{
+                    paddingLeft: 10,
+                    paddingRight: 10,
+                    marginTop: 10,
+                    borderRadius: 10,
+                  }}
+                >
                   <TouchableOpacity
-                    style={{
-                      backgroundColor: "#FEF4EB",
-                      flexDirection: "row",
-                      padding: 6,
-                      alignItems: "center",
-                      justifyContent: "space-between",
-                      borderRadius: 5,
-                    }}
+                    style={styles.takasBtn}
                     onPress={() => {
                       if (user.access_token) {
                         navigation.navigate("SwapForm", {
@@ -1915,30 +1905,12 @@ export default function PostDetail() {
                       }
                     }}
                   >
-                    <View
-                      style={{
-                        flexDirection: "row",
-                        alignItems: "center",
-                        gap: 10,
-                      }}
-                    >
-                      <View
-                        style={{
-                          backgroundColor: "#F37919",
-                          padding: 6,
-                          borderRadius: 5,
-                        }}
-                      >
+                    <View style={styles.takasContainer}>
+                      <View style={styles.takasIcon}>
                         <Icon2 name="plus" size={16} color={"#fff"} />
                       </View>
                       <View style={{}}>
-                        <Text
-                          style={{
-                            fontSize: 12,
-                            color: "#333",
-                            fontWeight: "600",
-                          }}
-                        >
+                        <Text style={styles.takasText}>
                           Takas Başvurusu Yap
                         </Text>
                       </View>
@@ -2031,6 +2003,7 @@ export default function PostDetail() {
                 onClose={onClose}
                 data={roomData ?? roomData}
                 RoomOrder={HomeId}
+                deposit_rate={ProjectHomeData?.project?.deposit_rate}
               />
 
               <Modal
@@ -2915,7 +2888,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   discountedPrice: {
-    color: "#27bb53",
+    color: "#EA2C2E",
     fontWeight: "700",
     marginTop: 5,
     fontSize: 14,
@@ -2923,7 +2896,7 @@ const styles = StyleSheet.create({
     marginLeft: 5,
   },
   regularPrice: {
-    color: "#274abb",
+    color: "#EA2C2E",
     fontWeight: "700",
     marginTop: 5,
     fontSize: 14,
@@ -2985,13 +2958,16 @@ const styles = StyleSheet.create({
     paddingRight: 20,
     padding: 10,
     alignItems: "center",
-    backgroundColor: "#000000",
+
+    backgroundColor: "#FFFFFF",
     borderRadius: 5,
+    borderWidth: 1,
+    borderColor: "#EA2C2E",
   },
   payDetailText: {
-    fontWeight: "500",
+    fontWeight: "700",
     fontSize: 12,
-    color: "white",
+    color: "#EA2C2E",
   },
   captionAndIcons: {
     display: "flex",
@@ -3022,12 +2998,12 @@ const styles = StyleSheet.create({
     padding: 10,
     width: "100%",
     alignItems: "center",
-    backgroundColor: "#264ABB",
+    backgroundColor: "#EA2C2E",
     borderRadius: 5,
   },
   addBasketText: {
     color: "white",
-    fontWeight: "500",
+    fontWeight: "700",
     fontSize: 12,
   },
   showCustomer: {
@@ -3089,6 +3065,29 @@ const styles = StyleSheet.create({
   modalContent4: {
     backgroundColor: "#fefefe",
     padding: 20,
+    borderRadius: 5,
+  },
+  takasContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 10,
+  },
+  takasBtn: {
+    backgroundColor: "#FEF4EB",
+    flexDirection: "row",
+    padding: 6,
+    alignItems: "center",
+    justifyContent: "space-between",
+    borderRadius: 5,
+  },
+  takasText: {
+    fontSize: 12,
+    color: "#333",
+    fontWeight: "600",
+  },
+  takasIcon: {
+    backgroundColor: "#F37919",
+    padding: 6,
     borderRadius: 5,
   },
 });
