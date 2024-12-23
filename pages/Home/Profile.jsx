@@ -38,8 +38,6 @@ import SellPlacesForBrands from "./ProfilePageItem/SellPlaceForBrand";
 import { ActivityIndicator } from "react-native-paper";
 import Introduction from "./ProfilePageItem/Introduction/Introduction";
 import Filter from "../../assets/filter.png";
-import ProjectBottomSheetFilter from "../../components/ProjectBottomSheetFilter";
-import EstateBottomSheetFilter from "../../components/EstateBottomSheetFilter";
 
 import BecomeConsultant from "./ProfilePageItem/BecomeConsultant/BecomeConsultant";
 import FranchiseForm from "../../components/BottomModals/FranchiseForm/FranchiseForm";
@@ -513,7 +511,13 @@ export default function Profile() {
     return (
       <>
         {tab === 0 && <Introduction id={id} setTab={settab} />}
-        {tab === 1 && <RealtorAdverts storeID={storeID} />}
+        {tab === 1 && (
+          <RealtorAdverts
+            storeID={storeID}
+            openEstateFilter={openEstateFilter}
+            setOpenEstateFilter={setOpenEstateFilter}
+          />
+        )}
         {tab === 2 && <Text>Ofislermizi</Text>}
         {tab === 3 && <Team team={teamm} type={corporateType} />}
         {tab === 4 && <Team team={teamm} type={corporateType} />}
@@ -524,7 +528,13 @@ export default function Profile() {
   const renderRealtorTabPages = () => {
     return (
       <>
-        {tab === 0 && <RealtorAdverts storeID={storeID} />}
+        {tab === 0 && (
+          <RealtorAdverts
+            storeID={storeID}
+            openEstateFilter={openEstateFilter}
+            setOpenEstateFilter={setOpenEstateFilter}
+          />
+        )}
         {tab === 1 && <Introduction id={id} setTab={settab} />}
 
         {tab === 2 && <ShopInfo data={storeData} loading={loading} />}
@@ -536,7 +546,13 @@ export default function Profile() {
   const renderTourismTabPages = () => {
     return (
       <>
-        {tab === 0 && <RealtorAdverts storeID={storeID} />}
+        {tab === 0 && (
+          <RealtorAdverts
+            storeID={storeID}
+            openEstateFilter={openEstateFilter}
+            setOpenEstateFilter={setOpenEstateFilter}
+          />
+        )}
         {tab === 1 && <Introduction id={id} setTab={settab} />}
 
         {tab === 2 && <ShopInfo data={storeData} loading={loading} />}
@@ -556,7 +572,13 @@ export default function Profile() {
             id={id}
           />
         )}
-        {tab === 1 && <RealtorAdverts storeID={storeID} />}
+        {tab === 1 && (
+          <RealtorAdverts
+            storeID={storeID}
+            openEstateFilter={openEstateFilter}
+            setOpenEstateFilter={setOpenEstateFilter}
+          />
+        )}
         {tab === 2 && <Introduction id={id} setTab={settab} />}
         {tab === 3 && <SellPlacesForBrands data={storeData} />}
         {tab === 4 && <ShopInfo data={storeData} loading={loading} />}
@@ -577,7 +599,13 @@ export default function Profile() {
             id={id}
           />
         )}
-        {tab === 1 && <RealtorAdverts storeID={storeID} />}
+        {tab === 1 && (
+          <RealtorAdverts
+            storeID={storeID}
+            openEstateFilter={openEstateFilter}
+            setOpenEstateFilter={setOpenEstateFilter}
+          />
+        )}
         {tab === 2 && <Introduction id={id} setTab={settab} />}
 
         {tab === 3 && <ShopInfo data={storeData} loading={loading} />}
@@ -631,12 +659,6 @@ export default function Profile() {
       ) : (
         <View style={{ flex: 1 }}>
           <View style={styles.container}>
-            <>
-              <EstateBottomSheetFilter
-                isVisible={openEstateFilter}
-                setIsVisible={setOpenEstateFilter}
-              />
-            </>
             <View
               style={[
                 {

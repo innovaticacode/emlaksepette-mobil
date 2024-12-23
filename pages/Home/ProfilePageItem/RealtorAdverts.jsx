@@ -16,8 +16,13 @@ import {
 } from "../../../components/methods/apiRequest";
 import RealtorPost from "../../../components/Card/RealtorCard/RealtorPost";
 import axios from "axios";
+import EstateBottomSheetFilter from "../../../components/EstateBottomSheetFilter";
 
-export default function RealtorAdverts({ storeID }) {
+export default function RealtorAdverts({
+  storeID,
+  openEstateFilter,
+  setOpenEstateFilter,
+}) {
   const [refreshing, setRefreshing] = useState(false);
   const [loading, setLoading] = useState(true);
   const [loadingEstates, setLoadingEstates] = useState(false);
@@ -69,8 +74,8 @@ export default function RealtorAdverts({ storeID }) {
 
   const onRefresh = async () => {
     setRefreshing(true);
-    setSkip(0); // Skip'i sıfırla
-    await fetchBrandEstates(false); // Veriyi yeniden yükle
+    setSkip(0);
+    await fetchBrandEstates(false);
     setRefreshing(false);
   };
 
@@ -78,9 +83,22 @@ export default function RealtorAdverts({ storeID }) {
     fetchBrandEstates();
   }, [storeID]);
 
+  useEffect(() => {
+    setSkip(0);
+    fetchBrandEstates(false);
+  }, [filter]);
+
   return (
     <>
       {loading && <ActivityIndicator size="large" color="#333" />}
+      <>
+        <EstateBottomSheetFilter
+          isVisible={openEstateFilter}
+          setIsVisible={setOpenEstateFilter}
+          setFilter={setFilter}
+          totalCount={totalCount}
+        />
+      </>
       <FlatList
         contentContainerStyle={{ padding: 10, paddingBottom: 50 }}
         data={housing}

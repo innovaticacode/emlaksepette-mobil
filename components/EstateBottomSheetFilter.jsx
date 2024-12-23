@@ -6,15 +6,23 @@ import { TouchableOpacity } from "react-native";
 
 const { width, height } = Dimensions.get("screen");
 
-const EstateBottomSheetFilter = (props) => {
-  const { isVisible, setIsVisible } = props;
+const EstateBottomSheetFilter = ({
+  isVisible,
+  setIsVisible,
+  setFilter,
+  totalCount,
+}) => {
   const actionSheetRef = useRef(null);
 
   const [checkboxes, setCheckboxes] = useState([
-    { label: "Tümü", checked: true, count: 23 },
-    { label: "Satılık", checked: false, count: 9 },
-    { label: "Kiralık", checked: false, count: 5 },
-    { label: "Günlük Kiralık", checked: false, count: 9 },
+    { label: "Tümü", checked: true, count: totalCount, value: null },
+    { label: "Satılık", checked: false, value: "satilik" },
+    { label: "Kiralık", checked: false, value: "kiralik" },
+    {
+      label: "Günlük Kiralık",
+      checked: false,
+      value: "gunluk-kiralik",
+    },
   ]);
 
   const toggleCheckbox = (index) => {
@@ -23,6 +31,7 @@ const EstateBottomSheetFilter = (props) => {
       checked: i === index,
     }));
     setCheckboxes(newCheckboxes);
+    setFilter(newCheckboxes[index].value);
   };
 
   useEffect(() => {
@@ -32,7 +41,7 @@ const EstateBottomSheetFilter = (props) => {
       actionSheetRef.current?.setModalVisible(false);
     }
   }, [isVisible]);
-
+  console.log(totalCount);
   return (
     <ActionSheet
       ref={actionSheetRef}
@@ -48,17 +57,8 @@ const EstateBottomSheetFilter = (props) => {
       defaultOverlayOpacity={0.3}
       animated={true}
     >
-      <View
-        style={{
-          padding: 16,
-        }}
-      >
-        <View
-          style={{
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
+      <View style={{ padding: 16 }}>
+        <View style={{ justifyContent: "center", alignItems: "center" }}>
           <View
             style={{
               flexDirection: "row",
@@ -99,7 +99,11 @@ const EstateBottomSheetFilter = (props) => {
               onPress={() => toggleCheckbox(index)}
             />
             <TouchableOpacity onPress={() => toggleCheckbox(index)}>
-              <Text>{`${checkbox.label} (${checkbox?.count})`}</Text>
+              <Text>
+                {checkbox.count !== undefined
+                  ? `${checkbox.label} (${checkbox.count})`
+                  : checkbox.label}
+              </Text>
             </TouchableOpacity>
           </View>
         ))}
