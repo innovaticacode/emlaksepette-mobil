@@ -13,8 +13,9 @@ import {
   apiUrl,
   frontEndUriBase,
 } from "../../../components/methods/apiRequest";
+import NoDataScreen from "../../../components/NoDataScreen";
 
-export default function ProjectAdverts({ data, isVisible, setIsVisible, id }) {
+export default function ProjectAdverts({ isVisible, setIsVisible, id }) {
   const [loadingProjects, setLoadingProjects] = useState(false);
   const [featuredProjects, setFeaturedProjects] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
@@ -93,9 +94,17 @@ export default function ProjectAdverts({ data, isVisible, setIsVisible, id }) {
         isVisible={isVisible}
         setIsVisible={setIsVisible}
       />
-      {featuredProjects.length > 0 ? (
+      {loadingProjects ? (
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color="#000" />
+        </View>
+      ) : (
         <FlatList
           data={featuredProjects}
+          contentContainerStyle={{
+            flexGrow: 1,
+            justifyContent: featuredProjects.length === 0 ? "center" : null,
+          }}
           keyExtractor={(item, index) => `${item.id}-${index}`}
           showsVerticalScrollIndicator={false}
           renderItem={({ item }) => (
@@ -110,23 +119,24 @@ export default function ProjectAdverts({ data, isVisible, setIsVisible, id }) {
               location={item?.city?.title}
               city={item?.county?.ilce_title}
               ProjectNo={item?.id}
-              user={data?.data}
-              ProfilImage={`${frontEndUriBase}storage/profile_images/${data?.profile_image}`}
+              user={item?.data}
+              ProfilImage={`${frontEndUriBase}storage/profile_images/${item?.profile_image}`}
               loading={loadingProjects}
             />
           )}
           onEndReached={loadMore}
           onEndReachedThreshold={0.5}
           ListFooterComponent={renderFooter}
+          ListEmptyComponent={() => (
+            <NoDataScreen
+              iconName={"home"}
+              isShowButton={true}
+              message={"Henüz ilan yayınlanmadı."}
+              navigateTo={"Home"}
+              buttonText={"Anasayfaya Git"}
+            />
+          )}
         />
-      ) : loadingProjects ? (
-        <View style={styles.loadingContainer}>
-          <ActivityIndicator size="large" color="#000" />
-        </View>
-      ) : (
-        <View style={styles.empty}>
-          <Text>Proje bulunamadı.</Text>
-        </View>
       )}
     </View>
   );

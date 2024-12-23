@@ -17,6 +17,7 @@ import {
 import RealtorPost from "../../../components/Card/RealtorCard/RealtorPost";
 import axios from "axios";
 import EstateBottomSheetFilter from "../../../components/EstateBottomSheetFilter";
+import NoDataScreen from "../../../components/NoDataScreen";
 
 export default function RealtorAdverts({
   storeID,
@@ -100,7 +101,12 @@ export default function RealtorAdverts({
         />
       </>
       <FlatList
-        contentContainerStyle={{ padding: 10, paddingBottom: 50 }}
+        contentContainerStyle={{
+          padding: 10,
+          paddingBottom: 50,
+          flexGrow: 1,
+          alignItems: housing.length == 0 ? "center" : null,
+        }}
         data={housing}
         initialNumToRender={10}
         windowSize={3}
@@ -157,9 +163,15 @@ export default function RealtorAdverts({
         refreshing={refreshing}
         ListEmptyComponent={
           !loading && (
-            <View>
-              <Text>Emlak ilanı bulunamadı</Text>
-            </View>
+            <>
+              <NoDataScreen
+                iconName={"home"}
+                isShowButton={true}
+                message={"Henüz ilan yayınlanmadı."}
+                navigateTo={"Home"}
+                buttonText={"Anasayfaya Git"}
+              />
+            </>
           )
         }
         ListFooterComponent={
