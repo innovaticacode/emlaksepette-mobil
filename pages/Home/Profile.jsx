@@ -640,9 +640,35 @@ export default function Profile() {
     }
   };
 
-  useEffect(() => {
-    console.log("tab---------->", tab);
-  }, [tab]);
+  /**
+   * Dynamically handles filter actions based on the current `corporateType` and `tab`.
+   *
+   * The function maps combinations of `corporateType` and `tab` to specific actions
+   * (e.g., opening a project filter or estate filter) and executes the corresponding action.
+   * Logs a warning if no action is defined for the given combination.
+   *
+   * @constant {Object} filterActions - Maps `corporateType-tab` combinations to filter actions.
+   * @function handlerFilterAction
+   *
+   * @example
+   * handlerFilterAction(); // Executes the appropriate filter action or logs a warning.
+   */
+  const filterActions = {
+    "İnşaat Ofisi-0": () => setOpenProjectFilter(true), // Tab 0 - ProjectAdverts
+    "İnşaat Ofisi-1": () => setOpenEstateFilter(true), // Tab 1 - RealtorAdverts
+    "Emlak Ofisi-0": () => setOpenEstateFilter(true), // Emlak Ofisi için
+    "Üretici-0": () => setOpenEstateFilter(true), // Üretici için
+    "Turizm Amaçlı Kiralama-0": () => setOpenEstateFilter(true), // Turizm Amaçlı Kiral
+  };
+
+  const handlerFilterAction = () => {
+    const actionKey = `${corporateType}-${tab}`;
+    if (filterActions[actionKey]) {
+      filterActions[actionKey]();
+    } else {
+      console.warn(`"${actionKey}" için bir filtre işlemi tanımlı değil.`);
+    }
+  };
 
   return (
     <>
@@ -819,11 +845,7 @@ export default function Profile() {
                 (corporateType == "Turizm Amaçlı Kiralama" && tab == 0) ||
                 (corporateType == "Üretici" && tab == 0)) && (
                 <TouchableOpacity
-                  onPress={() =>
-                    tab == 2
-                      ? setOpenProjectFilter(true)
-                      : setOpenEstateFilter(true)
-                  }
+                  onPress={handlerFilterAction}
                   style={{
                     justifyContent: "center",
                     alignItems: "center",
