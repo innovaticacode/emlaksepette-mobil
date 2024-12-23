@@ -52,9 +52,9 @@ import {
 
 export default function Profile() {
   const route = useRoute();
-  const { name, id } = route.params;
+  const { id } = route.params;
   const [tab, settab] = useState(0);
-  const { width, height, fontScale } = Dimensions.get("window");
+  const { width } = Dimensions.get("window");
   const translateY = useRef(new Animated.Value(400)).current;
   const navigation = useNavigation();
   const [nameId, setNameId] = useState("");
@@ -75,7 +75,6 @@ export default function Profile() {
   const toggleCheckbox = () => setChecked(!checked);
   const scrollViewRef = useRef(null); // ScrollView için ref
   const [tabWidth, setTabWidth] = useState(0);
-  const [projectData, setProjectData] = useState([]);
   const [checkImage, setCheckImage] = useState(null);
   const [color, setColor] = useState("#000000");
   const [corporateType, setCorporateType] = useState(null);
@@ -172,7 +171,6 @@ export default function Profile() {
         const res = await apiRequestGet("brand/" + id);
 
         setstoreData(res.data);
-        setProjectData(res.data.data.projects);
         setTeamm(res.data.data.child);
         setCorporateType(res.data.data.corporate_type);
       } catch (error) {
@@ -564,7 +562,7 @@ export default function Profile() {
       <>
         {tab === 0 && (
           <ProjectAdverts
-            data={projectData}
+            // data={projectData}
             isVisible={openProjectFilter}
             setIsVisible={setOpenProjectFilter}
             id={id}

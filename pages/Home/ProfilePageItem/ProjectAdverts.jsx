@@ -20,10 +20,6 @@ export default function ProjectAdverts({ data, isVisible, setIsVisible, id }) {
   const [currentPage, setCurrentPage] = useState(0);
   const [hasMore, setHasMore] = useState(true);
 
-  useEffect(() => {
-    console.log(isVisible);
-  }, [setIsVisible]);
-
   const fetchFeaturedProjects = async (page = 0) => {
     const uri = `${apiUrl}get_institutional_projects_by_housing_type/${id}`;
     const params = {
