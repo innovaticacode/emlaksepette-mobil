@@ -307,7 +307,7 @@ export default function AllProjects() {
   const [skip, setSkip] = useState(0); // Hangi noktadan itibaren veri alınacak
 
   const handleLoadMore = async () => {
-    if (isLoadingMore || state.secondhandHousings.length >= totalCounts) {
+    if (isLoadingMore || state.projects.length >= totalCounts) {
       return;
     }
     setIsLoadingMore(true); // Yeni veri yükleme işlemi başlıyor

@@ -19,7 +19,7 @@ export default function ProjectAdverts({ isVisible, setIsVisible, id }) {
   const [loadingProjects, setLoadingProjects] = useState(false);
   const [featuredProjects, setFeaturedProjects] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
-  const [hasMore, setHasMore] = useState(true);
+  const [totalCounts, setTotalCounts] = useState(0);
 
   const fetchFeaturedProjects = async (page = 0) => {
     const uri = `${apiUrl}get_institutional_projects_by_housing_type/${id}`;
@@ -33,10 +33,12 @@ export default function ProjectAdverts({ isVisible, setIsVisible, id }) {
       setLoadingProjects(true);
       const response = await axios.get(uri, { params });
 
-      if (response.data.length === 0) {
-        setHasMore(false);
+      setTotalCounts(response.data.total_count); // Toplam kayıt sayısını güncelleyin
+
+      if (response.data && Array.isArray(response.data.projects)) {
+        setFeaturedProjects((prev) => [...prev, ...response.data.projects]);
       } else {
-        setFeaturedProjects((prev) => [...prev, ...response.data]);
+        console.error("Unexpected response structure:", response.data);
       }
     } catch (error) {
       console.error("Error fetching featured projects:", error);
@@ -63,10 +65,13 @@ export default function ProjectAdverts({ isVisible, setIsVisible, id }) {
 
     try {
       const response = await axios.get(uri, { params });
-      setFeaturedProjects(response.data);
-      setHasMore(response.data.length === 2);
+      setFeaturedProjects(response.data.projects);
+      setTotalCounts(response.data.total_count);
     } catch (error) {
-      console.error("Error fetching data:", error.response || error.message);
+      console.error(
+        "Error fetching data onfilter:",
+        error.response || error.message
+      );
     } finally {
       setLoadingProjects(false);
       setIsVisible(false);
@@ -74,7 +79,7 @@ export default function ProjectAdverts({ isVisible, setIsVisible, id }) {
   };
 
   const loadMore = () => {
-    if (!loadingProjects && hasMore) {
+    if (!loadingProjects && featuredProjects.length < totalCounts) {
       setCurrentPage((prev) => prev + 1);
     }
   };
