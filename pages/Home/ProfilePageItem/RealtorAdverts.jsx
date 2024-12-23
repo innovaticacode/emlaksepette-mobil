@@ -98,7 +98,7 @@ export default function RealtorAdverts({ storeID }) {
             }
             housing={item}
             filteredResults={undefined}
-            title={item.title}
+            title={item.housing_title}
             loading={loadingEstates}
             location={item.city["title"] + " / " + item.county["title"]}
             image={`${frontEndUriBase}housing_images/${
