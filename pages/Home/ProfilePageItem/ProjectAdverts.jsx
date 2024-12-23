@@ -14,12 +14,15 @@ import {
   frontEndUriBase,
 } from "../../../components/methods/apiRequest";
 
-export default function ProjectAdverts(props) {
-  const { data, isVisible, setIsVisible, id } = props;
+export default function ProjectAdverts({ data, isVisible, setIsVisible, id }) {
   const [loadingProjects, setLoadingProjects] = useState(false);
   const [featuredProjects, setFeaturedProjects] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
   const [hasMore, setHasMore] = useState(true);
+
+  useEffect(() => {
+    console.log(isVisible);
+  }, [setIsVisible]);
 
   const fetchFeaturedProjects = async (page = 0) => {
     const uri = `${apiUrl}get_institutional_projects_by_housing_type/${id}`;

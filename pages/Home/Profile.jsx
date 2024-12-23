@@ -64,10 +64,8 @@ export default function Profile() {
   const [errorMessage, seterrorMessage] = useState("");
   const [user, setUser] = useState({});
   const [teamm, setTeamm] = useState([]);
-  const [searchText, setSearchText] = useState("");
   const [openProjectFilter, setOpenProjectFilter] = useState(false);
   const [openEstateFilter, setOpenEstateFilter] = useState(false);
-  const [newCollectionNameCreate, setnewCollectionNameCreate] = useState("");
   const [loading, setloading] = useState(false);
   const [storeData, setstoreData] = useState([]);
   const [loadingShopping, setloadingShopping] = useState(false);
@@ -592,26 +590,18 @@ export default function Profile() {
     return (
       <>
         {tab === 0 && (
-          <ProjectAdverts
-            data={projectData}
-            isVisible={openProjectFilter}
-            setIsVisible={setOpenProjectFilter}
-            id={id}
-          />
-        )}
-        {tab === 1 && (
           <RealtorAdverts
             storeID={storeID}
             openEstateFilter={openEstateFilter}
             setOpenEstateFilter={setOpenEstateFilter}
           />
         )}
-        {tab === 2 && <Introduction id={id} setTab={settab} />}
+        {tab === 1 && <Introduction id={id} setTab={settab} />}
 
-        {tab === 3 && <ShopInfo data={storeData} loading={loading} />}
+        {tab === 2 && <ShopInfo data={storeData} loading={loading} />}
 
-        {tab === 4 && <CommentsOfBrands id={id} />}
-        {tab === 5 && <Team team={teamm} type={corporateType} />}
+        {tab === 3 && <CommentsOfBrands id={id} />}
+        {tab === 4 && <Team team={teamm} type={corporateType} />}
       </>
     );
   };
@@ -649,6 +639,10 @@ export default function Profile() {
         break;
     }
   };
+
+  useEffect(() => {
+    console.log("tab---------->", tab);
+  }, [tab]);
 
   return (
     <>

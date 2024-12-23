@@ -9,6 +9,9 @@ const ProjectBottomSheetFilter = (props) => {
   const { isVisible, setIsVisible, onFilterChange } = props;
   const actionSheetRef = useRef(null);
 
+  console.log("isVisible", isVisible);
+  console.log("setIsVisible", setIsVisible);
+
   const [checkboxes, setCheckboxes] = useState([
     { label: "Tümü", checked: true, slug: "tum-projeler" },
     {
@@ -42,9 +45,12 @@ const ProjectBottomSheetFilter = (props) => {
   };
 
   useEffect(() => {
+    console.log("isVisible", isVisible);
     if (isVisible) {
+      console.log("isVisible-if", isVisible);
       actionSheetRef.current?.setModalVisible(true);
     } else {
+      console.log("isVisible-else", isVisible);
       actionSheetRef.current?.setModalVisible(false);
     }
   }, [isVisible]);

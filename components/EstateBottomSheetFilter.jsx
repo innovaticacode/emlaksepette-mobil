@@ -41,7 +41,7 @@ const EstateBottomSheetFilter = ({
       actionSheetRef.current?.setModalVisible(false);
     }
   }, [isVisible]);
-  console.log(totalCount);
+
   return (
     <ActionSheet
       ref={actionSheetRef}
@@ -100,9 +100,9 @@ const EstateBottomSheetFilter = ({
             />
             <TouchableOpacity onPress={() => toggleCheckbox(index)}>
               <Text>
-                {checkbox.count !== undefined
-                  ? `${checkbox.label} (${checkbox.count})`
-                  : checkbox.label}
+                {checkbox?.count !== undefined && checkbox?.count > 0
+                  ? `${checkbox?.label} (${checkbox?.count})`
+                  : checkbox?.label}
               </Text>
             </TouchableOpacity>
           </View>
