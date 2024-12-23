@@ -54,7 +54,6 @@ import {
 
 export default function Profile() {
   const route = useRoute();
-  const [Housings, setHousings] = useState([]);
   const { name, id } = route.params;
   const [tab, settab] = useState(0);
   const { width, height, fontScale } = Dimensions.get("window");
@@ -68,7 +67,6 @@ export default function Profile() {
   const [user, setUser] = useState({});
   const [teamm, setTeamm] = useState([]);
   const [searchText, setSearchText] = useState("");
-  const [housingRecords, sethousingRecords] = useState([]);
   const [openProjectFilter, setOpenProjectFilter] = useState(false);
   const [openEstateFilter, setOpenEstateFilter] = useState(false);
   const [newCollectionNameCreate, setnewCollectionNameCreate] = useState("");
@@ -172,55 +170,25 @@ export default function Profile() {
   };
 
   useEffect(() => {
-    console.log("1");
     const fetchData = async () => {
       try {
         setloadingShopping(true);
         const res = await apiRequestGet("brand/" + id);
-        const housingsWithPrefixedID = res.data.data.housings.map(
-          (housing) => ({
-            ...housing,
-            prefixedID: `20000${housing.id}`,
-          })
-        );
-        console.log("2");
 
         setstoreData(res.data);
         setProjectData(res.data.data.projects);
-        setHousings(housingsWithPrefixedID);
         setTeamm(res.data.data.child);
-        sethousingRecords(housingsWithPrefixedID); // Housings dizisini başlangıçta kopyala
         setCorporateType(res.data.data.corporate_type);
-        console.log("3");
       } catch (error) {
         console.error("Error fetching data:", error);
       } finally {
         setloadingShopping(false);
-        console.log("4");
       }
     };
 
     fetchData();
   }, [id]);
 
-  useEffect(() => {
-    console.log("----------xxx---------------->", Housings);
-  }, [Housings]);
-
-  const handleSearch = (text) => {
-    setSearchText(text);
-    ("");
-    const filteredData = text
-      ? Housings.filter(
-          (item) =>
-            item.title.toLowerCase().includes(text.toLowerCase()) ||
-            item.prefixedID.includes(text) || // prefixedID'yi kontrol et
-            item.id.toString().includes(text) // id'yi kontrol et
-        )
-      : Housings;
-
-    sethousingRecords(filteredData);
-  };
   const handleOpenPhone = () => {
     Linking.openURL(`tel:${storeData.data.phone}`);
   };
@@ -545,7 +513,7 @@ export default function Profile() {
     return (
       <>
         {tab === 0 && <Introduction id={id} setTab={settab} />}
-        {tab === 1 && <RealtorAdverts housingdata={housingRecords} />}
+        {tab === 1 && <RealtorAdverts storeID={storeID} />}
         {tab === 2 && <Text>Ofislermizi</Text>}
         {tab === 3 && <Team team={teamm} type={corporateType} />}
         {tab === 4 && <Team team={teamm} type={corporateType} />}
@@ -556,7 +524,7 @@ export default function Profile() {
   const renderRealtorTabPages = () => {
     return (
       <>
-        {tab === 0 && <RealtorAdverts housingdata={housingRecords} />}
+        {tab === 0 && <RealtorAdverts storeID={storeID} />}
         {tab === 1 && <Introduction id={id} setTab={settab} />}
 
         {tab === 2 && <ShopInfo data={storeData} loading={loading} />}
@@ -568,7 +536,7 @@ export default function Profile() {
   const renderTourismTabPages = () => {
     return (
       <>
-        {tab === 0 && <RealtorAdverts housingdata={housingRecords} />}
+        {tab === 0 && <RealtorAdverts storeID={storeID} />}
         {tab === 1 && <Introduction id={id} setTab={settab} />}
 
         {tab === 2 && <ShopInfo data={storeData} loading={loading} />}
@@ -588,7 +556,7 @@ export default function Profile() {
             id={id}
           />
         )}
-        {tab === 1 && <RealtorAdverts housingdata={housingRecords} />}
+        {tab === 1 && <RealtorAdverts storeID={storeID} />}
         {tab === 2 && <Introduction id={id} setTab={settab} />}
         {tab === 3 && <SellPlacesForBrands data={storeData} />}
         {tab === 4 && <ShopInfo data={storeData} loading={loading} />}
@@ -609,7 +577,7 @@ export default function Profile() {
             id={id}
           />
         )}
-        {tab === 1 && <RealtorAdverts housingdata={housingRecords} />}
+        {tab === 1 && <RealtorAdverts storeID={storeID} />}
         {tab === 2 && <Introduction id={id} setTab={settab} />}
 
         {tab === 3 && <ShopInfo data={storeData} loading={loading} />}
