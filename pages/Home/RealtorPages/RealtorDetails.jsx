@@ -23,7 +23,7 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 import Heart from "react-native-vector-icons/AntDesign";
 
 import Modal from "react-native-modal";
-
+import Bookmark from "react-native-vector-icons/FontAwesome";
 import { Icon } from "react-native-elements";
 import LinkIcon from "react-native-vector-icons/Entypo";
 import Arrow from "react-native-vector-icons/MaterialIcons";
@@ -55,6 +55,7 @@ import {
 import TextAlertModal from "../../../components/TextAlertModal";
 
 import AwesomeAlertComp from "../../../components/AwesomeAlertComp";
+import AddCollectionSheet from "../../../components/BottomModals/AddCollectionBottomModal/AddCollectionSheet";
 export default function PostDetail() {
   const [modalVisible, setModalVisible] = useState(false);
   const [tabs, setTabs] = useState(0);
@@ -240,7 +241,7 @@ export default function PostDetail() {
   const openCollection = (id) => {
     setselectedHouse(id);
 
-    setColectionSheet(true);
+    setisVisibleSheet(true);
   };
 
   const [addCollection, setaddCollection] = useState(false);
@@ -563,13 +564,6 @@ export default function PostDetail() {
       ?.map((item) => parseFloat(item?.rate) || 0)
       .reduce((acc, rate) => acc + rate, 0);
 
-  //     useEffect(() => {
-  //
-
-  //     }, [fetchDetails])
-
-  // console.log(IsSwap + 'swap')
-
   const [isVisible, setIsVisible] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
 
@@ -630,6 +624,7 @@ export default function PostDetail() {
       setShow(true);
     }
   };
+  const [isVisibleSheet, setisVisibleSheet] = useState(false);
   return (
     <>
       <AlertNotificationRoot>
@@ -757,141 +752,6 @@ export default function PostDetail() {
                     )}
                   </>
                 }
-                {/* {data?.housing?.user?.id == user?.id || data?.housing?.sold ? (
-                  <></>
-                ) : (
-                  <TouchableOpacity
-                    style={{
-                      width: "45%",
-                      backgroundColor: "#EA2B2E",
-                      padding: 12,
-                      borderRadius: 8,
-                    }}
-                    onPress={handleOpenPhone}
-                  >
-                    <Text
-                      style={{
-                        fontSize: 14,
-                        color: "white",
-                        fontWeight: "600",
-                        textAlign: "center",
-                      }}
-                    >
-                      Ara
-                    </Text>
-                  </TouchableOpacity>
-                )}
-                {!data?.housing?.sold ? (
-                  data?.housing?.user?.id == user?.id ? (
-                    <TouchableOpacity
-                      style={{
-                        backgroundColor: "#008001",
-                        width: "90%",
-                        padding: 12,
-                        borderRadius: 5,
-                      }}
-                    >
-                      <Text
-                        style={{
-                          textAlign: "center",
-                          color: "#ffffff",
-                          fontWeight: "700",
-                        }}
-                      >
-                        İlanı Düzenle
-                      </Text>
-                    </TouchableOpacity>
-                  ) : data?.housing?.step1_slug == "mustakil-tatil" &&
-                    data?.housing?.step2_slug == "gunluk-kiralik" ? (
-                    <TouchableOpacity
-                      onPress={() => {
-                        navigation.navigate("CreateReservation", {
-                          data: data,
-                        });
-                      }}
-                      style={{
-                        backgroundColor: "#EB2B2E",
-                        width: "45%",
-                        padding: 12,
-                        borderRadius: 5,
-                      }}
-                    >
-                      <Text
-                        style={{
-                          textAlign: "center",
-                          color: "#ffffff",
-                          fontWeight: "700",
-                        }}
-                      >
-                        Rezervasyon Yap
-                      </Text>
-                    </TouchableOpacity>
-                  ) : (
-                    <TouchableOpacity
-                      onPress={() => {
-                        if (user.access_token) {
-                          setModalForAddToCart(true);
-                        } else {
-                          setAlertForAddToCard(true);
-                        }
-                      }}
-                      style={{
-                        backgroundColor: "#EA2B2E",
-                        width: "45%",
-                        padding: 12,
-                        borderRadius: 5,
-                      }}
-                    >
-                      <Text
-                        style={{
-                          textAlign: "center",
-                          color: "#ffffff",
-                          fontWeight: "700",
-                        }}
-                      >
-                        Sepete Ekle
-                      </Text>
-                    </TouchableOpacity>
-                  )
-                ) : data?.housing?.sold == "1" ? (
-                  <View
-                    style={{
-                      backgroundColor: "#000000",
-                      width: "100%",
-                      padding: 12,
-                      borderRadius: 5,
-                    }}
-                  >
-                    <Text
-                      style={{
-                        color: "white",
-                        fontWeight: "600",
-                        textAlign: "center",
-                      }}
-                    >
-                      Satıldı
-                    </Text>
-                  </View>
-                ) : (
-                  <View
-                    style={{
-                      backgroundColor: "#373737",
-                      padding: 12,
-                      borderRadius: 5,
-                      width: "100%",
-                    }}
-                  >
-                    <Text
-                      style={{
-                        color: "white",
-                        fontWeight: "600",
-                        textAlign: "center",
-                      }}
-                    >
-                      Rezerve Edildi
-                    </Text>
-                  </View>
-                )} */}
               </View>
             </View>
             <View
@@ -1042,7 +902,7 @@ export default function PostDetail() {
                       </View>
                     </TouchableOpacity>
 
-                    {/* {((OpenSharing == "Evet" &&
+                    {((OpenSharing == "Evet" &&
                       user.corporate_type == "Emlak Ofisi") ||
                       user.type == 1) && (
                       <TouchableOpacity
@@ -1054,7 +914,7 @@ export default function PostDetail() {
                           <Bookmark name={bookmark} size={18} />
                         </View>
                       </TouchableOpacity>
-                    )} */}
+                    )}
                   </View>
                 )}
 
@@ -1297,6 +1157,12 @@ export default function PostDetail() {
               <TextAlertModal
                 visible={SeeAlertModal}
                 onClose={setSeeAlertModal}
+              />
+              <AddCollectionSheet
+                isVisible={isVisibleSheet}
+                setIsVisible={setisVisibleSheet}
+                HousingId={data?.housing?.id}
+                type={2}
               />
               <Modal
                 isVisible={ColectionSheet}

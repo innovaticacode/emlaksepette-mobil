@@ -834,6 +834,7 @@ const FirstHome = (props) => {
                           }`} // Safely access column4_name
                           column4_additional={item.column4_additional}
                           dailyRent={false}
+                          bookmarkStatus={true}
                           sold={item.sold}
                         />
                       )}

@@ -97,7 +97,7 @@
     "label": "Emlak Kulüp",
     "icon": "information-variant",
     "text": "Emlak Kulüp Nedir?",
-    "key": "DevreDışı_GetMyCollection",
+    "key": "GetMyCollection",
     "url": "RealtorClubExplore",
     "activePath": "/hesabim/koleksiyonlarim*",
     "_comment": "Bu öğe şu an geçici olarak devre dışı bırakıldı."
@@ -107,7 +107,7 @@
     "label": "Emlak Kulüp",
     "icon": "bookmark",
     "text": "Koleksiyonlarım",
-    "key": "DevreDışı_GetMyCollection",
+    "key": "GetMyCollection",
     "url": "Collections",
     "activePath": "/hesabim/koleksiyonlarim*",
     "_comment": "Bu öğe şu an geçici olarak devre dışı bırakıldı."
@@ -117,7 +117,7 @@
     "label": "Emlak Kulüp",
     "icon": "users",
     "text": "Üyelere Kupon Tanımla",
-    "key": "DevreDışı_EmlakClubUsers",
+    "key": "EmlakClubUsers",
     "url": "institutional.estate.club.users",
     "activePath": "/hesabim/estate_club_users",
     "_comment": "Bu öğe şu an geçici olarak devre dışı bırakıldı."
