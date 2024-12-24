@@ -6,7 +6,6 @@ import { frontEndUriBase } from "./methods/apiRequest";
 export default function SellPlaceItem({ item }) {
   const navigation = useNavigation();
 
-  console.debug("ITEM ==============>>> ", item);
   return (
     <TouchableOpacity
       onPress={() => {

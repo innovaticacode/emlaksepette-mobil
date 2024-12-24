@@ -1,8 +1,6 @@
-import { View, Text, ScrollView } from "react-native";
+import { View, ScrollView } from "react-native";
 import React, { useEffect, useState } from "react";
-
 import axios from "axios";
-
 import { ActivityIndicator } from "react-native-paper";
 import { getValueFor } from "../../../components/methods/user";
 import SellPlaceItem from "../../../components/SellPlaceItem";
@@ -20,13 +18,10 @@ export default function SellPlacesForBrands({ data }) {
   const GetSellPlace = async () => {
     setloading(true);
     try {
-      // if (user?.access_token && user) {
       const placeInfo = await axios.get(
         `${apiUrl}magaza/${ID}/satis-noktalari`
       );
-      console.log("placeInfo------------->>>>", placeInfo);
       setPlaces(placeInfo?.data?.sales_points);
-      // }
     } catch (error) {
       console.error("Kullanıcı verileri güncellenirken hata oluştu:", error);
     } finally {
@@ -35,10 +30,8 @@ export default function SellPlacesForBrands({ data }) {
   };
   useEffect(() => {
     GetSellPlace();
-    // console.debug("Placess=========>>>", Places);
   }, [user]);
 
-  console.log("satışNoktaları---------------------------------", Places);
   return (
     <>
       {loading ? (
