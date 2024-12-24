@@ -1,20 +1,7 @@
 import React, { useEffect, useState } from "react";
-import {
-  View,
-  Text,
-  ActivityIndicator,
-  ScrollView,
-  FlatList,
-  Image,
-} from "react-native";
-import {
-  apiRequestGet,
-  frontEndUriBase,
-} from "../../../../components/methods/apiRequest";
-
+import { View, Text, ActivityIndicator, ScrollView } from "react-native";
+import { apiRequestGet } from "../../../../components/methods/apiRequest";
 import { styles } from "./Introduction.styles";
-import { ALERT_TYPE, Dialog } from "react-native-alert-notification";
-
 import HTML from "react-native-render-html";
 import NoDataScreen from "../../../../components/NoDataScreen";
 

@@ -91,6 +91,7 @@ export const styles = StyleSheet.create({
     flex: 1, // Added to make the container fill the screen
     // paddingHorizontal: 12,
     backgroundColor: "#FFF",
+    paddingBottom: 24,
   },
   scrollView: {
     flexGrow: 1,

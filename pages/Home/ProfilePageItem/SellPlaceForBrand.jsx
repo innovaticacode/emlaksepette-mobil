@@ -10,6 +10,7 @@ import { apiUrl } from "../../../components/methods/apiRequest";
 import NoDataScreen from "../../../components/NoDataScreen";
 
 export default function SellPlacesForBrands({ data }) {
+  const ID = data?.data?.id;
   const [Places, setPlaces] = useState([]);
   const [user, setuser] = useState({});
   useEffect(() => {
@@ -21,9 +22,10 @@ export default function SellPlacesForBrands({ data }) {
     try {
       // if (user?.access_token && user) {
       const placeInfo = await axios.get(
-        `${apiUrl}magaza/${data?.data?.id}/satis-noktalari`
+        `${apiUrl}magaza/${ID}/satis-noktalari`
       );
-      setPlaces(placeInfo?.data?.usersFromCollections);
+      console.log("placeInfo------------->>>>", placeInfo);
+      setPlaces(placeInfo?.data?.sales_points);
       // }
     } catch (error) {
       console.error("Kullanıcı verileri güncellenirken hata oluştu:", error);
@@ -36,7 +38,7 @@ export default function SellPlacesForBrands({ data }) {
     // console.debug("Placess=========>>>", Places);
   }, [user]);
 
-  console.log(Places, "satışNoktaları");
+  console.log("satışNoktaları---------------------------------", Places);
   return (
     <>
       {loading ? (
