@@ -38,8 +38,6 @@ import SellPlacesForBrands from "./ProfilePageItem/SellPlaceForBrand";
 import { ActivityIndicator } from "react-native-paper";
 import Introduction from "./ProfilePageItem/Introduction/Introduction";
 import Filter from "../../assets/filter.png";
-import ProjectBottomSheetFilter from "../../components/ProjectBottomSheetFilter";
-import EstateBottomSheetFilter from "../../components/EstateBottomSheetFilter";
 
 import BecomeConsultant from "./ProfilePageItem/BecomeConsultant/BecomeConsultant";
 import FranchiseForm from "../../components/BottomModals/FranchiseForm/FranchiseForm";
@@ -54,10 +52,9 @@ import {
 
 export default function Profile() {
   const route = useRoute();
-  const [Housings, setHousings] = useState([]);
-  const { name, id } = route.params;
+  const { id } = route.params;
   const [tab, settab] = useState(0);
-  const { width, height, fontScale } = Dimensions.get("window");
+  const { width } = Dimensions.get("window");
   const translateY = useRef(new Animated.Value(400)).current;
   const navigation = useNavigation();
   const [nameId, setNameId] = useState("");
@@ -67,11 +64,8 @@ export default function Profile() {
   const [errorMessage, seterrorMessage] = useState("");
   const [user, setUser] = useState({});
   const [teamm, setTeamm] = useState([]);
-  const [searchText, setSearchText] = useState("");
-  const [housingRecords, sethousingRecords] = useState([]);
   const [openProjectFilter, setOpenProjectFilter] = useState(false);
   const [openEstateFilter, setOpenEstateFilter] = useState(false);
-  const [newCollectionNameCreate, setnewCollectionNameCreate] = useState("");
   const [loading, setloading] = useState(false);
   const [storeData, setstoreData] = useState([]);
   const [loadingShopping, setloadingShopping] = useState(false);
@@ -81,15 +75,12 @@ export default function Profile() {
   const toggleCheckbox = () => setChecked(!checked);
   const scrollViewRef = useRef(null); // ScrollView için ref
   const [tabWidth, setTabWidth] = useState(0);
-  const [projectData, setProjectData] = useState([]);
   const [checkImage, setCheckImage] = useState(null);
   const [color, setColor] = useState("#000000");
   const [corporateType, setCorporateType] = useState(null);
 
   const userID = user?.id;
   const storeID = storeData?.data?.id;
-
-  console.log(storeData);
 
   useEffect(() => {
     getValueFor("user", setUser);
@@ -178,18 +169,9 @@ export default function Profile() {
       try {
         setloadingShopping(true);
         const res = await apiRequestGet("brand/" + id);
-        const housingsWithPrefixedID = res.data.data.housings.map(
-          (housing) => ({
-            ...housing,
-            prefixedID: `20000${housing.id}`,
-          })
-        );
 
         setstoreData(res.data);
-        setProjectData(res.data.data.projects);
-        setHousings(housingsWithPrefixedID);
         setTeamm(res.data.data.child);
-        sethousingRecords(housingsWithPrefixedID); // Housings dizisini başlangıçta kopyala
         setCorporateType(res.data.data.corporate_type);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -201,20 +183,6 @@ export default function Profile() {
     fetchData();
   }, [id]);
 
-  const handleSearch = (text) => {
-    setSearchText(text);
-    ("");
-    const filteredData = text
-      ? Housings.filter(
-          (item) =>
-            item.title.toLowerCase().includes(text.toLowerCase()) ||
-            item.prefixedID.includes(text) || // prefixedID'yi kontrol et
-            item.id.toString().includes(text) // id'yi kontrol et
-        )
-      : Housings;
-
-    sethousingRecords(filteredData);
-  };
   const handleOpenPhone = () => {
     Linking.openURL(`tel:${storeData.data.phone}`);
   };
@@ -539,7 +507,13 @@ export default function Profile() {
     return (
       <>
         {tab === 0 && <Introduction id={id} setTab={settab} />}
-        {tab === 1 && <RealtorAdverts housingdata={housingRecords} />}
+        {tab === 1 && (
+          <RealtorAdverts
+            storeID={storeID}
+            openEstateFilter={openEstateFilter}
+            setOpenEstateFilter={setOpenEstateFilter}
+          />
+        )}
         {tab === 2 && <Text>Ofislermizi</Text>}
         {tab === 3 && <Team team={teamm} type={corporateType} />}
         {tab === 4 && <Team team={teamm} type={corporateType} />}
@@ -550,7 +524,13 @@ export default function Profile() {
   const renderRealtorTabPages = () => {
     return (
       <>
-        {tab === 0 && <RealtorAdverts housingdata={housingRecords} />}
+        {tab === 0 && (
+          <RealtorAdverts
+            storeID={storeID}
+            openEstateFilter={openEstateFilter}
+            setOpenEstateFilter={setOpenEstateFilter}
+          />
+        )}
         {tab === 1 && <Introduction id={id} setTab={settab} />}
 
         {tab === 2 && <ShopInfo data={storeData} loading={loading} />}
@@ -562,7 +542,13 @@ export default function Profile() {
   const renderTourismTabPages = () => {
     return (
       <>
-        {tab === 0 && <RealtorAdverts housingdata={housingRecords} />}
+        {tab === 0 && (
+          <RealtorAdverts
+            storeID={storeID}
+            openEstateFilter={openEstateFilter}
+            setOpenEstateFilter={setOpenEstateFilter}
+          />
+        )}
         {tab === 1 && <Introduction id={id} setTab={settab} />}
 
         {tab === 2 && <ShopInfo data={storeData} loading={loading} />}
@@ -576,13 +562,19 @@ export default function Profile() {
       <>
         {tab === 0 && (
           <ProjectAdverts
-            data={projectData}
+            // data={projectData}
             isVisible={openProjectFilter}
             setIsVisible={setOpenProjectFilter}
             id={id}
           />
         )}
-        {tab === 1 && <RealtorAdverts housingdata={housingRecords} />}
+        {tab === 1 && (
+          <RealtorAdverts
+            storeID={storeID}
+            openEstateFilter={openEstateFilter}
+            setOpenEstateFilter={setOpenEstateFilter}
+          />
+        )}
         {tab === 2 && <Introduction id={id} setTab={settab} />}
         {tab === 3 && <SellPlacesForBrands data={storeData} />}
         {tab === 4 && <ShopInfo data={storeData} loading={loading} />}
@@ -596,20 +588,18 @@ export default function Profile() {
     return (
       <>
         {tab === 0 && (
-          <ProjectAdverts
-            data={projectData}
-            isVisible={openProjectFilter}
-            setIsVisible={setOpenProjectFilter}
-            id={id}
+          <RealtorAdverts
+            storeID={storeID}
+            openEstateFilter={openEstateFilter}
+            setOpenEstateFilter={setOpenEstateFilter}
           />
         )}
-        {tab === 1 && <RealtorAdverts housingdata={housingRecords} />}
-        {tab === 2 && <Introduction id={id} setTab={settab} />}
+        {tab === 1 && <Introduction id={id} setTab={settab} />}
 
-        {tab === 3 && <ShopInfo data={storeData} loading={loading} />}
+        {tab === 2 && <ShopInfo data={storeData} loading={loading} />}
 
-        {tab === 4 && <CommentsOfBrands id={id} />}
-        {tab === 5 && <Team team={teamm} type={corporateType} />}
+        {tab === 3 && <CommentsOfBrands id={id} />}
+        {tab === 4 && <Team team={teamm} type={corporateType} />}
       </>
     );
   };
@@ -648,8 +638,36 @@ export default function Profile() {
     }
   };
 
-  console.log("storeID", storeID);
-  console.log("userID", userID);
+  /**
+   * Dynamically handles filter actions based on the current `corporateType` and `tab`.
+   *
+   * The function maps combinations of `corporateType` and `tab` to specific actions
+   * (e.g., opening a project filter or estate filter) and executes the corresponding action.
+   * Logs a warning if no action is defined for the given combination.
+   *
+   * @constant {Object} filterActions - Maps `corporateType-tab` combinations to filter actions.
+   * @function handlerFilterAction
+   *
+   * @example
+   * handlerFilterAction(); // Executes the appropriate filter action or logs a warning.
+   */
+  const filterActions = {
+    "İnşaat Ofisi-0": () => setOpenProjectFilter(true), // Tab 0 - ProjectAdverts
+    "İnşaat Ofisi-1": () => setOpenEstateFilter(true), // Tab 1 - RealtorAdverts
+    "Emlak Ofisi-0": () => setOpenEstateFilter(true), // Emlak Ofisi için
+    "Üretici-0": () => setOpenEstateFilter(true), // Üretici için
+    "Turizm Amaçlı Kiralama-0": () => setOpenEstateFilter(true), // Turizm Amaçlı Kiral
+  };
+
+  const handlerFilterAction = () => {
+    const actionKey = `${corporateType}-${tab}`;
+    if (filterActions[actionKey]) {
+      filterActions[actionKey]();
+    } else {
+      console.warn(`"${actionKey}" için bir filtre işlemi tanımlı değil.`);
+    }
+  };
+
   return (
     <>
       {loadingShopping ? (
@@ -659,12 +677,6 @@ export default function Profile() {
       ) : (
         <View style={{ flex: 1 }}>
           <View style={styles.container}>
-            <>
-              <EstateBottomSheetFilter
-                isVisible={openEstateFilter}
-                setIsVisible={setOpenEstateFilter}
-              />
-            </>
             <View
               style={[
                 {
@@ -831,11 +843,7 @@ export default function Profile() {
                 (corporateType == "Turizm Amaçlı Kiralama" && tab == 0) ||
                 (corporateType == "Üretici" && tab == 0)) && (
                 <TouchableOpacity
-                  onPress={() =>
-                    tab == 2
-                      ? setOpenProjectFilter(true)
-                      : setOpenEstateFilter(true)
-                  }
+                  onPress={handlerFilterAction}
                   style={{
                     justifyContent: "center",
                     alignItems: "center",

@@ -1,14 +1,14 @@
-import { View, Text, ScrollView } from "react-native";
+import { View, ScrollView } from "react-native";
 import React, { useEffect, useState } from "react";
-
 import axios from "axios";
-
 import { ActivityIndicator } from "react-native-paper";
 import { getValueFor } from "../../../components/methods/user";
 import SellPlaceItem from "../../../components/SellPlaceItem";
 import { apiUrl } from "../../../components/methods/apiRequest";
+import NoDataScreen from "../../../components/NoDataScreen";
 
 export default function SellPlacesForBrands({ data }) {
+  const ID = data?.data?.id;
   const [Places, setPlaces] = useState([]);
   const [user, setuser] = useState({});
   useEffect(() => {
@@ -18,12 +18,10 @@ export default function SellPlacesForBrands({ data }) {
   const GetSellPlace = async () => {
     setloading(true);
     try {
-      // if (user?.access_token && user) {
       const placeInfo = await axios.get(
-        `${apiUrl}magaza/${data?.data?.id}/satis-noktalari`
+        `${apiUrl}magaza/${ID}/satis-noktalari`
       );
-      setPlaces(placeInfo?.data?.usersFromCollections);
-      // }
+      setPlaces(placeInfo?.data?.sales_points);
     } catch (error) {
       console.error("Kullanıcı verileri güncellenirken hata oluştu:", error);
     } finally {
@@ -32,10 +30,8 @@ export default function SellPlacesForBrands({ data }) {
   };
   useEffect(() => {
     GetSellPlace();
-    // console.debug("Placess=========>>>", Places);
   }, [user]);
 
-  console.log(Places, "satışNoktaları");
   return (
     <>
       {loading ? (
@@ -50,12 +46,20 @@ export default function SellPlacesForBrands({ data }) {
           <ActivityIndicator size={"large"} color="#333" />
         </View>
       ) : Places.length == 0 ? (
-        <View>
-          <Text
-            style={{ textAlign: "center", color: "#333", fontWeight: "700" }}
-          >
-            Satış Noktası Bulunumadı
-          </Text>
+        <View
+          style={{
+            alignItems: "center",
+            justifyContent: "center",
+            flex: 1,
+          }}
+        >
+          <NoDataScreen
+            iconName={"home"}
+            isShowButton={true}
+            message={"Henüz satış noktası bulunmamaktadır."}
+            navigateTo={"Home"}
+            buttonText={"Anasayfaya Git"}
+          />
         </View>
       ) : (
         <ScrollView

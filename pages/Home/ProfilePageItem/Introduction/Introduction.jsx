@@ -1,30 +1,14 @@
 import React, { useEffect, useState } from "react";
-import {
-  View,
-  Text,
-  ActivityIndicator,
-  ScrollView,
-  FlatList,
-  Image,
-} from "react-native";
-import {
-  apiRequestGet,
-  frontEndUriBase,
-} from "../../../../components/methods/apiRequest";
-
+import { View, Text, ActivityIndicator, ScrollView } from "react-native";
+import { apiRequestGet } from "../../../../components/methods/apiRequest";
 import { styles } from "./Introduction.styles";
-import { Dialog } from "react-native-alert-notification";
-
 import HTML from "react-native-render-html";
+import NoDataScreen from "../../../../components/NoDataScreen";
 
 const Introduction = (props) => {
   const { id, setTab } = props;
   const [storeInfo, setStoreInfo] = useState({});
-  const [owners, setOwners] = useState([]);
-  const [projects, setProjects] = useState([]);
-  const [banners, setBanners] = useState([]);
-  const [ratingCount, setRatingCount] = useState([]);
-  const [housings, setHousings] = useState([]);
+
   const [loading, setLoading] = useState(true);
 
   const handleGetStoreInfo = async () => {
@@ -32,18 +16,10 @@ const Introduction = (props) => {
     try {
       const response = await apiRequestGet("brand/" + id);
       setStoreInfo(response.data.data);
-      setProjects(response.data.data.projects.slice(0, 3));
-      setOwners(response.data.data.owners);
-      setBanners(response.data.data.banners);
-      setRatingCount(response.data?.ratingCounts);
-      setHousings(response.data.data?.housings.slice(0, 3));
+
       setLoading(false);
     } catch (error) {
-      Dialog.show({
-        type: "error",
-        title: "Hata",
-        text: "İşletme bilgileri alınırken bir hata oluştu.",
-      });
+      console.log("error", error);
       setLoading(false);
     }
   };
@@ -54,42 +30,47 @@ const Introduction = (props) => {
     }
   }, [id]);
 
-  const isDataAvailable = () => {
-    return (
-      storeInfo?.name ||
-      storeInfo?.about ||
-      owners.length > 0 ||
-      banners.length > 0 ||
-      projects.length > 0 ||
-      ratingCount ||
-      housings.length > 0
-    );
-  };
-
   return (
     <>
       <View style={styles.container}>
-        <ScrollView>
-          <View>
-            <Image
-              source={{ uri: "https://www.dummyimage.co.uk/480x240/000000" }}
-              width={"100%"}
-              height={240}
-              resizeMode="cover"
-            />
-            <View style={styles.textArea}>
-              <Text style={styles.title}>Hakkımızda</Text>
-              {storeInfo?.about && (
+        {loading ? (
+          <View style={styles.loadingContainer}>
+            <ActivityIndicator size="large" color="#333" />
+          </View>
+        ) : (
+          <ScrollView
+            contentContainerStyle={{
+              flexGrow: 1,
+            }}
+          >
+            {storeInfo?.about ? (
+              <View style={styles.textArea}>
+                <Text style={styles.title}>Hakkımızda</Text>
                 <View style={styles.description}>
                   <HTML
                     source={{ html: storeInfo?.about }}
                     contentWidth={100}
                   />
                 </View>
-              )}
-            </View>
-          </View>
-        </ScrollView>
+              </View>
+            ) : (
+              <View
+                style={{
+                  justifyContent: "center",
+                  alignItems: "center",
+                  flexGrow: 1,
+                }}
+              >
+                <NoDataScreen
+                  message="Herhangi bir Bilgi Bulunamadı"
+                  iconName="store-off-outline"
+                  buttonText="Anasayfaya Git"
+                  navigateTo="HomePage"
+                />
+              </View>
+            )}
+          </ScrollView>
+        )}
       </View>
     </>
     // <View style={styles.container}>
