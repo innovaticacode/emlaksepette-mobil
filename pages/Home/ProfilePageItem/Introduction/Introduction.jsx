@@ -43,12 +43,16 @@ const Introduction = (props) => {
               flexGrow: 1,
             }}
           >
-            {storeInfo?.about ? (
+            {storeInfo?.about || storeInfo?.brand_text ? (
               <View style={styles.textArea}>
                 <Text style={styles.title}>Hakkımızda</Text>
                 <View style={styles.description}>
                   <HTML
-                    source={{ html: storeInfo?.about }}
+                    source={{
+                      html: storeInfo?.brand_text
+                        ? storeInfo?.brand_text
+                        : storeInfo?.about,
+                    }}
                     contentWidth={100}
                   />
                 </View>

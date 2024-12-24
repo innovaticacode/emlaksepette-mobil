@@ -171,7 +171,7 @@ export default function Profile() {
         const res = await apiRequestGet("brand/" + id);
 
         setstoreData(res.data);
-        setTeamm(res.data.data.child);
+        setTeamm(res.data.team_members);
         setCorporateType(res.data.data.corporate_type);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -181,6 +181,7 @@ export default function Profile() {
     };
 
     fetchData();
+    console.log("corporateType------------->", corporateType);
   }, [id]);
 
   const handleOpenPhone = () => {
