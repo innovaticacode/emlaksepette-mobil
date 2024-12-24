@@ -123,29 +123,25 @@ export default function Personal({ type }) {
         }, 5000);
       }
     } catch (error) {
-      // alert(error.response.data.error);
-      if (error?.response?.data.errors.email) {
+      if (error?.response?.data.errors?.email) {
         seterrorStatu(2);
         setData("emailErr", error.response.data.errors.email[0]);
         setTimeout(() => {
           setData("emailErr", null);
         }, 10000);
       }
-      if (error.response.data.error) {
-        seterrorStatu(3);
-        setData("mobilePhoneErr", error.response.data.error);
-        setTimeout(() => {
-          setData("mobilePhoneErr", null);
-        }, 10000);
+      if (error.response.data) {
+        if (
+          error.response.data.error &&
+          error.response.data.error.includes("cep telefonu")
+        ) {
+          seterrorStatu(3);
+          setData("mobilePhoneErr", error.response.data.error);
+          setTimeout(() => {
+            setData("mobilePhoneErr", null);
+          }, 10000);
+        }
       }
-
-      // if (error.response.data.errors.password) {
-      //   seterrorStatu(4);
-      //   setData("mobilePhoneErr", error.response.data.errors.password[0]);
-      //   setTimeout(() => {
-      //     setData("mobilePhoneErr", null);
-      //   }, 5000);
-      // }
     } finally {
       setIsloading(false);
     }
@@ -227,10 +223,8 @@ export default function Personal({ type }) {
     try {
       const data = await fetchFromURL(url);
       setDeals(data.content);
-      // Burada isteğin başarılı olduğunda yapılacak işlemleri gerçekleştirebilirsiniz.
     } catch (error) {
       console.error("İstek hatası:", error);
-      // Burada isteğin başarısız olduğunda yapılacak işlemleri gerçekleştirebilirsiniz.
     }
   };
 
@@ -314,10 +308,8 @@ export default function Personal({ type }) {
       setcolorForSymbol(true);
     }
   };
-  console.log("------> ", Errors.emailErr);
   const [isVisible, setIsVisible] = useState(false);
   const [selectedUrl, setselectedUrl] = useState(null);
-  console.log(Errors.mobilePhoneErr);
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
       <ScrollView
