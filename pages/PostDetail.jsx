@@ -941,44 +941,15 @@ export default function PostDetail() {
           <SafeAreaView
             style={{ backgroundColor: "white", flex: 1, paddingTop: 30 }}
           >
-            <View
-              style={{
-                position: "absolute",
-                width: "100%",
-                bottom: 35,
-                padding: 4,
-                zIndex: 1,
-                flexDirection: "row",
-                justifyContent: "space-around",
-              }}
-            >
+            <View style={styles.CallAndSeePlaceContainer}>
               <TouchableOpacity
-                style={{
-                  width: "45%",
-                  backgroundColor: "#EA2B2E",
-                  padding: 12,
-                  borderRadius: 8,
-                }}
+                style={styles.CallBtn}
                 onPress={handleOpenPhone}
               >
-                <Text
-                  style={{
-                    fontSize: 14,
-                    color: "white",
-                    fontWeight: "600",
-                    textAlign: "center",
-                  }}
-                >
-                  Ara
-                </Text>
+                <Text style={styles.CallBtnText}>Ara</Text>
               </TouchableOpacity>
               <TouchableOpacity
-                style={{
-                  width: "45%",
-                  backgroundColor: "#EA2B2E",
-                  padding: 12,
-                  borderRadius: 8,
-                }}
+                style={styles.seePlaceBtn}
                 onPress={() => {
                   navigation.navigate("Profile", {
                     name: "",
@@ -986,14 +957,7 @@ export default function PostDetail() {
                   });
                 }}
               >
-                <Text
-                  style={{
-                    fontSize: 14,
-                    color: "white",
-                    fontWeight: "600",
-                    textAlign: "center",
-                  }}
-                >
+                <Text style={styles.seePlaceBtnText}>
                   Satış Noktalarını Gör
                 </Text>
               </TouchableOpacity>
@@ -1013,13 +977,7 @@ export default function PostDetail() {
                     id: ProjectHomeData?.project?.user?.id,
                   });
                 }}
-                style={{
-                  padding: 5,
-                  flexDirection: "row",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                  width: "100%",
-                }}
+                style={styles.ProfileBannerBtn}
               >
                 <View
                   style={{ flexDirection: "row", gap: 4, alignItems: "center" }}
@@ -1033,23 +991,10 @@ export default function PostDetail() {
                       borderRadius={20}
                     />
                   </View>
-                  <Text
-                    style={{
-                      color: "white",
-                      fontWeight: "600",
-                      fontSize: 12,
-                    }}
-                  >
+                  <Text style={styles.ProfileName}>
                     {ProjectHomeData?.project?.user?.name}
                   </Text>
-                  <View
-                    style={{
-                      width: 18,
-                      height: 18,
-                      alignItems: "center",
-                      justifyContent: "center",
-                    }}
-                  >
+                  <View style={styles.ProfileIconVerify}>
                     <LinkIcon
                       name="check"
                       style={{ position: "absolute", zIndex: 1 }}
@@ -1062,14 +1007,7 @@ export default function PostDetail() {
                   </View>
                 </View>
                 <View>
-                  <Text
-                    style={{
-                      color: "white",
-                      fontWeight: "600",
-                      fontSize: 12,
-                      marginHorizontal: 15,
-                    }}
-                  >
+                  <Text style={styles.ProjectIdText}>
                     İlan No:{" "}
                     {1000000 + ProjectHomeData?.project?.id + "-" + HomeId}
                   </Text>
@@ -1168,15 +1106,7 @@ export default function PostDetail() {
             >
               <View style={{ height: 250 }}>
                 <View style={styles.pagination}>
-                  <View
-                    style={{
-                      backgroundColor: "#333",
-                      padding: 10,
-                      paddingLeft: 8,
-                      paddingRight: 8,
-                      borderRadius: 5,
-                    }}
-                  >
+                  <View style={styles.PaginationContainer}>
                     <Text style={{ color: "white", fontSize: 12 }}>
                       {pagination + 1} / {galleries.length}
                     </Text>
@@ -1301,59 +1231,23 @@ export default function PostDetail() {
                   <Icon2 name="arrowright" size={17} color={"#ED3135"} />
                 </TouchableOpacity>
               )}
-              <View
-                style={{
-                  paddingTop: 8,
-                  gap: 5,
-                  borderBottomWidth: 1,
-                  borderColor: "#e8e8e8",
-                  paddingBottom: 10,
-                }}
-              >
+              <View style={styles.totalRateView}>
                 {totalRate != 0 && (
-                  <View
-                    style={{
-                      position: "absolute",
-                      right: 10,
-                      flexDirection: "row",
-                      alignItems: "center",
-                      gap: 4,
-                      top: 10,
-                      zIndex: 1,
-                    }}
-                  >
-                    <Text
-                      style={{
-                        color: "#264ABB",
-                        fontWeight: "600",
-                        fontSize: 13,
-                      }}
-                    >
+                  <View style={styles.totalRateContainer}>
+                    <Text style={styles.totalRateText}>
                       {(totalRate / comments.length).toFixed(1)}
                     </Text>
 
                     <Icon2 name="star" color={"gold"} />
                   </View>
                 )}
-                <View style={{ paddingLeft: 8, gap: 5, paddingTop: 8 }}>
-                  <Text
-                    style={{
-                      fontSize: 11,
-                      color: "#333",
-                      fontWeight: "700",
-                    }}
-                  >
+                <View style={styles.LocationContainer}>
+                  <Text style={styles.LocationText}>
                     {ProjectHomeData?.project?.city?.title
                       ? `${ProjectHomeData?.project?.city?.title} / ${ProjectHomeData?.project?.county?.ilce_title}`
                       : ""}
                   </Text>
-                  <Text
-                    style={{
-                      fontSize: 16,
-                      color: "#333",
-                      fontWeight: "700",
-                    }}
-                  >
+                  <Text style={styles.LocationText}>
                     {ProjectHomeData?.projectHousingsList[HomeId]
                       ? ProjectHomeData?.projectHousingsList[HomeId][
                           "advertise_title[]"
@@ -1856,32 +1750,6 @@ export default function PostDetail() {
                   )}
               </View>
 
-              {/* {(user.corporate_type == "Emlak Ofisi" || user.type == 1) && (
-                <TouchableOpacity
-                  onPress={() => {
-
-                    getRoomID(HomeId);
-                    GetUserInfo();
-                    setColectionSheet(true);
-                  }}
-                >
-                  {roomData && roomData["off_sale[]"] && (
-                    <SettingsItem
-                      info={
-                        user.type == 2 && user.corporate_type == "Emlak Ofisi"
-                          ? "Portföye Ekle"
-                          : "Koleksiyona Ekle"
-                      }
-                      color={"red"}
-                      fontWeight={"700"}
-                      icon={
-                        <LinkIcon3 name="bookmark" size={15} color={"red"} />
-                      }
-                    />
-                  )}
-                </TouchableOpacity>
-              )} */}
-
               {roomData && roomData["swap[]"] && roomData["swap[]"] !== "[]" ? (
                 <View
                   style={{
@@ -1933,31 +1801,14 @@ export default function PostDetail() {
                 />
               </View>
 
-              <View
-                style={{ paddingLeft: 5, paddingRight: 5, paddingBottom: 5 }}
-              >
+              <View style={styles.InformationCon}>
                 <TouchableOpacity
-                  style={{
-                    borderWidth: 1,
-                    borderColor: "#EA2B2E",
-                    padding: 5,
-                    borderRadius: 6,
-                    backgroundColor: "white",
-                  }}
+                  style={styles.InfoBtn}
                   onPress={() => {
                     setSeeAlertModal(true);
                   }}
                 >
-                  <Text
-                    style={{
-                      textAlign: "center",
-                      fontSize: 13,
-                      color: "#EA2B2E",
-                      fontWeight: "600",
-                    }}
-                  >
-                    Bilgilendirme!
-                  </Text>
+                  <Text style={styles.InfoText}>Bilgilendirme!</Text>
                 </TouchableOpacity>
               </View>
 
@@ -2005,53 +1856,6 @@ export default function PostDetail() {
                 RoomOrder={HomeId}
                 deposit_rate={ProjectHomeData?.project?.deposit_rate}
               />
-
-              <Modal
-                isVisible={showCoverImageModal}
-                onBackdropPress={() => setCoverImageModal(false)}
-                swipeDirection={["down"]}
-                animationIn={"fadeInRightBig"}
-                animationOut={"fadeOutDownBig"}
-                onSwipeComplete={() => setCoverImageModal(false)}
-                backdropColor="transparent"
-                style={styles.modalImage}
-              >
-                <View style={styles.modalContentImage}>
-                  <View style={{ alignItems: "flex-end", marginBottom: 20 }}>
-                    <TouchableOpacity onPress={() => setCoverImageModal(false)}>
-                      <CloseIcon name="close" color={"white"} size={30} />
-                    </TouchableOpacity>
-                  </View>
-
-                  <PagerView
-                    style={{ height: 300 }}
-                    initialPage={selectedImage}
-                    onPageSelected={(event) =>
-                      handlePageChange(event.nativeEvent.position)
-                    }
-                  >
-                    {ProjectHomeData?.project?.images.map((image, index) => {
-                      return (
-                        <Pressable
-                          key={index + 1}
-                          onPress={() => setCoverImageModal(true)}
-                        >
-                          <ImageBackground
-                            source={{
-                              uri: `${apiUrl}${image.image.replace(
-                                "public",
-                                "storage"
-                              )}`,
-                            }}
-                            style={{ width: "100%", height: "100%" }}
-                            resizeMode="cover"
-                          />
-                        </Pressable>
-                      );
-                    })}
-                  </PagerView>
-                </View>
-              </Modal>
             </ScrollView>
             <TextAlertModal
               visible={SeeAlertModal}
