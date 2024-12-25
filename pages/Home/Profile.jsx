@@ -43,6 +43,7 @@ import BecomeConsultant from "./ProfilePageItem/BecomeConsultant/BecomeConsultan
 import FranchiseForm from "../../components/BottomModals/FranchiseForm/FranchiseForm";
 import { BecomingFranchise } from "./ProfilePageItem/BecomingFranchise/BecomingFranchise";
 import {
+  BireyselTab,
   BuilderOffice,
   FranchiseTab,
   RealEstateOfficeTab,
@@ -504,6 +505,69 @@ export default function Profile() {
       </ScrollView>
     );
   };
+  const renderBireyselTab = () => {
+    return (
+      <ScrollView
+        ref={scrollViewRef} // Ref ekleniyor
+        onLayout={() => {
+          // Calculate the width of each tab dynamically
+          if (BireyselTab.length > 0) {
+            const tabWidth = width / TourismAcent.length;
+            setTabWidth(tabWidth);
+          }
+        }}
+        horizontal
+        style={{
+          paddingTop: 5,
+          marginBottom: 5,
+          marginLeft: 5,
+          marginRight: 5,
+        }}
+        showsHorizontalScrollIndicator={false}
+        nestedScrollEnabled={true}
+        contentContainerStyle={{ gap: 5 }}
+      >
+        {BireyselTab.map((item, index) => (
+          <TouchableOpacity
+            key={index}
+            style={[
+              styles.TabBarBtn,
+              {
+                borderBottomWidth: tab === index ? 3 : 0,
+                borderBottomColor: tab === index ? "#EA2C2E" : "transparent",
+                top: 2,
+              },
+            ]}
+            onPress={() => settab(index)}
+          >
+            <Text
+              style={{
+                color: tab === index ? "#EA2C2E" : "grey",
+                fontWeight: tab === index ? "500" : "normal",
+              }}
+            >
+              {item.text}
+            </Text>
+          </TouchableOpacity>
+        ))}
+      </ScrollView>
+    );
+  };
+  const BireyselTabPages = () => {
+    return (
+      <>
+        {tab === 0 && (
+          <RealtorAdverts
+            storeID={storeID}
+            openEstateFilter={openEstateFilter}
+            setOpenEstateFilter={setOpenEstateFilter}
+          />
+        )}
+        {tab === 1 && <ShopInfo data={storeData} loading={loading} />}
+        {tab === 2 && <CommentsOfBrands id={id} />}
+      </>
+    );
+  };
   const renderFranchiseTabPages = () => {
     return (
       <>
@@ -617,6 +681,8 @@ export default function Profile() {
         return renderUretici();
       case corporateType === "Turizm Amaçlı Kiralama":
         return renderTourismOfficeTab();
+      case !corporateType:
+        return renderBireyselTab();
       default:
         break;
     }
@@ -634,6 +700,8 @@ export default function Profile() {
         return renderUreticiPages();
       case corporateType === "Turizm Amaçlı Kiralama":
         return renderTourismTabPages();
+      case !corporateType:
+        return BireyselTabPages();
       default:
         break;
     }
@@ -657,7 +725,8 @@ export default function Profile() {
     "İnşaat Ofisi-1": () => setOpenEstateFilter(true), // Tab 1 - RealtorAdverts
     "Emlak Ofisi-0": () => setOpenEstateFilter(true), // Emlak Ofisi için
     "Üretici-0": () => setOpenEstateFilter(true), // Üretici için
-    "Turizm Amaçlı Kiralama-0": () => setOpenEstateFilter(true), // Turizm Amaçlı Kiral
+    "Turizm Amaçlı Kiralama-0": () => setOpenEstateFilter(true),
+    "null-0": () => setOpenEstateFilter(true),
   };
 
   const handlerFilterAction = () => {
@@ -839,25 +908,26 @@ export default function Profile() {
                 height: "auto",
               }}
             >
-              {((corporateType == "İnşaat Ofisi" && (tab == 0 || tab == 1)) ||
+              {(corporateType == "İnşaat Ofisi" && (tab == 0 || tab == 1)) ||
                 (corporateType == "Emlak Ofisi" && tab == 0) ||
                 (corporateType == "Turizm Amaçlı Kiralama" && tab == 0) ||
-                (corporateType == "Üretici" && tab == 0)) && (
-                <TouchableOpacity
-                  onPress={handlerFilterAction}
-                  style={{
-                    justifyContent: "center",
-                    alignItems: "center",
-                    borderWidth: 1,
-                    borderColor: "#EA2B2E",
-                    backgroundColor: "#ffffff",
-                    padding: 10,
-                    borderRadius: 4,
-                  }}
-                >
-                  <Image source={Filter} style={{ width: 16, height: 16 }} />
-                </TouchableOpacity>
-              )}
+                (corporateType == "Üretici" && tab == 0) ||
+                (!corporateType && tab == 0 && (
+                  <TouchableOpacity
+                    onPress={handlerFilterAction}
+                    style={{
+                      justifyContent: "center",
+                      alignItems: "center",
+                      borderWidth: 1,
+                      borderColor: "#EA2B2E",
+                      backgroundColor: "#ffffff",
+                      padding: 10,
+                      borderRadius: 4,
+                    }}
+                  >
+                    <Image source={Filter} style={{ width: 16, height: 16 }} />
+                  </TouchableOpacity>
+                ))}
               {corporateType == "Emlak Ofisi" &&
               storeData?.data?.is_brand == 1 ? (
                 <TouchableOpacity
