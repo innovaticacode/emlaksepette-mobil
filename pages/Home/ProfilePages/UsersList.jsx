@@ -33,8 +33,6 @@ export default function UsersList() {
   const [user, setuser] = useState({});
   const [SuccessDelete, setSuccessDelete] = useState(false);
   const [selectedUser, setselectedUser] = useState(0);
-  const [selectedUserName, setselectedUserName] = useState("");
-  const [SelecteduserID, setSelecteduserID] = useState(0);
   const [SelectedUserIDS, setSelectedUserIDS] = useState([]);
   const [openDeleteModal, setopenDeleteModal] = useState(false);
   const [isChoosed, setisChoosed] = useState(false);
@@ -72,26 +70,52 @@ export default function UsersList() {
     fetchData();
   }, [user, isfocused]);
 
+  useEffect(() => {
+    // console.log("sub-users-------------->", subUsers);
+  }, [subUsers]);
+
   const DeleteUser = async () => {
     setloading(true);
 
     try {
       if (user.access_token) {
-        const response = await axios.delete(
-          `${apiUrl}institutional/users/${selectedUser}`,
-          {
-            headers: {
-              Authorization: `Bearer ${user.access_token}`,
+        try {
+          console.log("selectedUser", selectedUser);
+          const response = await axios.put(
+            `${apiUrl}institutional/users/${selectedUser?.id}`,
+            {
+              name: selectedUser?.name,
+              email: selectedUser?.email,
+              title: selectedUser?.title,
+              mobile_phone: selectedUser?.mobile_phone,
+              type: selectedUser?.type,
+              is_active: true,
             },
+            {
+              headers: {
+                Authorization: `Bearer ${user?.access_token}`,
+                "Content-Type": "application/json",
+              },
+            }
+          );
+
+          console.log("Kullanıcı başarıyla güncellendi:", response.data);
+        } catch (error) {
+          if (error.response) {
+            console.error("Sunucudan dönen hata:", error.response.data);
+          } else {
+            console.error("İstek sırasında hata oluştu:", error.message);
           }
-        );
+        }
+
+        console.log("DELETE Response:", response.data);
 
         if (response.status === 200) {
           setTimeout(() => {
             Dialog.show({
               type: ALERT_TYPE.SUCCESS,
               title: "Başarılı",
-              textBody: `${selectedUserName} Adlı kullanıcı silindi.`,
+              textBody: `${selectedUser.name} Adlı kullanıcı silindi.`,
               button: "Tamam",
               onHide: () => {
                 fetchData();
@@ -110,11 +134,9 @@ export default function UsersList() {
 
   const GetId = (UserID, name) => {
     setselectedUser(UserID);
-    setselectedUserName(name);
   };
 
   const getUserID = (UserID) => {
-    setSelecteduserID(UserID);
     setSelectedUserIDS((prevIds) => {
       if (prevIds.includes(UserID)) {
         return prevIds.filter((item) => item !== UserID);
@@ -221,7 +243,7 @@ export default function UsersList() {
               textAlign: "center",
               margin: 5,
             }}
-            title={`${selectedUserName} adlı kullanıcıyı silmek istediğinize emin misiniz?`}
+            title={`${selectedUser.name} adlı kullanıcıyı silmek istediğinize emin misiniz?`}
             messageStyle={{ textAlign: "center" }}
             closeOnTouchOutside={true}
             closeOnHardwareBackPress={false}
@@ -279,7 +301,7 @@ export default function UsersList() {
               textAlign: "center",
               margin: 5,
             }}
-            title={`${selectedUserName} adlı kullanıcıyı silmek istediğinize emin misiniz?`}
+            title={`${selectedUser.name} adlı kullanıcıyı silmek istediğinize emin misiniz?`}
             messageStyle={{ textAlign: "center" }}
             closeOnTouchOutside={true}
             closeOnHardwareBackPress={false}
@@ -348,7 +370,7 @@ export default function UsersList() {
                 <Text
                   style={{ fontSize: 13, fontWeight: "700", color: "#333" }}
                 >
-                  Tümünü Sil
+                  Tümünü Pasife Al
                 </Text>
               </TouchableOpacity>
 
@@ -481,7 +503,7 @@ export default function UsersList() {
                     borderRadius: 5,
                   }}
                 >
-                  <Text style={{ color: "white" }}>Kullanıcıyı Sil</Text>
+                  <Text style={{ color: "white" }}>Kullanıcıyı Pasife Al</Text>
                 </TouchableOpacity>
               </View>
             </View>
@@ -504,7 +526,7 @@ export default function UsersList() {
                 { gap: 10, alignItems: "center", justifyContent: "center" },
               ]}
             >
-              <Text>{selectedUserName} adlı Kullanıcınız silindi</Text>
+              <Text>{selectedUser.name} adlı Kullanıcınız silindi</Text>
             </View>
           </ModalEdit>
         </ScrollView>

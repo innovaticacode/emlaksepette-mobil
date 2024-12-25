@@ -74,7 +74,7 @@ export default function SubUser({
             <TouchableOpacity
               onPress={() => {
                 setModalVisible(true);
-                GetId(item.id, item.name);
+                GetId(item);
               }}
             >
               <Icon name="dots-three-vertical" size={25} color={"#333"} />
