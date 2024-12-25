@@ -374,7 +374,7 @@ export default function UsersList() {
                 </Text>
               </TouchableOpacity>
 
-              <TouchableOpacity
+              {/* <TouchableOpacity
                 style={styles.btnRemove}
                 onPress={() => {
                   setisShowDeleteButon(!isShowDeleteButon);
@@ -387,7 +387,7 @@ export default function UsersList() {
                 >
                   {isChoosed == true ? "Seçimi İptal Et" : "Toplu Seç"}
                 </Text>
-              </TouchableOpacity>
+              </TouchableOpacity> */}
             </View>
 
             {isShowDeleteButon == true && (
