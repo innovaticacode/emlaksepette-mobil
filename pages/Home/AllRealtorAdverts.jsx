@@ -7,7 +7,6 @@ import {
   TouchableOpacity,
   ImageBackground,
   FlatList,
-  Dimensions,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import { useRoute, useNavigation } from "@react-navigation/native";
@@ -20,19 +19,15 @@ import RNPickerSelect from "react-native-picker-select";
 
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 
-import { getValueFor } from "../../components/methods/user";
-
 import SortModal from "../../components/SortModal";
 import { apiUrl, frontEndUriBase } from "../../components/methods/apiRequest";
 import RealtorPost from "../../components/Card/RealtorCard/RealtorPost";
 import ViewFilter from "../../components/Filter/ViewFilter/ViewFilter";
 import FilterRealtor from "../../assets/filterRealtor.svg";
 export default function AllRealtorAdverts() {
-  console.log("AllRealtorAdverts");
   const [cityItems, setCityItems] = useState();
   const [state, setState] = useState({
     loading: true,
-    isDrawerOpen: false,
     isHidden: false,
     selectedCity: "",
     selectedProjectStatus: "",
@@ -141,9 +136,6 @@ export default function AllRealtorAdverts() {
         county,
         hood,
       });
-
-      console.log(apiUrlFilter);
-
       fetchFilteredProjects(apiUrlFilter, null);
     } else {
       fetchFilteredProjects(buildApiUrl(params), null);
@@ -255,10 +247,6 @@ export default function AllRealtorAdverts() {
     setState((prevState) => ({ ...prevState, selectedNeighborhood: value }));
   };
 
-  const onChangeProjectStatus = (value) => {
-    setState((prevState) => ({ ...prevState, selectedProjectStatus: value }));
-  };
-
   const [filterData, setFilterData] = useState({}); // filterData için bir state değişkeni tanımla
 
   const handleFilterSubmit = () => {
@@ -335,10 +323,6 @@ export default function AllRealtorAdverts() {
         setIsLoadingMore(true); // Daha fazla veri yükleme işlemi başlıyor
       }
 
-      console.log(filterData);
-      console.log("take", take);
-      console.log("skip", skip);
-
       const response = await axios.get(apiUrlFilter, {
         params: {
           ...filterData,
@@ -389,7 +373,7 @@ export default function AllRealtorAdverts() {
       };
 
       // Eğer sonuçlar boşsa durum mesajını güncelle
-      if (data.secondhandHousings?.length == 0 && isInitialLoad) {
+      if (data.secondhandHousings?.length == 0 || ([] && isInitialLoad)) {
         newState.searchStatus = "Sonuç bulunamadı";
       }
 
@@ -501,18 +485,6 @@ export default function AllRealtorAdverts() {
     }));
   };
 
-  const toggleDrawer = () => {
-    setState((prevState) => ({
-      ...prevState,
-      isDrawerOpen: !prevState.isDrawerOpen,
-    }));
-  };
-  const [index, setindex] = useState(0);
-  const [tab, settab] = useState(0);
-  const [user, setuser] = useState({});
-  useEffect(() => {
-    getValueFor("user", setuser);
-  }, []);
   const [showViewModal, setshowViewModal] = useState(false);
   const [selectedView, setselectedView] = useState(0);
   const [chekView, setchekView] = useState(false);
@@ -530,29 +502,6 @@ export default function AllRealtorAdverts() {
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
-      {/* <Header onPress={toggleDrawer} tab={settab} index={setindex} /> */}
-
-      <Modal
-        swipeDirection="left"
-        onSwipeComplete={() =>
-          setState((prevState) => ({ ...prevState, isDrawerOpen: false }))
-        }
-        onSwipeThreshold={(gestureState) => ({
-          horizontal: gestureState.ly > Dimensions.get("window").width / 10,
-        })}
-        isVisible={state.isDrawerOpen}
-        onBackdropPress={() =>
-          setState((prevState) => ({ ...prevState, isDrawerOpen: false }))
-        }
-        animationIn="bounceInLeft"
-        animationOut="bounceOutLeft"
-        style={styles.modal}
-      >
-        {/* <View style={styles.modalContent}>
-          <DrawerMenu setIsDrawerOpen={setState} />
-        </View> */}
-      </Modal>
-
       <View
         style={{
           flexDirection: "row",
