@@ -23,7 +23,7 @@ import NoDataScreen from "../../components/NoDataScreen";
 import { apiUrl } from "../../components/methods/apiRequest";
 export default function CreateCollections() {
   const route = useRoute();
-  const { HouseID } = route.params;
+  const { HouseID, ProjectId } = route.params;
   const [CollectionName, setCollectionName] = useState("");
   const [user, setUser] = useState({});
   const [collections, setcollections] = useState([]);
@@ -101,8 +101,8 @@ export default function CreateCollections() {
       collection_name: CollectionName,
       cart: {
         id: HouseID,
-        type: null,
-        project: null,
+        type: ProjectId ? "project" : null,
+        project: ProjectId ? ProjectId : null,
         clear_cart: "no",
         selectedCollectionId: null,
       },
@@ -147,9 +147,9 @@ export default function CreateCollections() {
       collection_name: name,
       clear_cart: "no",
       id: HouseID,
-      project: null,
+      item_id: ProjectId ? ProjectId : HouseID,
       selectedCollectionId: id,
-      type: 2,
+      type: ProjectId ? 1 : 2,
     };
 
     axios
@@ -181,10 +181,10 @@ export default function CreateCollections() {
                 ...collection.links,
                 {
                   collection_id: id,
-                  room_order: null,
-                  item_id: HouseID,
+                  room_order: ProjectId ? HouseID : null,
+                  item_id: ProjectId ? ProjectId : HouseID,
                   user_id: user?.id,
-                  item_type: 2,
+                  item_type: ProjectId ? 1 : 2,
                 },
               ],
             };
@@ -204,13 +204,25 @@ export default function CreateCollections() {
     let check = false;
     collections.map((collection) => {
       for (var i = 0; i < collection?.links?.length; i++) {
-        if (
-          (collection.links[i].item_type =
-            2 &&
-            collection.links[i].item_id == HouseID &&
-            collection.links[i].collection_id == collectionId)
-        ) {
-          check = true;
+        if (ProjectId) {
+          if (
+            (collection.links[i].item_type =
+              1 &&
+              collection.links[i].item_id == ProjectId &&
+              collection.links[i].room_order == HouseID &&
+              collection.links[i].collection_id == collectionId)
+          ) {
+            check = true;
+          }
+        } else {
+          if (
+            (collection.links[i].item_type =
+              2 &&
+              collection.links[i].item_id == HouseID &&
+              collection.links[i].collection_id == collectionId)
+          ) {
+            check = true;
+          }
         }
       }
     });
@@ -219,9 +231,9 @@ export default function CreateCollections() {
   };
   const removeItemOnCollection = (collectionId, name) => {
     const collectionData = {
-      item_type: 2,
-
-      item_id: HouseID,
+      item_type: ProjectId ? 1 : 2,
+      room_order: HouseID,
+      item_id: ProjectId ? ProjectId : HouseID,
       collection_id: collectionId,
     };
 
@@ -240,15 +252,21 @@ export default function CreateCollections() {
             user.type == 2 && user.corporate_type == "Emlak Ofisi"
               ? `${name} Adlı portföyden 1 konut silindi`
               : `${name} Adlı koleksiyondan 1 konut silindi`,
+          button: "Tamam",
+          onHide: () => {
+            fetchData();
+          },
         });
 
         var newCollections = collections.map((collection) => {
           if (collection.id == collectionId) {
             var newLinks = collection.links.filter((link) => {
               if (
-                link.collection_id == collectionId &&
-                link.item_id == HouseID &&
-                link.room_order == null
+                link.collection_id == collectionId && link.item_id == ProjectId
+                  ? ProjectId
+                  : HouseID && link.room_order == ProjectId
+                  ? HouseID
+                  : null
               ) {
               } else {
                 return link;
@@ -300,7 +318,7 @@ export default function CreateCollections() {
       });
     }
   }, [loading, namFromGetUser, navigation]);
-  console.log(user.access_token, namFromGetUser.has_club);
+
   return (
     <AlertNotificationRoot>
       <>

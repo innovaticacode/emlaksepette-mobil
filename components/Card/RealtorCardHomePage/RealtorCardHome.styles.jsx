@@ -1,16 +1,15 @@
-
 import { Platform } from "react-native";
 import { StyleSheet } from "react-native";
 
 export const styles = StyleSheet.create({
   cardContainer: {
     backgroundColor: "#FFFFFF",
-  padding:10,
-    borderRadius:3,
-    gap:8,
-    flexDirection:'column',
-    justifyContent:'space-between',
- 
+    padding: 10,
+    borderRadius: 3,
+    gap: 8,
+    flexDirection: "column",
+    justifyContent: "space-between",
+
     borderColor: "#e6e6e6",
     ...Platform.select({
       ios: {
@@ -31,18 +30,17 @@ export const styles = StyleSheet.create({
   ımage: {
     width: "100%",
     height: "100%",
-    
   },
-  addCardBtn:{
-    padding:8,
-    backgroundColor:'#EA2B2E',
-    borderRadius:5
+  addCardBtn: {
+    padding: 8,
+    backgroundColor: "#EA2B2E",
+    borderRadius: 5,
   },
-  butonText:{
-  color:'white',
-  fontSize:12,
-  fontWeight:'700',
-  textAlign:'center'
+  butonText: {
+    color: "white",
+    fontSize: 12,
+    fontWeight: "700",
+    textAlign: "center",
   },
   ıconContainer: {
     width: 28,
@@ -51,9 +49,9 @@ export const styles = StyleSheet.create({
     justifyContent: "center",
     borderRadius: 20,
     backgroundColor: "#FFFF",
-    position:'absolute',
-    right:5,
-    top:5,
+    position: "absolute",
+    right: 5,
+    top: 5,
     borderColor: "#e6e6e6",
     ...Platform.select({
       ios: {
@@ -66,5 +64,13 @@ export const styles = StyleSheet.create({
         elevation: 5,
       },
     }),
+  },
+  IconContainer: {
+    position: "absolute",
+    zIndex: 1,
+    flexDirection: "row",
+    right: 10,
+    gap: 10,
+    top: 5,
   },
 });

@@ -24,7 +24,7 @@ import { Polyline } from "react-native-maps";
 import AwesomeAlert from "react-native-awesome-alerts";
 import axios from "axios";
 import { getValueFor } from "./methods/user";
-
+import Bookmark from "react-native-vector-icons/FontAwesome";
 import * as SecureStore from "expo-secure-store";
 import {
   BookmarkStatus,
@@ -35,6 +35,7 @@ import {
 import PaymentPlanModal from "./PaymentPlanModal";
 import ShareProgressBar from "./ShareProgessBar";
 import { apiUrl, frontEndUriBase } from "./methods/apiRequest";
+import AddCollectionSheet from "./BottomModals/AddCollectionBottomModal/AddCollectionSheet";
 
 export default function Posts({
   project,
@@ -334,6 +335,7 @@ export default function Posts({
   };
 
   console.log(data?.neighborViews[roomOrder]?.user_id == user.id);
+  const [isVisible, setisVisible] = useState(false);
   return (
     <View style={styles.container}>
       <AwesomeAlert
@@ -533,12 +535,12 @@ export default function Posts({
                 justifyContent: bookmarkStatus ? "space-between" : "flex-end",
               }}
             >
-              {/* {BookmarkStatus.map((item) => (
+              {BookmarkStatus.map((item) => (
                 <TouchableOpacity
                   onPress={() => {
-                    changeBookmark();
-                    openCollection(roomOrder);
-                    GetID(roomOrder);
+                    // openCollection(roomOrder);
+                    // GetID(roomOrder);
+                    setisVisible(true);
                   }}
                 >
                   {sold ? (
@@ -561,8 +563,8 @@ export default function Posts({
                                 item.offsalePersonal.includes(
                                   Number(offSaleStatus)
                                 )
-                                ? "flex"
-                                : "none",
+                              ? "flex"
+                              : "none",
                         },
                       ]}
                     >
@@ -574,7 +576,7 @@ export default function Posts({
                     </View>
                   )}
                 </TouchableOpacity>
-              ))} */}
+              ))}
 
               <TouchableOpacity onPress={addFavorites}>
                 {sold || offSaleStatus == 1 ? (
@@ -1098,6 +1100,13 @@ export default function Posts({
         RoomOrder={roomOrder}
         deposit_rate={data?.project?.deposit_rate}
         addToCard={AddCartModal}
+      />
+      <AddCollectionSheet
+        isVisible={isVisible}
+        setIsVisible={setisVisible}
+        ProjectId={data?.project?.id}
+        roomOrder={roomOrder}
+        type={1}
       />
     </View>
   );
