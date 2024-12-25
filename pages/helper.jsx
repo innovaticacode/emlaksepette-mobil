@@ -464,3 +464,14 @@ export const TourismAcent = [
     tab: 3,
   },
 ];
+export const BireyselTab = [
+  {
+    text: "İlanlarım",
+  },
+  {
+    text: "İletişim Bilgilerim",
+  },
+  {
+    text: "Değerlendirmelerim",
+  },
+];
