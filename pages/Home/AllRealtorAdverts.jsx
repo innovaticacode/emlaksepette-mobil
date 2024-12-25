@@ -389,7 +389,7 @@ export default function AllRealtorAdverts() {
       };
 
       // Eğer sonuçlar boşsa durum mesajını güncelle
-      if (data.secondhandHousings?.length == 0 && isInitialLoad) {
+      if (data.secondhandHousings?.length == 0 || ([] && isInitialLoad)) {
         newState.searchStatus = "Sonuç bulunamadı";
       }
 
