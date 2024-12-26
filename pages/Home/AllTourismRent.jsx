@@ -6,7 +6,6 @@ import {
   Text,
   FlatList,
   StyleSheet,
-
   ImageBackground,
 } from "react-native";
 import { ALERT_TYPE, Dialog } from "react-native-alert-notification";
@@ -15,23 +14,18 @@ import { apiUrl, frontEndUriBase } from "../../components/methods/apiRequest";
 import { useRoute } from "@react-navigation/native";
 import { ActivityIndicator } from "react-native-paper";
 
-
-
 export default function AllTourismRent(prosp) {
   const { navigation } = prosp;
   const [tourismBrand, setTourismBrand] = useState([]);
   const [loading, setLoading] = useState(true);
-  const route =useRoute()
-  const {brandName}=route.params
+  const route = useRoute();
+  const { brandName } = route.params;
   const fetchFeaturedStores = async () => {
+    setLoading(true);
     try {
-      const response = await axios.get(
-        `${apiUrl}markalar/${brandName}`
-      );
-      if (response?.data?.markalar?.length > 0) {
-        setTourismBrand(response?.data?.markalar);
-      }
-      setLoading(false);
+      const response = await axios.get(`${apiUrl}markalar/${brandName}`);
+
+      setTourismBrand(response?.data?.data?.markalar);
     } catch (error) {
       Dialog.show({
         type: ALERT_TYPE.DANGER,
@@ -43,9 +37,10 @@ export default function AllTourismRent(prosp) {
         },
       });
       setLoading(false);
+    } finally {
+      setLoading(false);
     }
   };
-  console.log(loading);
 
   useEffect(() => {
     fetchFeaturedStores();
@@ -54,13 +49,10 @@ export default function AllTourismRent(prosp) {
   return (
     <View style={styles.container}>
       {loading ? (
-        <ActivityIndicator
-          size="large"
-          color="#333"
-          style={styles.loading}
-        />
+        <ActivityIndicator size="large" color="#333" style={styles.loading} />
       ) : (
         <FlatList
+          contentContainerStyle={{ paddingBottom: 30 }}
           data={tourismBrand}
           keyExtractor={(item) =>
             item.id ? item.id.toString() : Math.random().toString()
