@@ -117,7 +117,7 @@ const styles = StyleSheet.create({
     paddingVertical: 5,
     paddingHorizontal: 5,
     width: "100%",
-
+    marginVertical: 6,
     borderWidth: 0.7,
     borderColor: "#e6e6e6",
     ...Platform.select({

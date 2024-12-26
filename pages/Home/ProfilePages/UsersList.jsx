@@ -42,6 +42,7 @@ export default function UsersList() {
   const [deleteUserModal, setdeleteUserModal] = useState(false);
   const [selectedUserDeleteModa, setselectedUserDeleteModa] = useState(false);
   const [showText, setshowText] = useState(false);
+  const [passiveSubUsers, setPassiveSubUsers] = useState([]);
 
   useEffect(() => {
     getValueFor("user", setuser);
@@ -56,8 +57,16 @@ export default function UsersList() {
             Authorization: `Bearer ${user.access_token}`,
           },
         });
-        setsubUsers(response.data.users);
-        return setloading(false);
+        const activeUsers = response.data.users.filter(
+          (user) => user.status != "5"
+        );
+        const passiveUsers = response.data.users.filter(
+          (user) => user.status == "5"
+        );
+
+        // Durumları ayarla
+        setsubUsers(activeUsers);
+        setPassiveSubUsers(passiveUsers);
       }
     } catch (error) {
       if (error.response) {
@@ -216,16 +225,97 @@ export default function UsersList() {
     }
   };
 
+  const [isPassive, setIsPassive] = useState(false);
+
+  const tabs = [
+    {
+      label: "Aktif Ekip Üyeleri",
+      isActive: !isPassive,
+      onPress: () => setIsPassive(false),
+    },
+    {
+      label: "Pasife Alınan Üyeler",
+      isActive: isPassive,
+      onPress: () => setIsPassive(true),
+    },
+  ];
+
+  // console.log(passiveSubUsers.length);
+  // console.log(subUsers.length);
+
   return (
     <AlertNotificationRoot>
+      <>
+        <View style={styles.sectionSelect}>
+          {tabs.map((tab, index) => (
+            <TouchableOpacity
+              key={index}
+              activeOpacity={0.8}
+              style={[
+                styles.memberButton,
+                tab.isActive ? styles.activeMembers : styles.passiveMembers,
+              ]}
+              onPress={tab.onPress}
+            >
+              <Text style={[styles.text, tab.isActive && styles.activeText]}>
+                {tab.label}
+              </Text>
+            </TouchableOpacity>
+          ))}
+        </View>
+      </>
       {loading ? (
         <View
           style={{ alignItems: "center", justifyContent: "center", flex: 1 }}
         >
           <ActivityIndicator size={"large"} color="#333" />
         </View>
-      ) : subUsers?.length > 0 ? (
-        <ScrollView style={styles.container} stickyHeaderIndices={[0]}>
+      ) : subUsers?.length || passiveSubUsers?.length > 0 ? (
+        <>
+          {isPassive ? (
+            passiveSubUsers.length > 0 ? (
+              <ScrollView style={styles.container} stickyHeaderIndices={[0]}>
+                {passiveSubUsers.map((item, index) => (
+                  <SubUser
+                    key={index}
+                    setModalVisible={setModalVisible}
+                    item={item}
+                    GetId={GetId}
+                    isChoosed={isChoosed}
+                    getUserID={getUserID}
+                  />
+                ))}
+              </ScrollView>
+            ) : (
+              <NoDataScreen
+                iconName={"account-off"}
+                buttonText={"Anasayfa"}
+                navigateTo={"Home"}
+                message={"Pasife alınan ekip üyesi bulunmamaktadır."}
+              />
+            )
+          ) : subUsers.length > 0 ? (
+            <ScrollView style={styles.container} stickyHeaderIndices={[0]}>
+              {subUsers.map((item, index) => (
+                <SubUser
+                  key={index}
+                  setModalVisible={setModalVisible}
+                  item={item}
+                  GetId={GetId}
+                  isChoosed={isChoosed}
+                  getUserID={getUserID}
+                />
+              ))}
+            </ScrollView>
+          ) : (
+            <NoDataScreen
+              iconName={"account-multiple-plus"}
+              buttonText={"Oluştur"}
+              navigateTo={"CreateUser"}
+              message={"Aktif Ekip Üyeniz Bulunmamaktadır"}
+            />
+          )}
+
           <AwesomeAlert
             show={openDeleteModal}
             showProgress={false}
@@ -351,38 +441,6 @@ export default function UsersList() {
               justifyContent: "space-between",
             }}
           >
-            <View style={{ flexDirection: "row", gap: 10 }}>
-              {/* <TouchableOpacity
-                style={styles.btnRemove}
-                onPress={() => {
-                  setdeleteAllUserType(true);
-                  const Users = subUsers.map((item) => item.id);
-                  setuserList(Users);
-                }}
-              >
-                <Text
-                  style={{ fontSize: 13, fontWeight: "700", color: "#333" }}
-                >
-                  Tümünü Pasife Al
-                </Text>
-              </TouchableOpacity> */}
-
-              {/* <TouchableOpacity
-                style={styles.btnRemove}
-                onPress={() => {
-                  setisShowDeleteButon(!isShowDeleteButon);
-                  setisChoosed(!isChoosed);
-                  setSelectedUserIDS([]);
-                }}
-              >
-                <Text
-                  style={{ fontSize: 13, fontWeight: "700", color: "#333" }}
-                >
-                  {isChoosed == true ? "Seçimi İptal Et" : "Toplu Seç"}
-                </Text>
-              </TouchableOpacity> */}
-            </View>
-
             {isShowDeleteButon == true && (
               <View
                 style={{ flexDirection: "row", gap: 9, alignItems: "center" }}
@@ -427,7 +485,7 @@ export default function UsersList() {
               </Text>
             </View>
           )}
-          <View style={{ gap: 10, padding: 5, paddingBottom: 100 }}>
+          {/* <View style={{ gap: 10, padding: 5, paddingBottom: 100 }}>
             {subUsers?.map((item, index) => (
               <SubUser
                 key={index}
@@ -438,7 +496,7 @@ export default function UsersList() {
                 getUserID={getUserID}
               />
             ))}
-          </View>
+          </View> */}
           <ModalEdit
             animationIn={"fadeInDown"}
             animationOut={"fadeOutDownBig"}
@@ -522,7 +580,7 @@ export default function UsersList() {
               <Text>{selectedUser.name} adlı Kullanıcınız silindi</Text>
             </View>
           </ModalEdit>
-        </ScrollView>
+        </>
       ) : (
         <NoDataScreen
           iconName={"account-multiple-plus"}
@@ -606,5 +664,29 @@ const styles = StyleSheet.create({
         elevation: 5,
       },
     }),
+  },
+  activeMembers: {
+    borderBottomWidth: 0.5,
+    borderColor: "#e63946",
+  },
+  passiveMembers: {
+    borderBottomWidth: 0.5,
+    borderColor: "#333",
+  },
+  sectionSelect: {
+    flexDirection: "row",
+    padding: 10,
+    gap: 10,
+    backgroundColor: "#FFF",
+  },
+  passiveText: {
+    fontWeight: "bold",
+    fontSize: 14,
+    color: "#333",
+  },
+  activeText: {
+    fontWeight: "bold",
+    fontSize: 14,
+    color: "#e63946",
   },
 });
