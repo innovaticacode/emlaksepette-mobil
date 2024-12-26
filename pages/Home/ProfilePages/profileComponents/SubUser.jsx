@@ -74,7 +74,7 @@ export default function SubUser({
             <TouchableOpacity
               onPress={() => {
                 setModalVisible(true);
-                GetId(item.id, item.name);
+                GetId(item);
               }}
             >
               <Icon name="dots-three-vertical" size={25} color={"#333"} />
@@ -102,7 +102,7 @@ export default function SubUser({
           )}
           {item.status == 5 && (
             <Text style={{ color: "#bc260f", fontSize: 13 }}>
-              Hesap Engellendi
+              Hesap Pasife Alındı
             </Text>
           )}
         </View>
@@ -117,7 +117,7 @@ const styles = StyleSheet.create({
     paddingVertical: 5,
     paddingHorizontal: 5,
     width: "100%",
-
+    marginVertical: 6,
     borderWidth: 0.7,
     borderColor: "#e6e6e6",
     ...Platform.select({
