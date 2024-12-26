@@ -433,7 +433,32 @@ export default function PaymentScreen2() {
           </View>
         </View>
       </View>
-
+      <View
+        style={{
+          flexDirection: "row",
+          width: "100%",
+          justifyContent: "space-between",
+        }}
+      >
+        <View
+          style={{
+            backgroundColor: "#EA2C2E",
+            borderRadius: 50,
+            width: 25,
+            height: 25,
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <IconIdCard name="info" color={"white"} />
+        </View>
+        <View style={{ width: "90%" }}>
+          <Text style={{ color: "#333", fontSize: 13, fontWeight: "600" }}>
+            Alıcı ve satıcı veya kiraya veren ve kiralayan arasında güvenli bir
+            işlem sağlamak amacıyla alınan bir ön ödemedir.
+          </Text>
+        </View>
+      </View>
       <View
         style={{
           flexDirection: "row",
