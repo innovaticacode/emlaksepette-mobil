@@ -580,7 +580,14 @@ export default function Profile() {
           />
         )}
         {tab === 2 && <Text>Ofislermizi</Text>}
-        {tab === 3 && <Team team={teamm} type={corporateType} />}
+        {tab === 3 && (
+          <Team
+            team={teamm}
+            type={corporateType}
+            isShowFiter={true}
+            isbrand={storeData?.data?.is_brand}
+          />
+        )}
         {tab === 4 && <Team team={teamm} type={corporateType} />}
         {tab === 5 && <Text>Birincilikler</Text>}
       </>
@@ -600,7 +607,9 @@ export default function Profile() {
 
         {tab === 2 && <ShopInfo data={storeData} loading={loading} />}
         {tab === 3 && <CommentsOfBrands id={id} />}
-        {tab === 4 && <Team team={teamm} type={corporateType} />}
+        {tab === 4 && (
+          <Team team={teamm} type={corporateType} isShowFiter={false} />
+        )}
       </>
     );
   };

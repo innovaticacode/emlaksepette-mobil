@@ -15,7 +15,7 @@ import Filter from "../../../assets/filterRealtor.svg";
 import { useNavigation } from "@react-navigation/native";
 import IconFilter from "react-native-vector-icons/MaterialCommunityIcons"; // import for icon
 
-export default function Team({ team, type }) {
+export default function Team({ team, type, isShowFiter, isbrand }) {
   const navigation = useNavigation();
   const [search, setSearch] = useState("");
 
@@ -39,14 +39,16 @@ export default function Team({ team, type }) {
           value={search}
           onChangeText={setSearch}
         />
-        <TouchableOpacity
-          activeOpacity={0.7}
-          style={styles.filter}
-          onPress={() => navigation.navigate("TeamFilter")}
-        >
-          <Filter width={16} height={16} style={{ marginRight: 6 }} />
-          <Text style={styles.filterText}>Filtrele</Text>
-        </TouchableOpacity>
+        {isShowFiter && isShowFiter && (
+          <TouchableOpacity
+            activeOpacity={0.7}
+            style={styles.filter}
+            onPress={() => navigation.navigate("TeamFilter")}
+          >
+            <Filter width={16} height={16} style={{ marginRight: 6 }} />
+            <Text style={styles.filterText}>Filtrele {isShowFiter}</Text>
+          </TouchableOpacity>
+        )}
       </View>
 
       {filteredTeam.length === 0 ? (
@@ -62,7 +64,7 @@ export default function Team({ team, type }) {
           renderItem={({ item }) => (
             <>
               <TouchableOpacity
-                disabled={type !== "Franchise Markası"}
+                disabled={isbrand && isbrand !== 1}
                 style={styles.main}
                 activeOpacity={0.8}
                 onPress={() =>
