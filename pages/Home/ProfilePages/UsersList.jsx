@@ -60,7 +60,11 @@ export default function UsersList() {
         return setloading(false);
       }
     } catch (error) {
-      console.error("Error fetching data:", error);
+      if (error.response) {
+        console.error("Sunucudan dönen hata:", error.response.data);
+      } else {
+        console.error("İstek sırasında hata oluştu:", error.message);
+      }
     } finally {
       setloading(false);
     }
@@ -70,26 +74,17 @@ export default function UsersList() {
     fetchData();
   }, [user, isfocused]);
 
-  useEffect(() => {
-    // console.log("sub-users-------------->", subUsers);
-  }, [subUsers]);
-
   const DeleteUser = async () => {
     setloading(true);
 
     try {
       if (user.access_token) {
         try {
-          console.log("selectedUser", selectedUser);
+          console.log("selectedUser", selectedUser.id);
           const response = await axios.put(
-            `${apiUrl}institutional/users/${selectedUser?.id}`,
+            `${apiUrl}institutional/users/${selectedUser?.id}/deactivate`,
             {
-              name: selectedUser?.name,
-              email: selectedUser?.email,
-              title: selectedUser?.title,
-              mobile_phone: selectedUser?.mobile_phone,
-              type: selectedUser?.type,
-              is_active: true,
+              should_deactivate_all: false,
             },
             {
               headers: {
@@ -99,7 +94,21 @@ export default function UsersList() {
             }
           );
 
-          console.log("Kullanıcı başarıyla güncellendi:", response.data);
+          if (response.status === 200) {
+            setTimeout(() => {
+              Dialog.show({
+                type: ALERT_TYPE.SUCCESS,
+                title: "Başarılı",
+                textBody: `${selectedUser.name} Adlı kullanıcı silindi.`,
+                button: "Tamam",
+                onHide: () => {
+                  fetchData();
+                },
+              });
+            }, 300);
+          }
+          setloading(false);
+          return setopenDeleteModal(false);
         } catch (error) {
           if (error.response) {
             console.error("Sunucudan dönen hata:", error.response.data);
@@ -109,22 +118,6 @@ export default function UsersList() {
         }
 
         console.log("DELETE Response:", response.data);
-
-        if (response.status === 200) {
-          setTimeout(() => {
-            Dialog.show({
-              type: ALERT_TYPE.SUCCESS,
-              title: "Başarılı",
-              textBody: `${selectedUser.name} Adlı kullanıcı silindi.`,
-              button: "Tamam",
-              onHide: () => {
-                fetchData();
-              },
-            });
-          }, 300);
-        }
-        setloading(false);
-        return setopenDeleteModal(false);
       }
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -359,7 +352,7 @@ export default function UsersList() {
             }}
           >
             <View style={{ flexDirection: "row", gap: 10 }}>
-              <TouchableOpacity
+              {/* <TouchableOpacity
                 style={styles.btnRemove}
                 onPress={() => {
                   setdeleteAllUserType(true);
@@ -372,7 +365,7 @@ export default function UsersList() {
                 >
                   Tümünü Pasife Al
                 </Text>
-              </TouchableOpacity>
+              </TouchableOpacity> */}
 
               {/* <TouchableOpacity
                 style={styles.btnRemove}
@@ -472,7 +465,7 @@ export default function UsersList() {
                   onPress={() => {
                     setModalVisible(false);
                     navigation.navigate("UpdateUsers", {
-                      UserID: selectedUser,
+                      UserID: selectedUser.id,
                       fetcData: fetchData,
                     });
                   }}

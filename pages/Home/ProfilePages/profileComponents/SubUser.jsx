@@ -102,7 +102,7 @@ export default function SubUser({
           )}
           {item.status == 5 && (
             <Text style={{ color: "#bc260f", fontSize: 13 }}>
-              Hesap Engellendi
+              Hesap Pasife Alındı
             </Text>
           )}
         </View>
