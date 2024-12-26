@@ -18,7 +18,7 @@ const InfoCard = ({
     await onPress();
   };
 
-  console.debug("----",date,description,name,surname,phone,eposta)
+  console.debug("----", date, description, name, surname, phone, eposta);
 
   return (
     <React.Fragment>
@@ -40,7 +40,7 @@ const InfoCard = ({
             <Text style={styles.subTitle}>E-posta: {eposta}</Text>
           </View>
           <View style={styles.rightArea}>
-            <Text style={styles.date}>{date}</Text>
+            <Text style={styles.date}>{isNaN(date)}</Text>
             {!description && (
               <ArrowRight
                 width={20}
