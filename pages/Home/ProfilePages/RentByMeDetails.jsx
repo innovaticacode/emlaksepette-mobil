@@ -199,7 +199,7 @@ export default function RentByMeDetails({ route }) {
         default:
           return (
             <Icon2
-              name={question - circle}
+              name={"question-circle"}
               size={20}
               color="#fff"
               style={{ marginRight: 5 }}
