@@ -220,7 +220,7 @@ export default function Company() {
         Franchise_question: IsConnectFranchaise,
         brand_id: FrancheiseMarc,
       };
-      const response = await axios.put(
+      const response = await axios.post(
         apiUrl + "corporate/account/application",
         data,
         {
@@ -230,6 +230,8 @@ export default function Company() {
           },
         }
       );
+
+      console.debug("response-postman", response.data);
 
       // İsteğin başarılı bir şekilde tamamlandığı durum
 
@@ -244,9 +246,10 @@ export default function Company() {
           button: "Doğrula",
 
           onHide: () => {
-            Navigation.navigate("Drawer", {
-              screen: "Home",
-            });
+            // Navigation.navigate("Drawer", {
+            //   screen: "Home",
+            // });
+            Navigation.replace("VerifyScreen");
           },
         });
       }, 700);

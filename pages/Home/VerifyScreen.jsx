@@ -89,7 +89,9 @@ const VerifyScreen = () => {
 
   useEffect(() => {
     if (namFromGetUser.phone_verification_status == 1) {
-      setCurrentPosition(namFromGetUser?.first_register_step + 1);
+      if (namFromGetUser?.first_register_step) {
+        setCurrentPosition(namFromGetUser?.first_register_step);
+      }
     } else {
       setCurrentPosition(0);
     }
