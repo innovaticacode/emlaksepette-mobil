@@ -6,7 +6,6 @@ import {
   TextInput,
   TouchableOpacity,
   ScrollView,
-  Dimensions,
 } from "react-native";
 import Icon from "react-native-vector-icons/AntDesign";
 import SearchItem from "../../components/SearchItem";
@@ -33,8 +32,6 @@ const getStoredSearchHistory = async () => {
   }
 };
 
-const { width } = Dimensions.get("window");
-
 export default function SearchPage({ navigation }) {
   const [searchTerm, setSearchTerm] = useState("");
   const [results, setResults] = useState({
@@ -49,6 +46,8 @@ export default function SearchPage({ navigation }) {
   });
   const [searchHistory, setSearchHistory] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [debounceTimeout, setDebounceTimeout] = useState(null);
+  const [isSearching, setIsSearching] = useState(false);
 
   // Fetch initial search history from local storage
   useEffect(() => {
@@ -65,6 +64,7 @@ export default function SearchPage({ navigation }) {
       if (!term.trim()) return;
 
       setLoading(true);
+      setIsSearching(true);
 
       try {
         const { data } = await axios.get(apiUrl + "get-search-list", {
@@ -87,9 +87,16 @@ export default function SearchPage({ navigation }) {
     [searchHistory]
   );
 
-  const handleSearchTerm = (term) => {
+  const handleChangeText = (term) => {
     setSearchTerm(term);
-    handleSearch(term);
+    setIsSearching(false);
+    if (debounceTimeout) clearTimeout(debounceTimeout);
+
+    const timeout = setTimeout(() => {
+      handleSearch(term);
+    }, 1000);
+
+    setDebounceTimeout(timeout);
   };
 
   const handleClearAllHistory = useCallback(() => {
@@ -110,11 +117,11 @@ export default function SearchPage({ navigation }) {
     const photoBaseUrl = {
       "Emlak İlanları": frontEndUriBase + "housing_images/",
       "Proje İlanları": frontEndUriBase,
-      Üyeler: `${frontEndUriBase}storage/profile_images`,
+      Üyeler: `${frontEndUriBase}storage/profile_images/`,
     }[type];
 
     const modifyPhotoUrl = (photo) => {
-      if (!photo) return photoBaseUrl + "indir.png";
+      if (!photo) return photoBaseUrl + "indir.jpg";
       return type === "Proje İlanları" || type === "Üyeler"
         ? `${photoBaseUrl}${photo.replace("public/", "storage/")}`
         : `${photoBaseUrl}${photo}`;
@@ -137,25 +144,23 @@ export default function SearchPage({ navigation }) {
             name={item.name}
             onPress={() => {
               const routes = {
-                "Emlak İlanları": "AllRealtorAdverts", // Emlak İlanları için yönlendirme
-                "Proje İlanları": "Details", // Proje İlanları için yönlendirme
-                Üyeler: "Profile", // Üyeler için yönlendirme
+                "Emlak İlanları": "AllRealtorAdverts",
+                "Proje İlanları": "Details",
+                Üyeler: "Profile",
               };
 
               const params = {
-                "Emlak İlanları": { houseId: item.id }, // Emlak İlanları için parametre
-                "Proje İlanları": { ProjectId: item.id }, // Proje İlanları için parametre
-                Üyeler: { id: item.id }, // Üyeler için parametre
+                "Emlak İlanları": { houseId: item.id },
+                "Proje İlanları": { ProjectId: item.id },
+                Üyeler: { id: item.id },
               };
 
-              // Eğer 'Proje İlanları' seçilmişse ve detaylar Drawer içinde
               if (type === "Proje İlanları") {
                 navigation.navigate("Drawer", {
-                  screen: "Details", // Details ekranı
-                  params: params[type], // Detayları geçir
+                  screen: "Details",
+                  params: params[type],
                 });
               } else {
-                // Diğer yönlendirmeler için
                 navigation.navigate(routes[type], params[type]);
               }
             }}
@@ -179,8 +184,7 @@ export default function SearchPage({ navigation }) {
           placeholder="Emlak, Proje veya Mağaza ara"
           placeholderTextColor="#999"
           value={searchTerm}
-          onChangeText={setSearchTerm}
-          onSubmitEditing={() => handleSearch(searchTerm)}
+          onChangeText={handleChangeText}
         />
       </View>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
@@ -193,10 +197,7 @@ export default function SearchPage({ navigation }) {
               </TouchableOpacity>
             </View>
             {searchHistory.map((term, index) => (
-              <TouchableOpacity
-                key={index}
-                onPress={() => handleSearchTerm(term)}
-              >
+              <TouchableOpacity key={index} onPress={() => handleSearch(term)}>
                 <View style={styles.historyItem}>
                   <Text style={styles.historyText}>{term}</Text>
                   <Icon name="right" size={16} color="#E70A12" />
@@ -207,10 +208,11 @@ export default function SearchPage({ navigation }) {
         )}
         {loading ? (
           <Text style={styles.loadingText}>Aranıyor...</Text>
-        ) : !results.housings.length &&
+        ) : isSearching &&
+          !results.housings.length &&
           !results.projects.length &&
           !results.merchants.length &&
-          searchTerm ? (
+          searchTerm.trim() !== "" ? (
           <Text style={styles.noResultsText}>Sonuç bulunamadı</Text>
         ) : (
           <>
@@ -245,7 +247,6 @@ const styles = StyleSheet.create({
   input: {
     flex: 1,
     paddingVertical: 8,
-    paddingLeft: 0,
     color: "#333",
     fontSize: 16,
   },
