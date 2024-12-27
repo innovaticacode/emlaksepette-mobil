@@ -80,40 +80,46 @@ export default function SalePageMain() {
       scrollEventThrottle={16}
       showsVerticalScrollIndicator={false}
     >
-      <AwesomeAlert
-        show={isUserHaveToken}
-        showProgress={false}
-        titleStyle={styles.alertTitle}
-        messageStyle={{ textAlign: "center" }}
-        message={`Başvuru yapabilmek için önce giriş yapmalısınız!`}
-        closeOnTouchOutside={true}
-        closeOnHardwareBackPress={false}
-        showCancelButton={true}
-        showConfirmButton={true}
-        cancelText="Kapat"
-        confirmText="Giriş Yap"
-        cancelButtonColor="#ce4d63"
-        confirmButtonColor="#1d8027"
-        onCancelPressed={closeModal}
-        onConfirmPressed={navigateToLogin}
-        confirmButtonTextStyle={{ marginLeft: 20, marginRight: 20 }}
-        cancelButtonTextStyle={{ marginLeft: 20, marginRight: 20 }}
-      />
-      <AwesomeAlert
-        show={isCorporateTypeRight}
-        showProgress={false}
-        titleStyle={styles.alertTitle}
-        messageStyle={{ textAlign: "center" }}
-        message={`Başvuru yapabilmek için emlak ofisi olmalısınız!`}
-        closeOnTouchOutside={true}
-        closeOnHardwareBackPress={false}
-        showCancelButton={true}
-        cancelText="Kapat"
-        cancelButtonColor="#ce4d63"
-        confirmButtonColor="#1d8027"
-        onCancelPressed={closeModal}
-        cancelButtonTextStyle={{ marginLeft: 20, marginRight: 20 }}
-      />
+      {isUserHaveToken && (
+        <AwesomeAlert
+          show={isUserHaveToken}
+          showProgress={false}
+          titleStyle={styles.alertTitle}
+          messageStyle={{ textAlign: "center" }}
+          message={`Başvuru yapabilmek için önce giriş yapmalısınız!`}
+          closeOnTouchOutside={true}
+          closeOnHardwareBackPress={false}
+          showCancelButton={true}
+          showConfirmButton={true}
+          cancelText="Kapat"
+          confirmText="Giriş Yap"
+          cancelButtonColor="#ce4d63"
+          confirmButtonColor="#1d8027"
+          onCancelPressed={closeModal}
+          onConfirmPressed={navigateToLogin}
+          confirmButtonTextStyle={{ marginLeft: 20, marginRight: 20 }}
+          cancelButtonTextStyle={{ marginLeft: 20, marginRight: 20 }}
+        />
+      )}
+
+      {isCorporateTypeRight && (
+        <AwesomeAlert
+          show={isCorporateTypeRight}
+          showProgress={false}
+          titleStyle={styles.alertTitle}
+          messageStyle={{ textAlign: "center" }}
+          message={`Başvuru yapabilmek için emlak ofisi olmalısınız!`}
+          closeOnTouchOutside={true}
+          closeOnHardwareBackPress={false}
+          showCancelButton={true}
+          cancelText="Kapat"
+          cancelButtonColor="#ce4d63"
+          confirmButtonColor="#1d8027"
+          onCancelPressed={closeModal}
+          cancelButtonTextStyle={{ marginLeft: 20, marginRight: 20 }}
+        />
+      )}
+
       <View style={{ backgroundColor: "#FFF", flex: 1 }}>
         <View style={{ paddingHorizontal: 30, paddingTop: 20, gap: 20 }}>
           <Image
