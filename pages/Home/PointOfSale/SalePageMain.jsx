@@ -179,6 +179,8 @@ export default function SalePageMain() {
               <FlatList
                 data={cardData}
                 keyExtractor={(item) => item?.id}
+                initialNumToRender={5}
+                windowSize={5}
                 horizontal
                 showsHorizontalScrollIndicator={false}
                 renderItem={({ item }) => (
