@@ -977,7 +977,7 @@ const StackScreenNavigator = () => {
               component={SeeNeigbourhood}
               options={({ route }) => ({
                 headerBackTitleVisible: false,
-                title: "Komşumu Gör",
+                title: "Komşunu Gör",
               })}
             />
             <Stack.Screen
@@ -1319,7 +1319,7 @@ const StackScreenNavigator = () => {
               name="Basket2"
               component={Basket2}
               options={({ route }) => ({
-                title: "Komşumu Gör Satın Alma",
+                title: "Komşunu Gör Satın Alma",
                 headerBackTitleVisible: false,
                 headerStyle: {
                   backgroundColor: "#f7f7f7",
@@ -1330,7 +1330,7 @@ const StackScreenNavigator = () => {
               name="PaymentScreen2"
               component={PaymentScreen2}
               options={({ route }) => ({
-                title: "Komşumu Gör Satın Alma",
+                title: "Komşunu Gör Satın Alma",
                 headerBackTitleVisible: false,
                 headerStyle: {
                   backgroundColor: "#f7f7f7",
