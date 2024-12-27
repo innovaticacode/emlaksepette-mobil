@@ -113,6 +113,7 @@ export default function RealtorPost({
       if (user.cartItem !== null) {
         setcartIsNull(true);
       } else {
+        console.log("Sepete Ekleme Fonksiyonu");
         setAddCartShow(true);
       }
     } else {
@@ -186,14 +187,15 @@ export default function RealtorPost({
     }
   };
   const addToCard = async () => {
-    const formData = new FormData();
-    formData.append("id", HouseId);
-    formData.append("isShare", null);
-    formData.append("numbershare", null);
-    formData.append("qt", 1);
-    formData.append("type", "housing");
-    formData.append("project", null);
-    formData.append("clear_cart", "no");
+    const formData = {
+      id: HouseId,
+      isShare: null,
+      numbershare: null,
+      qt: 1,
+      type: "housing",
+      project: null,
+      clear_cart: "no",
+    };
 
     try {
       if (user?.access_token) {
@@ -203,7 +205,7 @@ export default function RealtorPost({
           {
             headers: {
               Authorization: `Bearer ${user.access_token}`,
-              "Content-Type": "multipart/form-data",
+              "Content-Type": "application/json",
             },
           }
         );
