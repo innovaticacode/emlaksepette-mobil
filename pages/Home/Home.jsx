@@ -1,16 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { View, StyleSheet, Platform, Dimensions } from "react-native";
+import { View, StyleSheet, Platform, Dimensions, Text } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import Feather from "react-native-vector-icons/Feather";
 import ShareScreen from "./ShareScreen";
 import Test from "./Test";
 import Basket from "./Basket";
-import {
-  useFocusEffect,
-  useIsFocused,
-  useNavigation,
-} from "@react-navigation/native";
+import { useIsFocused, useNavigation } from "@react-navigation/native";
 import IconStore from "react-native-vector-icons/MaterialCommunityIcons";
 import ShoppingProfile from "./ShoppingProfile";
 import { getValueFor } from "../../components/methods/user";
@@ -24,16 +20,37 @@ import { apiUrl } from "../../components/methods/apiRequest";
 import VerifyScreen from "./VerifyScreen";
 const Tab = createBottomTabNavigator();
 
+const DynamicLabel = ({ label }) => {
+  const screenWidth = Dimensions.get("window").width;
+  const maxWidth = screenWidth / 5 - 10;
+
+  return (
+    <Text
+      style={{
+        fontSize: screenWidth > 400 ? 12 : 10,
+        color: "#000",
+        fontWeight: "500",
+        marginBottom: 4,
+        textAlign: "center",
+        maxWidth: maxWidth,
+      }}
+      numberOfLines={1}
+      ellipsizeMode="tail"
+    >
+      {label}
+    </Text>
+  );
+};
+
 const Home = ({ route }) => {
   const isFocused = useIsFocused();
   const dispatch = useDispatch();
-  const shoppingPage = useSelector((state) => state.menu.isShoppingProfile);
-  const nav = useNavigation();
 
   const basketItem = useSelector((state) => state.basket.basketItem);
 
   const [user, setUser] = useState({});
   const [verifyStatus, setverifyStatus] = useState(null);
+  const [userdata, setuserdata] = useState({});
 
   useEffect(() => {
     if (route?.params?.status == "login") {
@@ -50,8 +67,6 @@ const Home = ({ route }) => {
       getValueFor("PhoneVerify", setverifyStatus);
     }
   }, [isFocused]);
-
-  const [userdata, setuserdata] = useState({});
 
   const GetUserInfo = async () => {
     try {
@@ -73,23 +88,6 @@ const Home = ({ route }) => {
     GetUserInfo();
   }, [user]);
 
-  // if (userdata && user.access_token) {
-  //   if (user.type === 1 && verifyStatus === 0) {
-  //     setTimeout(() => nav.replace("VerifyScreen"), 100);
-  //   } else if (verifyStatus === 0 || userdata.corporate_account_status === 0) {
-  //     setTimeout(() => nav.replace("VerifyScreen"), 100);
-  //   }
-  // }
-
-  const handleTabPress = (e, navigation) => {
-    if (!user.access_token) {
-      e.preventDefault();
-      setTimeout(() => {
-        navigation.navigate("Login");
-      }, 400);
-    }
-  };
-
   return (
     <Tab.Navigator
       screenOptions={{
@@ -104,13 +102,13 @@ const Home = ({ route }) => {
         component={HomePage2}
         options={{
           title: "Ana Sayfa",
-
           headerShown: false,
+          tabBarLabel: () => <DynamicLabel label="Ana Sayfa" />,
           tabBarIcon: ({ color, focused }) => (
             <Ionicons
               name={focused ? "home" : "home-outline"}
               color={color}
-              size={25}
+              size={24}
             />
           ),
         }}
@@ -125,11 +123,12 @@ const Home = ({ route }) => {
         component={Test}
         options={{
           headerShown: false,
+          tabBarLabel: () => <DynamicLabel label="Favoriler" />,
           tabBarIcon: ({ color, focused }) => (
             <Ionicons
               name={focused ? "heart" : "heart-outline"}
               color={color}
-              size={25}
+              size={24}
             />
           ),
         }}
@@ -144,7 +143,7 @@ const Home = ({ route }) => {
         component={ShareScreen}
         options={{
           headerShown: false,
-          tabBarLabel: "İlan Ver",
+          tabBarLabel: () => <DynamicLabel label="İlan Ver" />,
           tabBarIcon: () => (
             <View style={styles.advertiseIconContainer}>
               <Ionicons
@@ -167,11 +166,12 @@ const Home = ({ route }) => {
         component={Basket}
         options={{
           headerShown: false,
-          tabBarIcon: ({ color, focused }) =>
+          tabBarLabel: () => <DynamicLabel label="Sepetim" />,
+          tabBarIcon: ({ focused }) =>
             focused ? (
-              <FontAwesome5Icon name="shopping-cart" color="black" size={20} />
+              <FontAwesome5Icon name="shopping-cart" color="black" size={24} />
             ) : (
-              <Feather name="shopping-cart" color="grey" size={20} />
+              <Feather name="shopping-cart" color="grey" size={24} />
             ),
           tabBarBadge: basketItem ? 1 : null,
           tabBarBadgeStyle: styles.tabBarBadgeStyle,
@@ -190,11 +190,17 @@ const Home = ({ route }) => {
             : ShoppingProfile
         }
         options={{
-          tabBarLabel: user.access_token
-            ? user.role === "Kurumsal Hesap"
-              ? "Panelim"
-              : "Hesabım"
-            : "Giriş Yap",
+          tabBarLabel: () => (
+            <DynamicLabel
+              label={
+                user.access_token
+                  ? user.role === "Kurumsal Hesap"
+                    ? "Panelim"
+                    : "Hesabım"
+                  : "Giriş Yap"
+              }
+            />
+          ),
           headerShown: false,
           tabBarIcon: ({ color, focused }) =>
             user.role === "Kurumsal Hesap" ? (
@@ -250,7 +256,6 @@ const styles = StyleSheet.create({
   },
   advertiseIcon: {
     borderRadius: 20,
-    left: 1.3,
     fontWeight: "700",
   },
   tabBarBadgeStyle: {

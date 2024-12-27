@@ -24,10 +24,17 @@ import { useDispatch, useSelector } from "react-redux";
 import { setNotificationsRedux } from "../store/slices/Notifications/NotificationsSlice";
 import { setUser } from "../store/user/UserSlice";
 import * as Device from "expo-device";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function Header({ showBack }) {
+  const insets = useSafeAreaInsets();
+
+  console.log("insets", insets);
+
   const isAndroidWithNotch =
     Platform.OS === "android" && Device.modelName.includes("Notch");
+
+  console.log("isAndroidWithNotch", isAndroidWithNotch);
 
   const dispatch = useDispatch();
   const navigation = useNavigation();
@@ -36,8 +43,9 @@ export default function Header({ showBack }) {
   const headerStyle = {
     backgroundColor: scheme === "dark" ? "#000" : "#fff",
   };
+  const hasNotch = insets.top > 20;
 
-  const checkNotch = isAndroidWithNotch ? { paddingTop: 30 } : {};
+  const checkNotch = isAndroidWithNotch || hasNotch ? { paddingTop: 30 } : {};
 
   const notificationCount = useSelector(
     (state) => state.notifications.notificationsCount
@@ -137,12 +145,8 @@ const styles = StyleSheet.create({
     justifyContent: "space-around",
     alignItems: "center",
     padding: 10,
-
     gap: 50,
-
     width: "100%",
-    // Android için paddingTop ekle
-    paddingTop: Platform.OS === "android" ? 30 : 0,
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
@@ -151,7 +155,6 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 1.84,
     elevation: 2,
-    marginTop: Platform.OS === "android" ? 6 : 0,
   },
   logoContainer: {
     width: 200,
