@@ -833,7 +833,7 @@ export default function UpgradeProfile() {
       Dialog.show({
         type: ALERT_TYPE.SUCCESS,
         title: "Başarılı",
-        textBody: "Mağaza Bilgileriniz başarıyla güncellendi.",
+        textBody: response?.data?.message,
         button: "Tamam",
         onHide: () => GetUserInfo(),
       });
@@ -1072,16 +1072,16 @@ export default function UpgradeProfile() {
             </View>
 
             <View style={{ width: "100%", alignItems: "center" }}>
-              {tab == 0 && user.type == 2 && personalChange === true && (
+              {user.type == 2 && personalChange === true && (
                 <View style={styles.mesg}>
-                  {tab == 0 && user.type == 2 && personalChange === true ? (
+                  {user.type == 2 && personalChange === true ? (
                     <View style={styles.messageBox}>
                       <Text style={styles.messageText}>
                         Profilinizi Güncelleme işlemi yaptınız, onay
                         bekliyorsunuz.
                       </Text>
                     </View>
-                  ) : tab == 0 && user.type == 1 && personalChange === true ? (
+                  ) : user.type == 1 && personalChange === true ? (
                     <View style={styles.messageBox}>
                       <Text style={styles.messageText}>
                         Kişisel Bilgilerinizi Güncelleme işlemi yaptınız, onay
