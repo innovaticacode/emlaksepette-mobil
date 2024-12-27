@@ -632,7 +632,7 @@ export default function PostDetail() {
     try {
       if (user?.access_token) {
         const response = await axios.post(
-          `${apiUrl}institutional/add_to_cart`,
+          `${apiUrl}institutional/add_to_cart_api`,
           formData,
           {
             headers: {
@@ -667,7 +667,7 @@ export default function PostDetail() {
     try {
       if (user?.access_token) {
         const response = await axios.post(
-          `${apiUrl}institutional/add_to_cart`,
+          `${apiUrl}institutional/add_to_cart_api`,
           formData,
           {
             headers: {

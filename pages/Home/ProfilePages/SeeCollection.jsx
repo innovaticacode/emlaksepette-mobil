@@ -375,7 +375,7 @@ export default function SeeCollection() {
     try {
       if (user?.access_token) {
         const response = await axios.post(
-          apiUrl + "institutional/add_to_cart",
+          apiUrl + "institutional/add_to_cart_api",
           formData,
           {
             headers: {
