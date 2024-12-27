@@ -22,22 +22,15 @@ import Prefabrik from "./Home Pages/Prefabrik";
 import BookHouse from "./Home Pages/BookHouse";
 import SellAcil from "./Home Pages/SellAcil";
 import Shared from "./Home Pages/Shared";
+import ReadyOffices from "./Home Pages/ReadyOffices/ReadyOffices";
 import Modal from "react-native-modal";
 import { useNavigation } from "@react-navigation/native";
 import FirstHome from "./FirstHome";
 import { apiUrl } from "../../components/methods/apiRequest";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { setBanners } from "../../store/slices/Banner/BannerSlice";
 
-const { width, height } = Dimensions.get("window");
-
-const FirstRoute = () => (
-  <View style={{ flex: 1, backgroundColor: "#ff4081" }} />
-);
-
-const SecondRoute = () => (
-  <View style={{ flex: 1, backgroundColor: "#673ab7" }} />
-);
+const { width } = Dimensions.get("window");
 
 const renderScene = ({ route, index }) => {
   switch (route.key) {
@@ -55,10 +48,12 @@ const renderScene = ({ route, index }) => {
       return <Prefabrik index={index} />;
     case "bookhouse":
       return <BookHouse index={index} />;
-    case "sellacil":
-      return <SellAcil index={index} />;
-    case "shared":
-      return <Shared index={index} />;
+    // case "sellacil":
+    //   return <SellAcil index={index} />;
+    // case "shared":
+    //   return <Shared index={index} />;
+    case "readyOffices":
+      return <ReadyOffices index={index} />;
     default:
       return null;
   }
@@ -78,9 +73,9 @@ const CustomTabBar = ({
   React.useEffect(() => {
     const fetchMenuItems = async () => {
       try {
-        const response = await axios.get(apiUrl + "menu-list");
+        const response = await axios.get(apiUrl + "menu-list-names");
         setMenuItems(response.data);
-        setMenuItems([{ text: "Anasayfa" }, ...response.data.slice(0, -1)]);
+        setMenuItems([{ text: "Anasayfa" }, ...response.data]);
       } catch (error) {
         console.error("Error fetching menu items:", error);
       }
@@ -179,8 +174,9 @@ export default function HomePage2() {
     { key: "area", title: "Area" },
     { key: "prefabrik", title: "Prefabrik" },
     { key: "bookhouse", title: "Bookhouse" },
-    { key: "sellacil", title: "Sellacil" },
-    { key: "shared", title: "Shared" },
+    // { key: "sellacil", title: "Sellacil" },
+    // { key: "shared", title: "Shared" },
+    { key: "readyOffices", title: "ReadyOffices" },
   ]);
   const indexChange = (index) => {
     setIndex(index);

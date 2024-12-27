@@ -125,7 +125,7 @@ export default function RentByMe() {
       getRentCategoriesAnItem(TabBarItem[0].value, currentPage); // Fetch initial page
     }
   }, [user, Tabs]); // Include Tabs as a dependency
-
+  console.log(RentItems);
   return (
     <View style={{ flex: 1 }}>
       <View style={styles.container}>

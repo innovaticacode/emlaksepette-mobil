@@ -12,7 +12,7 @@ import { useNavigation } from "@react-navigation/native";
 import Heart from "react-native-vector-icons/AntDesign";
 
 import Icon from "react-native-vector-icons/FontAwesome6";
-
+import Bookmark from "react-native-vector-icons/FontAwesome";
 import AwesomeAlert from "react-native-awesome-alerts";
 import axios from "axios";
 
@@ -113,6 +113,7 @@ export default function RealtorPost({
       if (user.cartItem !== null) {
         setcartIsNull(true);
       } else {
+        console.log("Sepete Ekleme Fonksiyonu");
         setAddCartShow(true);
       }
     } else {
@@ -186,14 +187,15 @@ export default function RealtorPost({
     }
   };
   const addToCard = async () => {
-    const formData = new FormData();
-    formData.append("id", HouseId);
-    formData.append("isShare", null);
-    formData.append("numbershare", null);
-    formData.append("qt", 1);
-    formData.append("type", "housing");
-    formData.append("project", null);
-    formData.append("clear_cart", "no");
+    const formData = {
+      id: HouseId,
+      isShare: null,
+      numbershare: null,
+      qt: 1,
+      type: "housing",
+      project: null,
+      clear_cart: "no",
+    };
 
     try {
       if (user?.access_token) {
@@ -203,7 +205,7 @@ export default function RealtorPost({
           {
             headers: {
               Authorization: `Bearer ${user.access_token}`,
-              "Content-Type": "multipart/form-data",
+              "Content-Type": "application/json",
             },
           }
         );
@@ -364,29 +366,6 @@ export default function RealtorPost({
                   navigation.navigate("Realtor details", { houseId: HouseId })
                 }
               >
-                {!sold && (
-                  <TouchableOpacity
-                    style={styles.heartBtn}
-                    activeOpacity={0.8}
-                    onPress={() => {
-                      addFavorites();
-                    }}
-                  >
-                    <View style={styles.ıconContainer}>
-                      <Heart
-                        name={heart}
-                        size={13}
-                        color={
-                          heart == "hearto"
-                            ? "#EA2C2E"
-                            : "red" || isFavorite === 1
-                            ? "red"
-                            : "black"
-                        }
-                      />
-                    </View>
-                  </TouchableOpacity>
-                )}
                 {openSharing === "Evet" && (
                   <View
                     style={{
@@ -426,53 +405,52 @@ export default function RealtorPost({
                     </Text>
                   </View>
 
-                  {/* 
-                <View
-                  style={{
-                    ...styles.ıcons, // Diğer stil özelliklerini ekleyin
-                    justifyContent:
-                      bookmarkStatus && bookmarkStatus == true
-                        ? "space-between"
-                        : "flex-end", // Koşula göre justifyContent özelliğini belirleyin
-                  }}
-                >
-                  {bookmarkStatus &&
-                    bookmarkStatus == true &&
-                    openSharing === "Evet" &&
-                    (user.role == "Bireysel Hesap" ||
-                      (user.role == "Kurumsal Hesap" &&
-                        user.corporate_type == "Emlak Ofisi")) && (
-                      <TouchableOpacity
-                        onPress={() => {
-                          CreateCollection(HouseId);
-                        }}
-                      >
-                        <View style={styles.ıconContainer}>
-                          <Bookmark
-                            name={bookmark}
-                            size={13}
-                            color={bookmark == "bookmark-o" ? "black" : "red"}
-                          />
-                        </View>
-                      </TouchableOpacity>
-                    )}
-
-                  <TouchableOpacity
-                    activeOpacity={0.8}
-                    onPress={() => {
-                      addFavorites();
+                  <View
+                    style={{
+                      ...styles.ıcons, // Diğer stil özelliklerini ekleyin
+                      justifyContent:
+                        bookmarkStatus && bookmarkStatus == true
+                          ? "space-between"
+                          : "flex-end",
+                      paddingRight: 10, // Koşula göre justifyContent özelliğini belirleyin
                     }}
                   >
-                    <View style={styles.ıconContainer}>
-                      <Heart
-                        name={heart}
-                        size={13}
-                        color={heart == "hearto" ? "black" : "red"}
-                      />
-                    </View>
-                  </TouchableOpacity> 
-                </View>
-                */}
+                    {bookmarkStatus &&
+                      bookmarkStatus == true &&
+                      openSharing === "Evet" &&
+                      (user.role == "Bireysel Hesap" ||
+                        (user.role == "Kurumsal Hesap" &&
+                          user.corporate_type == "Emlak Ofisi")) && (
+                        <TouchableOpacity
+                          onPress={() => {
+                            CreateCollection(HouseId);
+                          }}
+                        >
+                          <View style={styles.ıconContainer}>
+                            <Bookmark
+                              name={bookmark}
+                              size={13}
+                              color={bookmark == "bookmark-o" ? "black" : "red"}
+                            />
+                          </View>
+                        </TouchableOpacity>
+                      )}
+
+                    <TouchableOpacity
+                      activeOpacity={0.8}
+                      onPress={() => {
+                        addFavorites();
+                      }}
+                    >
+                      <View style={styles.ıconContainer}>
+                        <Heart
+                          name={heart}
+                          size={13}
+                          color={heart == "hearto" ? "black" : "red"}
+                        />
+                      </View>
+                    </TouchableOpacity>
+                  </View>
                 </View>
                 <View style={styles.location}>
                   <Icon name="location-dot" color={"#6b6b6b"} size={10} />
@@ -574,29 +552,52 @@ export default function RealtorPost({
           >
             <View style={{ gap: 7 }}>
               <View style={{ width: "100%", height: 180 }}>
-                {!sold && (
-                  <TouchableOpacity
-                    style={styles.heartBtn}
-                    activeOpacity={0.8}
-                    onPress={() => {
-                      addFavorites();
-                    }}
-                  >
-                    <View style={styles.ıconContainer2}>
-                      <Heart
-                        name={heart}
-                        size={15}
-                        color={
-                          heart == "hearto"
-                            ? "#EA2C2E"
-                            : "red" || isFavorite === 1
-                            ? "red"
-                            : "black"
-                        }
-                      />
-                    </View>
-                  </TouchableOpacity>
-                )}
+                <View style={styles.IconContainer}>
+                  {bookmarkStatus &&
+                    bookmarkStatus == true &&
+                    openSharing === "Evet" &&
+                    (user.role == "Bireysel Hesap" ||
+                      (user.role == "Kurumsal Hesap" &&
+                        user.corporate_type == "Emlak Ofisi")) && (
+                      <TouchableOpacity
+                        onPress={() => {
+                          CreateCollection(HouseId);
+                        }}
+                      >
+                        <View style={styles.ıconContainer2}>
+                          <Bookmark
+                            name={bookmark}
+                            size={15}
+                            color={bookmark == "bookmark-o" ? "black" : "red"}
+                          />
+                        </View>
+                      </TouchableOpacity>
+                    )}
+                  {!sold && (
+                    <TouchableOpacity
+                      style={styles.heartBtn}
+                      activeOpacity={0.8}
+                      onPress={() => {
+                        addFavorites();
+                      }}
+                    >
+                      <View style={styles.ıconContainer2}>
+                        <Heart
+                          name={heart}
+                          size={15}
+                          color={
+                            heart == "hearto"
+                              ? "#EA2C2E"
+                              : "red" || isFavorite === 1
+                              ? "red"
+                              : "black"
+                          }
+                        />
+                      </View>
+                    </TouchableOpacity>
+                  )}
+                </View>
+
                 <ImageBackground
                   source={{ uri: image }}
                   style={{ width: "100%", height: "100%" }}

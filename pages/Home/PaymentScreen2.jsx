@@ -27,6 +27,7 @@ import { io } from "socket.io-client";
 
 import WebView from "react-native-webview";
 import HTMLView from "react-native-htmlview";
+import ContratsActionSheet from "../../components/ContratsModal/ContratsActionSheet";
 import { getValueFor } from "../../components/methods/user";
 import {
   Dialog,
@@ -454,6 +455,8 @@ export default function PaymentScreen2() {
     return newErrors;
   };
 
+  const [isVisible, setIsVisible] = useState(false);
+  const [selectedUrl, setselectedUrl] = useState(null);
   return (
     <AlertNotificationRoot>
       <KeyboardAwareScrollView
@@ -758,7 +761,42 @@ export default function PaymentScreen2() {
                     Komşunu Gör Bilgi Güvenliği Politikası
                   </Text>
 
-                  <Text style={{ fontSize: 12 }}>okudum ve kabul ediyorum</Text>
+                  <Text style={{ fontSize: 12 }}>okudum kabul ediyorum</Text>
+                </View>
+              }
+            />
+            <ContratsActionSheet
+              url={selectedUrl}
+              isVisibleOpen={isVisible}
+              setIsVisible={setIsVisible}
+            />
+            <CheckBox
+              checked={checked}
+              onPress={toggleCheckbox}
+              // Use ThemeProvider to make change for all checkbox
+              iconType="material-community"
+              checkedIcon="checkbox-marked"
+              uncheckedIcon="checkbox-blank-outline"
+              containerStyle={{
+                padding: 0,
+                margin: 0,
+                marginRight: 0,
+                marginLeft: 0,
+              }}
+              size={21}
+              checkedColor="red"
+              title={
+                <View
+                  style={{
+                    alignItems: "center",
+                    justifyContent: "center",
+                    padding: 5,
+                  }}
+                >
+                  <Text numberOfLines={2} style={{ fontSize: 13 }}>
+                    Sözleşme aslını imzalamak için 7 iş günü içerisinde
+                    geleceğimi kabul ve beyan ediyorum
+                  </Text>
                 </View>
               }
             />

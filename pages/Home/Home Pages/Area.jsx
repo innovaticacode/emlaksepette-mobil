@@ -46,7 +46,9 @@ const Area = ({ index }) => {
 
   useEffect(() => {
     if (data && data.length > 0) {
-      setLoading(false); // Data yüklendiğinde loading state'i false yap
+      setLoading(false); // Veri yüklendi ve dolu
+    } else if (data && data.length === 0) {
+      setLoading(false); // Veri yüklendi ama boş
     }
   }, [data]);
 

@@ -149,7 +149,7 @@ export default function UpdateUsers() {
   const updateUser = async () => {
     setloadingUpdate(true);
     let formdata = new FormData();
-    formdata.append("_method", "PUT");
+    formdata.append("_method", "POST");
     formdata.append("name", nameAndSurname);
     formdata.append("title", title);
     formdata.append("email", email);
@@ -158,28 +158,25 @@ export default function UpdateUsers() {
     formdata.append("type", UserType);
     formdata.append("is_active", isActive);
 
-    if (image) {
-      // Normalize the URI for Android and get the proper mime type
+    if (image && image.uri) {
       const newImageUri =
         Platform.OS === "android"
           ? image.uri.replace("file:/", "file://") // Add "file://" for Android
           : image.uri.replace("file://", ""); // Clean for iOS
 
-      // Get the correct mime type using mime package
-      const mimeType = mime.getType(newImageUri) || "image/jpeg"; // Default to "image/jpeg" if not found
+      const mimeType = mime.getType(newImageUri) || "image/jpeg";
       formdata.append("profile_image", {
         uri: newImageUri,
-        type: mimeType, // Use the provided mime type
+        type: mimeType,
         name: image.fileName || "Image.jpeg",
       });
     }
 
-    console.debug("formdata", formdata);
-
     if (user?.access_token) {
-      console.debug("formdata", formdata.profile_image);
+      console.debug("formdata", formdata);
+
       try {
-        const response = await axios.put(
+        const response = await axios.post(
           `${apiUrl}institutional/users/${UserID}`, // URL
           formdata, // Güncellenen form verisi
           {
@@ -192,29 +189,33 @@ export default function UpdateUsers() {
         );
 
         setmessage(response.data.success);
-        Dialog.show({
-          type: ALERT_TYPE.SUCCESS,
-          title: "Başarılı",
-          textBody: "Başarılı bir şekilde güncelleme işlemi yaptınız",
-          button: "Tamam",
-        });
+        if (response.data.includes("başarıyla güncellendi")) {
+          Dialog.show({
+            type: ALERT_TYPE.SUCCESS,
+            title: "Başarılı",
+            textBody: response.data.success,
+            button: "Tamam",
+            onHide: () => {
+              // Navigate to UsersList
+              navigation.navigate("UsersList");
+            },
+          });
 
-        // Durumları sıfırla
-        setnameAndSurname("");
-        setemail("");
-        setpassword("");
-        settitle("");
-        setphoneNumber("");
-        setUserType("");
-
-        // Navigate to UsersList
-        navigation.navigate("UsersList");
+          // Durumları sıfırla
+          setnameAndSurname("");
+          setemail("");
+          setpassword("");
+          settitle("");
+          setphoneNumber("");
+          setUserType("");
+        }
       } catch (error) {
         // Hata ayrıntılarını yazdır
-        console.error(
-          "Error catch ---> :",
-          error.response ? error.response.data : error.message
-        );
+        if (error.response) {
+          console.error("Sunucudan dönen hata:", error.response.data);
+        } else {
+          console.error("İstek sırasında hata oluştu:", error.message);
+        }
 
         Dialog.show({
           type: ALERT_TYPE.WARNING,
@@ -231,6 +232,7 @@ export default function UpdateUsers() {
   };
 
   const getUserDetail = async () => {
+    console.log("user", UserID);
     setloading(true);
     try {
       if (user?.access_token) {
@@ -545,7 +547,9 @@ export default function UpdateUsers() {
                     onValueChange={toggleSwitch}
                     value={isEnabled}
                   />
-                  <Text style={[style.Label, { top: 5 }]}>Hesabı Engelle</Text>
+                  <Text style={[style.Label, { top: 5 }]}>
+                    Hesabı Pasife Al
+                  </Text>
                 </View>
               </View>
               <View style={{ width: "100%", alignItems: "center" }}>

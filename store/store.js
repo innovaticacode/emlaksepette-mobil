@@ -6,7 +6,7 @@ import SummarySlice from "./slices/Summary/Summary";
 import BannerSlice from "./slices/Banner/BannerSlice";
 import FilterProjectSlice from "./slices/FilterProject/FilterProjectSlice";
 import BasketSlice from "./slices/Basket/BasketSlice";
-
+import RealEstatesTypesSlice from "./slices/RealEstatesTypes/RealEstatesTypesSlice";
 import UserSlice, { fetchUser } from "./user/UserSlice";
 import { thunk } from "redux-thunk";
 
@@ -32,6 +32,7 @@ export const store = configureStore({
     mapFilters: FilterProjectSlice,
     banners: BannerSlice,
     basket: BasketSlice,
+    realEstatesTypes: RealEstatesTypesSlice,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(userAutoFetchMiddleware, thunk),

@@ -38,6 +38,7 @@ import { ActivityIndicator } from "react-native-paper";
 import CreditCartForReserve from "./ReservationPayment/CreditCartForReserve";
 import EftForReserve from "./ReservationPayment/EftForReserve";
 import HTMLView from "react-native-htmlview";
+import ContratsActionSheet from "../../components/ContratsModal/ContratsActionSheet";
 
 export default function PaymentScreenForReserve() {
   const [data, setData] = useState({});
@@ -253,7 +254,8 @@ export default function PaymentScreenForReserve() {
       { cancelable: false }
     );
   }, [isFocused]);
-
+  const [isVisible, setIsVisible] = useState(false);
+  const [selectedUrl, setselectedUrl] = useState(null);
   return (
     <>
       {loading ? (
@@ -458,6 +460,10 @@ export default function PaymentScreenForReserve() {
                 title={
                   <View style={{ padding: 5 }}>
                     <Text
+                      onPress={() => {
+                        setIsVisible(true);
+                        setselectedUrl("mesafeli-guvenli-kapora-sozlesmesi");
+                      }}
                       style={{ textDecorationLine: "underline", fontSize: 12 }}
                     >
                       Mesafeli kapora emanet sözleşmesini
@@ -466,6 +472,11 @@ export default function PaymentScreenForReserve() {
                     <Text style={{ fontSize: 12 }}>okudum kabul ediyorum</Text>
                   </View>
                 }
+              />
+              <ContratsActionSheet
+                url={selectedUrl}
+                setIsVisible={setIsVisible}
+                isVisibleOpen={isVisible}
               />
               <CheckBox
                 checked={checked}

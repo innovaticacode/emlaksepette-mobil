@@ -79,7 +79,7 @@ export default function UpgradeProfile() {
     }
   };
   const numericChange = (value) => {
-    return value.replace(/[^0-9]/g, "").substring(0, 10);
+    return value.replace(/[^0-9]/g, "").substring(0, 11);
   };
 
   const [cities, setCities] = useState([]);
@@ -113,7 +113,7 @@ export default function UpgradeProfile() {
   const initialFormData = {
     name: "",
     mobile_phone: "",
-    new_phone_number: "",
+
     store_name: "",
     username: "",
     authority_licence: "",
@@ -1172,11 +1172,6 @@ export default function UpgradeProfile() {
                                     handleInputChange(
                                       item.key,
                                       formatIban(value)
-                                    );
-                                  } else if (item.key === "new_phone_number") {
-                                    handleInputChange(
-                                      item.key,
-                                      formatPhoneNumberNew(value)
                                     );
                                   } else if (item.key === "phone") {
                                     handleInputChange(

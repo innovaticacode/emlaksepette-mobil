@@ -165,15 +165,8 @@ const RealEstateWallet = () => {
   }, [user]);
 
   const getStatusText = (item) => {
-    if (
-      item.status === "3" &&
-      item.should_payout == 1 &&
-      new Date(item.payout_date) > new Date()
-    ) {
-      return "Previzyon Bekliyor";
-    }
     if (item.status === "3") {
-      return "Onay Bekliyor";
+      return "Onay Veya Provizyon Bekliyor";
     }
     if (item.status === "2") {
       return "Reddedilen";

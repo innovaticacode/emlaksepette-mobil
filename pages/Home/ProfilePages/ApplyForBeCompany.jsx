@@ -31,6 +31,7 @@ import {
 } from "react-native-alert-notification";
 import { getValueFor } from "../../../components/methods/user";
 import { apiUrl } from "../../../components/methods/apiRequest";
+import ContratsActionSheet from "../../../components/ContratsModal/ContratsActionSheet";
 
 export default function Company() {
   const Navigation = useNavigation();
@@ -219,7 +220,7 @@ export default function Company() {
         Franchise_question: IsConnectFranchaise,
         brand_id: FrancheiseMarc,
       };
-      const response = await axios.put(
+      const response = await axios.post(
         apiUrl + "corporate/account/application",
         data,
         {
@@ -229,6 +230,8 @@ export default function Company() {
           },
         }
       );
+
+      console.debug("response-postman", response.data);
 
       // İsteğin başarılı bir şekilde tamamlandığı durum
 
@@ -243,9 +246,10 @@ export default function Company() {
           button: "Doğrula",
 
           onHide: () => {
-            Navigation.navigate("Drawer", {
-              screen: "Home",
-            });
+            // Navigation.navigate("Drawer", {
+            //   screen: "Home",
+            // });
+            Navigation.replace("VerifyScreen");
           },
         });
       }, 700);
@@ -692,6 +696,8 @@ export default function Company() {
     }
   };
   console.log(errorStatu);
+  const [isVisible, setIsVisible] = useState(false);
+  const [selectedUrl, setselectedUrl] = useState(null);
   return (
     <AlertNotificationRoot>
       <ScrollView behavior="padding" style={{ flex: 1 }} ref={scrollViewRef}>
@@ -1288,15 +1294,9 @@ export default function Company() {
             {/* Contracts */}
             <View style={styles.container}>
               <TouchableOpacity
-                onPress={() =>
-                  handleCheckboxChange(
-                    checked,
-                    setChecked,
-                    modalVisible,
-                    setModalVisible,
-                    "kurumsal-uyelik-sozlesmesi"
-                  )
-                }
+                onPress={() => {
+                  setChecked(!checked);
+                }}
                 style={styles.checkboxContainer}
               >
                 {checked ? (
@@ -1315,6 +1315,10 @@ export default function Company() {
                   ]}
                 >
                   <Text
+                    onPress={() => {
+                      setIsVisible(true);
+                      setselectedUrl("kurumsal-uyelik-sozlesmesi");
+                    }}
                     style={{
                       color: errorStatu === 15 ? "red" : "#027BFF",
                       fontSize: 13,
@@ -1326,15 +1330,9 @@ export default function Company() {
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity
-                onPress={() =>
-                  handleCheckboxChange(
-                    checked1,
-                    setChecked1,
-                    modalVisible2,
-                    setModalVisible2,
-                    "kvkk-politikasi"
-                  )
-                }
+                onPress={() => {
+                  setChecked1(!checked1);
+                }}
                 style={[styles.checkboxContainer]}
               >
                 {checked1 ? (
@@ -1353,6 +1351,12 @@ export default function Company() {
                   ]}
                 >
                   <Text
+                    onPress={() => {
+                      setIsVisible(true);
+                      setselectedUrl(
+                        "kisisel-verilerin-korunmasi-ve-islenmesi-politikasi"
+                      );
+                    }}
                     style={{
                       color: errorStatu === 15 ? "red" : "#027BFF",
                       fontSize: 13,
@@ -1365,15 +1369,7 @@ export default function Company() {
               </TouchableOpacity>
 
               <TouchableOpacity
-                onPress={() =>
-                  handleCheckboxChange(
-                    checked2,
-                    setChecked2,
-                    modalVisible3,
-                    setModalVisible3,
-                    "gizlilik-sozlesmesi-ve-aydinlatma-metni"
-                  )
-                }
+                onPress={() => setChecked2(!checked2)}
                 style={styles.checkboxContainer}
               >
                 {checked2 ? (
@@ -1392,6 +1388,10 @@ export default function Company() {
                   ]}
                 >
                   <Text
+                    onPress={() => {
+                      setIsVisible(true);
+                      setselectedUrl("gizlilik-sozlesmesi");
+                    }}
                     style={{
                       color: errorStatu === 15 ? "red" : "#027BFF",
                       fontSize: 13,
@@ -1402,7 +1402,11 @@ export default function Company() {
                   okudum onaylıyorum
                 </Text>
               </TouchableOpacity>
-
+              <ContratsActionSheet
+                url={selectedUrl}
+                isVisibleOpen={isVisible}
+                setIsVisible={setIsVisible}
+              />
               <TouchableOpacity
                 onPress={toggleCheked3}
                 style={styles.checkboxContainer}

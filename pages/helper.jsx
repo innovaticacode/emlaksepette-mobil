@@ -82,7 +82,7 @@ export const leftButtonsForPost = [
     type: [1, 2],
     isShowClient: 0,
     key: "AddBasket",
-    BackgroundColor: "#264ABB",
+    BackgroundColor: "#EA2B2E",
   },
   {
     title: "Sepete Ekle",
@@ -426,10 +426,7 @@ export const BuilderOffice = [
 ];
 export const Uretici = [
   {
-    text: "Toplu ilanlarımız",
-  },
-  {
-    text: "Tekli İlanlarımız",
+    text: "İlanlarımız",
   },
   {
     text: "Hakkımızda",
@@ -465,5 +462,16 @@ export const TourismAcent = [
   {
     text: "Ekibimiz",
     tab: 3,
+  },
+];
+export const BireyselTab = [
+  {
+    text: "İlanlarım",
+  },
+  {
+    text: "İletişim Bilgilerim",
+  },
+  {
+    text: "Değerlendirmelerim",
   },
 ];

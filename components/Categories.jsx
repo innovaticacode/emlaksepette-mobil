@@ -23,6 +23,8 @@ export default function Categories({ category, iconName, materialIcon }) {
     iconName = "trophy-variant";
   } else if (category == "Karavan") {
     iconName = "caravan";
+  } else if (category == "Hazır Ofis") {
+    iconName = "office-building-marker-outline";
   }
 
   return (

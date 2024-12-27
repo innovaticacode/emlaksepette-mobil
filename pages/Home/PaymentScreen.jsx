@@ -23,7 +23,11 @@ import * as DocumentPicker from "expo-document-picker";
 import { addDotEveryThreeDigits } from "../../components/methods/merhod";
 
 import { Platform } from "react-native";
-import { apiRequestGet, socketIO } from "../../components/methods/apiRequest";
+import {
+  apiRequestGet,
+  paymentUrl,
+  socketIO,
+} from "../../components/methods/apiRequest";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { WebView } from "react-native-webview";
 import { apiUrl, frontEndUriBase } from "../../components/methods/apiRequest";
@@ -40,6 +44,7 @@ import AbsoluteErrorInput from "../../components/custom_inputs/AbsoluteErrorInpu
 import axios from "axios";
 import { getValueFor } from "../../components/methods/user";
 import Toast from "react-native-toast-message";
+import ContratsActionSheet from "../../components/ContratsModal/ContratsActionSheet";
 export default function PaymentScreen() {
   // Kullanarak bu değerleri göstermek için devam edin
 
@@ -416,7 +421,7 @@ export default function PaymentScreen() {
   const formHtml = `
   <html>
       <body onload="javascript:moveWindow()">
-          <form name="pay_form" method="post" action=${process.env.EXPO_PUBLIC_PAYMENT_URL}>
+          <form name="pay_form" method="post" action=${paymentUrl}>
               <input type="hidden" name="clientid" value="${payResponse?.clientid}"/>
               <input type="hidden" name="callbackurl" value="${payResponse?.callbackurl}"/>
               <input type="hidden" name="amount" value="${payResponse?.amount}"/>
@@ -663,7 +668,8 @@ export default function PaymentScreen() {
       setParsed(parsedData);
     }
   }, [housing]);
-
+  const [isVisible, setIsVisible] = useState(false);
+  const [selectedUrl, setselectedUrl] = useState(null);
   return (
     <AlertNotificationRoot>
       <KeyboardAwareScrollView
@@ -1045,8 +1051,7 @@ export default function PaymentScreen() {
             <CheckBox
               checked={checked2}
               onPress={() => {
-                checked2 ? setModalVisible(false) : setModalVisible(true);
-                setChecked2(false);
+                setChecked2(!checked2);
               }}
               onLayout={(event) => handleLayout("checked2", event)}
               // Use ThemeProvider to make change for all checkbox
@@ -1065,6 +1070,10 @@ export default function PaymentScreen() {
               title={
                 <View style={{ padding: 5 }}>
                   <Text
+                    onPress={() => {
+                      setIsVisible(true);
+                      setselectedUrl("mesafeli-guvenli-kapora-sozlesmesi");
+                    }}
                     style={{ textDecorationLine: "underline", fontSize: 12 }}
                   >
                     Mesafeli kapora emanet sözleşmesini
@@ -1073,6 +1082,11 @@ export default function PaymentScreen() {
                   <Text style={{ fontSize: 12 }}>okudum kabul ediyorum</Text>
                 </View>
               }
+            />
+            <ContratsActionSheet
+              url={selectedUrl}
+              isVisibleOpen={isVisible}
+              setIsVisible={setIsVisible}
             />
             <CheckBox
               checked={checked}
@@ -1475,7 +1489,32 @@ export default function PaymentScreen() {
             )}
           </View>
         )}
-
+        <View
+          style={{
+            flexDirection: "row",
+            width: "100%",
+            justifyContent: "space-between",
+          }}
+        >
+          <View
+            style={{
+              backgroundColor: "#EA2C2E",
+              borderRadius: 50,
+              width: 25,
+              height: 25,
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <IconIdCard name="info" color={"white"} />
+          </View>
+          <View style={{ width: "90%" }}>
+            <Text style={{ color: "#333", fontSize: 13, fontWeight: "600" }}>
+              Alıcı ve satıcı veya kiraya veren ve kiralayan arasında güvenli
+              bir işlem sağlamak amacıyla alınan bir ön ödemedir.
+            </Text>
+          </View>
+        </View>
         <View
           style={{
             flexDirection: "row",

@@ -41,6 +41,7 @@ import { Skeleton } from "@rneui/themed";
 import { setShoppingProfile } from "../../store/slices/Menu/MenuSlice";
 import { apiUrl, frontEndUriBase } from "../../components/methods/apiRequest";
 import { ActivityIndicator } from "react-native-paper";
+import { clearBasketItem } from "../../store/slices/Basket/BasketSlice";
 
 export default function ShoppingProfile() {
   const [checkImage, setCheckImage] = useState(null);
@@ -842,7 +843,7 @@ export default function ShoppingProfile() {
                         fontWeight: "600",
                       }}
                     >
-                      Mağazama Git
+                      {namFromGetUser.type == 1 ? "Profilim" : "Mağazama Git"}
                     </Text>
                   </TouchableOpacity>
                   <View
@@ -874,7 +875,9 @@ export default function ShoppingProfile() {
                         fontWeight: "600",
                       }}
                     >
-                      Mağazamı Paylaş
+                      {namFromGetUser.type == 1
+                        ? "Profilimi Paylaş"
+                        : "Mağazamı Paylaş"}
                     </Text>
                   </TouchableOpacity>
                 </View>
@@ -1002,6 +1005,7 @@ export default function ShoppingProfile() {
               }}
               onConfirmPressed={() => {
                 logout();
+                dispatch(clearBasketItem());
               }}
               confirmButtonTextStyle={{ marginLeft: 20, marginRight: 20 }}
               cancelButtonTextStyle={{ marginLeft: 20, marginRight: 20 }}

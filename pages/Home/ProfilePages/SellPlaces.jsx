@@ -39,8 +39,9 @@ export default function SellPlaces({ data }) {
     GetSellPlace();
   }, [user]);
 
-  console.log(Places, "satışNoktaları");
-
+  useEffect(() => {
+    console.log("Places", Places);
+  }, [Places]);
   return (
     <>
       {loading ? (
@@ -59,7 +60,7 @@ export default function SellPlaces({ data }) {
           style={{ backgroundColor: "#fff" }}
           contentContainerStyle={{ padding: 10, flexGrow: 1 }}
         >
-          {Places.length == 0 ? (
+          {Places?.length == 0 || [] ? (
             <NoDataScreen
               message="Satış noktası bulunamadı."
               iconName="store-off-outline"
@@ -67,7 +68,7 @@ export default function SellPlaces({ data }) {
               navigateTo="HomePage"
             />
           ) : (
-            Places.map((item, _i) => <SellPlaceItem key={_i} item={item} />)
+            Places?.map((item, _i) => <SellPlaceItem key={_i} item={item} />)
           )}
         </ScrollView>
       )}
