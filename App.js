@@ -1452,7 +1452,7 @@ const StackScreenNavigator = () => {
               name="SeeMyNeighbor"
               component={SeeMyNeighbor}
               options={({ route }) => ({
-                title: "Komşumu Gör Nedir?",
+                title: "Komşunu Gör Nedir?",
                 headerBackTitleVisible: false,
                 headerStyle: {
                   backgroundColor: "#ffffff",
