@@ -87,7 +87,7 @@ export default function SalePageMain() {
       ? Faq.filter((item) => item?.category === category?.value)
       : Faq || [];
     setFilteredFaq(filteredFaq);
-  }, []);
+  }, [category]);
 
   return (
     <ScrollView
