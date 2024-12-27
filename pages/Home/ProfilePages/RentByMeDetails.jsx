@@ -260,7 +260,7 @@ export default function RentByMeDetails({ route }) {
    */ const { backgroundColor2, text2, onPress } = handleButtonStatus();
 
   console.log(orderDetails.status);
-  console.log(orderDetails.id);
+  console.log(orderDetails);
   function capitalizeFirstLetter(str) {
     if (!str) return ""; // Return an empty string if str is undefined or null
 
