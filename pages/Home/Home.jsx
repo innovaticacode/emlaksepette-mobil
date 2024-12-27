@@ -185,7 +185,7 @@ const Home = ({ route }) => {
       <Tab.Screen
         name="Hesabım"
         component={
-          user.type == 2 && userdata.corporate_account_status === 0
+          userdata.type == 2 && userdata.corporate_account_status === 0
             ? VerifyScreen
             : ShoppingProfile
         }
@@ -194,7 +194,7 @@ const Home = ({ route }) => {
             <DynamicLabel
               label={
                 user.access_token
-                  ? user.role === "Kurumsal Hesap"
+                  ? userdata.role === "Kurumsal Hesap"
                     ? "Panelim"
                     : "Hesabım"
                   : "Giriş Yap"
