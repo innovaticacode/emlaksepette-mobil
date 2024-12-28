@@ -48,6 +48,7 @@ import { areaData } from "../../helper";
 import { checkFileSize } from "../../../utils";
 import ImageViewing from "react-native-image-viewing";
 import { CheckBox } from "react-native-elements";
+import { emailRegex } from "../../../utils/regex";
 export default function UpgradeProfile() {
   const route = useRoute();
   const { name, tab } = route.params;
@@ -187,7 +188,7 @@ export default function UpgradeProfile() {
       if (user?.access_token) {
         try {
           const response = await axios.get(
-            "https://private.emlaksepette.com/api/kisisel-profil-degisikligi-kontrolu", // API URL
+            apiUrl + "kisisel-profil-degisikligi-kontrolu", // API URL
             {
               headers: {
                 "Content-Type": "application/json",
@@ -724,6 +725,15 @@ export default function UpgradeProfile() {
 
   const handleEmailUpdate = async (data) => {
     console.debug("E-posta güncelleme işlemi başlatıldı.");
+    if (!emailRegex.test(formData.new_email)) {
+      Dialog.show({
+        type: ALERT_TYPE.WARNING,
+        title: "Geçersiz E-posta",
+        textBody: "Lütfen geçerli bir e-posta adresi girin.",
+        button: "Tamam",
+      });
+      return;
+    }
 
     try {
       const response = await axios.post(
