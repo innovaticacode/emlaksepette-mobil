@@ -390,13 +390,15 @@ export default function UpdateAdress({ nextStep, prevStep }) {
                 longitude: 32.866287,
                 latitudeDelta: 10,
                 longitudeDelta: 10,
-                altidute: 50.03281021118164,
               }}
               style={{ flex: 1, borderRadius: 10 }}
             >
-              {selectedLocation && (
+              {selectedLocation?.latitude && selectedLocation?.longitude && (
                 <Marker
-                  coordinate={selectedLocation}
+                  coordinate={{
+                    latitude: selectedLocation.latitude,
+                    longitude: selectedLocation.longitude,
+                  }}
                   title="Seçtiğiniz Konum"
                 />
               )}

@@ -61,6 +61,9 @@ const FirstHome = (props) => {
   const [verifyAlert, setVerifyAlert] = useState(false);
 
   useEffect(() => {
+    if (user?.approve_website_approve == 1) {
+      return;
+    }
     setTimeout(() => {
       if (
         user?.access_token &&

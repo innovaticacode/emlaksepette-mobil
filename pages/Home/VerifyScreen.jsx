@@ -27,6 +27,7 @@ const labels = [
   "Belgeler",
   "Başarılı",
 ];
+import SecureStore from "expo-secure-store";
 const labels2 = ["Adres Bilgisi", "Profil Fotoğrafı Güncelle", "Başarılı"];
 const customStyles = {
   stepIndicatorSize: 30,
@@ -93,7 +94,7 @@ const VerifyScreen = () => {
         setCurrentPosition(namFromGetUser?.first_register_step);
       }
     } else {
-      setCurrentPosition(0);
+      setCurrentPosition(3);
     }
   }, [namFromGetUser]);
 
@@ -149,6 +150,8 @@ const VerifyScreen = () => {
   };
   const navigation = useNavigation();
 
+  const handleClose = () => {};
+
   return (
     <>
       {loading ? (
@@ -188,11 +191,8 @@ const VerifyScreen = () => {
               }}
               onPress={() => {
                 SecureStore.setItemAsync("user", "");
-                navigation.navigate("Drawer", {
-                  screen: "Home",
-                  params: {
-                    status: "logout",
-                  },
+                navigation.navigate("Home", {
+                  status: "logout",
                 });
               }}
             >

@@ -95,7 +95,9 @@ const NextAndPrevButton = ({
         <TouchableOpacity
           style={[styles.NextButton]}
           onPress={() => {
+            console.log("nextButtonPress", SendInfo);
             SendInfo();
+            nextButtonPress();
           }}
         >
           <Text style={styles.NextButtonText}>Sonraki Adım</Text>
