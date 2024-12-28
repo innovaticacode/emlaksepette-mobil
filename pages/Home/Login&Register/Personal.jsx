@@ -23,6 +23,7 @@ import { ActivityIndicator } from "react-native-paper";
 import { apiUrl } from "../../../components/methods/apiRequest";
 import { sanitizeEmail } from "../../../utils";
 import ContratsActionSheet from "../../../components/ContratsModal/ContratsActionSheet";
+import { emailRegex } from "../../../utils/regex";
 export default function Personal({ type }) {
   const navigation = useNavigation();
   const [eye, seteye] = useState("eye-off-sharp");
@@ -150,8 +151,6 @@ export default function Personal({ type }) {
   const [errorMessage, seterrorMessage] = useState("");
 
   const registerPersonal = () => {
-    let ErrorMessage = "";
-
     switch (true) {
       case !name:
         seterrorStatu(1);
@@ -161,6 +160,7 @@ export default function Personal({ type }) {
           setData("userNameErr", null);
         }, 1000);
         break;
+
       case !ePosta:
         seterrorStatu(2);
         setData("emailErr", "Email alanı Boş Bırakılmaz");
@@ -169,6 +169,16 @@ export default function Personal({ type }) {
           setData("emailErr", null);
         }, 1000);
         break;
+
+      case !emailRegex.test(ePosta):
+        seterrorStatu(2);
+        setData("emailErr", "Geçerli bir e-posta adresi giriniz.");
+
+        setTimeout(() => {
+          setData("emailErr", null);
+        }, 2000);
+        break;
+
       case !phoneNumber:
         seterrorStatu(3);
         setData("mobilePhoneErr", "Telefon Alanı Boş Bırakılmaz");
@@ -177,6 +187,7 @@ export default function Personal({ type }) {
           setData("mobilePhoneErr", null);
         }, 1000);
         break;
+
       case !password:
         seterrorStatu(4);
         setData("passwordErr", "Şifre Alanı Boş Bırakılamaz");
@@ -195,11 +206,7 @@ export default function Personal({ type }) {
         break;
 
       default:
-        postData();
-    }
-
-    if (ErrorMessage) {
-      ShowAlert(ErrorMessage);
+        postData(); // Tüm doğrulamalardan geçerse, veriyi gönder
     }
   };
 
