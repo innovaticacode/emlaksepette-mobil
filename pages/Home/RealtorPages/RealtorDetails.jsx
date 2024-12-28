@@ -663,6 +663,9 @@ export default function PostDetail() {
                           padding: 12,
                           borderRadius: 5,
                         }}
+                        onPress={() => {
+                          navigation.navigate("EditPending");
+                        }}
                       >
                         <Text
                           style={{
@@ -904,7 +907,8 @@ export default function PostDetail() {
 
                     {((OpenSharing == "Evet" &&
                       user.corporate_type == "Emlak Ofisi") ||
-                      user.type == 1) && (
+                      user.type == 1 ||
+                      !user.access_token) && (
                       <TouchableOpacity
                         onPress={() => {
                           openCollection();

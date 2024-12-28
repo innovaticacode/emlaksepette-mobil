@@ -420,7 +420,8 @@ export default function RealtorPost({
                       openSharing === "Evet" &&
                       (user.role == "Bireysel Hesap" ||
                         (user.role == "Kurumsal Hesap" &&
-                          user.corporate_type == "Emlak Ofisi")) && (
+                          user.corporate_type == "Emlak Ofisi") ||
+                        !user.access_token) && (
                         <TouchableOpacity
                           onPress={() => {
                             CreateCollection(HouseId);
@@ -483,6 +484,9 @@ export default function RealtorPost({
                   {housing?.user?.id == user.id && user.access_token ? (
                     <TouchableOpacity
                       style={[styles.addBasket, { backgroundColor: "#008001" }]}
+                      onPress={() => {
+                        navigation.navigate("EditPending");
+                      }}
                     >
                       <Text
                         style={{
@@ -668,6 +672,9 @@ export default function RealtorPost({
                           borderRadius: 5,
                         },
                       ]}
+                      onPress={() => {
+                        navigation.navigate("EditPending");
+                      }}
                     >
                       <Text
                         style={{

@@ -422,6 +422,7 @@ export default function UpdateShopInfo({ nextStep, prevStep }) {
               </Text>
               <TextInput
                 multiline
+                textAlignVertical="top"
                 style={[styles.Input, { height: 150 }]}
                 value={about}
                 onChangeText={(value) => setabout(value)}

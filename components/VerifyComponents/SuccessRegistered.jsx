@@ -1,7 +1,9 @@
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import React from "react";
 import Icon from "react-native-vector-icons/Entypo";
+import { useNavigation } from "@react-navigation/native";
 const SuccessRegistered = ({ nextStep, prevStep }) => {
+  const navigation = useNavigation();
   return (
     <View
       style={{
@@ -137,7 +139,15 @@ const SuccessRegistered = ({ nextStep, prevStep }) => {
           <Text style={style.seeDocumentBtnText}>Belgeleri Gör</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={style.goToHomePageBtn} activeOpacity={0.7}>
+        <TouchableOpacity
+          style={style.goToHomePageBtn}
+          activeOpacity={0.7}
+          onPress={() => {
+            navigation.navigate("Drawer", {
+              screen: "Home",
+            });
+          }}
+        >
           <Text style={style.goToHomePageBtnText}>Ana Sayfaya Git</Text>
         </TouchableOpacity>
       </View>
