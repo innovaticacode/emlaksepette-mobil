@@ -420,7 +420,8 @@ export default function RealtorPost({
                       openSharing === "Evet" &&
                       (user.role == "Bireysel Hesap" ||
                         (user.role == "Kurumsal Hesap" &&
-                          user.corporate_type == "Emlak Ofisi")) && (
+                          user.corporate_type == "Emlak Ofisi") ||
+                        !user.access_token) && (
                         <TouchableOpacity
                           onPress={() => {
                             CreateCollection(HouseId);
