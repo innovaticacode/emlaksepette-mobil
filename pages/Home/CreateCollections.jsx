@@ -69,6 +69,7 @@ export default function CreateCollections() {
     } catch (error) {
       console.error("Kullanıcı verileri güncellenirken hata oluştu:", error);
     } finally {
+      setloading(false);
     }
   };
   useEffect(() => {
@@ -330,7 +331,7 @@ export default function CreateCollections() {
           </View>
         ) : (
           <>
-            {user.access_token && namFromGetUser.has_club == 1 ? (
+            {user.access_token ? (
               <>
                 <ScrollView
                   style={styles.container}
@@ -462,114 +463,43 @@ export default function CreateCollections() {
             ) : (
               <>
                 <View style={{}}>
-                  {!user.access_token && (
-                    <View style={styles.card}>
-                      <View style={{ paddingTop: 10 }}>
-                        <Text
-                          style={{
-                            textAlign: "center",
-                            color: "#4C6272",
-                            fontWeight: "bold",
-                            fontSize: 16,
-                          }}
-                        >
-                          Üyeliğiniz Bulunmamaktadır!
-                        </Text>
-                      </View>
-                      <View style={{ width: "80%" }}>
-                        <Text style={{ textAlign: "center", color: "#7A8A95" }}>
-                          {user.type == 2 &&
-                          user.corporate_type == "Emlak Ofisi"
-                            ? "Portföyünüze konut ekleyebilmeniz için giriş yapmanız gerekmektedir"
-                            : "Koleksiyonunuza konut ekleyebilmeniz için giriş yapmanız gerekmektedir"}
-                        </Text>
-                      </View>
-                      <TouchableOpacity
+                  <View style={styles.card}>
+                    <View style={{ paddingTop: 10 }}>
+                      <Text
                         style={{
-                          backgroundColor: "#F65656",
-                          width: "100%",
-                          padding: 10,
-                        }}
-                        onPress={() => {
-                          setTimeout(() => {
-                            navigation.navigate("Login");
-                          }, 400);
+                          textAlign: "center",
+                          color: "#4C6272",
+                          fontWeight: "bold",
+                          fontSize: 16,
                         }}
                       >
-                        <Text style={{ color: "#FFFFFF", textAlign: "center" }}>
-                          Giriş Yap
-                        </Text>
-                      </TouchableOpacity>
+                        Üyeliğiniz Bulunmamaktadır!
+                      </Text>
                     </View>
-                  )}
-                  {user.access_token && namFromGetUser.has_club == 0 && (
-                    <View style={styles.card}>
-                      <View style={{ paddingTop: 10 }}>
-                        <Text
-                          style={{
-                            textAlign: "center",
-                            color: "#4C6272",
-                            fontWeight: "bold",
-                            fontSize: 16,
-                          }}
-                        >
-                          {" "}
-                          Emlak Kulüp Üyeliğiniz Bulunmamaktadır!
-                        </Text>
-                      </View>
-                      <View style={{ width: "80%" }}>
-                        <Text style={{ textAlign: "center", color: "#7A8A95" }}>
-                          {user.type == 2 &&
-                          user.corporate_type == "Emlak Ofisi"
-                            ? "Portföyünüze konut ekleyebilmeniz için emlak kulüp üyesi olmanız gerekmektedir"
-                            : "Koleksiyonunuza konut ekleyebilmeniz emlak kulüp üyesi olmanız gerekmektedir"}
-                        </Text>
-                      </View>
-                      <TouchableOpacity
-                        style={{
-                          backgroundColor: "#F65656",
-                          width: "100%",
-                          padding: 10,
-                        }}
-                        onPress={() => {
-                          navigation.navigate("Collections");
-                        }}
-                      >
-                        <Text style={{ color: "#FFFFFF", textAlign: "center" }}>
-                          Emlak Kulüp Üyesi Ol{" "}
-                        </Text>
-                      </TouchableOpacity>
+                    <View style={{ width: "80%" }}>
+                      <Text style={{ textAlign: "center", color: "#7A8A95" }}>
+                        {user.type == 2 && user.corporate_type == "Emlak Ofisi"
+                          ? "Portföyünüze konut ekleyebilmeniz için giriş yapmanız gerekmektedir"
+                          : "Koleksiyonunuza konut ekleyebilmeniz için giriş yapmanız gerekmektedir"}
+                      </Text>
                     </View>
-                  )}
-                  {user.access_token && namFromGetUser.has_club == 2 && (
-                    <View style={styles.card}>
-                      <View style={{ paddingTop: 10 }}>
-                        <NoDataScreen
-                          message="Emlak kulüp üyeliğiniz başvuru sürecindedir. Adminlerimiz en kısa sürede bilgilerinizi inceleyip dönüş sağlayacaktır."
-                          iconName="chat-processing"
-                          buttonText="Anasayfaya Dön"
-                          navigateTo="HomePage"
-                        />
-                      </View>
-                    </View>
-                  )}
-                  {user.access_token && namFromGetUser.has_club == 3 && (
-                    <View style={styles.card}>
-                      <View style={{}}>
-                        <NoDataScreen
-                          message={
-                            user.type == 2 &&
-                            user.corporate_type == "Emlak Ofisi"
-                              ? "Emlak Kulüp Üyeliğiniz Reddedildi! Portföy oluşturabilmek için tekrar başvuru yapabilirsiniz."
-                              : "Emlak Kulüp Üyeliğiniz Reddedildi! Koleksiyon oluşturabilmek için tekrar başvuru yapabilirsiniz."
-                          }
-                          iconName="emoticon-sad-outline"
-                          buttonText="Tekrar Başvur"
-                          navigateTo="Collections"
-                        />
-                      </View>
-                    </View>
-                  )}
+                    <TouchableOpacity
+                      style={{
+                        backgroundColor: "#F65656",
+                        width: "100%",
+                        padding: 10,
+                      }}
+                      onPress={() => {
+                        setTimeout(() => {
+                          navigation.navigate("Login");
+                        }, 400);
+                      }}
+                    >
+                      <Text style={{ color: "#FFFFFF", textAlign: "center" }}>
+                        Giriş Yap
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
                 </View>
               </>
             )}
