@@ -663,6 +663,9 @@ export default function PostDetail() {
                           padding: 12,
                           borderRadius: 5,
                         }}
+                        onPress={() => {
+                          navigation.navigate("EditPending");
+                        }}
                       >
                         <Text
                           style={{

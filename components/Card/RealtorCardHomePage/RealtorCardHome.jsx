@@ -227,6 +227,9 @@ export default function RealtorCardHome({
           housing?.user?.id == user.id && user.access_token ? (
             <TouchableOpacity
               style={[styles.addCardBtn, { backgroundColor: "#008001" }]}
+              onPress={() => {
+                navigation.navigate("EditPending");
+              }}
             >
               <Text style={styles.butonText}>İlanı Düzenle</Text>
             </TouchableOpacity>

@@ -484,6 +484,9 @@ export default function RealtorPost({
                   {housing?.user?.id == user.id && user.access_token ? (
                     <TouchableOpacity
                       style={[styles.addBasket, { backgroundColor: "#008001" }]}
+                      onPress={() => {
+                        navigation.navigate("EditPending");
+                      }}
                     >
                       <Text
                         style={{
@@ -669,6 +672,9 @@ export default function RealtorPost({
                           borderRadius: 5,
                         },
                       ]}
+                      onPress={() => {
+                        navigation.navigate("EditPending");
+                      }}
                     >
                       <Text
                         style={{

@@ -1451,7 +1451,12 @@ export default function PostDetail() {
                           ProjectHomeData?.project?.user?.id ==
                             user.parent_id ? (
                             <View style={styles.priceContainer}>
-                              <TouchableOpacity style={styles.addBasket}>
+                              <TouchableOpacity
+                                style={styles.addBasket}
+                                onPress={() => {
+                                  navigation.navigate("EditPending");
+                                }}
+                              >
                                 <Text style={styles.addBasketText}>
                                   İlanı Düzenle
                                 </Text>
@@ -1568,7 +1573,12 @@ export default function PostDetail() {
                         (!ProjectHomeData.projectCartOrders[HomeId] &&
                           ProjectHomeData.project.user.id == user.parent_id) ? (
                           <View style={styles.priceContainer}>
-                            <TouchableOpacity style={styles.addBasket}>
+                            <TouchableOpacity
+                              style={styles.addBasket}
+                              onPress={() => {
+                                navigation.navigate("EditPending");
+                              }}
+                            >
                               <Text style={styles.addBasketText}>
                                 İlanı Düzenle
                               </Text>
