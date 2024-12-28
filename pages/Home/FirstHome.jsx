@@ -8,6 +8,7 @@ import {
   SafeAreaView,
   FlatList,
   ImageBackground,
+  Alert,
 } from "react-native";
 import axios from "axios";
 import PagerView from "react-native-pager-view";
@@ -34,7 +35,6 @@ import { UsePaginatedData } from "../../hooks";
 import { setBasketItem } from "../../store/slices/Basket/BasketSlice";
 import { useDispatch } from "react-redux";
 import { registerForPushNotificationsAsync } from "../../services/registerForPushNotificationsAsync";
-import * as SecureStore from "expo-secure-store";
 
 const FirstHome = (props) => {
   const { index } = props;
@@ -58,6 +58,19 @@ const FirstHome = (props) => {
   const [creatorBrands, setcreatorBrands] = useState([]);
   const [Bungalov, setBungalov] = useState([]);
   const [token, setToken] = useState("");
+  const [verifyAlert, setVerifyAlert] = useState(false);
+
+  useEffect(() => {
+    setTimeout(() => {
+      if (
+        user?.access_token &&
+        user?.type == 2 &&
+        user?.corporate_account_status === 0
+      ) {
+        return setVerifyAlert(true);
+      }
+    }, 1000);
+  }, [user]);
 
   useEffect(() => {
     async function setupNotifications() {
@@ -342,6 +355,32 @@ const FirstHome = (props) => {
     checkCreatorBrands,
     checkBungalov,
   } = memoizedData;
+
+  useEffect(() => {
+    if (verifyAlert) {
+      Alert.alert(
+        "Belge Onayı Gerekli",
+        "Değerli Kullanıcımız, belgelerinizin henüz onay sürecine gönderilmediğini tespit ettik. İşlemlerinize devam edebilmeniz için lütfen gerekli belgelerinizi onay sürecine iletiniz. Anlayışınız için teşekkür ederiz.",
+        [
+          {
+            text: "Daha Sonra",
+            onPress: () => {
+              setVerifyAlert(false);
+            },
+            style: "cancel",
+          },
+          {
+            text: "Hemen Gönder",
+            onPress: () => {
+              setVerifyAlert(false);
+              navigation.navigate("VerifyScreen");
+            },
+          },
+        ],
+        { cancelable: false }
+      );
+    }
+  }, [verifyAlert]);
 
   return (
     <AlertNotificationRoot>

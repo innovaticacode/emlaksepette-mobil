@@ -62,7 +62,7 @@ const VerifyScreen = () => {
     getValueFor("user", setuser);
     getValueFor("PhoneVerify", setverifyStatu);
   }, []);
-  const [loading, setloading] = useState(false);
+  const [loading, setloading] = useState(true);
 
   const GetUserInfo = async () => {
     setloading(true);
@@ -155,7 +155,7 @@ const VerifyScreen = () => {
         <View
           style={{ alignItems: "center", justifyContent: "center", flex: 1 }}
         >
-          <ActivityIndicator />
+          <ActivityIndicator size={"large"} color="#333" />
         </View>
       ) : (
         <SafeAreaView style={styles.container}>
