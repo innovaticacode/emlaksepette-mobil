@@ -35,6 +35,7 @@ import {
 import { useDispatch } from "react-redux";
 import { setShoppingProfile } from "../../../store/slices/Menu/MenuSlice";
 import { sanitizeEmail } from "../../../utils";
+import { emailRegex } from "../../../utils/regex";
 
 export default function Login({ navigation }) {
   const route = useRoute();
@@ -114,7 +115,7 @@ export default function Login({ navigation }) {
   };
 
   const Submit = () => {
-    if (!(email.trim() !== "" && email.includes("@"))) {
+    if (!emailRegex.test(email)) {
       setemailControl(true);
       setTimeout(() => {
         setemailControl(false);
@@ -261,7 +262,7 @@ export default function Login({ navigation }) {
                         </Text>
                       </View>
                       <View style={{ gap: 10 }}>
-                        <View style={{}}>
+                        <>
                           <Text
                             style={{
                               fontSize: 13,
@@ -271,7 +272,7 @@ export default function Login({ navigation }) {
                           >
                             Şifre
                           </Text>
-                        </View>
+                        </>
                         <View>
                           <TouchableOpacity
                             style={{
