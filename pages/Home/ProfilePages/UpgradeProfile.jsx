@@ -49,12 +49,14 @@ import { checkFileSize } from "../../../utils";
 import ImageViewing from "react-native-image-viewing";
 import { CheckBox } from "react-native-elements";
 import { emailRegex } from "../../../utils/regex";
+import ContratsActionSheet from "../../../components/ContratsModal/ContratsActionSheet";
 export default function UpgradeProfile() {
   const route = useRoute();
   const { name, tab } = route.params;
   const [choose, setchoose] = useState(false);
   const navigation = useNavigation();
   const [approve, setApprove] = useState(false);
+  const [isContractVisible, setIsContractVisible] = useState(false);
 
   const [image, setImage] = useState(null);
   const [isImageVisible, setIsImageVisible] = useState(false);
@@ -1279,7 +1281,9 @@ export default function UpgradeProfile() {
                     borderWidth: 0,
                   }}
                 />
-                <TouchableOpacity onPress={() => linkKvkk()}>
+                <TouchableOpacity
+                  onPress={() => setIsContractVisible(!isContractVisible)}
+                >
                   <Text
                     style={{
                       color: "#EA2B2E",
@@ -1290,6 +1294,15 @@ export default function UpgradeProfile() {
                     KVKK politikasını
                   </Text>
                 </TouchableOpacity>
+
+                {isContractVisible && (
+                  <ContratsActionSheet
+                    url={"kisisel-verilerin-korunmasi-ve-islenmesi-politikasi"}
+                    isVisibleOpen={isContractVisible}
+                    setIsVisible={setIsContractVisible}
+                  />
+                )}
+
                 <Text
                   style={{
                     fontSize: 14,
