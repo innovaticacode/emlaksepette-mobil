@@ -6,10 +6,10 @@ const EditPending = () => {
   return (
     <View style={{ flex: 1 }}>
       <NoDataScreen
-        buttonText={"Anasayfa'ya Dön"}
+        buttonText={"Anasayfaya Dön"}
         isShowButton={true}
         message={
-          "Düzenleme henüz aktif değil, düzenleme için web sitesini kullanabilirsiniz."
+          "Düzenleme henüz aktif değil, düzenleme için web sitemizi kullanabilirsiniz."
         }
         iconName={"tooltip-edit"}
         navigateTo={"Home"}
