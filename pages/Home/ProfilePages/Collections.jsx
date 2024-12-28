@@ -65,79 +65,67 @@ export default function Collections() {
           <ActivityIndicator color="#333" />
         </View>
       ) : (
-        <>
-          {namFromGetUser?.has_club == 0 ||
-          namFromGetUser?.has_club == 2 ||
-          namFromGetUser?.has_club == 3 ? (
-            <RegisterRealtorClub />
-          ) : (
-            <View style={{ flex: 1 }}>
-              <View
+        <View style={{ flex: 1 }}>
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-between",
+              backgroundColor: "#fff",
+            }}
+          >
+            <TouchableOpacity
+              onPress={() => {
+                settab(0);
+              }}
+              style={{
+                padding: 12,
+                width: "45%",
+                borderBottomWidth: tab == 0 ? 1 : 0,
+                borderBottomColor: "#EA2C2E",
+              }}
+            >
+              <Text
                 style={{
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                  backgroundColor: "#fff",
+                  color: tab == 0 ? "#EA2C2E" : "#404040",
+                  fontWeight: "500",
+                  textAlign: "center",
+                  fontSize: 15,
                 }}
               >
-                <TouchableOpacity
-                  onPress={() => {
-                    settab(0);
-                  }}
-                  style={{
-                    padding: 12,
-                    width: "45%",
-                    borderBottomWidth: tab == 0 ? 1 : 0,
-                    borderBottomColor: "#EA2C2E",
-                  }}
-                >
-                  <Text
-                    style={{
-                      color: tab == 0 ? "#EA2C2E" : "#404040",
-                      fontWeight: "500",
-                      textAlign: "center",
-                      fontSize: 15,
-                    }}
-                  >
-                    {namFromGetUser?.corporate_type == "Emlak Ofisi"
-                      ? "Portföyler"
-                      : "Koleksiyonlar"}
-                  </Text>
-                </TouchableOpacity>
+                {namFromGetUser?.corporate_type == "Emlak Ofisi"
+                  ? "Portföyler"
+                  : "Koleksiyonlar"}
+              </Text>
+            </TouchableOpacity>
 
-                <TouchableOpacity
-                  disabled={
-                    namFromGetUser.has_club == (0 || 2 || 3) ? true : false
-                  }
-                  onPress={() => {
-                    settab(1);
-                  }}
-                  style={{
-                    padding: 12,
-                    width: "50%",
-                    borderBottomWidth: tab == 1 ? 1 : 0,
-                    borderBottomColor: "#EA2C2E",
-                  }}
-                >
-                  <Text
-                    style={{
-                      color: tab == 1 ? "#EA2C2E" : "#404040",
-                      textAlign: "center",
-                      fontSize: 15,
-                      opacity: namFromGetUser.has_club == 0 || 2 || 3 ? 0.5 : 1,
-                    }}
-                  >
-                    {" "}
-                    {namFromGetUser?.corporate_type == "Emlak Ofisi"
-                      ? "Portföy İstatistikleri"
-                      : " Koleksiyon İstatistikleri"}
-                  </Text>
-                </TouchableOpacity>
-              </View>
-              {tab == 0 && <CollectionsTab />}
-              {tab == 1 && <CollectionsGraphic />}
-            </View>
-          )}
-        </>
+            <TouchableOpacity
+              onPress={() => {
+                settab(1);
+              }}
+              style={{
+                padding: 12,
+                width: "50%",
+                borderBottomWidth: tab == 1 ? 1 : 0,
+                borderBottomColor: "#EA2C2E",
+              }}
+            >
+              <Text
+                style={{
+                  color: tab == 1 ? "#EA2C2E" : "#404040",
+                  textAlign: "center",
+                  fontSize: 15,
+                }}
+              >
+                {" "}
+                {namFromGetUser?.corporate_type == "Emlak Ofisi"
+                  ? "Portföy İstatistikleri"
+                  : " Koleksiyon İstatistikleri"}
+              </Text>
+            </TouchableOpacity>
+          </View>
+          {tab == 0 && <CollectionsTab />}
+          {tab == 1 && <CollectionsGraphic />}
+        </View>
       )}
     </>
   );

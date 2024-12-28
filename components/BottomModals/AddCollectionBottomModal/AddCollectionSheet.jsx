@@ -107,77 +107,82 @@ export default function AddCollectionSheet({
 
     return check;
   };
-  const renderCollections = (hasClub) => {
-    if (hasClub) {
-      if (hasClub == 0) {
-        return (
-          <HasClubControl
-            setIsVisible={setIsVisible}
-            alert={"Emlak Kulüp Üyeliğiniz Bulunmamaktadır!"}
-            type={user?.type}
-            corporateType={user?.corporate_type}
-            btnText={"Başvur"}
-          />
-        );
-      }
-      if (hasClub == 3) {
-        return (
-          <HasClubControl
-            setIsVisible={setIsVisible}
-            alert={"Emlak Kulüp Üyelik Başvurunuz Reddedildi"}
-            type={user?.type}
-            corporateType={user?.corporate_type}
-            btnText={"Tekrar Başvur"}
-          />
-        );
-      }
-      if (hasClub == 2) {
-        return (
-          <HasClubControl
-            setIsVisible={setIsVisible}
-            alert={"Emlak Kulüp Üyeliğiniz Başvuru Sürecinde"}
-            type={user?.type}
-            corporateType={user?.corporate_type}
-            btnText={null}
-          />
-        );
-      }
-      if (hasClub == 1) {
-        return (
-          <>
-            <TouchableOpacity
-              style={styles.CreateNewCollectionBtn}
-              onPress={() => {
-                actionSheetRef.current?.setModalVisible(false);
-                setTimeout(() => {
-                  nav.navigate("CreateCollections", {
-                    HouseID: HousingId ? HousingId : roomOrder,
-                    ProjectId: HousingId ? null : ProjectId,
-                  });
-                }, 200);
+  const renderCollections = () => {
+    if (!user.access_token) {
+      return (
+        <View style={styles.card}>
+          <View style={{ paddingTop: 10 }}>
+            <Text
+              style={{
+                textAlign: "center",
+                color: "#4C6272",
+                fontWeight: "bold",
+                fontSize: 16,
               }}
             >
-              <View style={styles.IconContainer}>
-                <Icon2 name="pluscircleo" size={27} color={"#19181C"} />
-              </View>
-              <View style={styles.btnTextContainer}>
-                <Text style={styles.btnText}>Yeni Oluştur</Text>
-              </View>
-            </TouchableOpacity>
-            {collections.map((item, index) => (
-              <AddCollection
-                checkFunc={ıtemOnCollection}
-                setPopUpForRemoveItem={setsetPopUpForRemoveItem}
-                key={index}
-                item={item}
-                getCollectionId={getCollectionId}
-                removeItemOnCollection={removeItemOnCollection}
-                addLink={addSelectedCollection}
-              />
-            ))}
-          </>
-        );
-      }
+              Üyeliğiniz Bulunmamaktadır!
+            </Text>
+          </View>
+          <View style={{ width: "100%" }}>
+            <Text style={{ textAlign: "center", color: "#7A8A95" }}>
+              {user.type == 2 && user.corporate_type == "Emlak Ofisi"
+                ? "Portföyünüze konut ekleyebilmeniz için giriş yapmanız gerekmektedir"
+                : "Koleksiyonunuza konut ekleyebilmeniz için giriş yapmanız gerekmektedir"}
+            </Text>
+          </View>
+          <TouchableOpacity
+            style={{
+              backgroundColor: "#F65656",
+              width: "100%",
+              padding: 10,
+            }}
+            onPress={() => {
+              setTimeout(() => {
+                nav.navigate("Login");
+              }, 400);
+            }}
+          >
+            <Text style={{ color: "#FFFFFF", textAlign: "center" }}>
+              Giriş Yap
+            </Text>
+          </TouchableOpacity>
+        </View>
+      );
+    } else {
+      return (
+        <>
+          <TouchableOpacity
+            style={styles.CreateNewCollectionBtn}
+            onPress={() => {
+              actionSheetRef.current?.setModalVisible(false);
+              setTimeout(() => {
+                nav.navigate("CreateCollections", {
+                  HouseID: HousingId ? HousingId : roomOrder,
+                  ProjectId: HousingId ? null : ProjectId,
+                });
+              }, 200);
+            }}
+          >
+            <View style={styles.IconContainer}>
+              <Icon2 name="pluscircleo" size={27} color={"#19181C"} />
+            </View>
+            <View style={styles.btnTextContainer}>
+              <Text style={styles.btnText}>Yeni Oluştur</Text>
+            </View>
+          </TouchableOpacity>
+          {collections.map((item, index) => (
+            <AddCollection
+              checkFunc={ıtemOnCollection}
+              setPopUpForRemoveItem={setsetPopUpForRemoveItem}
+              key={index}
+              item={item}
+              getCollectionId={getCollectionId}
+              removeItemOnCollection={removeItemOnCollection}
+              addLink={addSelectedCollection}
+            />
+          ))}
+        </>
+      );
     }
   };
 
@@ -324,7 +329,7 @@ export default function AddCollectionSheet({
           </Text>
         </View>
         <ScrollView contentContainerStyle={{ flexGrow: 1, padding: 5 }}>
-          {renderCollections(namFromGetUser.has_club)}
+          {renderCollections()}
         </ScrollView>
       </View>
     </ActionSheet>
