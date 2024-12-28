@@ -143,7 +143,9 @@ const SuccessRegistered = ({ nextStep, prevStep }) => {
           style={style.goToHomePageBtn}
           activeOpacity={0.7}
           onPress={() => {
-            navigation.navigate("Home");
+            navigation.navigate("Drawer", {
+              screen: "Home",
+            });
           }}
         >
           <Text style={style.goToHomePageBtnText}>Ana Sayfaya Git</Text>

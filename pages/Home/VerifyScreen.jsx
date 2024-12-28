@@ -94,7 +94,7 @@ const VerifyScreen = () => {
         setCurrentPosition(namFromGetUser?.first_register_step);
       }
     } else {
-      setCurrentPosition(0);
+      setCurrentPosition(3);
     }
   }, [namFromGetUser]);
 
