@@ -1,4 +1,4 @@
-import { View, Text } from "react-native";
+import { View, Text, TouchableOpacity } from "react-native";
 import React from "react";
 import { useNavigation } from "@react-navigation/native";
 import { styles } from "./HasClubControl.styles";
@@ -8,6 +8,7 @@ export default function HasClubControl({
   btnText,
   type,
   corporateType,
+  setIsVisible,
 }) {
   const nav = useNavigation();
   return (
@@ -26,6 +27,7 @@ export default function HasClubControl({
       <TouchableOpacity
         style={styles.btn}
         onPress={() => {
+          setIsVisible(false);
           nav.navigate("Collections");
         }}
       >

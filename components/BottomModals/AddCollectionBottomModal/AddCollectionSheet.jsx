@@ -112,6 +112,7 @@ export default function AddCollectionSheet({
       if (hasClub == 0) {
         return (
           <HasClubControl
+            setIsVisible={setIsVisible}
             alert={"Emlak Kulüp Üyeliğiniz Bulunmamaktadır!"}
             type={user?.type}
             corporateType={user?.corporate_type}
@@ -122,6 +123,7 @@ export default function AddCollectionSheet({
       if (hasClub == 3) {
         return (
           <HasClubControl
+            setIsVisible={setIsVisible}
             alert={"Emlak Kulüp Üyelik Başvurunuz Reddedildi"}
             type={user?.type}
             corporateType={user?.corporate_type}
@@ -132,6 +134,7 @@ export default function AddCollectionSheet({
       if (hasClub == 2) {
         return (
           <HasClubControl
+            setIsVisible={setIsVisible}
             alert={"Emlak Kulüp Üyeliğiniz Başvuru Sürecinde"}
             type={user?.type}
             corporateType={user?.corporate_type}

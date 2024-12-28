@@ -153,7 +153,7 @@ export default function UpgradeProfile() {
       }));
       setCorporateType(items); // Dönüştürülmüş veriyi kaydet
     } catch (error) {
-      console.error("Hata:", error);
+      console.error("Hata corporateType:", error);
     }
   };
 
@@ -162,7 +162,7 @@ export default function UpgradeProfile() {
       if (user?.access_token) {
         try {
           const response = await axios.get(
-            "https://private.emlaksepette.com/api/telefon-numarasi-sms-gonderimi-kontrolu",
+            apiUrl + "telefon-numarasi-sms-gonderimi-kontrolu",
             {
               headers: {
                 "Content-Type": "application/json",
@@ -172,15 +172,13 @@ export default function UpgradeProfile() {
           );
 
           setPhoneData(response?.data); // Gelen veriyi state'e aktar
-          setLoading(false); // Yükleme tamam
         } catch (error) {
-          // setError("Bir hata oluştu");
-          setLoading(false);
+          console.log("erroorr tleefo", error);
         }
       }
     };
     if (user?.access_token) {
-      fetchPhoneData(); // API'yi çağır
+      fetchPhoneData();
     }
   }, [user]);
 
@@ -418,7 +416,7 @@ export default function UpgradeProfile() {
       const response = await axios.get(`${apiUrl}get-tax-office/${value}`);
       setTaxOffice(response.data);
     } catch (error) {
-      console.error("Hata:", error);
+      console.error("Hata vergi daireleri:", error);
       throw error;
     }
   };
@@ -559,12 +557,16 @@ export default function UpgradeProfile() {
         longitude: namFromGetUser.longitude || "",
       });
       setCurrentColor(namFromGetUser.banner_hex_code);
-      setareaCode(namFromGetUser.area_code);
+
       setImage(namFromGetUser?.profile_image);
-      onChangeCity(namFromGetUser?.city_id);
-      onChangeCounty(namFromGetUser?.county_id);
-      onChangeNeighborhood(namFromGetUser?.neighborhood_id);
-      onchangeTaxOffice(namFromGetUser.taxOfficeCity);
+
+      if (namFromGetUser.type == 2) {
+        onchangeTaxOffice(namFromGetUser.taxOfficeCity);
+        onChangeCounty(namFromGetUser?.county_id);
+        onChangeNeighborhood(namFromGetUser?.neighborhood_id);
+        onChangeCity(namFromGetUser?.city_id);
+        setareaCode(namFromGetUser.area_code);
+      }
 
       setRegion(initialRegion);
     }
@@ -833,7 +835,7 @@ export default function UpgradeProfile() {
       Dialog.show({
         type: ALERT_TYPE.SUCCESS,
         title: "Başarılı",
-        textBody: "Mağaza Bilgileriniz başarıyla güncellendi.",
+        textBody: response?.data?.message,
         button: "Tamam",
         onHide: () => GetUserInfo(),
       });
@@ -1072,16 +1074,16 @@ export default function UpgradeProfile() {
             </View>
 
             <View style={{ width: "100%", alignItems: "center" }}>
-              {tab == 0 && user.type == 2 && personalChange === true && (
+              {user.type == 2 && personalChange === true && (
                 <View style={styles.mesg}>
-                  {tab == 0 && user.type == 2 && personalChange === true ? (
+                  {user.type == 2 && personalChange === true ? (
                     <View style={styles.messageBox}>
                       <Text style={styles.messageText}>
                         Profilinizi Güncelleme işlemi yaptınız, onay
                         bekliyorsunuz.
                       </Text>
                     </View>
-                  ) : tab == 0 && user.type == 1 && personalChange === true ? (
+                  ) : user.type == 1 && personalChange === true ? (
                     <View style={styles.messageBox}>
                       <Text style={styles.messageText}>
                         Kişisel Bilgilerinizi Güncelleme işlemi yaptınız, onay

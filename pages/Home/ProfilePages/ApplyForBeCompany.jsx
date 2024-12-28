@@ -253,12 +253,8 @@ export default function Company() {
           },
         });
       }, 700);
-    } catch (error) {
-      alert(error);
-    } finally {
       setloadingBtn(false);
-      seteposta("");
-      setphoneNumber("");
+
       setpassword("");
       setbossName("");
       setcompanyName("");
@@ -278,6 +274,9 @@ export default function Company() {
       setChecked2(false);
       setChecked3(false);
       setcityCode("");
+    } catch (error) {
+      alert(error);
+    } finally {
     }
   };
 
