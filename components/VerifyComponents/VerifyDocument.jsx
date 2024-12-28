@@ -291,9 +291,43 @@ export default function VerifyDocument({ nextStep, prevStep }) {
         }
       })
       .catch((err) => {
-        console.error(err);
-        alert("Hata oluştu");
+        if (err.response) {
+          // Sunucudan gelen yanıtla ilgili hata
+          console.error("Hata yanıtı:", {
+            status: err.response.status,
+            data: err.response.data,
+            headers: err.response.headers,
+          });
+          Dialog.show({
+            type: ALERT_TYPE.DANGER,
+            title: "Hata",
+            textBody: `Hata: ${
+              err.response.data?.message || "Bilinmeyen bir hata oluştu."
+            }`,
+            button: "Tamam",
+          });
+        } else if (err.request) {
+          // İstek gönderildi ancak yanıt alınmadı
+          console.error("İstek gönderildi ancak yanıt alınamadı:", err.request);
+          Dialog.show({
+            type: ALERT_TYPE.DANGER,
+            title: "Bağlantı Hatası",
+            textBody:
+              "Sunucuya bağlanılamadı. Lütfen internet bağlantınızı kontrol edin.",
+            button: "Tamam",
+          });
+        } else {
+          // İstek oluşturulurken bir hata oluştu
+          console.error("Hata:", err.message);
+          Dialog.show({
+            type: ALERT_TYPE.DANGER,
+            title: "Hata",
+            textBody: `Hata: ${err.message}`,
+            button: "Tamam",
+          });
+        }
       })
+
       .finally(() => {
         setloading(false);
       });
