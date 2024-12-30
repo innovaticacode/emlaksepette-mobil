@@ -77,8 +77,8 @@ export const Forms = [
     label2: "Yeni Telefon Numarası",
     tab: [2],
     type: "input",
-    placeholder: "5********",
-    maxlength: 15,
+    placeholder: "05********",
+    maxlength: 11,
   },
 
   { key: "year", label: "Kaç Yıldır Sektördesiniz", tab: 2, type: "input" },

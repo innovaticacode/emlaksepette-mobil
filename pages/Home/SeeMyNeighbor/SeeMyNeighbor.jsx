@@ -9,70 +9,29 @@ import {
   Platform,
   Dimensions,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Icon5 from "react-native-vector-icons/MaterialIcons";
+import axios from "axios";
+import { apiUrl } from "../../../components/methods/apiRequest";
 
 const { width, height } = Dimensions.get("window");
 
 const SeeMyNeighbor = () => {
   const [selectedId, setSelectedId] = useState(null);
+  const [faqData, setFaqData] = useState([]);
 
-  const faqData = [
-    {
-      id: "1",
-      question: '"Komşunu Gör" özelliği nedir?',
-      answer:
-        '"Komşunu Gör" özelliği, aynı inşaat projesinden mülk satın alan kişilerin birbirleriyle iletişim kurmasını sağlar. Bu sayede mülk sahipleri komşularıyla tanışabilir ve daha bilinçli kararlar alabilirler. Sat kirala sistemi gayrimenkullerini hızlı güvenli ve değerinde satmak isteyen bireysel satıcıların gayrimenkullerin platforma kayıtlı kurumsal emlak firmaları vasıtasıyla satışını sağlayan bir hizmettir.',
-    },
-    {
-      id: "2",
-      question: '"Komşunu Gör" özelliğini nasıl kullanabilirim?',
-      answer:
-        "EmlakSepette.com'a kaydolduktan sonra, mülk sahibi olduğunuz projeyi seçip kendinizi ekleyebilirsiniz. Eğer bir projeden mülk almak istiyorsanız, o projedeki mevcut mülk sahiplerine ulaşarak bilgi alabilirsiniz.",
-    },
-    {
-      id: "3",
-      question: "Bu özellik ücretli mi?",
-      answer:
-        "EmlakSepette.com, Kişisel Verilerin Korunması Kanunu (KVKK) çerçevesinde, tüm kullanıcı verilerini güvenli bir şekilde korur. İletişim bilgileri sadece izin verilen kişiler tarafından görüntülenebilir.",
-    },
-    {
-      id: "4",
-      question: '"Komşunu Gör" özelliğini kullanırken bilgilerim güvende mi?',
-      answer:
-        '"Komşunu Gör" özelliği, aynı inşaat projesinden mülk satın alan kişilerin birbirleriyle iletişim kurmasını sağlar. Bu sayede mülk sahipleri komşularıyla tanışabilir ve daha bilinçli kararlar alabilirler. Sat kirala sistemi gayrimenkullerini hızlı güvenli ve değerinde satmak isteyen bireysel satıcıların gayrimenkullerin platforma kayıtlı kurumsal emlak firmaları vasıtasıyla satışını sağlayan bir hizmettir.',
-    },
-    {
-      id: "5",
-      question: "Mülk sahibi değilsem de bu özelliği kullanabilir miyim?",
-      answer:
-        "Evet, bir projeden mülk satın almayı düşünüyorsanız, mevcut mülk sahipleriyle iletişim kurabilir, onların deneyimlerinden faydalanabilirsiniz.",
-    },
-    {
-      id: "6",
-      question: "Projeden mülk aldığımı sisteme nasıl eklerim?",
-      answer:
-        "EmlakSepette.com üzerinden mülkünüzün alımını gerçekleştirirken otomatik olarak verdiğiniz izin ile birlikte kendinizi Komşunu Gör alanına ekleyebilirsiniz. Öncesinde almış olduğunuz bir mülk ise bilgilerinizi eklemek için emlak Sepette çağrı merkezi ile iletişime geçebilirsiniz.",
-    },
-    {
-      id: "7",
-      question: "Komisyonumu ne zaman alabilirim?",
-      answer:
-        '"Komşunu Gör" özelliği, aynı inşaat projesinden mülk satın alan kişilerin birbirleriyle iletişim kurmasını sağlar. Bu sayede mülk sahipleri komşularıyla tanışabilir ve daha bilinçli kararlar alabilirler. Sat kirala sistemi gayrimenkullerini hızlı güvenli ve değerinde satmak isteyen bireysel satıcıların gayrimenkullerin platforma kayıtlı kurumsal emlak firmaları vasıtasıyla satışını sağlayan bir hizmettir.',
-    },
-    {
-      id: "8",
-      question: "Bu özellik hangi projelerde geçerli?",
-      answer:
-        'EmlakSepette.com’da yer alan tüm inşaat projeleri için "Komşunu Gör" özelliği kullanılabilir. İlgili projeyi platformda arayarak özellikten faydalanabilirsiniz.',
-    },
-    {
-      id: "9",
-      question: "İstediğim komşularla nasıl iletişim kurabilirim?",
-      answer:
-        "Komşularınızın iletişim bilgilerine belirli bir ücret karşılığında ulaşabilir ve iletişim bilgilerin görüntülediğiniz müşterilerle irtibata geçebilirisiniz.",
-    },
-  ];
+  const fetchFaqData = async () => {
+    const response = await axios.get(apiUrl + "faqs", {
+      params: {
+        title: "Komşumu Gör",
+      },
+    });
+    return setFaqData(response.data.faqs);
+  };
+
+  useEffect(() => {
+    fetchFaqData();
+  }, []);
 
   const toggleExpand = (id) => {
     setSelectedId(selectedId === id ? null : id);
@@ -201,22 +160,22 @@ const SeeMyNeighbor = () => {
           daha güvenli ve bilinçli adımlar atabilirsiniz.
         </Text>
       </View>
-      <View style={styles.SSS}>
-        {/* Sıkça Sorulan Sorular Başlığı */}
-        <View style={styles.faqSection}>
-          <Text style={styles.titleSSS}>Sıkça Sorulan Sorular</Text>
-        </View>
+      {faqData && (
+        <View style={styles.SSS}>
+          <View style={styles.faqSection}>
+            <Text style={styles.titleSSS}>Sıkça Sorulan Sorular</Text>
+          </View>
 
-        {/* Alt Bilgi ve SSS */}
-        <View style={styles.container}>
-          <FlatList
-            data={faqData}
-            renderItem={renderItem}
-            keyExtractor={(item) => item.id}
-            showsVerticalScrollIndicator={false}
-          />
+          <View style={styles.container}>
+            <FlatList
+              data={faqData}
+              renderItem={renderItem}
+              keyExtractor={(item) => item.id}
+              showsVerticalScrollIndicator={false}
+            />
+          </View>
         </View>
-      </View>
+      )}
     </ScrollView>
   );
 };

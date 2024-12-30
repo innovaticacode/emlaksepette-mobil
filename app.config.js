@@ -47,7 +47,7 @@ export default {
         NSPhotoLibraryUsageDescription:
           "Bu uygulama, fotoğraf seçmek için fotoğraf kitaplığınıza erişim gerektirir.",
       },
-      bundleIdentifier: "com.mastergirisim.emlaksepette",
+      bundleIdentifier: "com.sepettebilgiteknolojileri.emlaksepette",
       associatedDomains: ["applinks:example.com"],
       config: {
         usesNonExemptEncryption: false,
@@ -65,10 +65,10 @@ export default {
         foregroundImage: "./assets/app-logo.png",
         backgroundColor: "#ffffff",
       },
-      package: "com.mastergirisim.emlaksepette",
+      package: "com.sepettebilgiteknolojileri.emlaksepette",
       config: {
         googleMaps: {
-          apiKey: process.env.EXPO_PUBLIC_GOOGLE_API,
+          apiKey: process.env.GOOGLE_API,
         },
       },
     },

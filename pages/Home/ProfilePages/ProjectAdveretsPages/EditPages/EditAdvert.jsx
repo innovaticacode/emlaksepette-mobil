@@ -363,6 +363,9 @@ export default function EditAdvert() {
                       borderRadius: 5,
                     },
                   ]}
+                  onPress={() => {
+                    navigation.navigate("EditPending");
+                  }}
                 >
                   <Text style={{ fontSize: 12, color: "#003cc7" }}>
                     İlanı Düzenle
@@ -613,6 +616,9 @@ export default function EditAdvert() {
                       borderRadius: 5,
                     },
                   ]}
+                  onPress={() => {
+                    navigation.navigate("EditPending");
+                  }}
                 >
                   <Text style={{ fontSize: 12, color: "#003cc7" }}>
                     İlanı Düzenle
@@ -863,6 +869,9 @@ export default function EditAdvert() {
                       borderRadius: 5,
                     },
                   ]}
+                  onPress={() => {
+                    navigation.navigate("EditPending");
+                  }}
                 >
                   <Text style={{ fontSize: 12, color: "#003cc7" }}>
                     İlanı Düzenle
@@ -1113,6 +1122,9 @@ export default function EditAdvert() {
                       borderRadius: 5,
                     },
                   ]}
+                  onPress={() => {
+                    navigation.navigate("EditPending");
+                  }}
                 >
                   <Text style={{ fontSize: 12, color: "#003cc7" }}>
                     İlanı Düzenle

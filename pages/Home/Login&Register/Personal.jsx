@@ -23,6 +23,7 @@ import { ActivityIndicator } from "react-native-paper";
 import { apiUrl } from "../../../components/methods/apiRequest";
 import { sanitizeEmail } from "../../../utils";
 import ContratsActionSheet from "../../../components/ContratsModal/ContratsActionSheet";
+import { emailRegex } from "../../../utils/regex";
 export default function Personal({ type }) {
   const navigation = useNavigation();
   const [eye, seteye] = useState("eye-off-sharp");
@@ -111,7 +112,9 @@ export default function Personal({ type }) {
           setChecked3(false);
           seterrorStatu(0);
           seterrorMessage("");
-          navigation.replace("Login", { showAlert: true });
+          setTimeout(() => {
+            navigation.replace("Login", { showAlert: true });
+          }, 500);
         }
       } else {
         seterrorStatu(5);
@@ -121,26 +124,24 @@ export default function Personal({ type }) {
         }, 5000);
       }
     } catch (error) {
-      if (error.response.data.errors.email) {
+      if (error?.response?.data.errors?.email) {
         seterrorStatu(2);
         setData("emailErr", error.response.data.errors.email[0]);
         setTimeout(() => {
           setData("emailErr", null);
         }, 10000);
       }
-      if (error.response.data.errors.mobile_phone) {
-        seterrorStatu(3);
-        setData("passwordErr", error.response.data.errors.mobile_phone[0]);
-        setTimeout(() => {
-          setData("passwordErr", null);
-        }, 5000);
-      }
-      if (error.response.data.errors.password) {
-        seterrorStatu(4);
-        setData("mobilePhoneErr", error.response.data.errors.password[0]);
-        setTimeout(() => {
-          setData("mobilePhoneErr", null);
-        }, 5000);
+      if (error.response.data) {
+        if (
+          error.response.data.error &&
+          error.response.data.error.includes("cep telefonu")
+        ) {
+          seterrorStatu(3);
+          setData("mobilePhoneErr", error.response.data.error);
+          setTimeout(() => {
+            setData("mobilePhoneErr", null);
+          }, 10000);
+        }
       }
     } finally {
       setIsloading(false);
@@ -150,8 +151,6 @@ export default function Personal({ type }) {
   const [errorMessage, seterrorMessage] = useState("");
 
   const registerPersonal = () => {
-    let ErrorMessage = "";
-
     switch (true) {
       case !name:
         seterrorStatu(1);
@@ -161,6 +160,7 @@ export default function Personal({ type }) {
           setData("userNameErr", null);
         }, 1000);
         break;
+
       case !ePosta:
         seterrorStatu(2);
         setData("emailErr", "Email alanı Boş Bırakılmaz");
@@ -169,6 +169,16 @@ export default function Personal({ type }) {
           setData("emailErr", null);
         }, 1000);
         break;
+
+      case !emailRegex.test(ePosta):
+        seterrorStatu(2);
+        setData("emailErr", "Geçerli bir e-posta adresi giriniz.");
+
+        setTimeout(() => {
+          setData("emailErr", null);
+        }, 2000);
+        break;
+
       case !phoneNumber:
         seterrorStatu(3);
         setData("mobilePhoneErr", "Telefon Alanı Boş Bırakılmaz");
@@ -177,6 +187,7 @@ export default function Personal({ type }) {
           setData("mobilePhoneErr", null);
         }, 1000);
         break;
+
       case !password:
         seterrorStatu(4);
         setData("passwordErr", "Şifre Alanı Boş Bırakılamaz");
@@ -195,11 +206,7 @@ export default function Personal({ type }) {
         break;
 
       default:
-        postData();
-    }
-
-    if (ErrorMessage) {
-      ShowAlert(ErrorMessage);
+        postData(); // Tüm doğrulamalardan geçerse, veriyi gönder
     }
   };
 
@@ -223,10 +230,8 @@ export default function Personal({ type }) {
     try {
       const data = await fetchFromURL(url);
       setDeals(data.content);
-      // Burada isteğin başarılı olduğunda yapılacak işlemleri gerçekleştirebilirsiniz.
     } catch (error) {
       console.error("İstek hatası:", error);
-      // Burada isteğin başarısız olduğunda yapılacak işlemleri gerçekleştirebilirsiniz.
     }
   };
 
@@ -310,7 +315,6 @@ export default function Personal({ type }) {
       setcolorForSymbol(true);
     }
   };
-  console.log("------> ", Errors.emailErr);
   const [isVisible, setIsVisible] = useState(false);
   const [selectedUrl, setselectedUrl] = useState(null);
   return (

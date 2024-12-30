@@ -186,8 +186,6 @@ export default function VerifyDocument({ nextStep, prevStep }) {
           setData(key, pdfAsset);
           console.log("seçilen Dosya", key);
           setchoose(false);
-
-          alert("gönderildi");
         }
       })
       .catch((error) => {
@@ -237,13 +235,14 @@ export default function VerifyDocument({ nextStep, prevStep }) {
         ? {
             uri:
               Platform.OS === "android"
-                ? FormDatas[documentName]
-                : FormDatas[documentName]?.uri.replace("file://", ""), // Android ve iOS için uygun URI
+                ? FormDatas[documentName]?.uri // Android için doğrudan URI kullanılır
+                : FormDatas[documentName]?.uri?.replace("file://", ""), // iOS için uygun URI
             type: FormDatas[documentName]?.mimeType,
             name:
               FormDatas[documentName]?.name == null
-                ? "İmage.jpeg"
-                : FormDatas[documentName]?.name?.slice(-3) == "pdf"
+                ? "Image.jpeg"
+                : FormDatas[documentName]?.name?.slice(-3).toLowerCase() ===
+                  "pdf"
                 ? FormDatas[documentName]?.name
                 : FormDatas[documentName]?.fileName, // Sunucuya gönderilecek dosya adı
           }
@@ -291,9 +290,43 @@ export default function VerifyDocument({ nextStep, prevStep }) {
         }
       })
       .catch((err) => {
-        console.error(err);
-        alert("Hata oluştu");
+        if (err.response) {
+          // Sunucudan gelen yanıtla ilgili hata
+          console.error("Hata yanıtı:", {
+            status: err.response.status,
+            data: err.response.data,
+            headers: err.response.headers,
+          });
+          Dialog.show({
+            type: ALERT_TYPE.DANGER,
+            title: "Hata",
+            textBody: `Hata: ${
+              err.response.data?.message || "Bilinmeyen bir hata oluştu."
+            }`,
+            button: "Tamam",
+          });
+        } else if (err.request) {
+          // İstek gönderildi ancak yanıt alınmadı
+          console.error("İstek gönderildi ancak yanıt alınamadı:", err.request);
+          Dialog.show({
+            type: ALERT_TYPE.DANGER,
+            title: "Bağlantı Hatası",
+            textBody:
+              "Sunucuya bağlanılamadı. Lütfen internet bağlantınızı kontrol edin.",
+            button: "Tamam",
+          });
+        } else {
+          // İstek oluşturulurken bir hata oluştu
+          console.error("Hata:", err.message);
+          Dialog.show({
+            type: ALERT_TYPE.DANGER,
+            title: "Hata",
+            textBody: `Hata: ${err.message}`,
+            button: "Tamam",
+          });
+        }
       })
+
       .finally(() => {
         setloading(false);
       });

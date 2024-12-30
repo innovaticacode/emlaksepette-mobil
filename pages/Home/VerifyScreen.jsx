@@ -27,6 +27,7 @@ const labels = [
   "Belgeler",
   "Başarılı",
 ];
+import SecureStore from "expo-secure-store";
 const labels2 = ["Adres Bilgisi", "Profil Fotoğrafı Güncelle", "Başarılı"];
 const customStyles = {
   stepIndicatorSize: 30,
@@ -62,7 +63,7 @@ const VerifyScreen = () => {
     getValueFor("user", setuser);
     getValueFor("PhoneVerify", setverifyStatu);
   }, []);
-  const [loading, setloading] = useState(false);
+  const [loading, setloading] = useState(true);
 
   const GetUserInfo = async () => {
     setloading(true);
@@ -89,9 +90,11 @@ const VerifyScreen = () => {
 
   useEffect(() => {
     if (namFromGetUser.phone_verification_status == 1) {
-      setCurrentPosition(namFromGetUser?.first_register_step + 1);
+      if (namFromGetUser?.first_register_step) {
+        setCurrentPosition(namFromGetUser?.first_register_step);
+      }
     } else {
-      setCurrentPosition(0);
+      setCurrentPosition(3);
     }
   }, [namFromGetUser]);
 
@@ -147,13 +150,15 @@ const VerifyScreen = () => {
   };
   const navigation = useNavigation();
 
+  const handleClose = () => {};
+
   return (
     <>
       {loading ? (
         <View
           style={{ alignItems: "center", justifyContent: "center", flex: 1 }}
         >
-          <ActivityIndicator />
+          <ActivityIndicator size={"large"} color="#333" />
         </View>
       ) : (
         <SafeAreaView style={styles.container}>
@@ -186,11 +191,8 @@ const VerifyScreen = () => {
               }}
               onPress={() => {
                 SecureStore.setItemAsync("user", "");
-                navigation.navigate("Drawer", {
-                  screen: "Home",
-                  params: {
-                    status: "logout",
-                  },
+                navigation.navigate("Home", {
+                  status: "logout",
                 });
               }}
             >

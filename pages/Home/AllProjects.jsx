@@ -307,7 +307,7 @@ export default function AllProjects() {
   const [skip, setSkip] = useState(0); // Hangi noktadan itibaren veri alınacak
 
   const handleLoadMore = async () => {
-    if (isLoadingMore || state.secondhandHousings.length >= totalCounts) {
+    if (isLoadingMore || state.projects.length >= totalCounts) {
       return;
     }
     setIsLoadingMore(true); // Yeni veri yükleme işlemi başlıyor
@@ -322,8 +322,6 @@ export default function AllProjects() {
     isInitialLoad = false
   ) => {
     console.log("apiUrlFilter", apiUrlFilter);
-    console.log("take", take);
-    console.log("skip", skip);
     try {
       const response = await axios.get(apiUrlFilter, {
         params: {
@@ -374,7 +372,7 @@ export default function AllProjects() {
         projects: data.projects,
       };
 
-      if (data.projects.length === 0 && isInitialLoad) {
+      if (data.projects.length === 0 || ([] && isInitialLoad)) {
         newState.searchStatus = "Sonuç bulunamadı";
       }
 

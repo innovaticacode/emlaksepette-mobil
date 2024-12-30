@@ -6,11 +6,10 @@ import { frontEndUriBase } from "./methods/apiRequest";
 export default function SellPlaceItem({ item }) {
   const navigation = useNavigation();
 
-  console.debug("ITEM ==============>>> ", item);
   return (
     <TouchableOpacity
       onPress={() => {
-        navigation.navigate("Profile", { id: item?.id });
+        navigation.navigate("Profile", { id: item?.user_id });
       }}
       style={{
         flexDirection: "row",
@@ -30,7 +29,7 @@ export default function SellPlaceItem({ item }) {
         <View style={{ width: 90, height: 90 }}>
           <Image
             source={{
-              uri: `${frontEndUriBase}storage/profile_images/${item.profile_image}`,
+              uri: `${frontEndUriBase}storage/profile_images/${item.user.profile_image}`,
             }}
             style={{ width: "100%", height: "100%", borderRadius: 8 }}
           />
@@ -45,16 +44,22 @@ export default function SellPlaceItem({ item }) {
         }}
       >
         <View style={{ gap: 4 }}>
-          <Text style={{ color: "#333", fontWeight: "600" }}>{item?.name}</Text>
-          <Text style={{ fontSize: 13, color: "#333" }}>{item?.phone}</Text>
-          <Text style={{ fontSize: 13, color: "#333" }}>{item?.email}</Text>
+          <Text style={{ color: "#333", fontWeight: "600" }}>
+            {item?.user.name}
+          </Text>
+          <Text style={{ fontSize: 13, color: "#333" }}>
+            {item?.user.phone}
+          </Text>
+          <Text style={{ fontSize: 13, color: "#333" }}>
+            {item?.user.email}
+          </Text>
           {item?.headquarters_district && item?.headquarters_city ? (
             <Text style={{ color: "#333", fontWeight: "600", fontSize: 13 }}>
               {item?.headquarters_city} / {item?.headquarters_district}
             </Text>
-          ) : item?.city?.title && item?.district?.ilce_title ? (
+          ) : item?.town?.sehir_title && item?.district?.ilce_title ? (
             <Text style={{ fontSize: 13 }}>
-              {`${item?.city?.title} / ${item?.district?.ilce_title}`}
+              {`${item?.town?.sehir_title} / ${item?.district?.ilce_title}`}
             </Text>
           ) : (
             <Text style={{ fontSize: 13 }}>Konum bilgisi mevcut değil.</Text>

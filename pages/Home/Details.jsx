@@ -48,6 +48,7 @@ import AwesomeAlert from "react-native-awesome-alerts";
 import CommentForProject from "../../components/CommentForProject";
 import ImageViewing from "react-native-image-viewing";
 import TextAlertModal from "../../components/TextAlertModal";
+import { styles } from "../../styles/Details.style";
 
 export default function Details({ navigation }) {
   const [ColectionSheet, setColectionSheet] = useState(false);
@@ -451,120 +452,11 @@ export default function Details({ navigation }) {
     setselectedCollectionName2(name);
   };
 
-  const addSelectedCollection = (id, name) => {
-    const collectionData = {
-      collection_name: name,
-      clear_cart: "no",
-      id: selectedHouse,
-      project: data.project.id,
-      selectedCollectionId: id,
-      type: "project",
-    };
-
-    axios
-      .post(apiUrl + "addLink", collectionData, {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${user.access_token}`,
-        },
-      })
-      .then((response) => {
-        setTimeout(() => {
-          setColectionSheet(false);
-        }, 500);
-
-        setTimeout(() => {
-          Dialog.show({
-            type: ALERT_TYPE.SUCCESS,
-
-            title:
-              user.type == 2 && user.corporate_type == "Emlak Ofisi"
-                ? "Portföye ekleme başarılı"
-                : "Koleksiyona ekleme başarılı",
-            textBody:
-              user.type == 2 && user.corporate_type == "Emlak Ofisi"
-                ? `${selectedHouse} No'lu Konut ${name} Adlı Portöyünüze Eklendi`
-                : `${selectedHouse} No'lu Konut ${name} Adlı Koleksiyonuza Eklendi`,
-            button: "Tamam",
-          });
-        }, 700);
-
-        // Başarılı yanıtı işleyin
-        // setselectedCollectionName(response.data.collection.name)
-        var newCollections = collections.map((collection) => {
-          if (collection.id == id) {
-            return {
-              ...collection,
-              links: [
-                ...collection.links,
-                {
-                  collection_id: id,
-                  room_order: selectedHouse,
-                  item_id: data.project.id,
-                  user_id: user?.id,
-                  item_type: 1,
-                },
-              ],
-            };
-          } else {
-            return collection;
-          }
-        });
-        setcollections(newCollections);
-      })
-      .catch((error) => {
-        // Hata durumunu işleyin
-        console.error("Error:", error);
-      });
-  };
-
   const GetIdForCart = (id) => {
     setselectedCartItem(id);
     setModalForAddToCart(true);
   };
 
-  const addToCardPaymentModal = async () => {
-    const formData = new FormData();
-    formData.append("id", paymentModalShowOrder);
-    formData.append(
-      "isShare",
-      data.projectHousingsList[paymentModalShowOrder]["share_sale[]"]
-    );
-    formData.append(
-      "numbershare",
-      data.projectHousingsList[paymentModalShowOrder]["number_of_shares[]"]
-    );
-    formData.append("qt", 1);
-    formData.append("type", "project");
-    formData.append("clear_cart", "no");
-    formData.append("project", data.project.id);
-    try {
-      if (user?.access_token) {
-        const response = await axios.post(
-          apiUrl + "institutional/add_to_cart",
-          formData,
-          {
-            headers: {
-              Authorization: `Bearer ${user?.access_token}`,
-            },
-          }
-        );
-
-        navigation.navigate("Sepetim");
-      } else {
-        setModalVisible(false);
-        setTimeout(() => {
-          setAlertForSign(true);
-        }, 400);
-      }
-    } catch (error) {
-      console.error("post isteği olmadı", error);
-    }
-  };
-  const [userid, setUserId] = useState("");
-  const [storeid, setStoreId] = useState("");
-  const [projectid, setProjectId] = useState("");
-  const [roomid, setRoomId] = useState("");
   const [emailid, setEmailId] = useState("");
   const [nameid, setNameId] = useState("");
 
@@ -573,7 +465,6 @@ export default function Details({ navigation }) {
   const [titleid, setTitleId] = useState("");
   const [offerid, setOfferId] = useState("");
 
-  const [createdid, setCreatedId] = useState("");
   const getRoomID = (id) => {
     setselectedroomId(id);
   };
@@ -874,44 +765,15 @@ export default function Details({ navigation }) {
             <ActivityIndicator size={"large"} color="#333" />
           ) : (
             <>
-              <View
-                style={{
-                  position: "absolute",
-                  width: "100%",
-                  bottom: 35,
-                  padding: 4,
-                  zIndex: 1,
-                  flexDirection: "row",
-                  justifyContent: "space-around",
-                }}
-              >
+              <View style={styles.CallAndSeePlaceContainer}>
                 <TouchableOpacity
-                  style={{
-                    width: "45%",
-                    backgroundColor: "#EA2B2E",
-                    padding: 12,
-                    borderRadius: 8,
-                  }}
+                  style={styles.CallBtn}
                   onPress={handleOpenPhone}
                 >
-                  <Text
-                    style={{
-                      fontSize: 14,
-                      color: "white",
-                      fontWeight: "600",
-                      textAlign: "center",
-                    }}
-                  >
-                    Ara
-                  </Text>
+                  <Text style={styles.CallBtnText}>Ara</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
-                  style={{
-                    width: "45%",
-                    backgroundColor: "#EA2B2E",
-                    padding: 12,
-                    borderRadius: 8,
-                  }}
+                  style={styles.seePlaceBtn}
                   onPress={() => {
                     navigation.navigate("Profile", {
                       name: "",
@@ -919,33 +781,21 @@ export default function Details({ navigation }) {
                     });
                   }}
                 >
-                  <Text
-                    style={{
-                      fontSize: 14,
-                      color: "white",
-                      fontWeight: "600",
-                      textAlign: "center",
-                    }}
-                  >
+                  <Text style={styles.seePlaceBtnText}>
                     Satış Noktalarını Gör
                   </Text>
                 </TouchableOpacity>
               </View>
               <View
-                style={{
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                  backgroundColor: data?.project.user?.banner_hex_code,
-                }}
+                style={[
+                  styles.ProfileBannerContainer,
+                  {
+                    backgroundColor: data?.project.user?.banner_hex_code,
+                  },
+                ]}
               >
                 <TouchableOpacity
-                  style={{
-                    padding: 5,
-                    flexDirection: "row",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                    width: "100%",
-                  }}
+                  style={styles.ProfileBannerBtn}
                   onPress={() =>
                     navigation.navigate("Profile", {
                       name: "",
@@ -953,46 +803,22 @@ export default function Details({ navigation }) {
                     })
                   }
                 >
-                  <View
-                    style={{
-                      flexDirection: "row",
-                      gap: 6,
-                      alignItems: "center",
-                    }}
-                  >
+                  <View style={styles.ProfileBannerItem}>
                     <View style={{ height: 35, width: 35 }}>
                       <ImageBackground
                         source={{
                           uri: `${frontEndUriBase}/storage/profile_images/${data?.project?.user?.profile_image}`,
                         }}
-                        style={{
-                          width: "100%",
-                          height: "100%",
-                          marginRight: 10,
-                        }}
+                        style={styles.ProfileImageBanner}
                         borderRadius={20}
                       />
                     </View>
-                    <Text
-                      style={{
-                        color: "white",
-                        fontWeight: "600",
-                        fontSize: 12,
-                        paddingLeft: 10,
-                      }}
-                    >
+                    <Text style={styles.ProfileName}>
                       {data?.project?.user?.name
                         ? `${data?.project?.user?.name} `
                         : ""}
                     </Text>
-                    <View
-                      style={{
-                        width: 18,
-                        height: 18,
-                        alignItems: "center",
-                        justifyContent: "center",
-                      }}
-                    >
+                    <View style={styles.ProfileIconVerify}>
                       <LinkIcon
                         name="check"
                         style={{ position: "absolute", zIndex: 1 }}
@@ -1005,14 +831,7 @@ export default function Details({ navigation }) {
                     </View>
                   </View>
 
-                  <Text
-                    style={{
-                      color: "white",
-                      fontWeight: "600",
-                      fontSize: 12,
-                      paddingLeft: "10px",
-                    }}
-                  >
+                  <Text style={styles.ProjectIdText}>
                     Proje No: {1000000 + data.project.id}
                   </Text>
                 </TouchableOpacity>
@@ -1061,15 +880,7 @@ export default function Details({ navigation }) {
               >
                 <View style={{ height: 250 }}>
                   <View style={styles.pagination}>
-                    <View
-                      style={{
-                        backgroundColor: "#333",
-                        padding: 5,
-                        paddingLeft: 8,
-                        paddingRight: 8,
-                        borderRadius: 5,
-                      }}
-                    >
+                    <View style={styles.PaginationContainer}>
                       <Text style={{ color: "white", fontSize: 12 }}>
                         {pagination + 1} / {galleries.length}
                       </Text>
@@ -1181,16 +992,7 @@ export default function Details({ navigation }) {
 
                 <View style={styles.CaptionPriceAndSlider}>
                   {totalRate != 0 && (
-                    <View
-                      style={{
-                        position: "absolute",
-                        right: 10,
-                        flexDirection: "row",
-                        alignItems: "center",
-                        gap: 4,
-                        top: 10,
-                      }}
-                    >
+                    <View style={styles.totalRateContainer}>
                       <Text
                         style={{
                           color: "#264ABB",
@@ -1204,25 +1006,13 @@ export default function Details({ navigation }) {
                     </View>
                   )}
                   <View style={{ width: "100%" }}>
-                    <View style={{ gap: 5, width: "70%" }}>
-                      <Text
-                        style={{
-                          fontSize: 11,
-                          color: "#333",
-                          fontWeight: "600",
-                        }}
-                      >
+                    <View style={styles.LocationContainer}>
+                      <Text style={styles.LocationText}>
                         {data?.project?.city?.title
                           ? `${data.project.city.title} / ${data.project.county.ilce_title} `
                           : ""}
                       </Text>
-                      <Text
-                        style={{
-                          fontSize: 16,
-                          color: "#333",
-                          fontWeight: "600",
-                        }}
-                      >
+                      <Text style={styles.TitleText}>
                         {data?.project?.project_title?.toLocaleUpperCase(
                           "tr-TR"
                         )}
@@ -1238,56 +1028,16 @@ export default function Details({ navigation }) {
                     />
                   </View>
                 </View>
-                {/* {
-                  data?.isShareLink?.length!==0 &&
-                  <View style={{paddingTop:6,paddingBottom:2,width:'100%',alignItems:'center'}}>
-                  <View style={{padding:6,backgroundColor:'#ffc9ca',borderRadius:8,flexDirection:'row',gap:5,width:'95%'}}>
-                    <View style={{alignItems:'center',justifyContent:'center'}}>
-                    <View style={{width:45,height:45}}>
-                      <ImageBackground source={Megaphone} style={{width:'100%',height:'100%'}}/>
-                    </View>
-                    </View>
-                   
-                    <View style={{width:'85%'}}>
-                      <Text style={{color:'#EA2C2E',fontSize:14,fontWeight:'700'}}>Harika bir haberimiz var!</Text>
-                      <Text style={{color:'#721C23',fontSize:13}}>
-                      Bu projenin ilanlarını , emlak ofislerinin özel koleksiyonlarından şimdi çok daha uygun fiyatlarla satın alabilirsiniz. <Text style={{fontWeight:'700'}}>Satış noktalarına</Text> hemen göz atın! 
-                      </Text>
-                    </View>
-                  </View>
-                 </View>
-                } */}
 
                 <View style={{ marginTop: 5 }}>
-                  <View
-                    style={{
-                      paddingLeft: 5,
-                      paddingRight: 5,
-                      paddingBottom: 5,
-                    }}
-                  >
+                  <View style={styles.InformationCon}>
                     <TouchableOpacity
-                      style={{
-                        borderWidth: 1,
-                        borderColor: "#EA2B2E",
-                        padding: 5,
-                        borderRadius: 6,
-                        backgroundColor: "white",
-                      }}
+                      style={styles.InfoBtn}
                       onPress={() => {
                         setSeeAlertModal(true);
                       }}
                     >
-                      <Text
-                        style={{
-                          textAlign: "center",
-                          fontSize: 13,
-                          color: "#EA2B2E",
-                          fontWeight: "600",
-                        }}
-                      >
-                        Bilgilendirme!
-                      </Text>
+                      <Text style={styles.InfoText}>Bilgilendirme!</Text>
                     </TouchableOpacity>
                   </View>
                   {tabs == 0 && (
@@ -1320,446 +1070,6 @@ export default function Details({ navigation }) {
                     <CommentForProject projectId={data?.project?.id} />
                   )}
                 </View>
-
-                <Modal
-                  isVisible={ColectionSheet}
-                  onBackdropPress={ToggleColSheet}
-                  animationIn={"fadeInDown"}
-                  animationOut={"fadeOutDown"}
-                  animationInTiming={200}
-                  animationOutTiming={200}
-                  backdropColor="transparent"
-                  style={styles.modal2}
-                >
-                  <View style={styles.modalContent2}>
-                    <SafeAreaView>
-                      <View
-                        style={{
-                          padding: 20,
-                          paddingTop: 24,
-                          gap: 13,
-                          borderBottomWidth: 1,
-                          borderBottomColor: "#ebebeb",
-                        }}
-                      >
-                        <Text
-                          style={{
-                            color: "#19181C",
-                            textAlign: "center",
-                            fontSize: 16,
-                            fontWeight: "400",
-                          }}
-                        >
-                          {user.type == 2 &&
-                          user.corporate_type == "Emlak Ofisi"
-                            ? "Portföye Ekle"
-                            : "Koleksiyona Ekle"}
-                        </Text>
-                        <Text
-                          style={{
-                            textAlign: "center",
-                            color: "#B2B2B2",
-                            fontSize: 14,
-                          }}
-                        >
-                          {user.type == 2 &&
-                          user.corporate_type == "Emlak Ofisi"
-                            ? "Konutu portföylerinden birine ekleyebilir veya yeni bir portföy oluşturabilirsin"
-                            : "Konutu koleksiyonlarından birine ekleyebilir veya yeni bir koleksiyon oluşturabilirsin"}
-                        </Text>
-                      </View>
-
-                      <ScrollView
-                        contentContainerStyle={{
-                          paddingLeft: 10,
-                          paddingRight: 10,
-                          paddingTop: 4,
-                          gap: 10,
-                          paddingBottom: 150,
-                        }}
-                      >
-                        {user.access_token ? (
-                          <>
-                            {namFromGetUser.has_club == 2 && (
-                              <>
-                                <View
-                                  style={{ paddingTop: 10, gap: 10, gap: 10 }}
-                                >
-                                  <View>
-                                    <Text
-                                      style={{
-                                        textAlign: "center",
-                                        color: "#4C6272",
-                                        fontWeight: "bold",
-                                        fontSize: 16,
-                                      }}
-                                    >
-                                      {" "}
-                                      Emlak Kulüp Üyeliğiniz Başvuru Sürecinde!
-                                    </Text>
-                                  </View>
-
-                                  <View style={{ width: "100%" }}>
-                                    <Text
-                                      style={{
-                                        textAlign: "center",
-                                        color: "#7A8A95",
-                                      }}
-                                    >
-                                      {user.type == 2 &&
-                                      user.corporate_type == "Emlak Ofisi"
-                                        ? "Portföyünüze konut ekleyebilmeniz emlak kulüp üyesi olmaız gerekmektedir"
-                                        : "Koleksiyonunuza konut ekleyebilmeniz emlak kulüp üyesi olmaız gerekmektedir"}
-                                    </Text>
-                                  </View>
-                                </View>
-                              </>
-                            )}
-                            {namFromGetUser.has_club == 3 && (
-                              <>
-                                <View style={{ paddingTop: 10 }}>
-                                  <Text
-                                    style={{
-                                      textAlign: "center",
-                                      color: "#4C6272",
-                                      fontWeight: "bold",
-                                      fontSize: 16,
-                                    }}
-                                  >
-                                    {" "}
-                                    Emlak Kulüp Üyeliğiniz Reddedildi!
-                                  </Text>
-                                </View>
-                                <View style={{ width: "100%" }}>
-                                  <Text
-                                    style={{
-                                      textAlign: "center",
-                                      color: "#7A8A95",
-                                    }}
-                                  >
-                                    {user.type == 2 &&
-                                    user.corporate_type == "Emlak Ofisi"
-                                      ? "Portföyünüze konut ekleyebilmeniz emlak kulüp üyesi olmaız gerekmektedir"
-                                      : "Koleksiyonunuza konut ekleyebilmeniz emlak kulüp üyesi olmaız gerekmektedir"}
-                                  </Text>
-                                </View>
-                                <TouchableOpacity
-                                  style={{
-                                    backgroundColor: "#F65656",
-                                    width: "100%",
-                                    padding: 10,
-                                  }}
-                                  onPress={() => {
-                                    navigation.navigate("Collections");
-                                    setColectionSheet(false);
-                                  }}
-                                >
-                                  <Text
-                                    style={{
-                                      color: "#FFFFFF",
-                                      textAlign: "center",
-                                    }}
-                                  >
-                                    Tekrar Başvur
-                                  </Text>
-                                </TouchableOpacity>
-                              </>
-                            )}
-                            {namFromGetUser.has_club == 0 && (
-                              <>
-                                <View style={{ paddingTop: 10, gap: 10 }}>
-                                  <View>
-                                    <Text
-                                      style={{
-                                        textAlign: "center",
-                                        color: "#4C6272",
-                                        fontWeight: "bold",
-                                        fontSize: 16,
-                                      }}
-                                    >
-                                      Emlak Kulüp Üyeliğiniz Bulunmamaktadır!
-                                    </Text>
-                                  </View>
-
-                                  <View style={{ width: "100%" }}>
-                                    <Text
-                                      style={{
-                                        textAlign: "center",
-                                        color: "#7A8A95",
-                                      }}
-                                    >
-                                      {user.type == 2 &&
-                                      user.corporate_type == "Emlak Ofisi"
-                                        ? "Portföyünüze konut ekleyebilmeniz emlak kulüp üyesi olmaız gerekmektedir"
-                                        : "Koleksiyonunuza konut ekleyebilmeniz emlak kulüp üyesi olmaız gerekmektedir"}
-                                    </Text>
-                                  </View>
-                                  <TouchableOpacity
-                                    style={{
-                                      backgroundColor: "#F65656",
-                                      width: "100%",
-                                      padding: 10,
-                                    }}
-                                    onPress={() => {
-                                      nav.navigate("Collections");
-                                    }}
-                                  >
-                                    <Text
-                                      style={{
-                                        color: "#FFFFFF",
-                                        textAlign: "center",
-                                      }}
-                                    >
-                                      Tekrar Başvur
-                                    </Text>
-                                  </TouchableOpacity>
-                                </View>
-                              </>
-                            )}
-
-                            {namFromGetUser.has_club == 1 && (
-                              <>
-                                <TouchableOpacity
-                                  style={{
-                                    flexDirection: "row",
-                                    alignItems: "center",
-                                  }}
-                                  onPress={() => {
-                                    setColectionSheet(false);
-                                    setTimeout(() => {
-                                      setaddCollection(true);
-                                    }, 700);
-                                  }}
-                                >
-                                  <View
-                                    style={{
-                                      padding: 0,
-                                      alignItems: "center",
-                                      justifyContent: "center",
-                                    }}
-                                  >
-                                    <Icon2
-                                      name="pluscircleo"
-                                      size={27}
-                                      color={"#19181C"}
-                                    />
-                                  </View>
-                                  <View
-                                    style={{
-                                      width: "100%",
-                                      borderBottomWidth: 1,
-                                      padding: 15,
-                                      borderBottomColor: "#ebebeb",
-                                    }}
-                                  >
-                                    <Text
-                                      style={{
-                                        fontSize: 13,
-                                        color: "#19181C",
-                                        fontWeight: "600",
-                                      }}
-                                    >
-                                      Yeni Oluştur
-                                    </Text>
-                                  </View>
-                                </TouchableOpacity>
-                                {collections.map((item, index) => (
-                                  <AddCollection
-                                    checkFunc={ıtemOnCollection}
-                                    setPopUpForRemoveItem={
-                                      setsetPopUpForRemoveItem
-                                    }
-                                    key={index}
-                                    item={item}
-                                    getCollectionId={getCollectionId}
-                                    removeItemOnCollection={
-                                      removeItemOnCollection
-                                    }
-                                    addLink={addSelectedCollection}
-                                  />
-                                ))}
-                              </>
-                            )}
-                          </>
-                        ) : (
-                          <>
-                            <View style={{ gap: 10 }}>
-                              <View style={{ paddingTop: 10 }}>
-                                <Text
-                                  style={{
-                                    textAlign: "center",
-                                    color: "#4C6272",
-                                    fontWeight: "bold",
-                                    fontSize: 16,
-                                  }}
-                                >
-                                  Üyeliğiniz Bulunmamaktadır!
-                                </Text>
-                              </View>
-                              <View style={{ width: "100%" }}>
-                                <Text
-                                  style={{
-                                    textAlign: "center",
-                                    color: "#7A8A95",
-                                  }}
-                                >
-                                  {user.type == 2 &&
-                                  user.corporate_type == "Emlak Ofisi"
-                                    ? "Portföyünüze konut ekleyebilmeniz Giriş yapmanız gerekmektedir."
-                                    : "Koleksiyonunuza konut ekleyebilmeniz Giriş yapmanız gerekmektedir."}
-                                </Text>
-                              </View>
-                              <TouchableOpacity
-                                style={{
-                                  backgroundColor: "#F65656",
-                                  width: "100%",
-                                  padding: 10,
-                                }}
-                                onPress={() => {
-                                  setColectionSheet(false);
-                                  setTimeout(() => {
-                                    navigation.navigate("Login");
-                                  }, 400);
-                                }}
-                              >
-                                <Text
-                                  style={{
-                                    color: "#FFFFFF",
-                                    textAlign: "center",
-                                  }}
-                                >
-                                  Giriş Yap
-                                </Text>
-                              </TouchableOpacity>
-                            </View>
-                          </>
-                        )}
-                      </ScrollView>
-                    </SafeAreaView>
-                  </View>
-                </Modal>
-
-                {/* */}
-                <Modal
-                  isVisible={addCollection}
-                  onBackdropPress={() => setaddCollection(false)}
-                  animationIn={"fadeInRight"}
-                  animationOut={"lightSpeedOut"}
-                  animationInTiming={200}
-                  animationOutTiming={200}
-                  style={styles.modal3}
-                >
-                  <View style={styles.modalContent3}>
-                    <ScrollView
-                      bounces={false}
-                      contentContainerStyle={{
-                        paddingLeft: 10,
-                        paddingRight: 10,
-                        paddingTop: 4,
-                        gap: 10,
-                        paddingBottom: 20,
-                      }}
-                    >
-                      <SafeAreaView>
-                        <View
-                          style={{
-                            flexDirection: "row",
-                            padding: 10,
-                            alignItems: "center",
-                            borderBottomWidth: 1,
-                            borderBottomColor: "#ebebeb",
-                          }}
-                        >
-                          <TouchableOpacity
-                            style={{
-                              flexDirection: "row",
-                              alignItems: "center",
-                              flex: 0.5 / 2,
-                            }}
-                            onPress={() => {
-                              setaddCollection(false);
-                            }}
-                          >
-                            <View
-                              style={{
-                                padding: 0,
-                                alignItems: "center",
-                                justifyContent: "center",
-                              }}
-                            >
-                              <Icon name="close" size={27} color={"#19181C"} />
-                            </View>
-                          </TouchableOpacity>
-                          <View style={{ flex: 1 / 2 }}>
-                            <Text
-                              style={{
-                                color: "#19181C",
-                                textAlign: "center",
-                                fontSize: 16,
-                                fontWeight: "400",
-                              }}
-                            >
-                              {user.type == 2 &&
-                              user.corporate_type == "Emlak Ofisi"
-                                ? "Portföy Oluştur"
-                                : "Koleksiyon Oluştur"}
-                            </Text>
-                          </View>
-                        </View>
-                        <View
-                          style={{
-                            gap: 6,
-                            justifyContent: "center",
-                            paddingTop: 20,
-                          }}
-                        >
-                          <Text
-                            style={{
-                              fontSize: 13,
-                              color: "#19181C",
-                              fontWeight: "500",
-                            }}
-                          >
-                            {user.type == 2 &&
-                            user.corporate_type == "Emlak Ofisi"
-                              ? "Portföy İsmi"
-                              : "Koleksiyon İsmi"}
-                          </Text>
-                          <TextInput
-                            style={styles.Input}
-                            value={newCollectionNameCreate}
-                            onChangeText={(value) => handleChangeText(value)}
-                          />
-                        </View>
-                        <View style={{ paddingTop: 10 }}>
-                          <TouchableOpacity
-                            disabled={newCollectionNameCreate ? false : true}
-                            style={{
-                              backgroundColor: "#EA2A28",
-                              padding: 10,
-                              borderRadius: 5,
-                              opacity: newCollectionNameCreate ? 1 : 0.3,
-                            }}
-                            onPress={addCollectionPost}
-                          >
-                            <Text
-                              style={{
-                                textAlign: "center",
-                                color: "white",
-                                fontWeight: "500",
-                              }}
-                            >
-                              {user.type == 2 &&
-                              user.corporate_type == "Emlak Ofisi"
-                                ? "Portföy Oluştur"
-                                : "Koleksiyon Oluştur"}
-                            </Text>
-                          </TouchableOpacity>
-                        </View>
-                      </SafeAreaView>
-                    </ScrollView>
-                  </View>
-                </Modal>
               </ScrollView>
             </>
           )}
@@ -1807,245 +1117,6 @@ export default function Details({ navigation }) {
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    alignItems: "center",
-
-    justifyContent: "center",
-
-    flex: 1,
-    ...Platform.select({
-      ios: {},
-      android: {
-        paddingTop: 25,
-      },
-    }),
-  },
-  clubRateContainer: {
-    width: 50,
-    height: "100%",
-    backgroundColor: "transparent",
-    position: "absolute",
-    right: 0,
-    top: 5,
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "start",
-    alignItems: "center",
-    gap: 20,
-    zIndex: 1,
-  },
-  commissionBadge: {
-    position: "absolute",
-    right: 0,
-    bottom: 60,
-    width: 120,
-    height: 30,
-    borderBottomLeftRadius: 15,
-    borderTopLeftRadius: 15,
-    backgroundColor: "#fff",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  commissionText: {
-    color: "#EA2C2E",
-    fontWeight: "700",
-    fontSize: 13,
-  },
-  modal: {
-    margin: 0,
-  },
-  modalContent: {
-    backgroundColor: "white",
-
-    flex: 1,
-    borderTopLeftRadius: 10,
-    borderTopRightRadius: 10,
-    width: 320,
-  },
-  pagination: {
-    position: "absolute",
-    zIndex: 1,
-    padding: 3,
-    paddingLeft: 8,
-    paddingRight: 8,
-    borderRadius: 5,
-    bottom: 0,
-    alignItems: "center",
-
-    width: "100%",
-  },
-  ıconContainer: {
-    width: 50,
-    height: "100%",
-    backgroundColor: "transparent",
-    position: "absolute",
-    right: 10,
-    top: 15,
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "start",
-    alignItems: "center",
-    gap: 20,
-    zIndex: 2,
-  },
-  ıcon: {
-    backgroundColor: "#FFFFFFAD",
-    width: 35,
-    height: 35,
-    alignItems: "center",
-    justifyContent: "center",
-    borderRadius: 20,
-  },
-  centeredView: {
-    padding: 10,
-    margin: 0,
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
-  },
-  modalView: {
-    width: "100%",
-
-    backgroundColor: "white",
-    borderRadius: 20,
-    padding: 25,
-    gap: 20,
-
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
-  },
-  modal2: {
-    justifyContent: "flex-end",
-    margin: 0,
-    backgroundColor: "#1414148c",
-  },
-  modalContent2: {
-    backgroundColor: "#fefefe",
-
-    height: "52%",
-    borderTopLeftRadius: 10,
-    borderTopRightRadius: 10,
-  },
-  modal3: {
-    justifyContent: "flex-end",
-    margin: 0,
-    backgroundColor: "#1414148c",
-  },
-  modalContent3: {
-    backgroundColor: "#fefefe",
-
-    height: "100%",
-  },
-  Input: {
-    borderWidth: 1,
-    padding: 10,
-    borderRadius: 5,
-    borderColor: "#ebebeb",
-  },
-  label: {
-    color: "grey",
-    fontWeight: "500",
-  },
-  card: {
-    backgroundColor: "#FFFFFF",
-    borderWidth: 0.7,
-    borderColor: "#e6e6e6",
-    ...Platform.select({
-      ios: {
-        shadowColor: " #e6e6e6",
-        shadowOffset: { width: 1, height: 1 },
-        shadowOpacity: 0.1,
-        shadowRadius: 5,
-      },
-      android: {
-        elevation: 5,
-      },
-    }),
-  },
-  modalImage: {
-    justifyContent: "flex-end",
-    margin: 0,
-  },
-  modalContentImage: {
-    backgroundColor: "black",
-    justifyContent: "center",
-
-    flex: 1,
-  },
-  Input: {
-    backgroundColor: "#F2F2F2",
-    padding: 10,
-    borderWidth: 1,
-    borderColor: "#ebebeb",
-    borderRadius: 5,
-    fontSize: 14,
-  },
-  modal4: {
-    justifyContent: "center",
-    margin: 0,
-    padding: 20,
-    backgroundColor: "#1414148c",
-  },
-  modalContent4: {
-    backgroundColor: "#fefefe",
-    padding: 20,
-    borderRadius: 5,
-  },
-  CaptionPriceAndSlider: {
-    gap: 8,
-    paddingBottom: 10,
-    width: "100%",
-    paddingTop: 10,
-    paddingLeft: 12,
-    paddingRight: 12,
-    backgroundColor: "#FFFFFF",
-
-    width: "100%",
-
-    borderWidth: 0.7,
-    borderColor: "#e6e6e6",
-    ...Platform.select({
-      ios: {
-        shadowColor: " #e6e6e6",
-        shadowOffset: { width: 1, height: 1 },
-        shadowOpacity: 0.1,
-        shadowRadius: 5,
-      },
-      android: {
-        elevation: 5,
-      },
-    }),
-  },
-  modalBackground: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "rgba(0,0,0,0.5)",
-  },
-  modalContainer: {
-    width: "95%",
-
-    backgroundColor: "white",
-    borderRadius: 6,
-  },
-  modalTitle: {
-    fontSize: 18,
-    fontWeight: "bold",
-    marginBottom: 10,
-  },
-  modalContent: {
-    fontSize: 16,
-    marginBottom: 20,
-  },
-});
 const pickerSelectStyles = StyleSheet.create({
   inputIOS: {
     borderWidth: 1,

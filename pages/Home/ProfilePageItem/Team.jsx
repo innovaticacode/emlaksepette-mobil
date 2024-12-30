@@ -57,7 +57,7 @@ export default function Team({ team, type }) {
       ) : (
         <FlatList
           data={filteredTeam}
-          keyExtractor={(item) => item.id.toString()}
+          keyExtractor={(item) => item.id}
           showsVerticalScrollIndicator={false}
           renderItem={({ item }) => (
             <>

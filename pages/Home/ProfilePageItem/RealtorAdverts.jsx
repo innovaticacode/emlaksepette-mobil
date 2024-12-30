@@ -10,33 +10,107 @@ import React, { useState, useEffect } from "react";
 
 import { FlatList } from "react-native-gesture-handler";
 import { ActivityIndicator } from "react-native-paper";
-import { frontEndUriBase } from "../../../components/methods/apiRequest";
+import {
+  apiUrl,
+  frontEndUriBase,
+} from "../../../components/methods/apiRequest";
 import RealtorPost from "../../../components/Card/RealtorCard/RealtorPost";
+import axios from "axios";
+import EstateBottomSheetFilter from "../../../components/EstateBottomSheetFilter";
+import NoDataScreen from "../../../components/NoDataScreen";
 
-export default function RealtorAdverts({ housingdata, filteredResults }) {
-  const fetchFeaturedEstates = async () => {
+export default function RealtorAdverts({
+  storeID,
+  openEstateFilter,
+  setOpenEstateFilter,
+}) {
+  const [refreshing, setRefreshing] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [loadingEstates, setLoadingEstates] = useState(false);
+  const [housing, setHousing] = useState([]);
+  const [skip, setSkip] = useState(0);
+  const take = 10;
+  const [totalCount, setTotalCount] = useState(0);
+  const [filter, setFilter] = useState(null);
+
+  const fetchBrandEstates = async (isLoadMore = false) => {
+    if (isLoadMore && housing.length >= totalCount) return;
+
+    if (!isLoadMore) {
+      setLoading(true);
+    } else {
+      if (housing.length == 0) return;
+      setLoadingEstates(true);
+    }
     try {
-      // setFeaturedEstates(housingdata);
+      const response = await axios.get(apiUrl + "get_housings_by_store_id", {
+        params: {
+          store_id: storeID,
+          skip: skip,
+          take: take,
+          filter: filter,
+        },
+      });
+      const newHousings = response.data.housings;
+      if (!isLoadMore) {
+        setHousing(newHousings);
+      } else {
+        setHousing((prevHousing) => [...prevHousing, ...newHousings]);
+      }
+      setTotalCount(response.data.total_count);
+      setSkip((prevSkip) => prevSkip + take);
     } catch (error) {
-      console.log(error);
+      console.error("Error fetching data:", error);
+    } finally {
+      setLoading(false);
+      setLoadingEstates(false);
     }
   };
 
-  const { width, height } = Dimensions.get("window");
-
-  const objectKeys = Object.keys(housingdata);
-  const onRefresh = () => {
-    setRefreshing(true);
-    fetchFeaturedEstates();
+  const onEndReached = () => {
+    if (!loadingEstates && housing.length < totalCount) {
+      fetchBrandEstates(true); // Sayfalama için
+    }
   };
-  const [refreshing, setRefreshing] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [loadingEstates, setloadingEstates] = useState(false);
+
+  const onRefresh = async () => {
+    setRefreshing(true);
+    setSkip(0);
+    await fetchBrandEstates(false);
+    setRefreshing(false);
+  };
+
+  useEffect(() => {
+    fetchBrandEstates();
+  }, [storeID]);
+
+  useEffect(() => {
+    setSkip(0);
+    fetchBrandEstates(false);
+  }, [filter]);
+
   return (
     <>
+      {loading && <ActivityIndicator size="large" color="#333" />}
+      <>
+        <EstateBottomSheetFilter
+          isVisible={openEstateFilter}
+          setIsVisible={setOpenEstateFilter}
+          setFilter={setFilter}
+          totalCount={totalCount}
+        />
+      </>
       <FlatList
-        contentContainerStyle={{ padding: 10, paddingBottom: 50 }}
-        data={housingdata}
+        contentContainerStyle={{
+          padding: 10,
+          paddingBottom: 50,
+          flexGrow: 1,
+          alignItems: housing.length == 0 ? "center" : null,
+        }}
+        data={housing}
+        initialNumToRender={10}
+        windowSize={3}
+        maxToRenderPerBatch={10}
         renderItem={({ item }) => (
           <RealtorPost
             HouseId={item.id}
@@ -47,8 +121,8 @@ export default function RealtorAdverts({ housingdata, filteredResults }) {
                 : JSON.parse(item.housing_type_data)["price"]
             }
             housing={item}
-            filteredResults={filteredResults}
-            title={item.title}
+            filteredResults={undefined}
+            title={item.housing_title}
             loading={loadingEstates}
             location={item.city["title"] + " / " + item.county["title"]}
             image={`${frontEndUriBase}housing_images/${
@@ -82,22 +156,26 @@ export default function RealtorAdverts({ housingdata, filteredResults }) {
             dailyRent={false}
           />
         )}
-        keyExtractor={(item, index) =>
-          item.id ? item.id.toString() : index.toString()
-        }
-        onEndReached={() => fetchFeaturedEstates()}
-        onEndReachedThreshold={0}
+        keyExtractor={(item, index) => item.id.toString() + index.toString()}
+        onEndReached={onEndReached}
+        onEndReachedThreshold={0.1} // Listenin sonuna yaklaşma eşiği
         onRefresh={onRefresh}
         refreshing={refreshing}
         ListEmptyComponent={
-          !loadingEstates && (
-            <View>
-              <Text>Emlak ilanı bulunamadı</Text>
-            </View>
+          !loading && (
+            <>
+              <NoDataScreen
+                iconName={"home"}
+                isShowButton={true}
+                message={"Henüz ilan yayınlanmadı."}
+                navigateTo={"Home"}
+                buttonText={"Anasayfaya Git"}
+              />
+            </>
           )
         }
         ListFooterComponent={
-          loadingEstates && !refreshing ? (
+          loadingEstates ? (
             <ActivityIndicator
               style={{ margin: 20 }}
               size="small"

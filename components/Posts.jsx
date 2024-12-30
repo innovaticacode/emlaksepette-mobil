@@ -24,7 +24,7 @@ import { Polyline } from "react-native-maps";
 import AwesomeAlert from "react-native-awesome-alerts";
 import axios from "axios";
 import { getValueFor } from "./methods/user";
-
+import Bookmark from "react-native-vector-icons/FontAwesome";
 import * as SecureStore from "expo-secure-store";
 import {
   BookmarkStatus,
@@ -35,6 +35,7 @@ import {
 import PaymentPlanModal from "./PaymentPlanModal";
 import ShareProgressBar from "./ShareProgessBar";
 import { apiUrl, frontEndUriBase } from "./methods/apiRequest";
+import AddCollectionSheet from "./BottomModals/AddCollectionBottomModal/AddCollectionSheet";
 
 export default function Posts({
   project,
@@ -121,7 +122,7 @@ export default function Posts({
       ? frontEndUriBase + "project_housing_images/" + selectedRoom["image[]"]
       : ""; // Resim URL'sini burada belirleyin
     const neightboord = false;
-    const ilanNo = 1000000 + data.project.id + roomOrder; // İlan numarasını belirliyoruz
+    const ilanNo = data.project.id; // İlan numarasını belirliyoruz
     const roomOrderString = roomOrder.toString();
 
     // Verileri secureStore ile saklayın
@@ -235,7 +236,7 @@ export default function Posts({
     try {
       if (user?.access_token) {
         const response = await axios.post(
-          `${apiUrl}institutional/add_to_cart`,
+          `${apiUrl}institutional/add_to_cart_api`,
           formData,
           {
             headers: {
@@ -334,6 +335,7 @@ export default function Posts({
   };
 
   console.log(data?.neighborViews[roomOrder]?.user_id == user.id);
+  const [isVisible, setisVisible] = useState(false);
   return (
     <View style={styles.container}>
       <AwesomeAlert
@@ -533,12 +535,12 @@ export default function Posts({
                 justifyContent: bookmarkStatus ? "space-between" : "flex-end",
               }}
             >
-              {/* {BookmarkStatus.map((item) => (
+              {BookmarkStatus.map((item) => (
                 <TouchableOpacity
                   onPress={() => {
-                    changeBookmark();
-                    openCollection(roomOrder);
-                    GetID(roomOrder);
+                    // openCollection(roomOrder);
+                    // GetID(roomOrder);
+                    setisVisible(true);
                   }}
                 >
                   {sold ? (
@@ -561,8 +563,8 @@ export default function Posts({
                                 item.offsalePersonal.includes(
                                   Number(offSaleStatus)
                                 )
-                                ? "flex"
-                                : "none",
+                              ? "flex"
+                              : "none",
                         },
                       ]}
                     >
@@ -574,7 +576,7 @@ export default function Posts({
                     </View>
                   )}
                 </TouchableOpacity>
-              ))} */}
+              ))}
 
               <TouchableOpacity onPress={addFavorites}>
                 {sold || offSaleStatus == 1 ? (
@@ -753,7 +755,12 @@ export default function Posts({
                       {project.user.id == user.id ||
                       project.user.id == user.parent_id ? (
                         <View style={styles.priceContainer}>
-                          <TouchableOpacity style={styles.addBasket}>
+                          <TouchableOpacity
+                            style={styles.addBasket}
+                            onPress={() => {
+                              navigation.navigate("EditPending");
+                            }}
+                          >
                             <Text style={styles.addBasketText}>
                               İlanı Düzenle
                             </Text>
@@ -859,7 +866,12 @@ export default function Posts({
                     {(!sold && project.user.id == user.id) ||
                     (!sold && project.user.id == user.parent_id) ? (
                       <View style={styles.priceContainer}>
-                        <TouchableOpacity style={styles.addBasket}>
+                        <TouchableOpacity
+                          style={styles.addBasket}
+                          onPress={() => {
+                            navigation.navigate("EditPending");
+                          }}
+                        >
                           <Text style={styles.addBasketText}>
                             İlanı Düzenle
                           </Text>
@@ -994,7 +1006,7 @@ export default function Posts({
                     : "Başlık bulunamadı",
                   20
                 )}"\n\nİlan No: ${
-                  1000000 + data.project.id + roomOrder
+                  1000000 + data.project.id + " - " + roomOrder
                 }\nÖdeme Tarihi: ${formattedDate}\nTutar: 250 TL\n\nKomşumu Gör Özelliği: İlgilendiğiniz projeden konut alanları arayıp proje hakkında detaylı referans bilgisi almanıza imkan sağlar.\n\nKomşunuza ait iletişim bilgilerini görmek için aşağıdaki adımları takip edin:\n\n1. Ödeme işlemini tamamlayın ve belirtilen tutarı ödediğiniz takdirde,\n2. Ödemeniz onaylandıktan sonra, "Komşumu Gör" düğmesi aktif olacak ve komşunuzun iletişim bilgilerine ulaşabileceksiniz.`}
                 closeOnTouchOutside={true}
                 closeOnHardwareBackPress={false}
@@ -1098,6 +1110,13 @@ export default function Posts({
         RoomOrder={roomOrder}
         deposit_rate={data?.project?.deposit_rate}
         addToCard={AddCartModal}
+      />
+      <AddCollectionSheet
+        isVisible={isVisible}
+        setIsVisible={setisVisible}
+        ProjectId={data?.project?.id}
+        roomOrder={roomOrder}
+        type={1}
       />
     </View>
   );

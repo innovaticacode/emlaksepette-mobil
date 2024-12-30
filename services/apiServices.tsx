@@ -86,6 +86,7 @@ export const checkReferanceCode = (referanceCode: number) => {
  * @readonly
  * @enum {string}
  */
+
 export enum endpoints {
   CURRENT_USER = "current_user/",
   PAY_EFT = "pay_eft",

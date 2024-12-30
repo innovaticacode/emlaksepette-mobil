@@ -48,12 +48,15 @@ import { areaData } from "../../helper";
 import { checkFileSize } from "../../../utils";
 import ImageViewing from "react-native-image-viewing";
 import { CheckBox } from "react-native-elements";
+import { emailRegex } from "../../../utils/regex";
+import ContratsActionSheet from "../../../components/ContratsModal/ContratsActionSheet";
 export default function UpgradeProfile() {
   const route = useRoute();
   const { name, tab } = route.params;
   const [choose, setchoose] = useState(false);
   const navigation = useNavigation();
   const [approve, setApprove] = useState(false);
+  const [isContractVisible, setIsContractVisible] = useState(false);
 
   const [image, setImage] = useState(null);
   const [isImageVisible, setIsImageVisible] = useState(false);
@@ -79,7 +82,7 @@ export default function UpgradeProfile() {
     }
   };
   const numericChange = (value) => {
-    return value.replace(/[^0-9]/g, "").substring(0, 10);
+    return value.replace(/[^0-9]/g, "").substring(0, 11);
   };
 
   const [cities, setCities] = useState([]);
@@ -113,7 +116,7 @@ export default function UpgradeProfile() {
   const initialFormData = {
     name: "",
     mobile_phone: "",
-    new_phone_number: "",
+
     store_name: "",
     username: "",
     authority_licence: "",
@@ -153,7 +156,7 @@ export default function UpgradeProfile() {
       }));
       setCorporateType(items); // Dönüştürülmüş veriyi kaydet
     } catch (error) {
-      console.error("Hata:", error);
+      console.error("Hata corporateType:", error);
     }
   };
 
@@ -162,7 +165,7 @@ export default function UpgradeProfile() {
       if (user?.access_token) {
         try {
           const response = await axios.get(
-            "https://private.emlaksepette.com/api/telefon-numarasi-sms-gonderimi-kontrolu",
+            apiUrl + "telefon-numarasi-sms-gonderimi-kontrolu",
             {
               headers: {
                 "Content-Type": "application/json",
@@ -172,15 +175,13 @@ export default function UpgradeProfile() {
           );
 
           setPhoneData(response?.data); // Gelen veriyi state'e aktar
-          setLoading(false); // Yükleme tamam
         } catch (error) {
-          // setError("Bir hata oluştu");
-          setLoading(false);
+          console.log("erroorr tleefo", error);
         }
       }
     };
     if (user?.access_token) {
-      fetchPhoneData(); // API'yi çağır
+      fetchPhoneData();
     }
   }, [user]);
 
@@ -189,7 +190,7 @@ export default function UpgradeProfile() {
       if (user?.access_token) {
         try {
           const response = await axios.get(
-            "https://private.emlaksepette.com/api/kisisel-profil-degisikligi-kontrolu", // API URL
+            apiUrl + "kisisel-profil-degisikligi-kontrolu", // API URL
             {
               headers: {
                 "Content-Type": "application/json",
@@ -418,7 +419,7 @@ export default function UpgradeProfile() {
       const response = await axios.get(`${apiUrl}get-tax-office/${value}`);
       setTaxOffice(response.data);
     } catch (error) {
-      console.error("Hata:", error);
+      console.error("Hata vergi daireleri:", error);
       throw error;
     }
   };
@@ -559,12 +560,16 @@ export default function UpgradeProfile() {
         longitude: namFromGetUser.longitude || "",
       });
       setCurrentColor(namFromGetUser.banner_hex_code);
-      setareaCode(namFromGetUser.area_code);
+
       setImage(namFromGetUser?.profile_image);
-      onChangeCity(namFromGetUser?.city_id);
-      onChangeCounty(namFromGetUser?.county_id);
-      onChangeNeighborhood(namFromGetUser?.neighborhood_id);
-      onchangeTaxOffice(namFromGetUser.taxOfficeCity);
+
+      if (namFromGetUser.type == 2) {
+        onchangeTaxOffice(namFromGetUser.taxOfficeCity);
+        onChangeCounty(namFromGetUser?.county_id);
+        onChangeNeighborhood(namFromGetUser?.neighborhood_id);
+        onChangeCity(namFromGetUser?.city_id);
+        setareaCode(namFromGetUser.area_code);
+      }
 
       setRegion(initialRegion);
     }
@@ -722,6 +727,15 @@ export default function UpgradeProfile() {
 
   const handleEmailUpdate = async (data) => {
     console.debug("E-posta güncelleme işlemi başlatıldı.");
+    if (!emailRegex.test(formData.new_email)) {
+      Dialog.show({
+        type: ALERT_TYPE.WARNING,
+        title: "Geçersiz E-posta",
+        textBody: "Lütfen geçerli bir e-posta adresi girin.",
+        button: "Tamam",
+      });
+      return;
+    }
 
     try {
       const response = await axios.post(
@@ -833,7 +847,7 @@ export default function UpgradeProfile() {
       Dialog.show({
         type: ALERT_TYPE.SUCCESS,
         title: "Başarılı",
-        textBody: "Mağaza Bilgileriniz başarıyla güncellendi.",
+        textBody: response?.data?.message,
         button: "Tamam",
         onHide: () => GetUserInfo(),
       });
@@ -1072,16 +1086,16 @@ export default function UpgradeProfile() {
             </View>
 
             <View style={{ width: "100%", alignItems: "center" }}>
-              {tab == 0 && user.type == 2 && personalChange === true && (
+              {user.type == 2 && personalChange === true && (
                 <View style={styles.mesg}>
-                  {tab == 0 && user.type == 2 && personalChange === true ? (
+                  {user.type == 2 && personalChange === true ? (
                     <View style={styles.messageBox}>
                       <Text style={styles.messageText}>
                         Profilinizi Güncelleme işlemi yaptınız, onay
                         bekliyorsunuz.
                       </Text>
                     </View>
-                  ) : tab == 0 && user.type == 1 && personalChange === true ? (
+                  ) : user.type == 1 && personalChange === true ? (
                     <View style={styles.messageBox}>
                       <Text style={styles.messageText}>
                         Kişisel Bilgilerinizi Güncelleme işlemi yaptınız, onay
@@ -1172,11 +1186,6 @@ export default function UpgradeProfile() {
                                     handleInputChange(
                                       item.key,
                                       formatIban(value)
-                                    );
-                                  } else if (item.key === "new_phone_number") {
-                                    handleInputChange(
-                                      item.key,
-                                      formatPhoneNumberNew(value)
                                     );
                                   } else if (item.key === "phone") {
                                     handleInputChange(
@@ -1272,7 +1281,9 @@ export default function UpgradeProfile() {
                     borderWidth: 0,
                   }}
                 />
-                <TouchableOpacity onPress={() => linkKvkk()}>
+                <TouchableOpacity
+                  onPress={() => setIsContractVisible(!isContractVisible)}
+                >
                   <Text
                     style={{
                       color: "#EA2B2E",
@@ -1283,6 +1294,15 @@ export default function UpgradeProfile() {
                     KVKK politikasını
                   </Text>
                 </TouchableOpacity>
+
+                {isContractVisible && (
+                  <ContratsActionSheet
+                    url={"kisisel-verilerin-korunmasi-ve-islenmesi-politikasi"}
+                    isVisibleOpen={isContractVisible}
+                    setIsVisible={setIsContractVisible}
+                  />
+                )}
+
                 <Text
                   style={{
                     fontSize: 14,
