@@ -354,7 +354,7 @@ export default function CollectionsTab() {
       console.error("Error fetching data:", error);
     }
   };
-
+  console.log(user.has_club);
   const [choose, setchoose] = useState(false);
   const [namFromGetUser, setnamFromGetUser] = useState([]);
   const GetUserInfo = async () => {
@@ -377,7 +377,7 @@ export default function CollectionsTab() {
   useEffect(() => {
     GetUserInfo();
   }, [user]);
-
+  console.log(namFromGetUser.has_club + "dfkjsdkf");
   const onShare = async () => {
     try {
       const result = await Share.share({
@@ -687,499 +687,410 @@ export default function CollectionsTab() {
                       </View>
                     </View>
 
-                  <View
-                    style={{
-                      flex: 1,
-                      position: "absolute",
-                      bottom: 0,
-                      width: "100%",
-                      display: display == false ? "none" : "flex",
-                    }}
-                  >
-                    <Animated.View
-                      style={[
-                        styles.animatedView,
-                        { transform: [{ translateY }] },
-                      ]}
+                    <Modal
+                      isVisible={choose}
+                      style={styles.modal2}
+                      animationIn={"slideInUp"}
+                      animationOut={"slideOutDown"}
+                      onBackdropPress={() => setchoose(false)}
+                      swipeDirection={["down"]}
+                      onSwipeComplete={() => setchoose(false)}
                     >
-                      <View style={{ width: "100%" }}>
-                        <View style={{ alignItems: "center" }}>
-                          <TouchableOpacity
-                            style={{
-                              width: 40,
-                              height: 7,
-                              backgroundColor: "#ebebeb",
-                              borderRadius: 5,
-                            }}
-                            onPress={closeSheet}
-                          ></TouchableOpacity>
-                        </View>
-                        <View style={{ paddingBottom: 10 }}>
-                          <TouchableOpacity
-                            style={{
-                              padding: 15,
-                              borderBottomWidth: 1,
-                              borderBottomColor: "#ebebeb",
-                            }}
-                            onPress={() => setModalVisible(!modalVisible)}
-                          >
-                            <View
-                              style={{
-                                flexDirection: "row",
-                                gap: 15,
-                                justifyContent: "flex-start",
-                                padding: 3,
-                              }}
-                            >
-                              <PencilIcon name="pencil-alt" size={17} />
-                              <Text style={{ textAlign: "center" }}>
-                                Koleksiyonun Adını Düzenle
-                              </Text>
-                            </View>
-                          </TouchableOpacity>
-                          <TouchableOpacity
-                            style={{
-                              padding: 15,
-                              borderBottomWidth: 1,
-                              borderBottomColor: "#ebebeb",
-                            }}
-                          >
-                            <View
-                              style={{
-                                flexDirection: "row",
-                                gap: 15,
-                                justifyContent: "flex-start",
-                                padding: 3,
-                              }}
-                            >
-                              <ShareIcon name="share-alternative" size={18} />
-                              <Text style={{ textAlign: "center", top: 2 }}>
-                                Paylaş
-                              </Text>
-                            </View>
-                          </TouchableOpacity>
-
-                          <TouchableOpacity
-                            style={{
-                              padding: 15,
-                              borderBottomWidth: 1,
-                              borderBottomColor: "#ebebeb",
-                            }}
-                            onPress={() => {
-                              setModalVisible2(!modalVisible2);
-                            }}
-                          >
-                            <View
-                              style={{
-                                flexDirection: "row",
-                                gap: 15,
-                                justifyContent: "flex-start",
-                                padding: 3,
-                              }}
-                            >
-                              <DeleteIcon name="delete-outline" size={20} />
-                              <Text style={{ textAlign: "center", top: 2 }}>
-                                Koleksiyonu Sil
-                              </Text>
-                            </View>
-                          </TouchableOpacity>
-                        </View>
-                      </View>
-                    </Animated.View>
-                  </View>
-                  <Modal
-                    isVisible={choose}
-                    style={styles.modal2}
-                    animationIn={"slideInUp"}
-                    animationOut={"slideOutDown"}
-                    onBackdropPress={() => setchoose(false)}
-                    swipeDirection={["down"]}
-                    onSwipeComplete={() => setchoose(false)}
-                  >
-                    <View style={styles.modalContent2}>
-                      <View style={{ alignItems: "center", paddingTop: 10 }}>
-                        <TouchableOpacity
-                          style={{
-                            width: "15%",
-                            backgroundColor: "#c2c4c6",
-                            padding: 4,
-                            borderRadius: 50,
-                          }}
-                        ></TouchableOpacity>
-                      </View>
-
-                      <View
-                        style={{
-                          gap: 30,
-                          paddingBottom: 20,
-                          paddingLeft: 20,
-                          paddingRight: 20,
-                          paddingTop: 10,
-                        }}
-                      >
-                        <TouchableOpacity
-                          style={{
-                            flexDirection: "row",
-                            alignItems: "center",
-                            gap: 10,
-                          }}
-                          onPress={() => {
-                            navigation.navigate("SeeColleciton", {
-                              item: item,
-                              collectionUser: user,
-                            });
-                            setchoose(false);
-                          }}
-                        >
-                          <PencilIcon name="eye" size={23} color={"#333"} />
-                          <Text
-                            style={{
-                              fontSize: 14,
-                              color: "#333",
-                              fontWeight: "700",
-                            }}
-                          >
-                            Önizle
-                          </Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                          style={{
-                            flexDirection: "row",
-                            alignItems: "center",
-                            gap: 10,
-                          }}
-                          onPress={copyToClipboard}
-                        >
-                          <PencilIcon name="link" size={23} color={"#333"} />
-                          <Text
-                            style={{
-                              fontSize: 14,
-                              color: "#333",
-                              fontWeight: "700",
-                            }}
-                          >
-                            Linki Kopyala
-                          </Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                          style={{
-                            flexDirection: "row",
-                            alignItems: "center",
-                            gap: 10,
-                          }}
-                          onPress={() => {
-                            onShare();
-                          }}
-                        >
-                          <IconMessenger
-                            name="whatsapp"
-                            size={22}
-                            color={"#333"}
-                          />
-                          <Text
-                            style={{
-                              fontSize: 14,
-                              color: "#333",
-                              fontWeight: "700",
-                            }}
-                          >
-                            Paylaş
-                          </Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                          style={{
-                            flexDirection: "row",
-                            alignItems: "center",
-                            gap: 10,
-                          }}
-                          onPress={() => {
-                            setchoose(false);
-                            setloading(true);
-                            setTimeout(() => {
-                              setModalVisible(true);
-                              setloading(false);
-                            }, 1000);
-                          }}
-                        >
-                          <PencilIcon name="edit" size={21} color={"#333"} />
-                          <Text
-                            style={{
-                              fontSize: 14,
-                              color: "#333",
-                              fontWeight: "700",
-                            }}
-                          >
-                            {user.type == 2 &&
-                            user.corporate_type == "Emlak Ofisi"
-                              ? "Portföy Adını Düzenle"
-                              : "Koleksiyon Adını Düzenle"}
-                          </Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                          style={{
-                            flexDirection: "row",
-                            alignItems: "center",
-                            gap: 10,
-                          }}
-                          onPress={() => {
-                            setchoose(false);
-                            setTimeout(() => {
-                              setModalVisible2(true);
-                            }, 700);
-                          }}
-                        >
-                          <Icon3
-                            name="restore-from-trash"
-                            size={22}
-                            color={"#d83131"}
-                          />
-                          <Text
-                            style={{
-                              fontSize: 14,
-                              color: "#d83131",
-                              fontWeight: "700",
-                            }}
-                          >
-                            {user.type == 2 &&
-                            user.corporate_type == "Emlak Ofisi"
-                              ? "Portföyü Sil"
-                              : "Koleksiyonu Sil"}
-                          </Text>
-                        </TouchableOpacity>
-                      </View>
-                    </View>
-                  </Modal>
-
-                  <Modal
-                    animationIn={"fadeIn"}
-                    animationOut={"fadeOut"} // veya "fade", "none" gibi
-                    transparent={true}
-                    visible={modalVisible}
-                    onRequestClose={() => {
-                      setModalVisible(!modalVisible);
-                    }}
-                    style={styles.modal4}
-                  >
-                    <View style={styles.modalView4}>
-                      <View style={styles.closeButtonContainer}>
-                        <Text
-                          style={{
-                            fontSize: 12,
-                            fontWeight: "600",
-                            color: "black",
-                          }}
-                        >
-                          {user.type == 2 &&
-                          user.corporate_type == "Emlak Ofisi"
-                            ? "Portföy Adını Değiştir"
-                            : "Koleksiyon Adını Değiştir"}
-                        </Text>
-                        <TouchableOpacity
-                          style={styles.closeButton}
-                          onPress={() => setModalVisible(!modalVisible)}
-                        >
-                          <Icon2
-                            name="x"
-                            size={15}
-                            color={"#525B75"}
-                            style={{ fontWeight: "700" }}
-                          />
-                        </TouchableOpacity>
-                      </View>
-                      <View style={{ gap: 5 }}>
-                        <TextInput
-                          style={[styles.Input, { width: "100%" }]}
-                          value={newName}
-                          onChangeText={(value) => setnewName(value)}
-                          placeholderTextColor={"#333"}
-                        />
-                        <Text
-                          style={{
-                            fontSize: 10,
-                            marginBottom: 5,
-                            color: "black",
-                            marginTop: 10,
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "center",
-                          }}
-                        >
-                          <Icon2 name="info" size={15} color={"#525B75"} />
-                          <Text>
-                            {" "}
-                            {user.type == 2 &&
-                            user.corporate_type == "Emlak Ofisi"
-                              ? "Oluşturduğun Portföyü paylaştığında, Emlak Sepette uyguluması içerisindeki diğer kullanıcılar da listendeki ilanları görüntüleyebilir."
-                              : "Oluşturduğun Koleksiyonu paylaştığında, Emlak Sepette uyguluması içerisindeki diğer kullanıcılar da listendeki ilanları görüntüleyebilir."}
-                          </Text>
-                        </Text>
-                      </View>
-
-                      <View
-                        style={{
-                          flexDirection: "row",
-                          justifyContent: "space-between",
-                          alignItems: "center",
-                        }}
-                      >
-                        <TouchableOpacity
-                          style={{
-                            backgroundColor: "green",
-                            padding: 10,
-                            width: "100%",
-                            borderRadius: 5,
-                            textAlign: "center",
-                          }}
-                          onPress={() => {
-                            editCollectionName(selectedCollection);
-                          }}
-                        >
-                          <Text
-                            style={{
-                              color: "white",
-                              fontSize: 15,
-                              textAlign: "center",
-                            }}
-                          >
-                            Düzenle
-                          </Text>
-                        </TouchableOpacity>
-                      </View>
-                    </View>
-                  </Modal>
-                  <Modal
-                    animationType="fade" // veya "fade", "none" gibi
-                    transparent={true}
-                    visible={SharemodalVisible}
-                    onRequestClose={() => {
-                      setShareModalVisible(!SharemodalVisible);
-                    }}
-                  >
-                    <View style={styles.centeredView2}>
-                      <View style={styles.modalView2}>
-                        <ScrollView
-                          horizontal
-                          showsHorizontalScrollIndicator={false}
-                        >
-                          <View
-                            style={{
-                              flexDirection: "row",
-                              gap: 17,
-                              justifyContent: "center",
-                            }}
-                          >
-                            <TouchableOpacity
-                              style={{
-                                backgroundColor: "#1cea30",
-                                padding: 15,
-                                borderRadius: 30,
-                                justifyContent: "center",
-                              }}
-                              onPress={copyToClipboard}
-                            >
-                              <ShareIcon
-                                name="link"
-                                size={30}
-                                color={"white"}
-                              />
-                            </TouchableOpacity>
-                            <TouchableOpacity
-                              style={{
-                                backgroundColor: "#01E676",
-                                padding: 15,
-                                paddingRight: 17,
-                                paddingLeft: 17,
-                                borderRadius: 30,
-                              }}
-                              onPress={shareLinkOnWhatsApp}
-                            >
-                              <Icon name="whatsapp" size={33} color={"white"} />
-                            </TouchableOpacity>
-                            <TouchableOpacity
-                              style={{
-                                backgroundColor: "#0766FF",
-                                paddingLeft: 20,
-                                paddingRight: 20,
-                                borderRadius: 30,
-                                justifyContent: "center",
-                              }}
-                              onPress={shareLinkOnFacebook}
-                            >
-                              <Icon name="facebook" size={30} color={"white"} />
-                            </TouchableOpacity>
-                            <TouchableOpacity
-                              style={{
-                                backgroundColor: "#F04E53",
-                                paddingLeft: 17,
-                                paddingRight: 17,
-                                borderRadius: 30,
-                                justifyContent: "center",
-                              }}
-                              onPress={shareLinkOnInstagram}
-                            >
-                              <Icon
-                                name="instagram"
-                                size={31}
-                                color={"white"}
-                              />
-                            </TouchableOpacity>
-                            <TouchableOpacity
-                              style={{
-                                backgroundColor: "#0766FF",
-                                paddingLeft: 15,
-                                paddingRight: 15,
-                                borderRadius: 30,
-                                padding: 13,
-                                justifyContent: "center",
-                              }}
-                              onPress={handleShareViaSMS}
-                            >
-                              <IconSms
-                                name="message-circle"
-                                size={30}
-                                color={"white"}
-                              />
-                            </TouchableOpacity>
-                            <TouchableOpacity
-                              style={{
-                                backgroundColor: "#0766FF",
-                                paddingLeft: 15,
-                                paddingRight: 15,
-                                borderRadius: 30,
-                                padding: 13,
-                                justifyContent: "center",
-                              }}
-                              onPress={shareLinkOnMessenger}
-                            >
-                              <IconMessenger
-                                name="messenger"
-                                size={30}
-                                color={"white"}
-                              />
-                            </TouchableOpacity>
-                          </View>
-                        </ScrollView>
+                      <View style={styles.modalContent2}>
                         <View style={{ alignItems: "center", paddingTop: 10 }}>
                           <TouchableOpacity
                             style={{
-                              backgroundColor: "red",
-                              paddingRight: 25,
-                              paddingLeft: 25,
-                              padding: 5,
-                              borderRadius: 5,
+                              width: "15%",
+                              backgroundColor: "#c2c4c6",
+                              padding: 4,
+                              borderRadius: 50,
                             }}
-                            onPress={() =>
-                              setShareModalVisible(!SharemodalVisible)
-                            }
+                          ></TouchableOpacity>
+                        </View>
+
+                        <View
+                          style={{
+                            gap: 30,
+                            paddingBottom: 20,
+                            paddingLeft: 20,
+                            paddingRight: 20,
+                            paddingTop: 10,
+                          }}
+                        >
+                          <TouchableOpacity
+                            style={{
+                              flexDirection: "row",
+                              alignItems: "center",
+                              gap: 10,
+                            }}
+                            onPress={() => {
+                              navigation.navigate("SeeColleciton", {
+                                item: item,
+                                collectionUser: user,
+                              });
+                              setchoose(false);
+                            }}
                           >
-                            <Text style={{ color: "white" }}>Kapat</Text>
+                            <PencilIcon name="eye" size={23} color={"#333"} />
+                            <Text
+                              style={{
+                                fontSize: 14,
+                                color: "#333",
+                                fontWeight: "700",
+                              }}
+                            >
+                              Önizle
+                            </Text>
+                          </TouchableOpacity>
+                          <TouchableOpacity
+                            style={{
+                              flexDirection: "row",
+                              alignItems: "center",
+                              gap: 10,
+                            }}
+                            onPress={copyToClipboard}
+                          >
+                            <PencilIcon name="link" size={23} color={"#333"} />
+                            <Text
+                              style={{
+                                fontSize: 14,
+                                color: "#333",
+                                fontWeight: "700",
+                              }}
+                            >
+                              Linki Kopyala
+                            </Text>
+                          </TouchableOpacity>
+                          <TouchableOpacity
+                            style={{
+                              flexDirection: "row",
+                              alignItems: "center",
+                              gap: 10,
+                            }}
+                            onPress={() => {
+                              onShare();
+                            }}
+                          >
+                            <IconMessenger
+                              name="whatsapp"
+                              size={22}
+                              color={"#333"}
+                            />
+                            <Text
+                              style={{
+                                fontSize: 14,
+                                color: "#333",
+                                fontWeight: "700",
+                              }}
+                            >
+                              Paylaş
+                            </Text>
+                          </TouchableOpacity>
+                          <TouchableOpacity
+                            style={{
+                              flexDirection: "row",
+                              alignItems: "center",
+                              gap: 10,
+                            }}
+                            onPress={() => {
+                              setchoose(false);
+                              setloading(true);
+                              setTimeout(() => {
+                                setModalVisible(true);
+                                setloading(false);
+                              }, 1000);
+                            }}
+                          >
+                            <PencilIcon name="edit" size={21} color={"#333"} />
+                            <Text
+                              style={{
+                                fontSize: 14,
+                                color: "#333",
+                                fontWeight: "700",
+                              }}
+                            >
+                              {user.type == 2 &&
+                              user.corporate_type == "Emlak Ofisi"
+                                ? "Portföy Adını Düzenle"
+                                : "Koleksiyon Adını Düzenle"}
+                            </Text>
+                          </TouchableOpacity>
+                          <TouchableOpacity
+                            style={{
+                              flexDirection: "row",
+                              alignItems: "center",
+                              gap: 10,
+                            }}
+                            onPress={() => {
+                              setchoose(false);
+                              setTimeout(() => {
+                                setModalVisible2(true);
+                              }, 700);
+                            }}
+                          >
+                            <Icon3
+                              name="restore-from-trash"
+                              size={22}
+                              color={"#d83131"}
+                            />
+                            <Text
+                              style={{
+                                fontSize: 14,
+                                color: "#d83131",
+                                fontWeight: "700",
+                              }}
+                            >
+                              {user.type == 2 &&
+                              user.corporate_type == "Emlak Ofisi"
+                                ? "Portföyü Sil"
+                                : "Koleksiyonu Sil"}
+                            </Text>
                           </TouchableOpacity>
                         </View>
                       </View>
-                    </View>
-                  </Modal>
+                    </Modal>
+
+                    <Modal
+                      animationIn={"fadeIn"}
+                      animationOut={"fadeOut"} // veya "fade", "none" gibi
+                      transparent={true}
+                      visible={modalVisible}
+                      onRequestClose={() => {
+                        setModalVisible(!modalVisible);
+                      }}
+                      style={styles.modal4}
+                    >
+                      <View style={styles.modalView4}>
+                        <View style={styles.closeButtonContainer}>
+                          <Text
+                            style={{
+                              fontSize: 12,
+                              fontWeight: "600",
+                              color: "black",
+                            }}
+                          >
+                            {user.type == 2 &&
+                            user.corporate_type == "Emlak Ofisi"
+                              ? "Portföy Adını Değiştir"
+                              : "Koleksiyon Adını Değiştir"}
+                          </Text>
+                          <TouchableOpacity
+                            style={styles.closeButton}
+                            onPress={() => setModalVisible(!modalVisible)}
+                          >
+                            <Icon2
+                              name="x"
+                              size={15}
+                              color={"#525B75"}
+                              style={{ fontWeight: "700" }}
+                            />
+                          </TouchableOpacity>
+                        </View>
+                        <View style={{ gap: 5 }}>
+                          <TextInput
+                            style={[styles.Input, { width: "100%" }]}
+                            value={newName}
+                            onChangeText={(value) => setnewName(value)}
+                            placeholderTextColor={"#333"}
+                          />
+                          <Text
+                            style={{
+                              fontSize: 10,
+                              marginBottom: 5,
+                              color: "black",
+                              marginTop: 10,
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "center",
+                            }}
+                          >
+                            <Icon2 name="info" size={15} color={"#525B75"} />
+                            <Text>
+                              {" "}
+                              {user.type == 2 &&
+                              user.corporate_type == "Emlak Ofisi"
+                                ? "Oluşturduğun Portföyü paylaştığında, Emlak Sepette uyguluması içerisindeki diğer kullanıcılar da listendeki ilanları görüntüleyebilir."
+                                : "Oluşturduğun Koleksiyonu paylaştığında, Emlak Sepette uyguluması içerisindeki diğer kullanıcılar da listendeki ilanları görüntüleyebilir."}
+                            </Text>
+                          </Text>
+                        </View>
+
+                        <View
+                          style={{
+                            flexDirection: "row",
+                            justifyContent: "space-between",
+                            alignItems: "center",
+                          }}
+                        >
+                          <TouchableOpacity
+                            style={{
+                              backgroundColor: "green",
+                              padding: 10,
+                              width: "100%",
+                              borderRadius: 5,
+                              textAlign: "center",
+                            }}
+                            onPress={() => {
+                              editCollectionName(selectedCollection);
+                            }}
+                          >
+                            <Text
+                              style={{
+                                color: "white",
+                                fontSize: 15,
+                                textAlign: "center",
+                              }}
+                            >
+                              Düzenle
+                            </Text>
+                          </TouchableOpacity>
+                        </View>
+                      </View>
+                    </Modal>
+                    <Modal
+                      animationType="fade" // veya "fade", "none" gibi
+                      transparent={true}
+                      visible={SharemodalVisible}
+                      onRequestClose={() => {
+                        setShareModalVisible(!SharemodalVisible);
+                      }}
+                    >
+                      <View style={styles.centeredView2}>
+                        <View style={styles.modalView2}>
+                          <ScrollView
+                            horizontal
+                            showsHorizontalScrollIndicator={false}
+                          >
+                            <View
+                              style={{
+                                flexDirection: "row",
+                                gap: 17,
+                                justifyContent: "center",
+                              }}
+                            >
+                              <TouchableOpacity
+                                style={{
+                                  backgroundColor: "#1cea30",
+                                  padding: 15,
+                                  borderRadius: 30,
+                                  justifyContent: "center",
+                                }}
+                                onPress={copyToClipboard}
+                              >
+                                <ShareIcon
+                                  name="link"
+                                  size={30}
+                                  color={"white"}
+                                />
+                              </TouchableOpacity>
+                              <TouchableOpacity
+                                style={{
+                                  backgroundColor: "#01E676",
+                                  padding: 15,
+                                  paddingRight: 17,
+                                  paddingLeft: 17,
+                                  borderRadius: 30,
+                                }}
+                                onPress={shareLinkOnWhatsApp}
+                              >
+                                <Icon
+                                  name="whatsapp"
+                                  size={33}
+                                  color={"white"}
+                                />
+                              </TouchableOpacity>
+                              <TouchableOpacity
+                                style={{
+                                  backgroundColor: "#0766FF",
+                                  paddingLeft: 20,
+                                  paddingRight: 20,
+                                  borderRadius: 30,
+                                  justifyContent: "center",
+                                }}
+                                onPress={shareLinkOnFacebook}
+                              >
+                                <Icon
+                                  name="facebook"
+                                  size={30}
+                                  color={"white"}
+                                />
+                              </TouchableOpacity>
+                              <TouchableOpacity
+                                style={{
+                                  backgroundColor: "#F04E53",
+                                  paddingLeft: 17,
+                                  paddingRight: 17,
+                                  borderRadius: 30,
+                                  justifyContent: "center",
+                                }}
+                                onPress={shareLinkOnInstagram}
+                              >
+                                <Icon
+                                  name="instagram"
+                                  size={31}
+                                  color={"white"}
+                                />
+                              </TouchableOpacity>
+                              <TouchableOpacity
+                                style={{
+                                  backgroundColor: "#0766FF",
+                                  paddingLeft: 15,
+                                  paddingRight: 15,
+                                  borderRadius: 30,
+                                  padding: 13,
+                                  justifyContent: "center",
+                                }}
+                                onPress={handleShareViaSMS}
+                              >
+                                <IconSms
+                                  name="message-circle"
+                                  size={30}
+                                  color={"white"}
+                                />
+                              </TouchableOpacity>
+                              <TouchableOpacity
+                                style={{
+                                  backgroundColor: "#0766FF",
+                                  paddingLeft: 15,
+                                  paddingRight: 15,
+                                  borderRadius: 30,
+                                  padding: 13,
+                                  justifyContent: "center",
+                                }}
+                                onPress={shareLinkOnMessenger}
+                              >
+                                <IconMessenger
+                                  name="messenger"
+                                  size={30}
+                                  color={"white"}
+                                />
+                              </TouchableOpacity>
+                            </View>
+                          </ScrollView>
+                          <View
+                            style={{ alignItems: "center", paddingTop: 10 }}
+                          >
+                            <TouchableOpacity
+                              style={{
+                                backgroundColor: "red",
+                                paddingRight: 25,
+                                paddingLeft: 25,
+                                padding: 5,
+                                borderRadius: 5,
+                              }}
+                              onPress={() =>
+                                setShareModalVisible(!SharemodalVisible)
+                              }
+                            >
+                              <Text style={{ color: "white" }}>Kapat</Text>
+                            </TouchableOpacity>
+                          </View>
+                        </View>
+                      </View>
+                    </Modal>
+                  </View>
                 </View>
-              </View>
+              )}
             </AlertNotificationRoot>
           )}
         </>
