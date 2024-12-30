@@ -41,6 +41,7 @@ import {
   apiUrl,
   frontEndUriBase,
 } from "../../../components/methods/apiRequest";
+import { styles } from "../../../styles/Collections.styles";
 
 export default function CollectionsTab() {
   const navigation = useNavigation();
@@ -402,7 +403,21 @@ export default function CollectionsTab() {
     await fetchData(); // Sayfayı yenilemek için API isteğini tekrar yapar
     setRefreshing(false);
   };
-
+  const HandleTrash = () => {
+    if (CollectionsRemoveIds.length == 0) {
+      Dialog.show({
+        type: ALERT_TYPE.WARNING,
+        title: "Lütfen seçiniz",
+        textBody:
+          user.type == 2 && user.corporate_type == "Emlak Ofisi"
+            ? "Silmek istediğiniz Portföyleri seçiniz"
+            : `Silmek istediğiniz koleksiyonları seçiniz`,
+        button: "Tamam",
+      });
+    } else {
+      setRemoveSelectedCollectionsModal(true);
+    }
+  };
   return (
     <>
       {loading ? (
@@ -422,175 +437,143 @@ export default function CollectionsTab() {
             />
           ) : (
             <AlertNotificationRoot>
-              <View style={styles.container}>
-                <View style={{ flex: 1 }}>
-                  <AwesomeAlert
-                    show={RemoveSelectedCollectionsModal}
-                    showProgress={false}
-                    titleStyle={{
-                      color: "#333",
-                      fontSize: 13,
-                      fontWeight: "700",
-                      textAlign: "center",
-                      margin: 5,
-                    }}
-                    title={
-                      user.type == 2 && user.corporate_type == "Emlak Ofisi"
-                        ? `${CollectionsRemoveIds.length} Seçili Portföyü silmek istediğinize emin misin`
-                        : `${CollectionsRemoveIds.length} Seçili Koleksiyonu silmek istediğinize emin misin`
-                    }
-                    messageStyle={{ textAlign: "center" }}
-                    closeOnTouchOutside={true}
-                    closeOnHardwareBackPress={false}
-                    showCancelButton={true}
-                    showConfirmButton={true}
-                    cancelText="Hayır"
-                    confirmText="Evet"
-                    cancelButtonColor="#ce4d63"
-                    confirmButtonColor="#1d8027"
-                    onCancelPressed={() => {
-                      setRemoveSelectedCollectionsModal(false);
-                    }}
-                    onConfirmPressed={() => {
-                      RemoveSelectedCollections();
-                    }}
-                    confirmButtonTextStyle={{
-                      marginLeft: 20,
-                      marginRight: 20,
-                    }}
-                    cancelButtonTextStyle={{
-                      marginLeft: 20,
-                      marginRight: 20,
-                    }}
-                  />
-                  <AwesomeAlert
-                    show={modalVisible2}
-                    showProgress={false}
-                    titleStyle={{
-                      color: "#333",
-                      fontSize: 13,
-                      fontWeight: "700",
-                      textAlign: "center",
-                      margin: 5,
-                    }}
-                    title={
-                      user.type == 2 && user.corporate_type == "Emlak Ofisi"
-                        ? `${colectionName} adlı Portföyünüzü silmek istediğinize eminmisiniz?`
-                        : `${colectionName} adlı koleksiyonu silmek istediğinize eminmisiniz?`
-                    }
-                    messageStyle={{ textAlign: "center" }}
-                    closeOnTouchOutside={true}
-                    closeOnHardwareBackPress={false}
-                    showCancelButton={true}
-                    showConfirmButton={true}
-                    cancelText="Hayır"
-                    confirmText="Evet"
-                    cancelButtonColor="#ce4d63"
-                    confirmButtonColor="#1d8027"
-                    onCancelPressed={() => {
-                      setModalVisible2(false);
-                    }}
-                    onConfirmPressed={() => {
-                      deleteCollection(selectedCollection);
-                    }}
-                    confirmButtonTextStyle={{
-                      marginLeft: 20,
-                      marginRight: 20,
-                    }}
-                    cancelButtonTextStyle={{
-                      marginLeft: 20,
-                      marginRight: 20,
-                    }}
-                  />
-                  <AwesomeAlert
-                    show={modalForRemoveAll}
-                    showProgress={false}
-                    titleStyle={{
-                      color: "#333",
-                      fontSize: 15,
-                      fontWeight: "700",
-                      textAlign: "center",
-                      margin: 5,
-                    }}
-                    title={"Tümünü Sil"}
-                    message={
-                      user.type == 2 && user.corporate_type == "Emlak Ofisi"
-                        ? "Tüm Portföyleri silmek istediğinize emin misiniz"
-                        : "Tüm koleksiyonları silmek istediğinize emin misiniz?"
-                    }
-                    messageStyle={{ textAlign: "center" }}
-                    closeOnTouchOutside={true}
-                    closeOnHardwareBackPress={false}
-                    showCancelButton={true}
-                    showConfirmButton={true}
-                    cancelText="Hayır"
-                    confirmText="Evet"
-                    cancelButtonColor="#ce4d63"
-                    confirmButtonColor="#1d8027"
-                    onCancelPressed={() => {
-                      setmodalForRemoveAll(false);
-                    }}
-                    onConfirmPressed={() => {
-                      RemoveAllCollection();
-                    }}
-                    confirmButtonTextStyle={{
-                      marginLeft: 20,
-                      marginRight: 20,
-                    }}
-                    cancelButtonTextStyle={{
-                      marginLeft: 20,
-                      marginRight: 20,
-                    }}
-                  />
-                  <View
-                    style={{
-                      alignItems: "center",
-                      flex: 1,
-
-                      backgroundColor: "white",
-                    }}
-                    onTouchStart={() => {
-                      Keyboard.dismiss();
-                      closeSheet();
-                    }}
-                  >
-                    <View style={styles.container}>
-                      <ScrollView
-                        showsVerticalScrollIndicator={false}
-                        stickyHeaderIndices={[0]}
-                        contentContainerStyle={{
-                          paddingBottom: 20,
-                          padding: 10,
-                        }}
-                        refreshControl={
-                          <RefreshControl
-                            refreshing={refreshing}
-                            onRefresh={onRefresh} // Sayfa yenileme fonksiyonu
-                          />
-                        }
-                      >
+              {namFromGetUser.has_club == 0 ||
+              namFromGetUser.has_club == 2 ||
+              namFromGetUser.has_club == 3 ? (
+                <RegisterRealtorClub />
+              ) : (
+                <View style={styles.container}>
+                  <View style={{ flex: 1 }}>
+                    <AwesomeAlert
+                      show={RemoveSelectedCollectionsModal}
+                      showProgress={false}
+                      titleStyle={{
+                        color: "#333",
+                        fontSize: 13,
+                        fontWeight: "700",
+                        textAlign: "center",
+                        margin: 5,
+                      }}
+                      title={
+                        user.type == 2 && user.corporate_type == "Emlak Ofisi"
+                          ? `${CollectionsRemoveIds.length} Seçili Portföyü silmek istediğinize emin misin`
+                          : `${CollectionsRemoveIds.length} Seçili Koleksiyonu silmek istediğinize emin misin`
+                      }
+                      messageStyle={{ textAlign: "center" }}
+                      closeOnTouchOutside={true}
+                      closeOnHardwareBackPress={false}
+                      showCancelButton={true}
+                      showConfirmButton={true}
+                      cancelText="Hayır"
+                      confirmText="Evet"
+                      cancelButtonColor="#ce4d63"
+                      confirmButtonColor="#1d8027"
+                      onCancelPressed={() => {
+                        setRemoveSelectedCollectionsModal(false);
+                      }}
+                      onConfirmPressed={() => {
+                        RemoveSelectedCollections();
+                      }}
+                      confirmButtonTextStyle={{
+                        marginLeft: 20,
+                        marginRight: 20,
+                      }}
+                      cancelButtonTextStyle={{
+                        marginLeft: 20,
+                        marginRight: 20,
+                      }}
+                    />
+                    <AwesomeAlert
+                      show={modalVisible2}
+                      showProgress={false}
+                      titleStyle={{
+                        color: "#333",
+                        fontSize: 13,
+                        fontWeight: "700",
+                        textAlign: "center",
+                        margin: 5,
+                      }}
+                      title={
+                        user.type == 2 && user.corporate_type == "Emlak Ofisi"
+                          ? `${colectionName} adlı Portföyünüzü silmek istediğinize eminmisiniz?`
+                          : `${colectionName} adlı koleksiyonu silmek istediğinize eminmisiniz?`
+                      }
+                      messageStyle={{ textAlign: "center" }}
+                      closeOnTouchOutside={true}
+                      closeOnHardwareBackPress={false}
+                      showCancelButton={true}
+                      showConfirmButton={true}
+                      cancelText="Hayır"
+                      confirmText="Evet"
+                      cancelButtonColor="#ce4d63"
+                      confirmButtonColor="#1d8027"
+                      onCancelPressed={() => {
+                        setModalVisible2(false);
+                      }}
+                      onConfirmPressed={() => {
+                        deleteCollection(selectedCollection);
+                      }}
+                      confirmButtonTextStyle={{
+                        marginLeft: 20,
+                        marginRight: 20,
+                      }}
+                      cancelButtonTextStyle={{
+                        marginLeft: 20,
+                        marginRight: 20,
+                      }}
+                    />
+                    <AwesomeAlert
+                      show={modalForRemoveAll}
+                      showProgress={false}
+                      titleStyle={{
+                        color: "#333",
+                        fontSize: 15,
+                        fontWeight: "700",
+                        textAlign: "center",
+                        margin: 5,
+                      }}
+                      title={"Tümünü Sil"}
+                      message={
+                        user.type == 2 && user.corporate_type == "Emlak Ofisi"
+                          ? "Tüm Portföyleri silmek istediğinize emin misiniz"
+                          : "Tüm koleksiyonları silmek istediğinize emin misiniz?"
+                      }
+                      messageStyle={{ textAlign: "center" }}
+                      closeOnTouchOutside={true}
+                      closeOnHardwareBackPress={false}
+                      showCancelButton={true}
+                      showConfirmButton={true}
+                      cancelText="Hayır"
+                      confirmText="Evet"
+                      cancelButtonColor="#ce4d63"
+                      confirmButtonColor="#1d8027"
+                      onCancelPressed={() => {
+                        setmodalForRemoveAll(false);
+                      }}
+                      onConfirmPressed={() => {
+                        RemoveAllCollection();
+                      }}
+                      confirmButtonTextStyle={{
+                        marginLeft: 20,
+                        marginRight: 20,
+                      }}
+                      cancelButtonTextStyle={{
+                        marginLeft: 20,
+                        marginRight: 20,
+                      }}
+                    />
+                    <View
+                      style={styles.backgroundContainer}
+                      onTouchStart={() => {
+                        Keyboard.dismiss();
+                        closeSheet();
+                      }}
+                    >
+                      <View style={styles.container}>
                         <View style={styles.SearchArea}>
                           <SearchBar
-                            containerStyle={{
-                              backgroundColor: "transparent",
-                              borderTopWidth: 0,
-                              borderWidth: 0,
-                              borderBottomWidth: 0,
-                              justifyContent: "center",
-                              width: "100%",
-                              paddingBottom: 10,
-
-                              height: 50,
-                            }}
-                            inputContainerStyle={{
-                              borderRadius: 5,
-                              backgroundColor: "#FFFFFF",
-                              borderWidth: 1,
-                              borderColor: "#bebebe26",
-                              borderBottomWidth: 1,
-                              height: "110%",
-                              borderBottomColor: "#bebebe26",
-                            }}
+                            containerStyle={styles.searchBarContainer}
+                            inputContainerStyle={styles.searchBarInput}
                             placeholder={
                               user.type == 2 &&
                               user.corporate_type == "Emlak Ofisi"
@@ -604,31 +587,11 @@ export default function CollectionsTab() {
                             value={searchText}
                           />
                         </View>
-                        <View
-                          style={{
-                            flexDirection: "row",
-                            padding: 5,
-                            paddingTop: 9,
-                            alignItems: "center",
-                            justifyContent: "space-between",
-                          }}
-                        >
-                          <View
-                            style={{
-                              flexDirection: "row",
-                              gap: 25,
-                              alignItems: "center",
-                            }}
-                          >
+
+                        <View style={styles.deleteButtons}>
+                          <View style={styles.deleteButtonsItem}>
                             <TouchableOpacity
-                              style={[
-                                styles.btnRemove,
-                                {
-                                  backgroundColor: "#EEEDEB",
-                                  borderWidth: 1,
-                                  borderColor: "#ebebeb",
-                                },
-                              ]}
+                              style={[styles.btnRemove]}
                               onPress={() => {
                                 if (collections.length == 0) {
                                   Dialog.show({
@@ -655,27 +618,13 @@ export default function CollectionsTab() {
                               </Text>
                             </TouchableOpacity>
                             <TouchableOpacity
-                              style={[
-                                styles.btnRemove,
-                                {
-                                  backgroundColor: "#EEEDEB",
-                                  borderWidth: 1,
-                                  borderColor: "#ebebeb",
-                                },
-                              ]}
+                              style={styles.chooseDeleteButton}
                               onPress={() => {
                                 setisChoosed(!isChoosed);
                                 setCollectionsRemoveIds([]);
                               }}
                             >
-                              <Text
-                                style={{
-                                  fontSize: 12,
-                                  textAlign: "center",
-                                  fontWeight: "bold",
-                                  color: "#333",
-                                }}
-                              >
+                              <Text style={styles.chooseText}>
                                 {!isChoosed ? "Toplu Seç" : "Seçimi İptal Et"}
                               </Text>
                             </TouchableOpacity>
@@ -689,60 +638,54 @@ export default function CollectionsTab() {
                             style={{ display: isChoosed ? "flex" : "none" }}
                           >
                             <TouchableOpacity
-                              style={[
-                                styles.btnRemove,
-                                { paddingLeft: 15, paddingRight: 15 },
-                              ]}
-                              onPress={() => {
-                                if (CollectionsRemoveIds.length == 0) {
-                                  Dialog.show({
-                                    type: ALERT_TYPE.WARNING,
-                                    title: "Lütfen seçiniz",
-                                    textBody:
-                                      user.type == 2 &&
-                                      user.corporate_type == "Emlak Ofisi"
-                                        ? "Silmek istediğiniz Portföyleri seçiniz"
-                                        : `Silmek istediğiniz koleksiyonları seçiniz`,
-                                    button: "Tamam",
-                                  });
-                                } else {
-                                  setRemoveSelectedCollectionsModal(true);
-                                }
-                              }}
+                              style={styles.trashIconDelete}
+                              onPress={HandleTrash}
                             >
                               <Icon name="trash" size={18} color={"#ffffff"} />
                             </TouchableOpacity>
                           </View>
                         </View>
-
-                        {loading == false ? (
-                          collectionsRecods.map((collection, index) => {
-                            return (
-                              <CollectionsItem
-                                isChoosed={isChoosed}
-                                SelectCollection={SelectCollection}
-                                projectItems={projectItems}
-                                item={collection}
-                                getId={getId}
-                                key={index}
-                                openBottom={openSheet}
-                                disabled={isDisabled}
-                                shareWp={shareLinkOnWhatsApp}
-                                copy={copyToClipboard}
-                                onRemove={() =>
-                                  removeFromCollection(collection)
-                                } // onRemove işlevini yolla
-                              />
-                            );
-                          })
-                        ) : (
-                          <View style={styles.loadingContainer}>
-                            <ActivityIndicator size="large" color="#333" />
-                          </View>
-                        )}
-                      </ScrollView>
+                        <ScrollView
+                          showsVerticalScrollIndicator={false}
+                          contentContainerStyle={{
+                            paddingBottom: 20,
+                            padding: 10,
+                          }}
+                          refreshControl={
+                            <RefreshControl
+                              refreshing={refreshing}
+                              onRefresh={onRefresh}
+                            />
+                          }
+                        >
+                          {loading == false ? (
+                            collectionsRecods.map((collection, index) => {
+                              return (
+                                <CollectionsItem
+                                  isChoosed={isChoosed}
+                                  SelectCollection={SelectCollection}
+                                  projectItems={projectItems}
+                                  item={collection}
+                                  getId={getId}
+                                  key={index}
+                                  openBottom={openSheet}
+                                  disabled={isDisabled}
+                                  shareWp={shareLinkOnWhatsApp}
+                                  copy={copyToClipboard}
+                                  onRemove={() =>
+                                    removeFromCollection(collection)
+                                  }
+                                />
+                              );
+                            })
+                          ) : (
+                            <View style={styles.loadingContainer}>
+                              <ActivityIndicator size="large" color="#333" />
+                            </View>
+                          )}
+                        </ScrollView>
+                      </View>
                     </View>
-                  </View>
 
                   <View
                     style={{
@@ -1244,193 +1187,3 @@ export default function CollectionsTab() {
     </>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#F6F6F6",
-    paddingHorizontal: 0,
-    width: "100%",
-    marginVertical: 0,
-  },
-  closeButtonContainer: {
-    flexDirection: "row",
-    display: "flex",
-    justifyContent: "space-between",
-    width: "100%",
-  },
-  closeButton: {
-    backgroundColor: "transparent",
-    borderRadius: 5,
-  },
-  SearchArea: {
-    width: "100%",
-  },
-
-  Input: {
-    backgroundColor: "#ebebebab",
-    marginTop: 0,
-    padding: 10,
-    fontSize: 17,
-    borderRadius: 4,
-  },
-  animatedView: {
-    alignItems: "center",
-    justifyContent: "center",
-    borderRadius: 20,
-    backgroundColor: "#FFFF",
-    borderColor: "#e6e6e6",
-    ...Platform.select({
-      ios: {
-        shadowColor: " #e6e6e6",
-        shadowOffset: { width: 1, height: 1 },
-        shadowOpacity: 0.1,
-        shadowRadius: 5,
-      },
-      android: {
-        elevation: 5,
-      },
-    }),
-    backgroundColor: "white",
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
-    paddingTop: 20,
-    paddingBottom: 20,
-    paddingLeft: 10,
-    paddingRight: 20,
-  },
-  centeredView: {
-    margin: 0,
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "rgba(0,0,0,0.5)", // modal dışı koyu arkaplan
-  },
-  modalView: {
-    width: "100%",
-    margin: 0,
-    backgroundColor: "white",
-    borderRadius: 5,
-    padding: 20,
-    gap: 20,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
-  },
-  modalText: {
-    marginBottom: 15,
-    textAlign: "center",
-  },
-  centeredView2: {
-    padding: 20,
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "rgba(0,0,0,0.5)", // modal dışı koyu arkaplan
-  },
-  modalView2: {
-    width: "100%",
-
-    backgroundColor: "white",
-    borderRadius: 5,
-    padding: 20,
-    gap: 15,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
-  },
-  modalText: {
-    marginBottom: 15,
-    textAlign: "center",
-  },
-  centeredView3: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "rgba(0,0,0,0.5)", // modal dışı koyu arkaplan
-  },
-  modalView3: {
-    margin: 20,
-    backgroundColor: "white",
-    borderRadius: 20,
-    padding: 35,
-    alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
-  },
-  modalText3: {
-    marginBottom: 15,
-    textAlign: "center",
-  },
-  loadingContainer: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  btnRemove: {
-    backgroundColor: "#EA2A28",
-    padding: 5,
-    borderRadius: 5,
-  },
-  modal2: {
-    justifyContent: "flex-end",
-    margin: 0,
-  },
-  modalContent2: {
-    gap: 10,
-
-    backgroundColor: "#F8F7F4",
-    padding: 10,
-
-    borderTopLeftRadius: 30,
-    borderTopRightRadius: 30,
-    ...Platform.select({
-      ios: {
-        shadowColor: "white",
-        shadowOffset: { width: 1, height: 1 },
-        shadowOpacity: 0.1,
-        shadowRadius: 5,
-      },
-      android: {
-        elevation: 5,
-      },
-    }),
-  },
-  modalView4: {
-    width: "100%",
-
-    backgroundColor: "white",
-    borderRadius: 5,
-    padding: 20,
-    gap: 15,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
-  },
-  modal4: {
-    backgroundColor: "rgba(0,0,0,0.5)",
-    margin: 0,
-    padding: 10,
-  },
-});
