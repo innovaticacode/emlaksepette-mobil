@@ -30,22 +30,28 @@ export default function SalePageMain() {
   const [isCorporateTypeRight, setIsCorporateTypeRight] = useState(false);
   const [selectedId, setSelectedId] = useState(null);
   const [category, setCategory] = useState(
-    dropdownData ? dropdownData[0].value : null
+    dropdownData && dropdownData.length > 0 ? dropdownData[0].value : null
   );
+  const [cardData, setCardData] = useState([]);
+
   const [user, setUser] = useState({});
+  const [filteredFaq, setFilteredFaq] = useState([]);
 
   useEffect(() => {
     getValueFor("user", setUser);
+    setCardData(CardDatajson);
   }, []);
 
   const navigation = useNavigation();
   const handleSubmit = () => {
-    if (!user?.access_token) {
-      setIsUserHaveToken(true);
-    } else if (user?.access_token && user.corporate_type !== "Emlak Ofisi") {
-      setIsCorporateTypeRight(true);
-    } else if (user?.access_token && user.corporate_type === "Emlak Ofisi") {
-      navigation.navigate("SalePage");
+    if (user) {
+      if (!user?.access_token) {
+        setIsUserHaveToken(true);
+      } else if (user?.access_token && user.corporate_type !== "Emlak Ofisi") {
+        setIsCorporateTypeRight(true);
+      } else if (user?.access_token && user.corporate_type === "Emlak Ofisi") {
+        navigation.navigate("SalePage");
+      }
     }
   };
   const navigateToLogin = () => {
@@ -60,6 +66,7 @@ export default function SalePageMain() {
   };
 
   const toggleExpand = (id) => {
+    if (!id) return;
     setSelectedId(selectedId === id ? null : id);
   };
 
@@ -69,9 +76,18 @@ export default function SalePageMain() {
     { label: "Ödeme", value: "payment" },
   ];
 
-  const filteredFaq = category
-    ? Faq.filter((item) => item.category === category.value)
-    : Faq;
+  useEffect(() => {
+    if (!category) {
+    }
+    if (!Faq || Faq.length === 0) {
+      console.error("Faq JSON verisi eksik veya bozuk.");
+      return null;
+    }
+    const filteredFaq = category
+      ? Faq.filter((item) => item?.category === category?.value)
+      : Faq || [];
+    setFilteredFaq(filteredFaq);
+  }, [category]);
 
   return (
     <ScrollView
@@ -80,40 +96,46 @@ export default function SalePageMain() {
       scrollEventThrottle={16}
       showsVerticalScrollIndicator={false}
     >
-      <AwesomeAlert
-        show={isUserHaveToken}
-        showProgress={false}
-        titleStyle={styles.alertTitle}
-        messageStyle={{ textAlign: "center" }}
-        message={`Başvuru yapabilmek için önce giriş yapmalısınız!`}
-        closeOnTouchOutside={true}
-        closeOnHardwareBackPress={false}
-        showCancelButton={true}
-        showConfirmButton={true}
-        cancelText="Kapat"
-        confirmText="Giriş Yap"
-        cancelButtonColor="#ce4d63"
-        confirmButtonColor="#1d8027"
-        onCancelPressed={closeModal}
-        onConfirmPressed={navigateToLogin}
-        confirmButtonTextStyle={{ marginLeft: 20, marginRight: 20 }}
-        cancelButtonTextStyle={{ marginLeft: 20, marginRight: 20 }}
-      />
-      <AwesomeAlert
-        show={isCorporateTypeRight}
-        showProgress={false}
-        titleStyle={styles.alertTitle}
-        messageStyle={{ textAlign: "center" }}
-        message={`Başvuru yapabilmek için emlak ofisi olmalısınız!`}
-        closeOnTouchOutside={true}
-        closeOnHardwareBackPress={false}
-        showCancelButton={true}
-        cancelText="Kapat"
-        cancelButtonColor="#ce4d63"
-        confirmButtonColor="#1d8027"
-        onCancelPressed={closeModal}
-        cancelButtonTextStyle={{ marginLeft: 20, marginRight: 20 }}
-      />
+      {isUserHaveToken && (
+        <AwesomeAlert
+          show={isUserHaveToken}
+          showProgress={false}
+          titleStyle={styles.alertTitle}
+          messageStyle={{ textAlign: "center" }}
+          message={`Başvuru yapabilmek için önce giriş yapmalısınız!`}
+          closeOnTouchOutside={true}
+          closeOnHardwareBackPress={false}
+          showCancelButton={true}
+          showConfirmButton={true}
+          cancelText="Kapat"
+          confirmText="Giriş Yap"
+          cancelButtonColor="#ce4d63"
+          confirmButtonColor="#1d8027"
+          onCancelPressed={closeModal}
+          onConfirmPressed={navigateToLogin}
+          confirmButtonTextStyle={{ marginLeft: 20, marginRight: 20 }}
+          cancelButtonTextStyle={{ marginLeft: 20, marginRight: 20 }}
+        />
+      )}
+
+      {isCorporateTypeRight && (
+        <AwesomeAlert
+          show={isCorporateTypeRight}
+          showProgress={false}
+          titleStyle={styles.alertTitle}
+          messageStyle={{ textAlign: "center" }}
+          message={`Başvuru yapabilmek için emlak ofisi olmalısınız!`}
+          closeOnTouchOutside={true}
+          closeOnHardwareBackPress={false}
+          showCancelButton={true}
+          cancelText="Kapat"
+          cancelButtonColor="#ce4d63"
+          confirmButtonColor="#1d8027"
+          onCancelPressed={closeModal}
+          cancelButtonTextStyle={{ marginLeft: 20, marginRight: 20 }}
+        />
+      )}
+
       <View style={{ backgroundColor: "#FFF", flex: 1 }}>
         <View style={{ paddingHorizontal: 30, paddingTop: 20, gap: 20 }}>
           <Image
@@ -137,7 +159,7 @@ export default function SalePageMain() {
               <WhiteOrRedButtons
                 bgColor={"#EA2B2E"}
                 text={"Hemen Başvur"}
-                onPress={() => handleSubmit()}
+                onPress={handleSubmit}
               />
             </View>
           </View>
@@ -155,8 +177,10 @@ export default function SalePageMain() {
                 Emlaksepette Satış Noktası Olmanın Avantajları Nelerdir?
               </Text>
               <FlatList
-                data={CardDatajson}
-                keyExtractor={(item) => item.id}
+                data={cardData}
+                keyExtractor={(item) => item?.id}
+                initialNumToRender={5}
+                windowSize={5}
                 horizontal
                 showsHorizontalScrollIndicator={false}
                 renderItem={({ item }) => (
@@ -246,66 +270,68 @@ export default function SalePageMain() {
             </View>
           </View>
         </View>
-        <View style={{ backgroundColor: "#FFF", paddingBottom: 20 }}>
-          <Text style={styles.faqTitle}>Sıkça Sorulan Sorular</Text>
-          <View style={styles.faqContainer}>
-            <Text style={styles.categoryTitle}>Kategori Seçimi</Text>
-            <Dropdown
-              style={styles.dropDown}
-              data={dropdownData}
-              placeholder={dropdownData[0].label}
-              containerStyle={styles.dropDownContainer}
-              labelField="label"
-              valueField="value"
-              value={category}
-              onChange={(value) => setCategory(value)}
-            />
-            <FlatList
-              data={filteredFaq}
-              renderItem={({ item }) => {
-                const isExpanded = selectedId === item.id;
-                return (
-                  <View style={styles.itemContainer}>
-                    <TouchableOpacity
-                      activeOpacity={0.8}
-                      style={[
-                        isExpanded
-                          ? styles.activeQuestion
-                          : styles.questionContainer,
-                      ]}
-                      onPress={() => toggleExpand(item.id)}
-                    >
-                      <Text
+        {Faq && (
+          <View style={{ backgroundColor: "#FFF", paddingBottom: 20 }}>
+            <Text style={styles.faqTitle}>Sıkça Sorulan Sorular</Text>
+            <View style={styles.faqContainer}>
+              <Text style={styles.categoryTitle}>Kategori Seçimi</Text>
+              <Dropdown
+                style={styles.dropDown}
+                data={dropdownData}
+                placeholder={dropdownData[0].label}
+                containerStyle={styles.dropDownContainer}
+                labelField="label"
+                valueField="value"
+                value={category}
+                onChange={(value) => setCategory(value)}
+              />
+              <FlatList
+                data={filteredFaq}
+                renderItem={({ item }) => {
+                  const isExpanded = selectedId === item.id;
+                  return (
+                    <View style={styles.itemContainer}>
+                      <TouchableOpacity
+                        activeOpacity={0.8}
                         style={[
-                          styles.questionText,
-                          isExpanded ? styles.activeQuestionText : null,
-                        ]}
-                      >
-                        {item.question}
-                      </Text>
-                      <Icon5
-                        name={
                           isExpanded
-                            ? "keyboard-arrow-up"
-                            : "keyboard-arrow-down"
-                        }
-                        size={24}
-                        color={isExpanded ? "#fff" : "#999"}
-                      />
-                    </TouchableOpacity>
-                    {isExpanded && (
-                      <View style={styles.answerContainer}>
-                        <Text style={styles.answerText}>{item.answer}</Text>
-                      </View>
-                    )}
-                  </View>
-                );
-              }}
-              keyExtractor={(item) => item.id.toString()}
-              showsVerticalScrollIndicator={false}
-            />
+                            ? styles.activeQuestion
+                            : styles.questionContainer,
+                        ]}
+                        onPress={() => toggleExpand(item?.id)}
+                      >
+                        <Text
+                          style={[
+                            styles.questionText,
+                            isExpanded ? styles.activeQuestionText : null,
+                          ]}
+                        >
+                          {item.question}
+                        </Text>
+                        <Icon5
+                          name={
+                            isExpanded
+                              ? "keyboard-arrow-up"
+                              : "keyboard-arrow-down"
+                          }
+                          size={24}
+                          color={isExpanded ? "#fff" : "#999"}
+                        />
+                      </TouchableOpacity>
+                      {isExpanded && (
+                        <View style={styles.answerContainer}>
+                          <Text style={styles.answerText}>{item.answer}</Text>
+                        </View>
+                      )}
+                    </View>
+                  );
+                }}
+                keyExtractor={(item) => item?.id.toString()}
+                showsVerticalScrollIndicator={false}
+              />
+            </View>
           </View>
-        </View>
+        )}
       </View>
     </ScrollView>
   );
